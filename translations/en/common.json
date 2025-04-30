@@ -1,0 +1,47 @@
+{
+  "language": "en",
+  "nav": {
+    "home": "Home",
+    "newsFeed": "News Feed",
+    "jobsFeed": "Jobs Feed",
+    "itJobs": "IT Jobs",
+    "rules": "Rules",
+    "faces": "Faces",
+    "about": "About",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "registerCard": "Register Card",
+    "articles": "Articles",
+    "events": "Events",
+    "companies": "Companies"
+  },
+  "telegramChannels": {
+    "newsFeed": {
+      "title": "News Feed",
+      "description": "Stay updated with the latest in Data Science"
+    },
+    "dataJobs": {
+      "title": "DS Jobs",
+      "description": "ML and Data Science job opportunities"
+    },
+    "itJobs": {
+      "title": "IT Jobs",
+      "description": "Software and IT job opportunities"
+    },
+    "joinButton": "Join Channel"
+  },
+  "back": "Back",
+  "view": "View Profile",
+  "viewAllResults": "View all results",
+  "startTypingToSearch": "Start typing to search for members",
+  "newsFeed": {
+    "title": "News Feed",
+    "subtitle": "Stay updated with the latest in Data Science and Machine Learning"
+  },
+  "dashboard": {
+    "searchTip": "Search for members by name, nickname, or position"
+  },
+  "title": "DSML Kazakhstan",
+  "subtitle": "The hub for Data Science and Machine Learning enthusiasts in Kazakhstan",
+  "joinButton": "Join Community"
+}

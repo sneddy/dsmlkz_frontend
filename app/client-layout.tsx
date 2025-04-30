@@ -1,0 +1,285 @@
+"use client"
+
+import type React from "react"
+
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import Image from "next/image"
+import { usePathname } from "next/navigation"
+import { Menu, User, X } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { useAuth } from "@/contexts/auth-context"
+import LanguageSelector from "@/components/language-selector"
+import { useTranslation } from "@/hooks/use-translation"
+
+export default function ClientLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const pathname = usePathname()
+  const { user, signOut, profile } = useAuth()
+  const { t } = useTranslation()
+
+  // Close mobile menu when path changes
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [pathname])
+
+  // Add useEffect to maintain dark mode
+  useEffect(() => {
+    // Ensure dark mode is applied
+    document.documentElement.classList.add("dark")
+  }, [])
+
+  return (
+    <div className="flex min-h-screen flex-col">
+      <header className="sticky top-0 z-50 border-b bg-background">
+        <div className="container flex h-16 items-center justify-between py-4">
+          <div className="flex items-center gap-6">
+            <Link href="/" className="flex items-center gap-2">
+              <Image
+                src="/images/dsml-logo.png"
+                alt="DSML Kazakhstan Logo"
+                width={32}
+                height={32}
+                className="rounded-sm"
+              />
+              <span className="font-medium font-pixel">DSML KZ</span>
+            </Link>
+            <nav className="hidden md:flex items-center gap-6">
+              <Link
+                href="/"
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {t("nav.home")}
+              </Link>
+              <Link
+                href="/news"
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/news" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {t("nav.newsFeed")}
+              </Link>
+              <Link
+                href="/jobs"
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/jobs" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {t("nav.jobsFeed")}
+              </Link>
+              <Link
+                href="/articles"
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/articles" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {t("nav.articles") || "Статьи"}
+              </Link>
+              <Link
+                href="/events"
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/events" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {t("nav.events") || "Ивенты"}
+              </Link>
+              <Link
+                href="/companies"
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/companies" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {t("nav.companies") || "Компании"}
+              </Link>
+              <Link
+                href="/faces"
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/faces" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {t("nav.faces")}
+              </Link>
+              <Link
+                href="/rules"
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/rules" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {t("nav.rules")}
+              </Link>
+            </nav>
+          </div>
+          <div className="flex items-center gap-4">
+            <LanguageSelector />
+            {user ? (
+              <div className="hidden md:flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Link href="/dashboard" className="flex items-center gap-2">
+                    <div className="flex items-center justify-center h-8 w-8 rounded-full bg-primary/10">
+                      <User className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="text-sm font-medium">{profile?.nickname || user.email.split("@")[0]}</span>
+                  </Link>
+                </div>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    // Disable button immediately
+                    const btn = document.activeElement as HTMLButtonElement
+                    if (btn) btn.disabled = true
+                    signOut()
+                  }}
+                >
+                  {t("auth.signOut")}
+                </Button>
+              </div>
+            ) : (
+              <div className="hidden md:flex items-center gap-4">
+                <Link href="/signin">
+                  <Button variant="outline" size="sm">
+                    {t("home.signIn")}
+                  </Button>
+                </Link>
+                <Link href="/signup">
+                  <Button size="sm">{t("home.signUp")}</Button>
+                </Link>
+              </div>
+            )}
+            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
+        </div>
+        {isMenuOpen && (
+          <div className="container md:hidden py-4 pb-6 fixed inset-x-0 top-16 z-50 bg-background border-b shadow-lg">
+            <nav className="flex flex-col gap-4">
+              <Link
+                href="/"
+                className={`text-sm font-medium font-pixel ${pathname === "/" ? "text-primary" : "text-muted-foreground"}`}
+              >
+                {t("nav.home")}
+              </Link>
+              <Link
+                href="/news"
+                className={`text-sm font-medium font-pixel ${pathname === "/news" ? "text-primary" : "text-muted-foreground"}`}
+              >
+                {t("nav.newsFeed")}
+              </Link>
+              <Link
+                href="/jobs"
+                className={`text-sm font-medium font-pixel ${pathname === "/jobs" ? "text-primary" : "text-muted-foreground"}`}
+              >
+                {t("nav.jobsFeed")}
+              </Link>
+              <Link
+                href="/articles"
+                className={`text-sm font-medium font-pixel ${pathname === "/articles" ? "text-primary" : "text-muted-foreground"}`}
+              >
+                {t("nav.articles") || "Статьи"}
+              </Link>
+              <Link
+                href="/events"
+                className={`text-sm font-medium font-pixel ${pathname === "/events" ? "text-primary" : "text-muted-foreground"}`}
+              >
+                {t("nav.events") || "Ивенты"}
+              </Link>
+              <Link
+                href="/companies"
+                className={`text-sm font-medium font-pixel ${pathname === "/companies" ? "text-primary" : "text-muted-foreground"}`}
+              >
+                {t("nav.companies") || "Компании"}
+              </Link>
+              <Link
+                href="/faces"
+                className={`text-sm font-medium font-pixel ${pathname === "/faces" ? "text-primary" : "text-muted-foreground"}`}
+              >
+                {t("nav.faces")}
+              </Link>
+              <Link
+                href="/rules"
+                className={`text-sm font-medium font-pixel ${pathname === "/rules" ? "text-primary" : "text-muted-foreground"}`}
+              >
+                {t("nav.rules")}
+              </Link>
+              {user ? (
+                <>
+                  <Link href="/dashboard" className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                    <div className="flex items-center justify-center h-6 w-6 rounded-full bg-primary/10">
+                      <User className="h-3 w-3 text-primary" />
+                    </div>
+                    <span>{profile?.nickname || user.email.split("@")[0]}</span>
+                  </Link>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full bg-[#FFEB3B] text-black hover:bg-[#FFEB3B]/90 border-[#FFEB3B]"
+                    onClick={() => {
+                      // Disable button immediately
+                      const btn = document.activeElement as HTMLButtonElement
+                      if (btn) btn.disabled = true
+                      signOut()
+                    }}
+                  >
+                    {t("auth.signOut")}
+                  </Button>
+                </>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <Link href="/signin">
+                    <Button variant="outline" size="sm" className="w-full">
+                      {t("home.signIn")}
+                    </Button>
+                  </Link>
+                  <Link href="/signup">
+                    <Button size="sm" className="w-full">
+                      {t("home.signUp")}
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </nav>
+          </div>
+        )}
+      </header>
+      <main className="flex-1">{children}</main>
+      <footer className="border-t py-6 md:py-8">
+        <div className="container flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/images/dsml-logo.png"
+              alt="DSML Kazakhstan Logo"
+              width={24}
+              height={24}
+              className="rounded-sm"
+            />
+            <span className="text-sm text-muted-foreground">© {new Date().getFullYear()} DSML Kazakhstan.</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link
+              href="https://t.me/dsml_kz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Telegram
+            </Link>
+            <Link
+              href="https://github.com/dsml-kz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              GitHub
+            </Link>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}

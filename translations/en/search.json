@@ -1,0 +1,10 @@
+{
+  "title": "Search Community Members",
+  "description": "Find and connect with other members of the DSML Kazakhstan community.",
+  "searchPlaceholder": "Search by name, nickname, or company...",
+  "membersPlaceholder": "Search for community members...",
+  "noResults": "No members found matching your search criteria.",
+  "searching": "Searching...",
+  "error": "An error occurred while searching. Please try again.",
+  "viewProfile": "View Profile"
+}

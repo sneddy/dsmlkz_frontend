@@ -1,0 +1,47 @@
+{
+  "language": "ru",
+  "nav": {
+    "home": "Главная",
+    "newsFeed": "Новости",
+    "jobsFeed": "Вакансии",
+    "itJobs": "Вакансии IT",
+    "rules": "Правила",
+    "faces": "Сообщество",
+    "about": "О нас",
+    "dashboard": "Личный кабинет",
+    "profile": "Профиль",
+    "registerCard": "Регистрация карточки",
+    "articles": "Статьи",
+    "events": "Ивенты",
+    "companies": "Компании"
+  },
+  "telegramChannels": {
+    "newsFeed": {
+      "title": "Новостная лента",
+      "description": "Будьте в курсе последних новостей в Data Science"
+    },
+    "dataJobs": {
+      "title": "DS вакансии",
+      "description": "Вакансии в ML и Data Science"
+    },
+    "itJobs": {
+      "title": "IT вакансии",
+      "description": "Вакансии в разработке ПО и IT"
+    },
+    "joinButton": "Присоединиться к каналу"
+  },
+  "back": "Назад",
+  "view": "Просмотреть профиль",
+  "viewAllResults": "Просмотреть все результаты",
+  "startTypingToSearch": "Начните вводить текст для поиска участников",
+  "newsFeed": {
+    "title": "Новостная лента",
+    "subtitle": "Будьте в курсе последних новостей в области Data Science и Machine Learning"
+  },
+  "dashboard": {
+    "searchTip": "Ищите участников по имени, никнейму или должности"
+  },
+  "title": "DSML Казахстан",
+  "subtitle": "Центр для энтузиастов Data Science и Machine Learning в Казахстане",
+  "joinButton": "Присоединиться к сообществу"
+}

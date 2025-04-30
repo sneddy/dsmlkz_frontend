@@ -17,6 +17,7 @@
 
 # Результаты отборочного раунда AI-Олимпиады
 
+
 ## I. Победители (600+ баллов)
 
 | Место | Имя                     | Школа                             |
@@ -715,7 +716,7 @@ def main(X, y):
 
 ### Код
 
-```Python
+```python
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report

@@ -18,37 +18,9 @@ interface MarkdownContentProps {
 export function MarkdownContent({ content, className }: MarkdownContentProps) {
   // Предварительная обработка контента для исправления LaTeX выражений
   const processedContent = useMemo(() => {
-    // Защищаем блочные формулы от изменений, заменяя их на временные маркеры
-    const blockFormulas = []
-    let processed = content.replace(/\$\$(.*?)\$\$/gs, (match, formula) => {
-      blockFormulas.push(formula)
-      return `BLOCK_FORMULA_${blockFormulas.length - 1}`
-    })
-
-    // Защищаем inline формулы от изменений
-    const inlineFormulas = []
-    processed = processed.replace(/\$([^$\n]+?)\$/g, (match, formula) => {
-      inlineFormulas.push(formula)
-      return `INLINE_FORMULA_${inlineFormulas.length - 1}`
-    })
-
-    // Заменяем буквальные строки "$<latex expression>$" на заполнитель
-    processed = processed.replace(/\$<latex expression>\$/g, "PLACEHOLDER_FORMULA")
-
-    // Восстанавливаем блочные формулы
-    processed = processed.replace(/BLOCK_FORMULA_(\d+)/g, (match, index) => {
-      return `$$${blockFormulas[Number.parseInt(index)]}$$`
-    })
-
-    // Восстанавливаем inline формулы
-    processed = processed.replace(/INLINE_FORMULA_(\d+)/g, (match, index) => {
-      return `$${inlineFormulas[Number.parseInt(index)]}$`
-    })
-
-    // Восстанавливаем заполнители
-    processed = processed.replace(/PLACEHOLDER_FORMULA/g, "$$\\text{[LaTeX формула]}$$")
-
-    return processed
+    // Instead of trying to pre-process LaTeX expressions, let's just ensure
+    // that standalone $ characters are properly escaped
+    return content.replace(/(\s)\$(\s)/g, "$1\\$$2")
   }, [content])
 
   return (
@@ -101,7 +73,7 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
             }
 
             const match = /language-(\w+)/.exec(className || "")
-            const language = match ? match[1] : ""
+            const language = match ? match[1] : "text" // Default to "text" if no language is specified
 
             return <CodeBlock language={language}>{String(children).replace(/\n$/, "")}</CodeBlock>
           },
@@ -163,7 +135,7 @@ function CodeBlock({ language, children }: CodeBlockProps) {
     setTimeout(() => setCopied(false), 2000)
   }, [children])
 
-  // Получаем название языка для отображения
+  // Get display language name
   const displayLanguage =
     {
       py: "Python",
@@ -194,12 +166,20 @@ function CodeBlock({ language, children }: CodeBlockProps) {
       text: "Text",
     }[language.toLowerCase()] ||
     language ||
-    "Code"
+    "Text"
+
+  // Determine background color based on language
+  const headerBgClass =
+    language.toLowerCase() === "python" || language.toLowerCase() === "py"
+      ? "from-[#00AEC7]/90 to-[#00AEC7]/70"
+      : language.toLowerCase() === "text" || !language
+        ? "from-gray-700 to-gray-800"
+        : "from-[#00AEC7]/90 to-[#00AEC7]/70"
 
   return (
     <div className="relative my-6 rounded-lg overflow-hidden">
-      {/* Заголовок с языком и кнопкой копирования */}
-      <div className="flex items-center justify-between px-4 py-2 bg-gradient-to-r from-[#00AEC7]/90 to-[#00AEC7]/70 text-white">
+      {/* Header with language and copy button */}
+      <div className={`flex items-center justify-between px-4 py-2 bg-gradient-to-r ${headerBgClass} text-white`}>
         <div className="flex items-center gap-2">
           <Terminal size={16} />
           <span className="text-sm font-medium">{displayLanguage}</span>
@@ -223,7 +203,7 @@ function CodeBlock({ language, children }: CodeBlockProps) {
         </button>
       </div>
 
-      {/* Блок кода с подсветкой синтаксиса */}
+      {/* Code block with syntax highlighting */}
       <SyntaxHighlighter
         language={language || "text"}
         style={atomDark}
@@ -235,7 +215,7 @@ function CodeBlock({ language, children }: CodeBlockProps) {
           fontSize: "0.9rem",
           border: "1px solid rgba(0, 174, 199, 0.3)",
         }}
-        showLineNumbers={true}
+        showLineNumbers={language.toLowerCase() !== "text" && !!language}
         wrapLines={true}
       >
         {children}

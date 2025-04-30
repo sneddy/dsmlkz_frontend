@@ -6,10 +6,13 @@
 3. **Offline Final** — два тура, где участники за 2 дня решают 4 задачи в стиле Kaggle по ML, CV и NLP.
 
 Со стороны Сообщества организацией занимались:
-- *Ален Баев* - организатор олимпиад по математике и спортивному программированию, призер IMO, ML Engineer @ Higgsfield AI
-- *Ануар Аймолдин* - DSML KZ Community Founder, Kaggle Top 14, призер APMO
-- *Нурдаулет Аханов* - призёр международных олимпиад по математике и информатике, ex Google Taiwan
-- *Данил Орел* - NLP ресерчер, KazNLP контрибьютор, студент MBZUAI
+| Имя               | Описание                                                                 |
+|-------------------|--------------------------------------------------------------------------|
+| *Ален Баев*       | Организатор олимпиад по математике и спортивному программированию, призёр IMO, ML Engineer @ Higgsfield AI |
+| *Ануар Аймолдин*  | DSML KZ Community Founder, Kaggle Top 14, призёр APMO                   |
+| *Нурдаулет Аханов*| Призёр международных олимпиад по математике и информатике, SWE @ Google Taiwan |
+| *Данил Орел*      | NLP ресерчер, KazNLP контрибьютор, студент MBZUAI                        |
+
 
 
 # Результаты отборочного раунда AI-Олимпиады
@@ -155,7 +158,7 @@ $$
 
 #### 2. Псевдокод
 
-\`\`\`text
+```text
 1. Считать N, K и массив a[0…N−1].
 
 2. Если K == 1:
@@ -175,12 +178,12 @@ $$
        max_s = max(max_s, s)
 
 7. Вывести max_s
-\`\`\`
+```
 
 ---
 
 #### 3. Python code
-\`\`\`python
+```python
 import sys
 def max_local_contrast(a, K):
     N = len(a)
@@ -198,7 +201,7 @@ def max_local_contrast(a, K):
         if cur > best:
             best = cur
     return best
-\`\`\`
+```
 
 ---
 #### 3. Сложность
@@ -240,7 +243,7 @@ def max_local_contrast(a, K):
 
 ### 3. Алгоритм
 
-\`\`\`text
+```text
 1. Считать пары (Y_i, P_i)
 2. Отсортировать по убыванию P_i
 3. Инициализировать: tp = 0, fp = 0, prev = -1
@@ -250,7 +253,7 @@ def max_local_contrast(a, K):
      - precision_after = tp / (tp + fp)
      - если after < before → добавить P_i в ответ
      - prev = after
-\`\`\`
+```
 
 ---
 
@@ -261,7 +264,7 @@ def max_local_contrast(a, K):
 
 ### Python code
 
-\`\`\`python
+```python
 # Read integer N
 N = int(input())
 
@@ -299,7 +302,7 @@ for i in range(left_index, right_index + 1):
 
 if not found:
     print(0)
-\`\`\`
+```
 
 ---
 
@@ -398,7 +401,7 @@ $$
 
 ### 4. Код (Python)
 
-\`\`\`python
+```python
 def main():
     # Read input
     parts = input().split()
@@ -427,7 +430,7 @@ def main():
         prev_layer = sum_val * (1 - p)
     
     print(f"{prev_layer:.6f}")
-\`\`\`
+```
 
 ## D. DSML Feature Engineering
 
@@ -445,7 +448,7 @@ def main():
 
 Для этого реализуйте метод:
 
-\`\`\`python
+```python
 def extract_features(images):
     # images: N x 28 x 28
     features_list = []
@@ -453,7 +456,7 @@ def extract_features(images):
         features = [image.max(), image.std(), image.mean()]
         features_list.append(features)
     return features_list
-\`\`\`
+```
 
 - images — список из $N$ изображений  
 - Каждое изображение — NumPy-массив размера $28 \times 28$, значения от 0 до 255  
@@ -515,7 +518,7 @@ $$
 **Баллы по датасетам (примерно):**  
 **108 + 94 + 82 = 284**
 
-\`\`\`python
+```python
 import numpy as np
 from scipy.ndimage import median_filter
 from sklearn.decomposition import PCA
@@ -569,7 +572,7 @@ def main(X, y):
     y_pred = denoize_pca_solution(X_train, X_test, y_train)
     acc = accuracy_score(y_test, y_pred)
     print(f"Denoize PCA solution accuracy: {acc:.4f}")
-\`\`\`
+```
 
 ### 🧱 2. **RESHAPE** — доступное решение без знаний ML
 
@@ -581,7 +584,7 @@ def main(X, y):
 **Баллы по датасетам (примерно):**  
 **44 + 16 + 42 = 102**
 
-\`\`\`python
+```python
 class ResizeFeatureExtractor:
     def __init__(self, n_rows: int, n_cols: int):
         self.n_rows = n_rows
@@ -629,7 +632,7 @@ def main(X, y):
 
     acc_resize = accuracy_score(y_test, y_pred_resize)
     print(f"Resize solution: {acc_resize:.4f}")
-\`\`\`
+```
 
 ## Тематическая классификация научных абстрактов (arXiv)
 
@@ -682,14 +685,14 @@ def main(X, y):
 
 #### Пример:
 
-\`\`\`
+```
 | text                                                   | category |
 |--------------------------------------------------------|----------|
 | Biomolecules often have some bond lengths.             | Biology  |
 | Contextuality is well known as a vital resource.       | Physics  |
 | Protein-specific large language models.                | UNKNOWN  |
 | In many applications Protein LLMs.                     | UNKNOWN  |
-\`\`\`
+```
 
 ---
 
@@ -697,10 +700,10 @@ def main(X, y):
 
 Результат зависит от точности (accuracy) **мультиклассификации**:
 
-\`\`\`
+```
   limited_accuracy = max(15, min(accuracy, 90))
   score = int((limited_accuracy - 15) ** 2 / 25)
-\`\`\`
+```
 ---
 
 ## Решение TF-IDF - хорошее решение
@@ -712,7 +715,7 @@ def main(X, y):
 
 ### Код
 
-\`\`\`Python
+```Python
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
@@ -752,6 +755,6 @@ model = LogisticRegression(max_iter=1000)
 model.fit(X_train_vec, y_train)
 
 y_pred = model.predict(X_test_vec)
-\`\`\`
+```
 
 Всем спасибо, кто осилил этот пост до конца

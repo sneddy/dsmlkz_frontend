@@ -260,9 +260,9 @@ export default function ClientLayout({
             />
             <span className="text-sm text-muted-foreground">© {new Date().getFullYear()} DSML Kazakhstan.</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Link
-              href="https://t.me/dsml_kz"
+              href="https://t.me/dsmlkz_news"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-muted-foreground hover:text-foreground"
@@ -270,12 +270,28 @@ export default function ClientLayout({
               Telegram
             </Link>
             <Link
-              href="https://github.com/dsml-kz"
+              href="https://www.youtube.com/c/DataScienceKazakhstan"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-muted-foreground hover:text-foreground"
             >
-              GitHub
+              YouTube
+            </Link>
+            <Link
+              href="https://www.linkedin.com/company/53101063/admin/dashboard/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              LinkedIn
+            </Link>
+            <Link
+              href="https://www.instagram.com/dsmlkz/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Instagram
             </Link>
           </div>
         </div>

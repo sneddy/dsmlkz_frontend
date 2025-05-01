@@ -105,7 +105,7 @@ export function HomeContent() {
                 </span>
               </div>
               <Link
-                href="https://t.me/main_ds_kz"
+                href="https://t.me/dsmlkz_news"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center text-[#00AEC7] hover:underline"

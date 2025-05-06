@@ -19,7 +19,7 @@ interface ProfileImageUploadProps {
   isRegistration?: boolean
 }
 
-// Функция для проверки, является ли URL сгенерированным аватаром
+// Функция для проверки, является ли URL сг��нерированным аватаром
 const isGeneratedAvatar = (url: string | null | undefined): boolean => {
   if (!url) return true
   return url.includes("dicebear.com") || url.includes("api.dicebear")

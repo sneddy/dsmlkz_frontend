@@ -91,11 +91,29 @@ export async function POST(request: Request) {
     // Remove email field if present to avoid schema errors
     const { email, ...profileDataWithoutEmail } = profileData
 
-    // Всегда генерировать новый secret_number, если его нет или если профиль не существует
-    let secretNumber = profileExists ? currentProfile?.secret_number : null
-    if (secretNumber === undefined || secretNumber === null) {
-      secretNumber = Math.floor(Math.random() * 1000) // Generate random number between 0-999
-      console.log("Generated new secret_number:", secretNumber)
+    // Установка secret_number с надежным fallback
+    let secretNumber
+    try {
+      // Проверяем существующий secret_number
+      secretNumber =
+        profileExists && currentProfile?.secret_number !== undefined && currentProfile?.secret_number !== null
+          ? currentProfile.secret_number
+          : null
+
+      // Если secret_number не существует, генерируем новый
+      if (secretNumber === undefined || secretNumber === null) {
+        try {
+          secretNumber = Math.floor(Math.random() * 1000) // Generate random number between 0-999
+        } catch (error) {
+          // Если что-то пошло не так при генерации случайного числа, используем fallback
+          secretNumber = 42
+        }
+        console.log("Generated new secret_number:", secretNumber)
+      }
+    } catch (error) {
+      // Если произошла любая ошибка в логике выше, используем fallback
+      secretNumber = 42
+      console.log("Using fallback secret_number:", secretNumber)
     }
 
     // Добавим дополнительную проверку для отладки
@@ -109,6 +127,12 @@ export async function POST(request: Request) {
       id: userId, // Ensure user ID is included
       secret_number: secretNumber, // Always include the secret_number
       updated_at: profileDataWithoutEmail.updated_at || new Date().toISOString(),
+    }
+
+    // Финальная проверка secret_number перед сохранением
+    if (dataToUpdate.secret_number === undefined || dataToUpdate.secret_number === null) {
+      console.log("Final fallback: secret_number was still null or undefined, setting to 42")
+      dataToUpdate.secret_number = 42
     }
 
     // Добавим дополнительную проверку для поля birthday

@@ -41,5 +41,6 @@
   },
   "searchTip": "Search for members by name, nickname, or position",
   "startTypingToSearch": "Start typing to search for members",
-  "viewAllResults": "View all results"
+  "viewAllResults": "View all results",
+  "reason_to_fill_profile": "We want our Community to be non-anonymous and trustworthy. Therefore, we ask you to fill out this small profile card. Upon completion, a button will appear to complete registration in our Telegram bot."
 }

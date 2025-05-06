@@ -200,7 +200,7 @@ function Dashboard() {
                 <CardDescription>{t("dashboard.registerCardDescription")}</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground mb-4">{t("rules.mainIdea")}</p>
+                <p className="text-muted-foreground mb-4">{t("dashboard.reason_to_fill_profile")}</p>
               </CardContent>
               <CardFooter>
                 <Link href="/profile?mode=create" className="w-full">

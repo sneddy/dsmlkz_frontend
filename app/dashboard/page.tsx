@@ -173,6 +173,9 @@ function Dashboard() {
     )
   }
 
+  // Общий стиль для всех кнопок на странице дашборда
+  const yellowButtonStyle = "bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90 border-[#FFF32A]"
+
   return (
     <div className="container py-8">
       <div className="mb-8">
@@ -200,8 +203,8 @@ function Dashboard() {
                 <p className="text-muted-foreground mb-4">{t("rules.mainIdea")}</p>
               </CardContent>
               <CardFooter>
-                <Link href="/profile?mode=create">
-                  <Button className="w-full bg-[#FFEB3B] text-black hover:bg-[#FFEB3B]/90">
+                <Link href="/profile?mode=create" className="w-full">
+                  <Button className={`w-full ${yellowButtonStyle}`}>
                     <UserPlus className="mr-2 h-4 w-4" />
                     {t("dashboard.registerCard")}
                   </Button>
@@ -222,25 +225,21 @@ function Dashboard() {
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Button
                       variant="outline"
-                      className="w-full sm:flex-1 bg-[#00AEC7] text-white hover:bg-[#00AEC7]/90 border-[#00AEC7]"
+                      className={`w-full sm:flex-1 ${yellowButtonStyle}`}
                       onClick={handleEditProfile}
                     >
                       <Edit className="mr-2 h-4 w-4" />
                       {t("dashboard.editProfile")}
                     </Button>
                     <Link href={`/users/${profile.nickname}`} className="w-full sm:flex-1">
-                      <Button
-                        variant="outline"
-                        className="w-full bg-[#00AEC7] text-white hover:bg-[#00AEC7]/90 border-[#00AEC7]"
-                      >
+                      <Button variant="outline" className={`w-full ${yellowButtonStyle}`}>
                         <ExternalLink className="mr-2 h-4 w-4" />
                         {t("dashboard.viewProfile")}
                       </Button>
                     </Link>
                     <Button
                       variant="outline"
-                      className="w-full sm:flex-1 text-black"
-                      style={{ backgroundColor: "#FFEB3B", borderColor: "#FFEB3B" }}
+                      className={`w-full sm:flex-1 ${yellowButtonStyle}`}
                       onClick={handleSignOut}
                       disabled={isSigningOut}
                     >
@@ -251,10 +250,7 @@ function Dashboard() {
                 ) : (
                   <>
                     <p className="text-muted-foreground mb-4">{t("dashboard.incompleteProfileMessage")}</p>
-                    <Button
-                      className="w-full bg-[#00AEC7] text-white hover:bg-[#00AEC7]/90"
-                      onClick={handleEditProfile}
-                    >
+                    <Button className={`w-full ${yellowButtonStyle}`} onClick={handleEditProfile}>
                       <Edit className="mr-2 h-4 w-4" />
                       {t("dashboard.completeProfileButton")}
                     </Button>
@@ -281,11 +277,7 @@ function Dashboard() {
                     onClick={(e) => !profileComplete && e.preventDefault()}
                   >
                     <Button
-                      className="w-full text-white"
-                      style={{
-                        backgroundColor: profileComplete ? "#0088cc" : "#0088cc80",
-                        borderColor: profileComplete ? "#0088cc" : "#0088cc80",
-                      }}
+                      className={`w-full ${profileComplete ? yellowButtonStyle : "bg-[#FFF32A]/50 text-black border-[#FFF32A]/50"}`}
                       disabled={!profileComplete}
                     >
                       <svg

@@ -92,19 +92,14 @@ export async function POST(request: Request) {
     const { email, ...profileDataWithoutEmail } = profileData
 
     // УПРОЩЕННАЯ ЛОГИКА ГЕНЕРАЦИИ SECRET_NUMBER
-    // 1. Используем существующий secret_number, если он есть
-    // 2. Пытаемся сгенерировать случайное число
-    // 3. Если не получилось, используем фолбэк 42
-    let secretNumber = 42 // Устанавливаем фолбэк значение по умолчанию
+    let secretNumber = 42 // fallback по умолчанию
 
-    // Проверяем существующий secret_number
     if (profileExists && currentProfile?.secret_number) {
       secretNumber = currentProfile.secret_number
       console.log("Using existing secret_number:", secretNumber)
     } else {
-      // Пытаемся сгенерировать случайное число
       try {
-        const randomNumber = Math.floor(Math.random() * 900) + 100 // Трехзначное число от 100 до 999
+        const randomNumber = Math.floor(Math.random() * 900) + 100
         if (!isNaN(randomNumber) && randomNumber > 0) {
           secretNumber = randomNumber
           console.log("Generated new random secret_number:", secretNumber)

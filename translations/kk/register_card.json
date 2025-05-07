@@ -17,7 +17,7 @@
   "aboutYou": "Өзіңіз туралы *",
   "aboutYouMinWords": "кемінд�� 10 сөз",
   "wordCount": "Сөз саны: {{count}}",
-  "aboutYouError": "'Өзіңіз туралы' бөлімінде кемінде 10 сөз болуы керек.",
+  "aboutYouError": "'Өзіңіз туралы' бөлімінде кемінде 10 сөз болуы ��ерек.",
   "motivation": "Мотивация *",
   "motivationMinWords": "кемінде 10 сөз",
   "motivationWordCount": "Сөз саны: {{count}}",

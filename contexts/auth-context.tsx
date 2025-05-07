@@ -638,49 +638,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         // Ensure we're not trying to update the email field
-        const { email, avatar_url, ...dataToUpdate } = dataWithTimestamp as any
+        const { email, avatar_url, secret_number, ...dataToUpdate } = dataWithTimestamp as any
 
-        // Try direct Supabase update first
-        const { data, error } = await supabase
-          .from("profiles")
-          .upsert({
-            id: user.id,
-            ...dataToUpdate,
+        if (secret_number !== undefined) {
+          dataToUpdate.secret_number = secret_number
+        }
+
+        // ВСЕГДА используем API-роут для обновления профиля
+        try {
+          const response = await fetch("/api/profile/update", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ...dataToUpdate,
+              id: user.id,
+            }),
+            cache: "no-cache",
+            credentials: "same-origin",
           })
-          .select()
 
-        if (error) {
-          console.error("Error updating profile directly:", error)
-
-          // Fall back to API route if direct update fails
-          try {
-            if (DEBUG) console.log("Falling back to API route for profile update")
-            const response = await fetch("/api/profile/update", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                ...dataToUpdate,
-                id: user.id,
-              }),
-              cache: "no-cache",
-              credentials: "same-origin",
-            })
-
-            if (!response.ok) {
-              const errorData = await response.json().catch(() => ({ error: "Failed to parse error response" }))
-              console.error("Profile update API error:", errorData)
-              return { error: new Error(errorData.error || "Failed to update profile") }
-            }
-
-            if (DEBUG) console.log("Profile updated successfully via API route")
-          } catch (apiError) {
-            console.error("Error calling profile update API:", apiError)
-            return { error: apiError }
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ error: "Failed to parse error response" }))
+            console.error("Profile update API error:", errorData)
+            return { error: new Error(errorData.error || "Failed to update profile") }
           }
-        } else {
-          if (DEBUG) console.log("Profile updated successfully via direct Supabase update")
+
+          if (DEBUG) console.log("Profile updated successfully via API route")
+        } catch (apiError) {
+          console.error("Error calling profile update API:", apiError)
+          return { error: apiError }
         }
 
         // Обновляем локальное хранилище
@@ -715,18 +703,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Refresh the profile data after update
         await fetchProfile(user.id, user.email)
 
-        // Если обновление прошло успешно, обновляем локальное состояние профиля
-        if (data && data.length > 0) {
-          setProfile(data[0] as Profile)
-        }
-
         return { error: null }
       } catch (error) {
         console.error("Error updating profile:", error)
         return { error }
       }
     },
-    [supabase, fetchProfile, user],
+    [fetchProfile, user],
   )
 
   // Обновим возвращаемый контекст

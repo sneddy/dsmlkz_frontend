@@ -60,7 +60,6 @@
     "zod": "^3.24.1",
     "@supabase/supabase-js": "latest",
     "@emotion/is-prop-valid": "latest",
-    "lodash": "latest",
     "@supabase/auth-helpers-nextjs": "latest",
     "html2canvas": "latest",
     "framer-motion": "latest",
@@ -72,7 +71,8 @@
     "remark-math": "latest",
     "rehype-katex": "latest",
     "react-syntax-highlighter": "latest",
-    "katex": "latest"
+    "katex": "latest",
+    "lodash": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

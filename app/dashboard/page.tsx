@@ -24,24 +24,20 @@ export default function DashboardPage() {
   )
 }
 
-// Изменим функцию isProfileComplete, чтобы она проверяла все обязательные поля
-
-// Добавим новую функцию для проверки, является ли профиль реальным (созданным пользователем)
-// или резервным (автоматически сгенерированным)
+// Обновленная функция для проверки, является ли профиль реальным (созданным пользователем)
 function isRealProfile(profile: any): boolean {
   if (!profile) return false
 
-  // Если у профиля есть поле secret_number, значит он был сохранен в базе данных
-  // и является реальным профилем, созданным пользователем
-  return profile.secret_number !== undefined && profile.secret_number !== null
+  // Проверяем наличие обязательных полей вместо проверки только secret_number
+  const requiredFields = ["nickname", "first_name", "last_name"]
+
+  // Проверяем, что хотя бы одно из полей заполнено
+  return requiredFields.some((field) => profile[field] && profile[field].trim() !== "")
 }
 
 // Обновим функцию isProfileComplete для проверки, что профиль полностью заполнен
 function isProfileComplete(profile: any): boolean {
   if (!profile) return false
-
-  // Сначала проверяем, что это реальный профиль
-  if (!isRealProfile(profile)) return false
 
   // Check that all required fields are present and not empty
   const requiredFields = ["nickname", "first_name", "last_name", "current_city", "about_you", "motivation"]
@@ -72,8 +68,33 @@ function Dashboard() {
   const [isClient, setIsClient] = useState(false)
   const [isSigningOut, setIsSigningOut] = useState(false)
 
+  // Добавим отладочный вывод для проверки состояния профиля
+  useEffect(() => {
+    if (profile) {
+      console.log("Profile state:", {
+        isRealProfile: isRealProfile(profile),
+        isProfileComplete: isProfileComplete(profile),
+        hasSecretNumber: profile.secret_number !== undefined && profile.secret_number !== null,
+        requiredFields: {
+          nickname: !!profile.nickname,
+          first_name: !!profile.first_name,
+          last_name: !!profile.last_name,
+          current_city: !!profile.current_city,
+          about_you: !!profile.about_you,
+          motivation: !!profile.motivation,
+        },
+        wordCounts: {
+          about_you: profile.about_you ? profile.about_you.trim().split(/\s+/).filter(Boolean).length : 0,
+          motivation: profile.motivation ? profile.motivation.trim().split(/\s+/).filter(Boolean).length : 0,
+        },
+        profile: profile,
+      })
+    }
+  }, [profile])
+
   // Проверяем, заполнен ли профиль полностью
   const profileComplete = isProfileComplete(profile)
+  const realProfile = isRealProfile(profile)
 
   // Используем useEffect для установки isClient в true после монтирования компонента
   useEffect(() => {
@@ -90,8 +111,6 @@ function Dashboard() {
   const handleEditProfile = () => {
     router.push("/profile")
   }
-
-  // Обновим функцию handleSignOut для лучшей обработки выхода из системы
 
   // Улучшенная функция выхода из системы
   const handleSignOut = async () => {
@@ -193,7 +212,8 @@ function Dashboard() {
         </div>
 
         <div className="md:col-span-1 space-y-6">
-          {(!profile || !isRealProfile(profile)) && !loading && !profileError && (
+          {/* Карточка для создания профиля - показываем только если профиль не существует или не реальный */}
+          {(!profile || !realProfile) && !loading && !profileError && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-[#00AEC7]">{t("dashboard.registerCardTitle")}</CardTitle>
@@ -213,7 +233,8 @@ function Dashboard() {
             </Card>
           )}
 
-          {profile && isRealProfile(profile) && (
+          {/* Карточка для управления профилем - показываем только если профиль существует и реальный */}
+          {profile && realProfile && (
             <Card style={gradientBorderStyle}>
               <CardHeader>
                 <CardTitle className="text-[#00AEC7]">

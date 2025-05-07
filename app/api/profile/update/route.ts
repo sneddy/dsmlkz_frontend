@@ -91,35 +91,36 @@ export async function POST(request: Request) {
     // Remove email field if present to avoid schema errors
     const { email, ...profileDataWithoutEmail } = profileData
 
-    // Установка secret_number с надежным fallback
-    let secretNumber
-    try {
-      // Проверяем существующий secret_number
-      secretNumber =
-        profileExists && currentProfile?.secret_number !== undefined && currentProfile?.secret_number !== null
-          ? currentProfile.secret_number
-          : null
+    // УПРОЩЕННАЯ ЛОГИКА ГЕНЕРАЦИИ SECRET_NUMBER
+    // 1. Используем существующий secret_number, если он есть
+    // 2. Пытаемся сгенерировать случайное число
+    // 3. Если не получилось, используем фолбэк 42
+    let secretNumber = 42 // Устанавливаем фолбэк значение по умолчанию
 
-      // Если secret_number не существует, генерируем новый
-      if (secretNumber === undefined || secretNumber === null) {
-        try {
-          secretNumber = Math.floor(Math.random() * 1000) // Generate random number between 0-999
-        } catch (error) {
-          // Если что-то пошло не так при генерации случайного числа, используем fallback
-          secretNumber = 42
+    // Проверяем существующий secret_number
+    if (profileExists && currentProfile?.secret_number) {
+      secretNumber = currentProfile.secret_number
+      console.log("Using existing secret_number:", secretNumber)
+    } else {
+      // Пытаемся сгенерировать случайное число
+      try {
+        const randomNumber = Math.floor(Math.random() * 900) + 100 // Трехзначное число от 100 до 999
+        if (!isNaN(randomNumber) && randomNumber > 0) {
+          secretNumber = randomNumber
+          console.log("Generated new random secret_number:", secretNumber)
+        } else {
+          console.log("Random number generation failed, using fallback 42")
         }
-        console.log("Generated new secret_number:", secretNumber)
+      } catch (error) {
+        console.error("Error generating random number:", error)
+        console.log("Using fallback secret_number: 42")
       }
-    } catch (error) {
-      // Если произошла любая ошибка в логике выше, используем fallback
-      secretNumber = 42
-      console.log("Using fallback secret_number:", secretNumber)
     }
 
     // Добавим дополнительную проверку для отладки
     console.log("Profile exists:", profileExists)
     console.log("Current profile from DB:", currentProfile)
-    console.log("Secret number to be used:", secretNumber)
+    console.log("Final secret number to be used:", secretNumber)
 
     // Также убедимся, что secret_number включен в данные для обновления
     const dataToUpdate = {
@@ -127,12 +128,6 @@ export async function POST(request: Request) {
       id: userId, // Ensure user ID is included
       secret_number: secretNumber, // Always include the secret_number
       updated_at: profileDataWithoutEmail.updated_at || new Date().toISOString(),
-    }
-
-    // Финальная проверка secret_number перед сохранением
-    if (dataToUpdate.secret_number === undefined || dataToUpdate.secret_number === null) {
-      console.log("Final fallback: secret_number was still null or undefined, setting to 42")
-      dataToUpdate.secret_number = 42
     }
 
     // Добавим дополнительную проверку для поля birthday

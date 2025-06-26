@@ -9,5 +9,11 @@
   "noEvents": "No events found in this category.",
   "learnMore": "Learn More",
   "register": "Register",
-  "description": "Stay updated with the latest meetups, workshops, conferences, and hackathons in the data science and machine learning community in Kazakhstan."
+  "description": "Stay updated with the latest meetups, workshops, conferences, and hackathons in the data science and machine learning community in Kazakhstan.",
+  "upcoming": "Upcoming",
+  "past": "Past Events",
+  "speakers": "Speakers",
+  "pricing": "Pricing",
+  "registration": "Registration",
+  "askQuestion": "Ask Question"
 }

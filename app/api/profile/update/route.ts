@@ -61,12 +61,12 @@ export async function POST(request: Request) {
       .from("profiles")
       .select("nickname, secret_number")
       .eq("id", userId)
-      .single()
+      .maybeSingle()
 
     console.log("Current profile fetch result:", { currentProfile, error: currentProfileError })
 
     // Проверяем, существует ли профиль
-    const profileExists = !currentProfileError || !currentProfileError.message.includes("No rows found")
+    const profileExists = currentProfile !== null
 
     // Only check for nickname conflicts if the nickname is changing
     if (!profileExists || (currentProfile && profileData.nickname !== currentProfile.nickname)) {
@@ -76,9 +76,9 @@ export async function POST(request: Request) {
         .select("id")
         .eq("nickname", profileData.nickname)
         .neq("id", userId)
-        .single()
+        .maybeSingle()
 
-      if (nicknameCheckError && !nicknameCheckError.message.includes("No rows found")) {
+      if (nicknameCheckError) {
         console.error("Error checking nickname:", nicknameCheckError)
         return NextResponse.json({ error: "Error checking nickname availability" }, { status: 500 })
       }

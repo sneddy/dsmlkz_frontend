@@ -152,13 +152,13 @@ export default function EventsPage() {
                       className="group"
                     >
                       <div className="text-center space-y-2">
-                        <div className="relative overflow-hidden rounded-lg aspect-square">
+                        <div className="relative overflow-hidden rounded-lg">
                           <BlobImage
                             src={speaker.imageUrl}
                             alt={speaker.name}
                             width={120}
-                            height={120}
-                            className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                            height={160}
+                            className="w-full h-auto object-contain transition-transform group-hover:scale-105"
                           />
                         </div>
                         <div>

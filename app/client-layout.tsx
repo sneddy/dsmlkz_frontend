@@ -27,9 +27,8 @@ export default function ClientLayout({
     setIsMenuOpen(false)
   }, [pathname])
 
-  // Add useEffect to maintain dark mode
+  // Enforce dark mode
   useEffect(() => {
-    // Ensure dark mode is applied
     document.documentElement.classList.add("dark")
   }, [])
 
@@ -37,6 +36,7 @@ export default function ClientLayout({
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 border-b bg-background">
         <div className="container flex h-16 items-center justify-between py-4">
+          {/* ------------- Logo & desktop nav ------------- */}
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center gap-2">
               <Image
@@ -48,6 +48,8 @@ export default function ClientLayout({
               />
               <span className="font-medium font-pixel">DSML KZ</span>
             </Link>
+
+            {/* -------- Desktop navigation -------- */}
             <nav className="hidden md:flex items-center gap-6">
               <Link
                 href="/"
@@ -89,14 +91,7 @@ export default function ClientLayout({
               >
                 {t("nav.events") || "Ивенты"}
               </Link>
-              <Link
-                href="/companies"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/companies" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {t("nav.companies") || "Компании"}
-              </Link>
+              {/* ------------- Companies link removed ------------- */}
               <Link
                 href="/faces"
                 className={`text-sm font-medium font-pixel ${
@@ -115,22 +110,22 @@ export default function ClientLayout({
               </Link>
             </nav>
           </div>
+
+          {/* --------- Right section (language, auth, burger) --------- */}
           <div className="flex items-center gap-4">
             <LanguageSelector />
+
             {user ? (
               <div className="hidden md:flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Link href="/dashboard" className="flex items-center gap-2">
-                    <div className="flex items-center justify-center h-8 w-8 rounded-full bg-primary/10">
-                      <User className="h-4 w-4 text-primary" />
-                    </div>
-                    <span className="text-sm font-medium">{profile?.nickname || user.email.split("@")[0]}</span>
-                  </Link>
-                </div>
+                <Link href="/dashboard" className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+                    <User className="h-4 w-4 text-primary" />
+                  </div>
+                  <span className="text-sm font-medium">{profile?.nickname || user.email.split("@")[0]}</span>
+                </Link>
                 <Button
                   size="sm"
                   onClick={() => {
-                    // Disable button immediately
                     const btn = document.activeElement as HTMLButtonElement
                     if (btn) btn.disabled = true
                     signOut()
@@ -151,66 +146,81 @@ export default function ClientLayout({
                 </Link>
               </div>
             )}
-            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+
+            {/* Mobile burger */}
+            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMenuOpen((prev) => !prev)}>
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
         </div>
+
+        {/* ---------- Mobile menu ---------- */}
         {isMenuOpen && (
-          <div className="container md:hidden py-4 pb-6 fixed inset-x-0 top-16 z-50 bg-background border-b shadow-lg">
+          <div className="container md:hidden fixed inset-x-0 top-16 z-50 bg-background border-b shadow-lg py-4 pb-6">
             <nav className="flex flex-col gap-4">
               <Link
                 href="/"
-                className={`text-sm font-medium font-pixel ${pathname === "/" ? "text-primary" : "text-muted-foreground"}`}
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/" ? "text-primary" : "text-muted-foreground"
+                }`}
               >
                 {t("nav.home")}
               </Link>
               <Link
                 href="/news"
-                className={`text-sm font-medium font-pixel ${pathname === "/news" ? "text-primary" : "text-muted-foreground"}`}
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/news" ? "text-primary" : "text-muted-foreground"
+                }`}
               >
                 {t("nav.newsFeed")}
               </Link>
               <Link
                 href="/jobs"
-                className={`text-sm font-medium font-pixel ${pathname === "/jobs" ? "text-primary" : "text-muted-foreground"}`}
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/jobs" ? "text-primary" : "text-muted-foreground"
+                }`}
               >
                 {t("nav.jobsFeed")}
               </Link>
               <Link
                 href="/articles"
-                className={`text-sm font-medium font-pixel ${pathname === "/articles" ? "text-primary" : "text-muted-foreground"}`}
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/articles" ? "text-primary" : "text-muted-foreground"
+                }`}
               >
                 {t("nav.articles") || "Статьи"}
               </Link>
               <Link
                 href="/events"
-                className={`text-sm font-medium font-pixel ${pathname === "/events" ? "text-primary" : "text-muted-foreground"}`}
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/events" ? "text-primary" : "text-muted-foreground"
+                }`}
               >
                 {t("nav.events") || "Ивенты"}
               </Link>
-              <Link
-                href="/companies"
-                className={`text-sm font-medium font-pixel ${pathname === "/companies" ? "text-primary" : "text-muted-foreground"}`}
-              >
-                {t("nav.companies") || "Компании"}
-              </Link>
+              {/* ------------- Companies link removed ------------- */}
               <Link
                 href="/faces"
-                className={`text-sm font-medium font-pixel ${pathname === "/faces" ? "text-primary" : "text-muted-foreground"}`}
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/faces" ? "text-primary" : "text-muted-foreground"
+                }`}
               >
                 {t("nav.faces")}
               </Link>
               <Link
                 href="/rules"
-                className={`text-sm font-medium font-pixel ${pathname === "/rules" ? "text-primary" : "text-muted-foreground"}`}
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/rules" ? "text-primary" : "text-muted-foreground"
+                }`}
               >
                 {t("nav.rules")}
               </Link>
+
+              {/* Auth buttons mobile */}
               {user ? (
                 <>
                   <Link href="/dashboard" className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                    <div className="flex items-center justify-center h-6 w-6 rounded-full bg-primary/10">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
                       <User className="h-3 w-3 text-primary" />
                     </div>
                     <span>{profile?.nickname || user.email.split("@")[0]}</span>
@@ -218,9 +228,8 @@ export default function ClientLayout({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full bg-[#FFEB3B] text-black hover:bg-[#FFEB3B]/90 border-[#FFEB3B]"
+                    className="w-full bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90 border-[#FFF32A]"
                     onClick={() => {
-                      // Disable button immediately
                       const btn = document.activeElement as HTMLButtonElement
                       if (btn) btn.disabled = true
                       signOut()
@@ -247,9 +256,12 @@ export default function ClientLayout({
           </div>
         )}
       </header>
+
       <main className="flex-1">{children}</main>
+
+      {/* ---------- Footer ---------- */}
       <footer className="border-t py-6 md:py-8">
-        <div className="container flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+        <div className="container flex flex-col items-center justify-between gap-4 text-center md:flex-row md:text-left">
           <div className="flex items-center gap-2">
             <Image
               src="/images/dsml-logo.png"

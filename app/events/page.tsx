@@ -81,11 +81,11 @@ export default function EventsPage() {
           <Card className="overflow-hidden">
             <div className="relative">
               <BlobImage
-                src="https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/meetup2025/announce_vertical.png"
+                src="/images/announce_horizontal.png"
                 alt="DSML MEETUP 2025"
                 width={1200}
                 height={400}
-                className="w-full h-64 md:h-80 object-cover"
+                className="w-full h-auto object-contain"
               />
               <div className="absolute top-4 left-4">
                 <Badge className="bg-[#FFF32A] text-black font-semibold">АНОНС</Badge>
@@ -218,15 +218,255 @@ export default function EventsPage() {
         </TabsContent>
 
         <TabsContent value="past" className="space-y-6">
-          <div className="text-center py-12">
-            <div className="max-w-md mx-auto space-y-4">
-              <div className="w-16 h-16 mx-auto bg-muted rounded-full flex items-center justify-center">
-                <Clock className="h-8 w-8 text-muted-foreground" />
+          {/* DSML AI Meetup 2019 */}
+          <Card className="overflow-hidden">
+            <CardHeader>
+              <div className="flex items-center gap-2 mb-2">
+                <Badge variant="secondary">2019</Badge>
+                <Badge variant="outline">Астана</Badge>
               </div>
-              <h3 className="text-xl font-semibold">Пока нет прошлых событий</h3>
-              <p className="text-muted-foreground">Здесь будут отображаться завершенные мероприятия DSML сообщества</p>
-            </div>
-          </div>
+              <CardTitle className="text-2xl">DSML AI Meetup</CardTitle>
+              <CardDescription className="text-lg">
+                Назарбаев Университет • Первый масштабный ивент по ИИ
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent className="space-y-6">
+              <div className="prose max-w-none">
+                <p className="text-lg leading-relaxed">
+                  Шестой митап DSML сообщества и первый масштабный ивент в Казахстане, посвященный искусственному
+                  интеллекту. Мероприятие было проведено в стенах Назарбаев Университета и включало как технические
+                  доклады и туториалы, так и визионерские сессии и обзоры конференций.
+                </p>
+              </div>
+
+              {/* Event Details */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-muted/50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Calendar className="h-5 w-5 text-[#00AEC7]" />
+                  <div>
+                    <p className="font-semibold">2019</p>
+                    <p className="text-sm text-muted-foreground">Шестой митап DSML</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-5 w-5 text-[#00AEC7]" />
+                  <div>
+                    <p className="font-semibold">Назарбаев Университет</p>
+                    <p className="text-sm text-muted-foreground">Астана</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Users className="h-5 w-5 text-[#00AEC7]" />
+                  <div>
+                    <p className="font-semibold">200+ участников</p>
+                    <p className="text-sm text-muted-foreground">Крупнейший ивент по AI в стране</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Videos Section */}
+              <div>
+                <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                  <ExternalLink className="h-5 w-5" />
+                  Записи докладов
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {[
+                    { id: "j5VnAxAjgnQ", title: "Доклад 1" },
+                    { id: "HDsJaxpQ2oI", title: "Доклад 2" },
+                    { id: "BUTUC3wk548", title: "Доклад 3" },
+                    { id: "gU1BcfZLpQk", title: "Доклад 4" },
+                    { id: "4U278oeSHt8", title: "Доклад 5" },
+                    { id: "5DE681nlHtM", title: "Доклад 6" },
+                    { id: "s7dJ8ltrkj4", title: "Доклад 7" },
+                  ].map((video, index) => (
+                    <div key={video.id} className="group">
+                      <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
+                        <iframe
+                          width="100%"
+                          height="100%"
+                          src={`https://www.youtube.com/embed/${video.id}`}
+                          title={`DSML AI Meetup 2019 - ${video.title}`}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          referrerPolicy="strict-origin-when-cross-origin"
+                          allowFullScreen
+                          className="transition-transform group-hover:scale-105"
+                        />
+                      </div>
+                      <p className="mt-2 text-sm font-medium text-center">Доклад {index + 1}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* AI Meetup Astana 2018 */}
+          <Card className="overflow-hidden">
+            <CardHeader>
+              <div className="flex items-center gap-2 mb-2">
+                <Badge variant="secondary">2018</Badge>
+                <Badge variant="outline">Астана</Badge>
+              </div>
+              <CardTitle className="text-2xl">AI Meetup Astana</CardTitle>
+              <CardDescription className="text-lg">Astana Hub • Первый в Казахстане ивент по ИИ</CardDescription>
+            </CardHeader>
+
+            <CardContent className="space-y-6">
+              <div className="prose max-w-none">
+                <p className="text-lg leading-relaxed">
+                  Пятый митап DSML сообщества и первый в Казахстане ивент, посвященный искусственному интеллекту.
+                  Мероприятие было проведено в стенах Astana Hub и включало как теоретические доклады и туториалы по
+                  генерации текста, так и визионерские сессии.
+                </p>
+              </div>
+
+              {/* Event Details */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-muted/50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Calendar className="h-5 w-5 text-[#00AEC7]" />
+                  <div>
+                    <p className="font-semibold">2018</p>
+                    <p className="text-sm text-muted-foreground">Пятый митап DSML</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-5 w-5 text-[#00AEC7]" />
+                  <div>
+                    <p className="font-semibold">Astana Hub</p>
+                    <p className="text-sm text-muted-foreground">Астана</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Users className="h-5 w-5 text-[#00AEC7]" />
+                  <div>
+                    <p className="font-semibold">100+ участников</p>
+                    <p className="text-sm text-muted-foreground">Первопроходцы AI</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Videos Section */}
+              <div>
+                <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                  <ExternalLink className="h-5 w-5" />
+                  Записи докладов
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {[
+                    { id: "l5V_UD5ouG0", title: "Доклад 1" },
+                    { id: "hTwvqDu4Q9I", title: "Доклад 2" },
+                    { id: "iI1ekmGFL0o", title: "Доклад 3" },
+                    { id: "kwzRijN0V28", title: "Доклад 4" },
+                  ].map((video, index) => (
+                    <div key={video.id} className="group">
+                      <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
+                        <iframe
+                          width="100%"
+                          height="100%"
+                          src={`https://www.youtube.com/embed/${video.id}`}
+                          title={`AI Meetup Astana 2018 - ${video.title}`}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          referrerPolicy="strict-origin-when-cross-origin"
+                          allowFullScreen
+                          className="transition-transform group-hover:scale-105"
+                        />
+                      </div>
+                      <p className="mt-2 text-sm font-medium text-center">Доклад {index + 1}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Тотальный митап 2018 */}
+          <Card className="overflow-hidden">
+            <CardHeader>
+              <div className="flex items-center gap-2 mb-2">
+                <Badge variant="secondary">2018</Badge>
+                <Badge variant="outline">Алматы</Badge>
+              </div>
+              <CardTitle className="text-2xl">Тотальный митап</CardTitle>
+              <CardDescription className="text-lg">
+                Smart Point • Крупнейший митап по ML и анализу данных
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent className="space-y-6">
+              <div className="prose max-w-none">
+                <p className="text-lg leading-relaxed">
+                  Крупнейший в свое время митап, посвященный машинному обучению и анализу данных. Мероприятие было
+                  проведено в стенах Smart Point и собрало рекордное количество участников для обсуждения актуальных тем
+                  в области data science.
+                </p>
+              </div>
+
+              {/* Event Details */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-muted/50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Calendar className="h-5 w-5 text-[#00AEC7]" />
+                  <div>
+                    <p className="font-semibold">2018</p>
+                    <p className="text-sm text-muted-foreground">Тотальный формат</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-5 w-5 text-[#00AEC7]" />
+                  <div>
+                    <p className="font-semibold">Smart Point</p>
+                    <p className="text-sm text-muted-foreground">Алматы</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Users className="h-5 w-5 text-[#00AEC7]" />
+                  <div>
+                    <p className="font-semibold">200+ участников</p>
+                    <p className="text-sm text-muted-foreground">Крупнейший митап</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Videos Section */}
+              <div>
+                <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                  <ExternalLink className="h-5 w-5" />
+                  Записи докладов
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {[
+                    { id: "Ta-Wvfmqfpo", title: "Доклад 1" },
+                    { id: "-5yhoxGI-jM", title: "Доклад 2" },
+                    { id: "Yhr58V7h6BM", title: "Доклад 3" },
+                    { id: "sYBa4UScneU", title: "Доклад 4" },
+                  ].map((video, index) => (
+                    <div key={video.id} className="group">
+                      <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
+                        <iframe
+                          width="100%"
+                          height="100%"
+                          src={`https://www.youtube.com/embed/${video.id}`}
+                          title={`Тотальный митап 2018 - ${video.title}`}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          referrerPolicy="strict-origin-when-cross-origin"
+                          allowFullScreen
+                          className="transition-transform group-hover:scale-105"
+                        />
+                      </div>
+                      <p className="mt-2 text-sm font-medium text-center">Доклад {index + 1}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>

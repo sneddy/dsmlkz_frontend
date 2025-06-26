@@ -15,6 +15,8 @@
     "@radix-ui/react-label": "latest",
     "@radix-ui/react-slot": "latest",
     "@radix-ui/react-switch": "latest",
+    "@radix-ui/react-tabs": "latest",
+    "@radix-ui/react-toast": "latest",
     "@supabase/auth-helpers-nextjs": "latest",
     "@supabase/supabase-js": "latest",
     "browser-image-compression": "latest",

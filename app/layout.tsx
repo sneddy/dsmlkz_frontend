@@ -11,6 +11,9 @@ import { Press_Start_2P } from "next/font/google"
 import type { Metadata } from "next"
 import ClientLayout from "./client-layout"
 
+// Make sure Radix UI deps are referenced so they’re bundled
+import "@/lib/radix-deps"
+
 const inter = Inter({ subsets: ["latin", "cyrillic"] })
 const pixelFont = Press_Start_2P({
   weight: "400",

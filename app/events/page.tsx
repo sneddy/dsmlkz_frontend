@@ -24,12 +24,6 @@ const speakers = [
     imageUrl: "https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/meetup2025/speakers/renat.jpg",
   },
   {
-    name: "Джимми Ямазаки",
-    role: "Deep Learning Engineer",
-    profileUrl: "https://www.dsml.kz/users/yamazaki",
-    imageUrl: "https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/meetup2025/speakers/max.jpg",
-  },
-  {
     name: "Аяна Мусабаева",
     role: "PhD researcher, MBZUAI",
     profileUrl: "https://www.dsml.kz/users/Ayana",
@@ -46,6 +40,12 @@ const speakers = [
     role: "Head of Quantitative Research, Atlas Capital",
     profileUrl: "https://www.dsml.kz/users/atabekdulat",
     imageUrl: "https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/meetup2025/speakers/dulat.jpg",
+  },
+  {
+    name: "Джимми Ямазаки",
+    role: "Deep Learning Engineer",
+    profileUrl: "https://www.dsml.kz/users/yamazaki",
+    imageUrl: "https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/meetup2025/speakers/max.jpg",
   },
 ]
 

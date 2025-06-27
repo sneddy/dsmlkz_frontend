@@ -3,12 +3,12 @@
     "badge": "Upcoming Event",
     "title": "DSML MEETUP 2025",
     "subtitle": "The largest AI/ML event in Kazakhstan",
-    "date": "February 15, 2025",
+    "date": "July 5, 2025",
     "day": "Saturday",
-    "time": "10:00 - 18:00",
-    "gathering": "Gathering from 9:30",
-    "venue": "Astana IT University",
-    "address": "Nur-Sultan, Mangilik El Ave 55/11",
+    "time": "12:00 - 18:00",
+    "gathering": "Gathering from 11:30",
+    "venue": "MOST IT Hub",
+    "address": "Almaty, Khodzhanova 2/2",
     "description_1": "Join us for the biggest Data Science and Machine Learning meetup in Kazakhstan! This year we're bringing together the brightest minds in AI/ML to share knowledge, network, and inspire the next generation of data scientists.",
     "description_2": "The event will feature presentations from leading experts, hands-on workshops, networking sessions, and much more. Don't miss this opportunity to be part of Kazakhstan's growing AI/ML community!",
     "speakers_title": "Speakers",
@@ -40,8 +40,8 @@
       }
     },
     "pricing_title": "Event Pricing",
-    "price": "Free",
-    "discount": "Registration required",
+    "price": "5,000 ₸",
+    "discount": "50% discount for undergraduate students and school students",
     "register_button": "Register Now",
     "ask_question_button": "Ask Questions"
   }

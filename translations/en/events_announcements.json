@@ -2,17 +2,17 @@
   "dsml_meetup_2025": {
     "badge": "Upcoming Event",
     "title": "DSML MEETUP 2025",
-    "subtitle": "The largest AI/ML event in Kazakhstan",
+    "subtitle": "Central Asia's Largest Data & AI Community Returns After 6 Years!",
     "date": "July 5, 2025",
     "day": "Saturday",
     "time": "12:00 - 18:00",
     "gathering": "Gathering from 11:30",
     "venue": "MOST IT Hub",
     "address": "Almaty, Khodzhanova 2/2",
-    "description_1": "Join us for the biggest Data Science and Machine Learning meetup in Kazakhstan! This year we're bringing together the brightest minds in AI/ML to share knowledge, network, and inspire the next generation of data scientists.",
-    "description_2": "The event will feature presentations from leading experts, hands-on workshops, networking sessions, and much more. Don't miss this opportunity to be part of Kazakhstan's growing AI/ML community!",
+    "description_1": "After 6 years since our last major offline meetup in 2019, we are gathering our Community again!",
+    "description_2": "You will be welcomed by new connections and interesting talks from dsml.kz residents about machine learning and artificial intelligence applications across a wide spectrum of industry and academic research directions.",
     "speakers_title": "Speakers",
-    "speakers_note": "Click on speaker photos to view their profiles",
+    "speakers_note": "And many other speakers from the DSML community!",
     "speakers": {
       "anuar": {
         "name": "Anuar Aimoldin",
@@ -23,20 +23,20 @@
         "role": "Data Scientist"
       },
       "ayana": {
-        "name": "Ayana Kairova",
-        "role": "AI Researcher"
+        "name": "Ayana Nazarbayeva",
+        "role": "ML Engineer at Kaspi.kz"
       },
       "zhzh": {
         "name": "Zhanibek Zhakanov",
-        "role": "ML Engineer"
+        "role": "Research Scientist at NU"
       },
       "dulat": {
-        "name": "Dulat Atabek",
-        "role": "Data Engineer"
+        "name": "Dulat Yerzhan",
+        "role": "AI Lead at Chocofamily"
       },
       "max": {
-        "name": "Maxim Yamazaki",
-        "role": "AI Consultant"
+        "name": "Maxat Tezekbayev",
+        "role": "Senior ML Engineer at Kolesa Group"
       }
     },
     "pricing_title": "Event Pricing",

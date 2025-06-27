@@ -245,7 +245,7 @@ export function HomeContent() {
       {/* News Feed Section - moved to the end */}
       <section className="container px-4 md:px-6 py-6">
         <h2 className="text-2xl font-bold mb-6 font-pixel text-[#FFF32A] text-center">{t("newsFeed.title")}</h2>
-        <NewsFeed showFullText={false} />
+        <NewsFeed showFullText={true} />
       </section>
     </div>
   )

@@ -10,6 +10,8 @@ import faces from "./kk/faces.json"
 import search from "./kk/search.json"
 import register_card from "./kk/register_card.json"
 import articles from "./kk/articles.json"
+import events_announcements from "./kk/events_announcements.json"
+import events_past from "./kk/events_past.json"
 
 export const kkTranslations = {
   ...common,
@@ -24,4 +26,6 @@ export const kkTranslations = {
   search,
   register_card,
   articles,
+  events_announcements,
+  events_past,
 }

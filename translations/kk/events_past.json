@@ -1,0 +1,39 @@
+{
+  "dsml_ai_meetup_2019": {
+    "year": "2019",
+    "location": "Алматы",
+    "title": "DSML AI Meetup (2019)",
+    "subtitle": "Елдегі алғашқы ең ірі AI іс-шарасы",
+    "description": "Бұл Қазақстандағы AI бойынша алғашқы ең ірі іс-шара болды, бүкіл елден 200-ден астам қатысушыны жинады. Іс-шара машиналық оқыту, терең оқыту және әртүрлі салаларда AI қолдану туралы презентацияларды қамтыды.",
+    "meetup_number": "5-ші DSML митапы",
+    "venue": "Almaty Management University",
+    "participants": "200+ қатысушы",
+    "participants_note": "Рекордтық қатысу",
+    "videos_title": "Іс-шара жазбалары"
+  },
+  "ai_meetup_astana_2018": {
+    "year": "2018",
+    "location": "Астана",
+    "title": "AI Meetup Astana (2018)",
+    "subtitle": "Қазақстандағы алғашқы AI іс-шарасы",
+    "description": "Астанада өткен Қазақстандағы ең алғашқы AI митапы. Бұл пионерлік іс-шара елдегі өсіп келе жатқан AI/ML қауымдастығының негізін қалады.",
+    "meetup_number": "1-ші AI митапы",
+    "venue": "Nazarbayev University",
+    "participants": "80+ қатысушы",
+    "participants_note": "Тарихи алғашқы іс-шара",
+    "videos_title": "Іс-шара жазбалары"
+  },
+  "total_meetup_2018": {
+    "year": "2018",
+    "location": "Алматы",
+    "title": "Тотальный митап (Алматы, 2018)",
+    "subtitle": "Төртінші DSML митапы",
+    "description": "Алматыда өткен төртінші DSML митапы, деректер ғылымы мен машиналық оқытудың әртүрлі аспектілері бойынша кешенді презентацияларды қамтыды.",
+    "meetup_number": "4-ші DSML митапы",
+    "venue": "Almaty Tech Hub",
+    "participants": "120+ қатысушы",
+    "participants_note": "Өсіп келе жатқан қауымдастық",
+    "videos_title": "Іс-шара жазбалары"
+  },
+  "talk_number": "Баяндама"
+}

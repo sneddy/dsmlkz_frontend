@@ -10,6 +10,8 @@ import faces from "./ru/faces.json"
 import search from "./ru/search.json"
 import register_card from "./ru/register_card.json"
 import articles from "./ru/articles.json"
+import events_announcements from "./ru/events_announcements.json"
+import events_past from "./ru/events_past.json"
 
 export const ruTranslations = {
   ...common,
@@ -24,4 +26,6 @@ export const ruTranslations = {
   search,
   register_card,
   articles,
+  events_announcements,
+  events_past,
 }

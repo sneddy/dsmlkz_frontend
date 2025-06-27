@@ -1,0 +1,39 @@
+{
+  "dsml_ai_meetup_2019": {
+    "year": "2019",
+    "location": "Almaty",
+    "title": "DSML AI Meetup (2019)",
+    "subtitle": "The first large-scale AI event",
+    "description": "This was the first large-scale AI event in Kazakhstan, bringing together over 200 participants from across the country. The event featured presentations on machine learning, deep learning, and AI applications in various industries.",
+    "meetup_number": "5th DSML Meetup",
+    "venue": "Almaty Management University",
+    "participants": "200+ participants",
+    "participants_note": "Record attendance",
+    "videos_title": "Event Recordings"
+  },
+  "ai_meetup_astana_2018": {
+    "year": "2018",
+    "location": "Astana",
+    "title": "AI Meetup Astana (2018)",
+    "subtitle": "The first AI event in Kazakhstan",
+    "description": "The very first AI meetup in Kazakhstan, held in Astana. This pioneering event laid the foundation for the growing AI/ML community in the country.",
+    "meetup_number": "1st AI Meetup",
+    "venue": "Nazarbayev University",
+    "participants": "80+ participants",
+    "participants_note": "Historic first event",
+    "videos_title": "Event Recordings"
+  },
+  "total_meetup_2018": {
+    "year": "2018",
+    "location": "Almaty",
+    "title": "Total Meetup (Almaty, 2018)",
+    "subtitle": "Fourth DSML Meetup",
+    "description": "The fourth DSML meetup held in Almaty, featuring comprehensive presentations on various aspects of data science and machine learning.",
+    "meetup_number": "4th DSML Meetup",
+    "venue": "Almaty Tech Hub",
+    "participants": "120+ participants",
+    "participants_note": "Growing community",
+    "videos_title": "Event Recordings"
+  },
+  "talk_number": "Talk"
+}

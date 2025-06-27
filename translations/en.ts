@@ -10,6 +10,8 @@ import faces from "./en/faces.json"
 import search from "./en/search.json"
 import register_card from "./en/register_card.json"
 import articles from "./en/articles.json"
+import events_announcements from "./en/events_announcements.json"
+import events_past from "./en/events_past.json"
 
 export const enTranslations = {
   ...common,
@@ -24,4 +26,6 @@ export const enTranslations = {
   search,
   register_card,
   articles,
+  events_announcements,
+  events_past,
 }

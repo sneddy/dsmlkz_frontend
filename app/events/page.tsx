@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { BlobImage } from "@/components/ui/blob-image"
-import { Calendar, Clock, MapPin, Users, ExternalLink, Ticket } from "lucide-react"
+import { Calendar, Clock, MapPin, Users, ExternalLink, Ticket, ChevronDown, ChevronUp, Coffee } from "lucide-react"
 import Link from "next/link"
 import { useTranslation } from "@/hooks/use-translation"
 
@@ -46,6 +46,7 @@ const speakerProfiles = [
 export default function EventsPage() {
   const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState("upcoming")
+  const [showProgram, setShowProgram] = useState(false)
 
   return (
     <div className="container py-8">
@@ -146,19 +147,11 @@ export default function EventsPage() {
                         <div className="relative overflow-hidden rounded-lg">
                           <BlobImage
                             src={speaker.imageUrl}
-                            alt={t(`events_announcements.dsml_meetup_2025.speakers.${speaker.key}.name`)}
+                            alt={`Speaker ${index + 1}`}
                             width={120}
                             height={160}
                             className="w-full h-auto object-contain transition-transform group-hover:scale-105"
                           />
-                        </div>
-                        <div>
-                          <p className="font-medium text-sm group-hover:text-[#00AEC7] transition-colors">
-                            {t(`events_announcements.dsml_meetup_2025.speakers.${speaker.key}.name`)}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {t(`events_announcements.dsml_meetup_2025.speakers.${speaker.key}.role`)}
-                          </p>
                         </div>
                       </div>
                     </Link>
@@ -167,6 +160,170 @@ export default function EventsPage() {
                 <p className="text-sm text-muted-foreground mt-4">
                   {t("events_announcements.dsml_meetup_2025.speakers_note")}
                 </p>
+
+                {/* Expandable Program Timeline */}
+                <div className="mt-6">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowProgram(!showProgram)}
+                    className="w-full flex items-center justify-center gap-2 bg-muted/50 hover:bg-muted"
+                  >
+                    {showProgram ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    {showProgram
+                      ? t("events_announcements.dsml_meetup_2025.hide_program")
+                      : t("events_announcements.dsml_meetup_2025.show_program")}
+                  </Button>
+
+                  {showProgram && (
+                    <div className="mt-6 space-y-4 animate-in slide-in-from-top-2 duration-300">
+                      <div className="bg-muted/30 rounded-lg p-6">
+                        <h4 className="text-lg font-semibold mb-4 text-[#00AEC7]">
+                          {t("events_announcements.dsml_meetup_2025.program_title")}
+                        </h4>
+
+                        <div className="space-y-6">
+                          {/* Talk 1 - Anuar Welcome */}
+                          <div className="border-l-4 border-[#FFF32A] pl-4">
+                            <div className="flex items-start gap-3">
+                              <div className="w-2 h-2 bg-[#FFF32A] rounded-full mt-2 flex-shrink-0"></div>
+                              <div className="flex-1">
+                                <h5 className="font-semibold text-[#00AEC7]">
+                                  {t("events_announcements.dsml_meetup_2025.talks.anuar_welcome.speaker")}
+                                </h5>
+                                <p className="font-medium mb-2">
+                                  {t("events_announcements.dsml_meetup_2025.talks.anuar_welcome.topic")}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  {t("events_announcements.dsml_meetup_2025.talks.anuar_welcome.abstract")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Talk 2 - Zhuldyzhan */}
+                          <div className="border-l-4 border-[#00AEC7] pl-4">
+                            <div className="flex items-start gap-3">
+                              <div className="w-2 h-2 bg-[#00AEC7] rounded-full mt-2 flex-shrink-0"></div>
+                              <div className="flex-1">
+                                <h5 className="font-semibold text-[#00AEC7]">
+                                  {t("events_announcements.dsml_meetup_2025.talks.zhuldyzhan.speaker")}
+                                </h5>
+                                <p className="font-medium mb-2">
+                                  {t("events_announcements.dsml_meetup_2025.talks.zhuldyzhan.topic")}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  {t("events_announcements.dsml_meetup_2025.talks.zhuldyzhan.abstract")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Talk 3 - Ayana */}
+                          <div className="border-l-4 border-[#FFF32A] pl-4">
+                            <div className="flex items-start gap-3">
+                              <div className="w-2 h-2 bg-[#FFF32A] rounded-full mt-2 flex-shrink-0"></div>
+                              <div className="flex-1">
+                                <h5 className="font-semibold text-[#00AEC7]">
+                                  {t("events_announcements.dsml_meetup_2025.talks.ayana.speaker")}
+                                </h5>
+                                <p className="font-medium mb-2">
+                                  {t("events_announcements.dsml_meetup_2025.talks.ayana.topic")}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  {t("events_announcements.dsml_meetup_2025.talks.ayana.abstract")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Talk 4 - Jimmy Yamazaki */}
+                          <div className="border-l-4 border-[#00AEC7] pl-4">
+                            <div className="flex items-start gap-3">
+                              <div className="w-2 h-2 bg-[#00AEC7] rounded-full mt-2 flex-shrink-0"></div>
+                              <div className="flex-1">
+                                <h5 className="font-semibold text-[#00AEC7]">
+                                  {t("events_announcements.dsml_meetup_2025.talks.jimmy.speaker")}
+                                </h5>
+                                <p className="font-medium mb-2">
+                                  {t("events_announcements.dsml_meetup_2025.talks.jimmy.topic")}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  {t("events_announcements.dsml_meetup_2025.talks.jimmy.abstract")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Break */}
+                          <div className="border-l-4 border-gray-300 pl-4">
+                            <div className="flex items-start gap-3">
+                              <Coffee className="w-4 h-4 text-gray-500 mt-2 flex-shrink-0" />
+                              <div className="flex-1">
+                                <p className="font-medium text-gray-600">
+                                  {t("events_announcements.dsml_meetup_2025.talks.break")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Talk 5 - Renat */}
+                          <div className="border-l-4 border-[#FFF32A] pl-4">
+                            <div className="flex items-start gap-3">
+                              <div className="w-2 h-2 bg-[#FFF32A] rounded-full mt-2 flex-shrink-0"></div>
+                              <div className="flex-1">
+                                <h5 className="font-semibold text-[#00AEC7]">
+                                  {t("events_announcements.dsml_meetup_2025.talks.renat.speaker")}
+                                </h5>
+                                <p className="font-medium mb-2">
+                                  {t("events_announcements.dsml_meetup_2025.talks.renat.topic")}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  {t("events_announcements.dsml_meetup_2025.talks.renat.abstract")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Talk 6 - Dulat */}
+                          <div className="border-l-4 border-[#00AEC7] pl-4">
+                            <div className="flex items-start gap-3">
+                              <div className="w-2 h-2 bg-[#00AEC7] rounded-full mt-2 flex-shrink-0"></div>
+                              <div className="flex-1">
+                                <h5 className="font-semibold text-[#00AEC7]">
+                                  {t("events_announcements.dsml_meetup_2025.talks.dulat.speaker")}
+                                </h5>
+                                <p className="font-medium mb-2">
+                                  {t("events_announcements.dsml_meetup_2025.talks.dulat.topic")}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  {t("events_announcements.dsml_meetup_2025.talks.dulat.abstract")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Talk 7 - Anuar Delivery */}
+                          <div className="border-l-4 border-[#FFF32A] pl-4">
+                            <div className="flex items-start gap-3">
+                              <div className="w-2 h-2 bg-[#FFF32A] rounded-full mt-2 flex-shrink-0"></div>
+                              <div className="flex-1">
+                                <h5 className="font-semibold text-[#00AEC7]">
+                                  {t("events_announcements.dsml_meetup_2025.talks.anuar_delivery.speaker")}
+                                </h5>
+                                <p className="font-medium mb-2">
+                                  {t("events_announcements.dsml_meetup_2025.talks.anuar_delivery.topic")}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  {t("events_announcements.dsml_meetup_2025.talks.anuar_delivery.abstract")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Pricing and Registration */}

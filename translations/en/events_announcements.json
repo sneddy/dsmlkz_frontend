@@ -13,6 +13,47 @@
     "description_2": "You will be welcomed by new connections and interesting talks from dsml.kz residents about machine learning and artificial intelligence applications across a wide spectrum of industry and academic research directions.",
     "speakers_title": "Speakers",
     "speakers_note": "And many other speakers from the DSML community!",
+    "show_program": "▼ Show Program",
+    "hide_program": "▲ Hide Program",
+    "program_title": "Event Program",
+    "talks": {
+      "anuar_welcome": {
+        "speaker": "Anuar Aimoldin",
+        "topic": "DSMLKZ: AI Olympiad Backstage & Web Hub",
+        "abstract": "This year DSML.KZ conducted the first republican AI olympiad for school students. We'll talk about its results, philosophy and future, as well as what difficulties we faced. We'll also discuss how we built the Community website: how everything works for us and how to do it all using no-code tools without frontend skills."
+      },
+      "zhuldyzhan": {
+        "speaker": "Zhuldyz-Zhan Sagimbayev",
+        "topic": "Generative models in Neuroimaging",
+        "abstract": "What generative models and how they are applied in Neuroimaging. We'll discuss popular architectures in CV. We'll look at the application of some within Cerebra."
+      },
+      "ayana": {
+        "speaker": "Ayana Mussabayeva",
+        "topic": "Severance: ML academia vs ML industry",
+        "abstract": "We'll discuss key differences between ML academia and industry: goals, approaches to problem solving, career paths and financial expectations. We'll analyze the pros and cons of both worlds, scientific and product, and try to understand who is better suited for one path or another."
+      },
+      "jimmy": {
+        "speaker": "Jimmy Yamazaki",
+        "topic": "From imagination to action: world models in modern deep learning landscape",
+        "abstract": "We'll talk about motivation in world models - why this is so important today and how modern deep learning helps agents better understand the world. We'll analyze the latest variants of world models and their evolution taking into account modern architectures and approaches."
+      },
+      "break": "☕ Break",
+      "renat": {
+        "speaker": "Renat Alimbekov",
+        "topic": "All about football data analysis",
+        "abstract": "I'll tell you everything about football data analysis. We'll break down football abbreviations: XG, EPV, PPDA and others. In conclusion, we'll look at the task of modeling team playing styles on real football data."
+      },
+      "dulat": {
+        "speaker": "Dulat Atabek",
+        "topic": "Machine Learning and Long-term Investment",
+        "abstract": "We'll dive into the incredibly fun world of asset allocation using various machine learning methods, as well as how PCA and Clustering are used to assess investment portfolio volatility."
+      },
+      "anuar_delivery": {
+        "speaker": "Anuar Aimoldin",
+        "topic": "Mathematical and ML tricks for delivery operations optimization",
+        "abstract": "We'll analyze a number of interesting cases of how mathematical insights and clever machine learning tricks can transform delivery procedures in the largest logistics technology company. Not forgetting about business impact, we'll not only analyze technical details, but try to feel the intuition behind projects such as delivery simulator, priority based dispatching, delivery time forecasting and implementation of a zonal duty system for couriers."
+      }
+    },
     "speakers": {
       "anuar": {
         "name": "Anuar Aimoldin",

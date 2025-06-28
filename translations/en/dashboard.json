@@ -1,6 +1,6 @@
 {
   "welcome": "Welcome to DSML Kazakhstan",
-  "description": "Your dashboard for the DSML Kazakhstan community",
+  "description": "Your personal dashboard for the DSML Kazakhstan community - manage your profile, connect with members, and stay updated",
   "registerCardTitle": "Create Your Profile Card",
   "registerCardDescription": "Join our community by creating your profile card",
   "registerCard": "Create Profile Card",
@@ -16,5 +16,22 @@
   "communityMembers": "Community Members",
   "findCommunityMembers": "Find and connect with other members of our community",
   "searchTip": "Search for members by name, nickname, or position",
-  "reason_to_fill_profile": "We want our Community to be non-anonymous and trustworthy. Therefore, we ask you to fill out this small profile card. Upon completion, a button will appear to complete registration in our Telegram bot."
+  "reason_to_fill_profile": "We want our Community to be non-anonymous and trustworthy. Therefore, we ask you to fill out this small profile card. Upon completion, a button will appear to complete registration in our Telegram bot.",
+  "quickStartTitle": "Quick Start Guide",
+  "quickStartDescription": "Follow these simple steps to join our community",
+  "step1Title": "Fill out your profile",
+  "step1Description": "Complete your profile card with all required information including your bio and motivation",
+  "step2Title": "Join our Telegram",
+  "step2Description": "Click the Telegram button to verify your account and join our community chat",
+  "step3Title": "Wait for admin approval",
+  "step3Description": "Our admins will review your application and approve your membership",
+  "completed": "Completed",
+  "current": "Current",
+  "whatIsDashboardTitle": "What is this dashboard?",
+  "whatIsDashboardDescription": "This is your personal control center for the DSML Kazakhstan community. Here you can manage your profile, connect with other members, and access all community features.",
+  "feature1": "Update your profile",
+  "feature2": "Connect with members",
+  "feature3": "Access community features",
+  "profileReady": "Profile Ready",
+  "telegramVerificationTitle": "Telegram Verification"
 }

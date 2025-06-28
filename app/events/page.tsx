@@ -187,9 +187,14 @@ export default function EventsPage() {
                             <div className="flex items-start gap-3">
                               <div className="w-2 h-2 bg-[#FFF32A] rounded-full mt-2 flex-shrink-0"></div>
                               <div className="flex-1">
-                                <h5 className="font-semibold text-[#00AEC7]">
-                                  {t("events_announcements.dsml_meetup_2025.talks.anuar_welcome.speaker")}
-                                </h5>
+                                <div className="flex items-center gap-3 mb-1">
+                                  <Badge variant="outline" className="text-xs font-mono">
+                                    {t("events_announcements.dsml_meetup_2025.talks.anuar_welcome.time")}
+                                  </Badge>
+                                  <h5 className="font-semibold text-[#00AEC7]">
+                                    {t("events_announcements.dsml_meetup_2025.talks.anuar_welcome.speaker")}
+                                  </h5>
+                                </div>
                                 <p className="font-medium mb-2">
                                   {t("events_announcements.dsml_meetup_2025.talks.anuar_welcome.topic")}
                                 </p>
@@ -205,9 +210,14 @@ export default function EventsPage() {
                             <div className="flex items-start gap-3">
                               <div className="w-2 h-2 bg-[#00AEC7] rounded-full mt-2 flex-shrink-0"></div>
                               <div className="flex-1">
-                                <h5 className="font-semibold text-[#00AEC7]">
-                                  {t("events_announcements.dsml_meetup_2025.talks.zhuldyzhan.speaker")}
-                                </h5>
+                                <div className="flex items-center gap-3 mb-1">
+                                  <Badge variant="outline" className="text-xs font-mono">
+                                    {t("events_announcements.dsml_meetup_2025.talks.zhuldyzhan.time")}
+                                  </Badge>
+                                  <h5 className="font-semibold text-[#00AEC7]">
+                                    {t("events_announcements.dsml_meetup_2025.talks.zhuldyzhan.speaker")}
+                                  </h5>
+                                </div>
                                 <p className="font-medium mb-2">
                                   {t("events_announcements.dsml_meetup_2025.talks.zhuldyzhan.topic")}
                                 </p>
@@ -223,9 +233,14 @@ export default function EventsPage() {
                             <div className="flex items-start gap-3">
                               <div className="w-2 h-2 bg-[#FFF32A] rounded-full mt-2 flex-shrink-0"></div>
                               <div className="flex-1">
-                                <h5 className="font-semibold text-[#00AEC7]">
-                                  {t("events_announcements.dsml_meetup_2025.talks.ayana.speaker")}
-                                </h5>
+                                <div className="flex items-center gap-3 mb-1">
+                                  <Badge variant="outline" className="text-xs font-mono">
+                                    {t("events_announcements.dsml_meetup_2025.talks.ayana.time")}
+                                  </Badge>
+                                  <h5 className="font-semibold text-[#00AEC7]">
+                                    {t("events_announcements.dsml_meetup_2025.talks.ayana.speaker")}
+                                  </h5>
+                                </div>
                                 <p className="font-medium mb-2">
                                   {t("events_announcements.dsml_meetup_2025.talks.ayana.topic")}
                                 </p>
@@ -241,9 +256,14 @@ export default function EventsPage() {
                             <div className="flex items-start gap-3">
                               <div className="w-2 h-2 bg-[#00AEC7] rounded-full mt-2 flex-shrink-0"></div>
                               <div className="flex-1">
-                                <h5 className="font-semibold text-[#00AEC7]">
-                                  {t("events_announcements.dsml_meetup_2025.talks.jimmy.speaker")}
-                                </h5>
+                                <div className="flex items-center gap-3 mb-1">
+                                  <Badge variant="outline" className="text-xs font-mono">
+                                    {t("events_announcements.dsml_meetup_2025.talks.jimmy.time")}
+                                  </Badge>
+                                  <h5 className="font-semibold text-[#00AEC7]">
+                                    {t("events_announcements.dsml_meetup_2025.talks.jimmy.speaker")}
+                                  </h5>
+                                </div>
                                 <p className="font-medium mb-2">
                                   {t("events_announcements.dsml_meetup_2025.talks.jimmy.topic")}
                                 </p>
@@ -259,9 +279,14 @@ export default function EventsPage() {
                             <div className="flex items-start gap-3">
                               <Coffee className="w-4 h-4 text-gray-500 mt-2 flex-shrink-0" />
                               <div className="flex-1">
-                                <p className="font-medium text-gray-600">
-                                  {t("events_announcements.dsml_meetup_2025.talks.break")}
-                                </p>
+                                <div className="flex items-center gap-3 mb-1">
+                                  <Badge variant="outline" className="text-xs font-mono">
+                                    {t("events_announcements.dsml_meetup_2025.talks.break_time")}
+                                  </Badge>
+                                  <p className="font-medium text-gray-600">
+                                    {t("events_announcements.dsml_meetup_2025.talks.break")}
+                                  </p>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -271,9 +296,14 @@ export default function EventsPage() {
                             <div className="flex items-start gap-3">
                               <div className="w-2 h-2 bg-[#FFF32A] rounded-full mt-2 flex-shrink-0"></div>
                               <div className="flex-1">
-                                <h5 className="font-semibold text-[#00AEC7]">
-                                  {t("events_announcements.dsml_meetup_2025.talks.renat.speaker")}
-                                </h5>
+                                <div className="flex items-center gap-3 mb-1">
+                                  <Badge variant="outline" className="text-xs font-mono">
+                                    {t("events_announcements.dsml_meetup_2025.talks.renat.time")}
+                                  </Badge>
+                                  <h5 className="font-semibold text-[#00AEC7]">
+                                    {t("events_announcements.dsml_meetup_2025.talks.renat.speaker")}
+                                  </h5>
+                                </div>
                                 <p className="font-medium mb-2">
                                   {t("events_announcements.dsml_meetup_2025.talks.renat.topic")}
                                 </p>
@@ -289,9 +319,14 @@ export default function EventsPage() {
                             <div className="flex items-start gap-3">
                               <div className="w-2 h-2 bg-[#00AEC7] rounded-full mt-2 flex-shrink-0"></div>
                               <div className="flex-1">
-                                <h5 className="font-semibold text-[#00AEC7]">
-                                  {t("events_announcements.dsml_meetup_2025.talks.dulat.speaker")}
-                                </h5>
+                                <div className="flex items-center gap-3 mb-1">
+                                  <Badge variant="outline" className="text-xs font-mono">
+                                    {t("events_announcements.dsml_meetup_2025.talks.dulat.time")}
+                                  </Badge>
+                                  <h5 className="font-semibold text-[#00AEC7]">
+                                    {t("events_announcements.dsml_meetup_2025.talks.dulat.speaker")}
+                                  </h5>
+                                </div>
                                 <p className="font-medium mb-2">
                                   {t("events_announcements.dsml_meetup_2025.talks.dulat.topic")}
                                 </p>
@@ -307,9 +342,14 @@ export default function EventsPage() {
                             <div className="flex items-start gap-3">
                               <div className="w-2 h-2 bg-[#FFF32A] rounded-full mt-2 flex-shrink-0"></div>
                               <div className="flex-1">
-                                <h5 className="font-semibold text-[#00AEC7]">
-                                  {t("events_announcements.dsml_meetup_2025.talks.anuar_delivery.speaker")}
-                                </h5>
+                                <div className="flex items-center gap-3 mb-1">
+                                  <Badge variant="outline" className="text-xs font-mono">
+                                    {t("events_announcements.dsml_meetup_2025.talks.anuar_delivery.time")}
+                                  </Badge>
+                                  <h5 className="font-semibold text-[#00AEC7]">
+                                    {t("events_announcements.dsml_meetup_2025.talks.anuar_delivery.speaker")}
+                                  </h5>
+                                </div>
                                 <p className="font-medium mb-2">
                                   {t("events_announcements.dsml_meetup_2025.talks.anuar_delivery.topic")}
                                 </p>

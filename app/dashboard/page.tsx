@@ -39,32 +39,22 @@ export default function DashboardPage() {
   )
 }
 
-// Обновленная функция для проверки, является ли профиль реальным (созданным пользователем)
 function isRealProfile(profile: any): boolean {
   if (!profile) return false
-
-  // Проверяем наличие обязательных полей вместо проверки только secret_number
   const requiredFields = ["nickname", "first_name", "last_name"]
-
-  // Проверяем, что хотя бы одно из полей заполнено
   return requiredFields.some((field) => profile[field] && profile[field].trim() !== "")
 }
 
-// Обновим функцию isProfileComplete для проверки, что профиль полностью заполнен
 function isProfileComplete(profile: any): boolean {
   if (!profile) return false
-
-  // Check that all required fields are present and not empty
   const requiredFields = ["nickname", "first_name", "last_name", "current_city", "about_you", "motivation"]
 
-  // Check that all required fields are filled and not empty
   for (const field of requiredFields) {
     if (!profile[field] || profile[field].trim() === "") {
       return false
     }
   }
 
-  // Additionally check that about_you and motivation contain at least 10 words
   const aboutYouWords = profile.about_you.trim().split(/\s+/).filter(Boolean).length
   const motivationWords = profile.motivation.trim().split(/\s+/).filter(Boolean).length
 
@@ -75,7 +65,6 @@ function isProfileComplete(profile: any): boolean {
   return true
 }
 
-// Компонент Overview Tab
 function OverviewTab({
   profile,
   profileComplete,
@@ -91,8 +80,6 @@ function OverviewTab({
   onSignOut: () => void
   isSigningOut: boolean
 }) {
-  const { t } = useTranslation()
-
   const getStepStatus = (stepId: number) => {
     switch (stepId) {
       case 1:
@@ -100,7 +87,7 @@ function OverviewTab({
       case 2:
         return profileComplete ? "in-progress" : "not-started"
       case 3:
-        return "not-started" // This would be determined by actual Telegram verification
+        return "not-started"
       default:
         return "not-started"
     }
@@ -132,7 +119,6 @@ function OverviewTab({
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      {/* Welcome Section */}
       <div className="text-center space-y-4">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#00AEC7]">
           Welcome{profile?.first_name ? `, ${profile.first_name}` : ""}!
@@ -143,97 +129,215 @@ function OverviewTab({
         </p>
       </div>
 
-      {/* Join Telegram Chat Widget - с фоновым изображением как в карточках */}
-      <Card
-        className="bg-gray-900/50 border border-gray-700 shadow-2xl backdrop-blur-sm relative overflow-hidden"
-        style={{
-          backgroundImage: "url('/images/card_background.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        {/* Overlay для лучшей читаемости текста */}
-        <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm" />
+      {/* Join Telegram Chat Widget */}
+      <Card className="shadow-lg border border-gray-700 bg-white">
+        <div className="relative overflow-hidden rounded-xl min-h-[400px]">
+          {/* Фоновое изображение - адаптивное для веб и мобильных */}
+          <div
+            className="absolute inset-0 sm:hidden"
+            style={{
+              backgroundImage: `url('https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/general/card_background.png')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          />
+          <div
+            className="absolute inset-0 hidden sm:block"
+            style={{
+              backgroundImage: `url('https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/general/background_horizontal.png')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          />
 
-        <CardHeader className="bg-[#00AEC7] text-white relative z-10">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
-              <MessageCircle className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <CardTitle className="text-xl font-bold">Join Telegram Chat</CardTitle>
-              <CardDescription className="text-white/80">
-                Follow these steps to join our private community
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="p-6 space-y-6 relative z-10">
-          {steps.map((step, index) => (
-            <div key={step.id} className="flex items-start gap-4">
-              {/* Step indicator */}
-              <div className="flex-shrink-0">
-                <div
-                  className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
-                    step.status === "completed"
-                      ? "bg-green-500 border-green-400"
-                      : step.status === "in-progress"
-                        ? "bg-[#FFF32A] border-[#FFF32A]"
-                        : "bg-gray-800 border-gray-600"
-                  }`}
-                >
-                  {step.status === "completed" ? (
-                    <Check className="h-5 w-5 text-white" />
-                  ) : step.status === "in-progress" ? (
-                    <Clock className="h-5 w-5 text-black" />
-                  ) : (
-                    <step.icon className="h-5 w-5 text-gray-400" />
-                  )}
+          {/* Полупрозрачный белый overlay для читаемости */}
+          <div className="absolute inset-0 bg-white/60" />
+
+          <div className="relative z-10 h-full">
+            <CardHeader className="bg-[#00AEC7] text-white relative z-20">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
+                  <MessageCircle className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl font-bold">Join Telegram Chat</CardTitle>
+                  <CardDescription className="text-white/80">
+                    Follow these steps to join our private community
+                  </CardDescription>
                 </div>
               </div>
+            </CardHeader>
+            <CardContent className="p-6 space-y-6 relative z-20">
+              {steps.map((step) => (
+                <div key={step.id} className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <div
+                      className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                        step.status === "completed"
+                          ? "bg-green-500 border-green-400"
+                          : step.status === "in-progress"
+                            ? "bg-[#FFF32A] border-[#FFF32A]"
+                            : "bg-gray-200 border-gray-300"
+                      }`}
+                    >
+                      {step.status === "completed" ? (
+                        <Check className="h-5 w-5 text-white" />
+                      ) : step.status === "in-progress" ? (
+                        <Clock className="h-5 w-5 text-black" />
+                      ) : (
+                        <step.icon className="h-5 w-5 text-gray-500" />
+                      )}
+                    </div>
+                  </div>
 
-              {/* Step content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
-                  <h3
-                    className={`font-semibold ${
-                      step.status === "completed"
-                        ? "text-green-400"
-                        : step.status === "in-progress"
-                          ? "text-[#00AEC7]"
-                          : "text-gray-300"
-                    }`}
-                  >
-                    Step {step.id}: {step.title}
-                  </h3>
-                  <Badge
-                    variant="outline"
-                    className={`text-xs ${
-                      step.status === "completed"
-                        ? "bg-green-900/50 text-green-400 border-green-700"
-                        : step.status === "in-progress"
-                          ? "bg-yellow-900/50 text-yellow-400 border-yellow-700"
-                          : "bg-gray-800/50 text-gray-400 border-gray-600"
-                    }`}
-                  >
-                    {step.status === "completed"
-                      ? "Completed"
-                      : step.status === "in-progress"
-                        ? "In Progress"
-                        : "Not Started"}
-                  </Badge>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+                      <h3
+                        className={`font-semibold ${
+                          step.status === "completed"
+                            ? "text-green-600"
+                            : step.status === "in-progress"
+                              ? "text-[#00AEC7]"
+                              : "text-gray-700"
+                        }`}
+                      >
+                        Step {step.id}: {step.title}
+                      </h3>
+                      <Badge
+                        variant="outline"
+                        className={`text-xs ${
+                          step.status === "completed"
+                            ? "bg-green-100 text-green-700 border-green-300"
+                            : step.status === "in-progress"
+                              ? "bg-yellow-100 text-yellow-700 border-yellow-300"
+                              : "bg-gray-100 text-gray-600 border-gray-300"
+                        }`}
+                      >
+                        {step.status === "completed"
+                          ? "Completed"
+                          : step.status === "in-progress"
+                            ? "In Progress"
+                            : "Not Started"}
+                      </Badge>
+                    </div>
+                    <p className="text-gray-600 text-sm mb-3">{step.description}</p>
+
+                    {step.id === 1 && (
+                      <div className="space-y-2">
+                        {!realProfile ? (
+                          <Link href="/profile?mode=create">
+                            <Button size="sm" className="bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90">
+                              <UserPlus className="mr-2 h-4 w-4" />
+                              Create Profile
+                            </Button>
+                          </Link>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={onEditProfile}
+                            className="border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white bg-white/90"
+                          >
+                            <Edit className="mr-2 h-4 w-4" />
+                            Edit Profile
+                          </Button>
+                        )}
+                      </div>
+                    )}
+
+                    {step.id === 2 && (
+                      <div className="space-y-2">
+                        <Link
+                          href={
+                            profileComplete
+                              ? `https://t.me/databek_bot?start=verify_${profile.nickname}_${profile.secret_number || 0}`
+                              : "#"
+                          }
+                          target={profileComplete ? "_blank" : undefined}
+                          rel={profileComplete ? "noopener noreferrer" : undefined}
+                          className={!profileComplete ? "pointer-events-none" : ""}
+                        >
+                          <Button
+                            size="sm"
+                            disabled={!profileComplete}
+                            className={
+                              profileComplete
+                                ? "bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90"
+                                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                            }
+                          >
+                            <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.296c-.146.658-.537.818-1.084.51l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121L8.48 13.278l-2.95-.924c-.642-.204-.654-.642.135-.953l11.447-4.415c.538-.196 1.006.13.45 1.262z" />
+                            </svg>
+                            Connect Telegram
+                          </Button>
+                        </Link>
+                        {!profileComplete && <p className="text-xs text-amber-600">Complete your profile first</p>}
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <p className="text-gray-300 text-sm mb-3">{step.description}</p>
+              ))}
+            </CardContent>
+          </div>
+        </div>
+      </Card>
 
-                {/* Step actions */}
-                {step.id === 1 && (
-                  <div className="space-y-2">
-                    {!realProfile ? (
-                      <Link href="/profile?mode=create">
-                        <Button size="sm" className="bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90">
-                          <UserPlus className="mr-2 h-4 w-4" />
-                          Create Profile
+      {/* Profile Widget */}
+      {realProfile && (
+        <Card className="shadow-lg border border-gray-700 bg-white">
+          <div className="relative overflow-hidden rounded-xl min-h-[120px]">
+            {/* Фоновое изображение - адаптивное для веб и мобильных */}
+            <div
+              className="absolute inset-0 sm:hidden"
+              style={{
+                backgroundImage: `url('https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/general/card_background.png')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            />
+            <div
+              className="absolute inset-0 hidden sm:block"
+              style={{
+                backgroundImage: `url('https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/general/background_horizontal.png')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            />
+
+            {/* Полупрозрачный белый overlay для читаемости */}
+            <div className="absolute inset-0 bg-white/60" />
+
+            <div className="relative z-10 h-full">
+              <CardContent className="p-6 relative z-20">
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#00AEC7] to-cyan-600 flex items-center justify-center text-white font-bold text-xl">
+                      {profile?.first_name?.[0]?.toUpperCase() || "U"}
+                    </div>
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg font-semibold text-gray-900 truncate">
+                      {profile?.first_name} {profile?.last_name}
+                    </h3>
+                    <p className="text-gray-600 text-sm">@{profile?.nickname}</p>
+                  </div>
+
+                  <div className="flex-shrink-0">
+                    {profileComplete ? (
+                      <Link href={`/users/${profile.nickname}`}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-gray-300 text-gray-700 hover:bg-gray-50 bg-white/90"
+                        >
+                          <ExternalLink className="mr-2 h-4 w-4" />
+                          View
                         </Button>
                       </Link>
                     ) : (
@@ -241,109 +345,17 @@ function OverviewTab({
                         size="sm"
                         variant="outline"
                         onClick={onEditProfile}
-                        className="bg-gray-800/80 border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white backdrop-blur-sm"
+                        className="border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white bg-white/90"
                       >
                         <Edit className="mr-2 h-4 w-4" />
-                        Edit Profile
+                        Complete
                       </Button>
                     )}
                   </div>
-                )}
-
-                {step.id === 2 && (
-                  <div className="space-y-2">
-                    <Link
-                      href={
-                        profileComplete
-                          ? `https://t.me/databek_bot?start=verify_${profile.nickname}_${profile.secret_number || 0}`
-                          : "#"
-                      }
-                      target={profileComplete ? "_blank" : undefined}
-                      rel={profileComplete ? "noopener noreferrer" : undefined}
-                      className={!profileComplete ? "pointer-events-none" : ""}
-                    >
-                      <Button
-                        size="sm"
-                        disabled={!profileComplete}
-                        className={
-                          profileComplete
-                            ? "bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90"
-                            : "bg-gray-700/80 text-gray-500 cursor-not-allowed backdrop-blur-sm"
-                        }
-                      >
-                        <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.296c-.146.658-.537.818-1.084.51l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121L8.48 13.278l-2.95-.924c-.642-.204-.654-.642.135-.953l11.447-4.415c.538-.196 1.006.13.45 1.262z" />
-                        </svg>
-                        Connect Telegram
-                      </Button>
-                    </Link>
-                    {!profileComplete && <p className="text-xs text-amber-400">Complete your profile first</p>}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-
-      {/* Profile Widget - также с фоновым изображением */}
-      {realProfile && (
-        <Card
-          className="bg-gray-900/50 border border-gray-700 shadow-xl backdrop-blur-sm relative overflow-hidden"
-          style={{
-            backgroundImage: "url('/images/card_background.png')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          {/* Overlay для лучшей читаемости текста */}
-          <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm" />
-
-          <CardContent className="p-6 relative z-10">
-            <div className="flex items-center gap-4">
-              {/* Avatar */}
-              <div className="flex-shrink-0">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#00AEC7] to-cyan-600 flex items-center justify-center text-white font-bold text-xl">
-                  {profile?.first_name?.[0]?.toUpperCase() || "U"}
                 </div>
-              </div>
-
-              {/* Name and username */}
-              <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-semibold text-white truncate">
-                  {profile?.first_name} {profile?.last_name}
-                </h3>
-                <p className="text-gray-300 text-sm">@{profile?.nickname}</p>
-              </div>
-
-              {/* View button */}
-              <div className="flex-shrink-0">
-                {profileComplete ? (
-                  <Link href={`/users/${profile.nickname}`}>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="bg-gray-800/80 border-gray-600 text-gray-300 backdrop-blur-sm hover:bg-gray-700/80"
-                    >
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                      View
-                    </Button>
-                  </Link>
-                ) : (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={onEditProfile}
-                    className="bg-gray-800/80 border-[#00AEC7] text-[#00AEC7] backdrop-blur-sm hover:bg-[#00AEC7] hover:text-white"
-                  >
-                    <Edit className="mr-2 h-4 w-4" />
-                    Complete
-                  </Button>
-                )}
-              </div>
+              </CardContent>
             </div>
-          </CardContent>
+          </div>
         </Card>
       )}
 
@@ -354,7 +366,7 @@ function OverviewTab({
             variant="outline"
             onClick={onSignOut}
             disabled={isSigningOut}
-            className="bg-red-900/30 text-red-400 border-red-700/50 hover:bg-red-900/50"
+            className="bg-red-50 text-red-600 border-red-300 hover:bg-red-100"
           >
             <LogOut className="mr-2 h-4 w-4" />
             {isSigningOut ? "Signing Out..." : "Sign Out"}
@@ -365,7 +377,6 @@ function OverviewTab({
   )
 }
 
-// Компонент Profile Tab
 function ProfileTab({ profile, loading, error }: { profile: any; loading: boolean; error: any }) {
   return (
     <div className="space-y-6">
@@ -378,26 +389,55 @@ function ProfileTab({ profile, loading, error }: { profile: any; loading: boolea
   )
 }
 
-// Компонент Search Tab
 function SearchTab() {
-  const { t } = useTranslation()
-
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-[#00AEC7] mb-2">{t("dashboard.communityMembers")}</h2>
-        <p className="text-gray-400">{t("dashboard.findCommunityMembers")}</p>
-      </div>
-      <Card className="bg-gray-900/50 border border-gray-700 shadow-xl backdrop-blur-sm">
-        <CardContent className="p-6">
-          <MemberSearch />
-        </CardContent>
+      {/* Search Widget */}
+      <Card className="shadow-lg border border-gray-700 bg-white">
+        <div className="relative overflow-hidden rounded-xl min-h-[500px]">
+          {/* Фоновое изображение - адаптивное для веб и мобильных */}
+          <div
+            className="absolute inset-0 sm:hidden"
+            style={{
+              backgroundImage: `url('https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/general/card_background.png')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          />
+          <div
+            className="absolute inset-0 hidden sm:block"
+            style={{
+              backgroundImage: `url('https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/general/background_horizontal.png')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+          />
+
+          {/* Полупрозрачный белый overlay для читаемости */}
+          <div className="absolute inset-0 bg-white/60" />
+
+          <div className="relative z-10 h-full">
+            {/* Заголовок внутри карточки */}
+            <CardHeader className="text-center relative z-20">
+              <CardTitle className="text-2xl font-bold text-[#00AEC7]">Community Members</CardTitle>
+              <CardDescription className="text-gray-600">Find and connect with community members</CardDescription>
+            </CardHeader>
+
+            <CardContent className="p-6 pt-0 relative z-20">
+              {/* Оставляем место для dropdown - добавляем padding-bottom */}
+              <div className="pb-80">
+                <MemberSearch />
+              </div>
+            </CardContent>
+          </div>
+        </div>
       </Card>
     </div>
   )
 }
 
-// Главный компонент Dashboard
 function Dashboard() {
   const { user, profile, loading, profileError, signOut, initialized } = useAuth()
   const router = useRouter()
@@ -406,11 +446,9 @@ function Dashboard() {
   const [isSigningOut, setIsSigningOut] = useState(false)
   const [activeTab, setActiveTab] = useState("overview")
 
-  // Проверяем, заполнен ли профиль полностью
   const profileComplete = isProfileComplete(profile)
   const realProfile = isRealProfile(profile)
 
-  // Используем useEffect для установки isClient в true после монтирования компонента
   useEffect(() => {
     setIsClient(true)
   }, [])
@@ -419,15 +457,14 @@ function Dashboard() {
     router.push("/profile")
   }
 
-  // Улучшенная функция выхода из системы
   const handleSignOut = async () => {
     if (isSigningOut) return
 
     setIsSigningOut(true)
 
     toast({
-      title: t("dashboard.signingOut"),
-      description: t("dashboard.pleaseWait"),
+      title: "Signing out...",
+      description: "Please wait while we sign you out.",
     })
 
     try {
@@ -443,8 +480,8 @@ function Dashboard() {
       setIsSigningOut(false)
 
       toast({
-        title: t("dashboard.error"),
-        description: t("dashboard.signOutError"),
+        title: "Error",
+        description: "There was an error signing you out. Please try again.",
         variant: "destructive",
       })
 
@@ -454,7 +491,6 @@ function Dashboard() {
     }
   }
 
-  // Loading state
   if (!initialized) {
     return (
       <div className="container py-8">
@@ -468,13 +504,11 @@ function Dashboard() {
     )
   }
 
-  // Redirect if no user
   if (!user) {
     router.push("/signin")
     return null
   }
 
-  // Client-side skeleton
   if (!isClient) {
     return (
       <div className="container py-6 sm:py-12 space-y-6 sm:space-y-8">
@@ -490,7 +524,6 @@ function Dashboard() {
   return (
     <div className="container py-6 sm:py-12 px-4 sm:px-6 max-w-6xl mx-auto">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        {/* Navigation Tabs */}
         <div className="flex justify-center mb-8">
           <TabsList className="grid w-full max-w-md grid-cols-3 bg-gray-900/50 border border-gray-700">
             <TabsTrigger
@@ -517,7 +550,6 @@ function Dashboard() {
           </TabsList>
         </div>
 
-        {/* Tab Contents */}
         <TabsContent value="overview" className="mt-0">
           <OverviewTab
             profile={profile}

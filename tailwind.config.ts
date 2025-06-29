@@ -208,14 +208,6 @@ const config: Config = {
     "bg-hero-pattern",
     "bg-dashboard-pattern",
 
-    // === ГРАДИЕНТНЫЕ РАМКИ ===
-    "gradient-border",
-    "gradient-border-thick",
-    "gradient-border-animated",
-    "gradient-border-glow",
-    "gradient-border-reverse",
-    "gradient-border-hover",
-
     // === ДОПОЛНИТЕЛЬНЫЕ УТИЛИТЫ ===
     "shadow-[#00AEC7]/20",
     "shadow-[#FFF32A]/20",

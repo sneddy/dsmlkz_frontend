@@ -161,173 +161,12 @@ body {
     background-position: center;
   }
 
-  /* === ГРАДИЕНТНЫЕ РАМКИ === */
-  .gradient-border {
-    position: relative;
-    background: white;
-    border-radius: 0.75rem;
-  }
-
-  .gradient-border::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 0.75rem;
-    padding: 3px;
-    background: linear-gradient(135deg, var(--dsml-blue), var(--dsml-yellow));
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: xor;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-  }
-
-  .gradient-border-thick {
-    position: relative;
-    background: white;
-    border-radius: 0.75rem;
-  }
-
-  .gradient-border-thick::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 0.75rem;
-    padding: 4px;
-    background: linear-gradient(135deg, var(--dsml-blue), var(--dsml-yellow));
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: xor;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-  }
-
-  .gradient-border-animated {
-    position: relative;
-    background: white;
-    border-radius: 0.75rem;
-  }
-
-  .gradient-border-animated::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 0.75rem;
-    padding: 3px;
-    background: linear-gradient(45deg, var(--dsml-blue), var(--dsml-yellow), var(--dsml-blue), var(--dsml-yellow));
-    background-size: 400% 400%;
-    animation: gradient-border-spin 8s ease infinite;
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: xor;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-  }
-
-  @keyframes gradient-border-spin {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-
-  .gradient-border-glow {
-    position: relative;
-    background: white;
-    border-radius: 0.75rem;
-    box-shadow: 0 0 20px rgba(0, 174, 199, 0.3), 0 0 40px rgba(255, 243, 42, 0.2);
-  }
-
-  .gradient-border-glow::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 0.75rem;
-    padding: 3px;
-    background: linear-gradient(135deg, var(--dsml-blue), var(--dsml-yellow));
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: xor;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-  }
-
-  .gradient-border-reverse {
-    position: relative;
-    background: white;
-    border-radius: 0.75rem;
-  }
-
-  .gradient-border-reverse::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 0.75rem;
-    padding: 3px;
-    background: linear-gradient(135deg, var(--dsml-yellow), var(--dsml-blue));
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: xor;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-  }
-
-  /* === HOVER ЭФФЕКТЫ ДЛЯ ГРАДИЕНТНЫХ РАМОК === */
-  .gradient-border-hover {
-    position: relative;
-    background: white;
-    border-radius: 0.75rem;
-    transition: all 0.3s ease;
-  }
-
-  .gradient-border-hover::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 0.75rem;
-    padding: 2px;
-    background: linear-gradient(135deg, var(--dsml-blue), var(--dsml-yellow));
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: xor;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    transition: all 0.3s ease;
-  }
-
-  .gradient-border-hover:hover::before {
-    padding: 4px;
-    background: linear-gradient(135deg, var(--dsml-yellow), var(--dsml-blue));
-  }
-
-  .gradient-border-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 174, 199, 0.2), 0 4px 10px rgba(255, 243, 42, 0.1);
-  }
-
   /* === КОМБИНИРОВАННЫЕ КЛАССЫ С OVERLAY === */
   .bg-card-with-overlay {
     position: relative;
   }
 
-  .bg-card-with-overlay::after {
+  .bg-card-with-overlay::before {
     content: "";
     position: absolute;
     top: 0;
@@ -336,7 +175,6 @@ body {
     bottom: 0;
     background: rgba(255, 255, 255, 0.5);
     z-index: 1;
-    border-radius: inherit;
   }
 
   .bg-card-with-overlay > * {
@@ -602,8 +440,7 @@ body {
 
 /* === RESPONSIVE УТИЛИТЫ === */
 @media (prefers-reduced-motion: reduce) {
-  .bg-dsml-animated,
-  .gradient-border-animated {
+  .bg-dsml-animated {
     animation: none;
   }
 }

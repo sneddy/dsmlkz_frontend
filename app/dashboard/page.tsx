@@ -81,6 +81,8 @@ function OverviewTab({
   onSignOut: () => void
   isSigningOut: boolean
 }) {
+  const { t } = useTranslation()
+
   const getStepStatus = (stepId: number) => {
     switch (stepId) {
       case 1:
@@ -97,22 +99,22 @@ function OverviewTab({
   const steps = [
     {
       id: 1,
-      title: "Complete Profile",
-      description: "Fill out your profile information",
+      title: t("dashboard.completeProfileStep"),
+      description: t("dashboard.completeProfileStepDesc"),
       status: getStepStatus(1),
       icon: FileText,
     },
     {
       id: 2,
-      title: "Connect Telegram",
-      description: "Link your Telegram account",
+      title: t("dashboard.connectTelegramStep"),
+      description: t("dashboard.connectTelegramStepDesc"),
       status: getStepStatus(2),
       icon: MessageCircle,
     },
     {
       id: 3,
-      title: "Follow the invite link and enjoy",
-      description: "Join our community chat",
+      title: t("dashboard.followInviteLinkStep"),
+      description: t("dashboard.followInviteLinkStepDesc"),
       status: getStepStatus(3),
       icon: Heart,
     },
@@ -122,18 +124,18 @@ function OverviewTab({
     <div className="space-y-6 sm:space-y-8">
       <div className="text-center space-y-4">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#00AEC7]">
-          Welcome{profile?.first_name ? `, ${profile.first_name}` : ""}!
+          {t("dashboard.welcome")}
+          {profile?.first_name ? `, ${profile.first_name}` : ""}!
         </h1>
         <p className="text-gray-400 text-base sm:text-lg max-w-4xl mx-auto leading-relaxed">
-          Your central hub for connecting with the DSML Kazakhstan Community. Here you can fill out your profile card,
-          join our private Telegram chat, find other community residents, and get early access to new features.
+          {t("dashboard.description")}
         </p>
       </div>
 
       {/* Join Telegram Chat Widget */}
       <Card className="shadow-lg border border-gray-700 bg-white">
         <div className="relative overflow-hidden rounded-xl min-h-[400px]">
-          {/* Фоновое изображение - адаптивное для веб и мобильных */}
+          {/* Фоновое изображение - исправлен URL для горизонтального фона */}
           <div
             className="absolute inset-0 block sm:hidden"
             style={{
@@ -153,8 +155,8 @@ function OverviewTab({
             }}
           />
 
-          {/* Полупрозрачный белый overlay для читаемости */}
-          <div className="absolute inset-0 bg-white/50" />
+          {/* Полупрозрачный белый overlay для читаемости - уменьшена прозрачность */}
+          <div className="absolute inset-0 bg-white/30" />
 
           <div className="relative z-10 h-full">
             <CardHeader className="bg-[#00AEC7] text-white relative z-20">
@@ -163,10 +165,8 @@ function OverviewTab({
                   <MessageCircle className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <CardTitle className="text-xl font-bold text-white">Join Telegram Chat</CardTitle>
-                  <CardDescription className="text-white/90">
-                    Follow these steps to join our private community
-                  </CardDescription>
+                  <CardTitle className="text-xl font-bold text-white">{t("dashboard.joinTelegramChat")}</CardTitle>
+                  <CardDescription className="text-white/90">{t("dashboard.followStepsToJoin")}</CardDescription>
                 </div>
               </div>
             </CardHeader>
@@ -201,10 +201,10 @@ function OverviewTab({
                             ? "text-green-600"
                             : step.status === "in-progress"
                               ? "text-[#00AEC7]"
-                              : "text-gray-700"
+                              : "text-gray-800"
                         }`}
                       >
-                        Step {step.id}: {step.title}
+                        {t("dashboard.step")} {step.id}: {step.title}
                       </h3>
                       <Badge
                         variant="outline"
@@ -217,13 +217,13 @@ function OverviewTab({
                         }`}
                       >
                         {step.status === "completed"
-                          ? "Completed"
+                          ? t("dashboard.completed")
                           : step.status === "in-progress"
-                            ? "In Progress"
-                            : "Not Started"}
+                            ? t("dashboard.inProgress")
+                            : t("dashboard.notStarted")}
                       </Badge>
                     </div>
-                    <p className="text-gray-600 text-sm mb-3">{step.description}</p>
+                    <p className="text-gray-700 text-sm mb-3">{step.description}</p>
 
                     {step.id === 1 && (
                       <div className="space-y-2">
@@ -231,7 +231,7 @@ function OverviewTab({
                           <Link href="/profile?mode=create">
                             <Button size="sm" className="bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90">
                               <UserPlus className="mr-2 h-4 w-4" />
-                              Create Profile
+                              {t("dashboard.createProfile")}
                             </Button>
                           </Link>
                         ) : (
@@ -242,7 +242,7 @@ function OverviewTab({
                             className="border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white bg-white/90"
                           >
                             <Edit className="mr-2 h-4 w-4" />
-                            Edit Profile
+                            {t("dashboard.editProfile")}
                           </Button>
                         )}
                       </div>
@@ -272,10 +272,12 @@ function OverviewTab({
                             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
                               <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.296c-.146.658-.537.818-1.084.51l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121L8.48 13.278l-2.95-.924c-.642-.204-.654-.642.135-.953l11.447-4.415c.538-.196 1.006.13.45 1.262z" />
                             </svg>
-                            Connect Telegram
+                            {t("dashboard.attachTelegram")}
                           </Button>
                         </Link>
-                        {!profileComplete && <p className="text-xs text-amber-600">Complete your profile first</p>}
+                        {!profileComplete && (
+                          <p className="text-xs text-amber-600">{t("dashboard.completeProfileFirst")}</p>
+                        )}
                       </div>
                     )}
                   </div>
@@ -290,7 +292,7 @@ function OverviewTab({
       {realProfile && (
         <Card className="shadow-lg border border-gray-700 bg-white">
           <div className="relative overflow-hidden rounded-xl min-h-[120px]">
-            {/* Фоновое изображение - адаптивное для веб и мобильных */}
+            {/* Фоновое изображение - исправлен URL для горизонтального фона */}
             <div
               className="absolute inset-0 block sm:hidden"
               style={{
@@ -310,8 +312,8 @@ function OverviewTab({
               }}
             />
 
-            {/* Полупрозрачный белый overlay для читаемости */}
-            <div className="absolute inset-0 bg-white/50" />
+            {/* Полупрозрачный белый overlay для читаемости - уменьшена прозрачность */}
+            <div className="absolute inset-0 bg-white/30" />
 
             <div className="relative z-10 h-full">
               <CardContent className="p-6 relative z-20">
@@ -338,7 +340,7 @@ function OverviewTab({
                           className="border-gray-300 text-gray-700 hover:bg-gray-50 bg-white/90"
                         >
                           <ExternalLink className="mr-2 h-4 w-4" />
-                          View
+                          {t("dashboard.view")}
                         </Button>
                       </Link>
                     ) : (
@@ -349,7 +351,7 @@ function OverviewTab({
                         className="border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white bg-white/90"
                       >
                         <Edit className="mr-2 h-4 w-4" />
-                        Complete
+                        {t("dashboard.complete")}
                       </Button>
                     )}
                   </div>
@@ -370,7 +372,7 @@ function OverviewTab({
             className="bg-red-50 text-red-600 border-red-300 hover:bg-red-100"
           >
             <LogOut className="mr-2 h-4 w-4" />
-            {isSigningOut ? "Signing Out..." : "Sign Out"}
+            {isSigningOut ? t("dashboard.signingOut") : t("dashboard.signOut")}
           </Button>
         </div>
       )}
@@ -389,11 +391,13 @@ function ProfileTab({
   error: any
   onEditProfile: () => void
 }) {
+  const { t } = useTranslation()
+
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-[#00AEC7] mb-2">Your Profile</h2>
-        <p className="text-gray-400">Manage your profile information and settings</p>
+        <h2 className="text-2xl font-bold text-[#00AEC7] mb-2">{t("dashboard.yourProfile")}</h2>
+        <p className="text-gray-400">{t("dashboard.manageProfileSettings")}</p>
       </div>
       <ProfileCard profile={profile} loading={loading} error={error} onEditProfile={onEditProfile} />
     </div>
@@ -401,12 +405,14 @@ function ProfileTab({
 }
 
 function SearchTab() {
+  const { t } = useTranslation()
+
   return (
     <div className="space-y-6">
       {/* Search Widget */}
       <Card className="shadow-lg border border-gray-700 bg-white">
         <div className="relative overflow-hidden rounded-xl min-h-[500px]">
-          {/* Фоновое изображение - адаптивное для веб и мобильных */}
+          {/* Фоновое изображение - исправлен URL для горизонтального фона */}
           <div
             className="absolute inset-0 block sm:hidden"
             style={{
@@ -426,14 +432,14 @@ function SearchTab() {
             }}
           />
 
-          {/* Полупрозрачный белый overlay для читаемости */}
-          <div className="absolute inset-0 bg-white/50" />
+          {/* Полупрозрачный белый overlay для читаемости - уменьшена прозрачность */}
+          <div className="absolute inset-0 bg-white/30" />
 
           <div className="relative z-10 h-full">
             {/* Заголовок внутри карточки */}
             <CardHeader className="text-center relative z-20">
-              <CardTitle className="text-2xl font-bold text-[#00AEC7]">Community Members</CardTitle>
-              <CardDescription className="text-gray-600">Find and connect with community members</CardDescription>
+              <CardTitle className="text-2xl font-bold text-[#00AEC7]">{t("dashboard.communityMembers")}</CardTitle>
+              <CardDescription className="text-gray-600">{t("dashboard.findCommunityMembers")}</CardDescription>
             </CardHeader>
 
             <CardContent className="p-6 pt-0 relative z-20">
@@ -474,8 +480,8 @@ function Dashboard() {
     setIsSigningOut(true)
 
     toast({
-      title: "Signing out...",
-      description: "Please wait while we sign you out.",
+      title: t("dashboard.signingOut"),
+      description: t("dashboard.signingOutMessage"),
     })
 
     try {
@@ -491,8 +497,8 @@ function Dashboard() {
       setIsSigningOut(false)
 
       toast({
-        title: "Error",
-        description: "There was an error signing you out. Please try again.",
+        title: t("dashboard.error"),
+        description: t("dashboard.signOutErrorMessage"),
         variant: "destructive",
       })
 
@@ -542,21 +548,21 @@ function Dashboard() {
               className="data-[state=active]:bg-[#00AEC7] data-[state=active]:text-white text-gray-400"
             >
               <Home className="mr-2 h-4 w-4" />
-              <span className="hidden sm:inline">Overview</span>
+              <span className="hidden sm:inline">{t("dashboard.overview")}</span>
             </TabsTrigger>
             <TabsTrigger
               value="profile"
               className="data-[state=active]:bg-[#00AEC7] data-[state=active]:text-white text-gray-400"
             >
               <User className="mr-2 h-4 w-4" />
-              <span className="hidden sm:inline">Profile</span>
+              <span className="hidden sm:inline">{t("dashboard.profile")}</span>
             </TabsTrigger>
             <TabsTrigger
               value="search"
               className="data-[state=active]:bg-[#00AEC7] data-[state=active]:text-white text-gray-400"
             >
               <Search className="mr-2 h-4 w-4" />
-              <span className="hidden sm:inline">Search</span>
+              <span className="hidden sm:inline">{t("dashboard.search")}</span>
             </TabsTrigger>
           </TabsList>
         </div>

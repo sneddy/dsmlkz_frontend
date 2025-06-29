@@ -130,7 +130,7 @@ function OverviewTab({
   return (
     <div className="space-y-6 sm:space-y-8">
       <div className="text-center space-y-4">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold" style={{ color: "#00AEC7" }}>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary">
           {t("dashboard.welcome")}
           {profile?.first_name ? `, ${profile.first_name}` : ""}!
         </h1>
@@ -162,20 +162,18 @@ function OverviewTab({
             }}
           />
 
-          {/* Полупрозрачный белый overlay для читаемости - уменьшена прозрачность */}
-          <div className="absolute inset-0 bg-white bg-opacity-20" />
+          {/* Полупрозрачный белый overlay для читаемости */}
+          <div className="absolute inset-0 bg-white/40" />
 
           <div className="relative z-10 h-full">
-            <CardHeader style={{ backgroundColor: "#00AEC7" }} className="text-white relative z-20">
+            <CardHeader className="bg-primary text-white relative z-20">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-white bg-opacity-20 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
                   <MessageCircle className="h-6 w-6 text-white" />
                 </div>
                 <div>
                   <CardTitle className="text-xl font-bold text-white">{t("dashboard.joinTelegramChat")}</CardTitle>
-                  <CardDescription className="text-white text-opacity-90">
-                    {t("dashboard.followStepsToJoin")}
-                  </CardDescription>
+                  <CardDescription className="text-white/90">{t("dashboard.followStepsToJoin")}</CardDescription>
                 </div>
               </div>
             </CardHeader>
@@ -188,10 +186,9 @@ function OverviewTab({
                         step.status === "completed"
                           ? "bg-green-500 border-green-400"
                           : step.status === "in-progress"
-                            ? "border-yellow-400"
+                            ? "bg-secondary border-secondary"
                             : "bg-gray-200 border-gray-300"
                       }`}
-                      style={step.status === "in-progress" ? { backgroundColor: "#FFF32A" } : undefined}
                     >
                       {step.status === "completed" ? (
                         <Check className="h-5 w-5 text-white" />
@@ -206,10 +203,7 @@ function OverviewTab({
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
                       <h3
-                        className="font-semibold"
-                        style={{
-                          color: step.status === "completed" ? "#16a34a" : "#00AEC7",
-                        }}
+                        className={`font-semibold ${step.status === "completed" ? "text-green-600" : "text-primary"}`}
                       >
                         {t("dashboard.step")} {step.id}: {step.title}
                       </h3>
@@ -230,7 +224,7 @@ function OverviewTab({
                             : t("dashboard.notStarted")}
                       </Badge>
                     </div>
-                    <p className="text-gray-700 text-sm mb-3">{step.description}</p>
+                    <p className="text-gray-800 text-sm mb-3">{step.description}</p>
 
                     {step.id === 1 && (
                       <div className="space-y-2">
@@ -238,8 +232,8 @@ function OverviewTab({
                           <Link href="/profile?mode=create">
                             <Button
                               size="sm"
-                              className="text-black hover:opacity-90 border-0"
-                              style={{ backgroundColor: "#FFF32A", ...gradientBorderStyle }}
+                              className="bg-secondary text-black hover:bg-secondary/90 border-0"
+                              style={gradientBorderStyle}
                             >
                               <UserPlus className="mr-2 h-4 w-4" />
                               {t("dashboard.createProfile")}
@@ -250,20 +244,8 @@ function OverviewTab({
                             size="sm"
                             variant="outline"
                             onClick={onEditProfile}
-                            className="bg-white bg-opacity-90 border-0 hover:text-white"
-                            style={{
-                              color: "#00AEC7",
-                              ...gradientBorderStyle,
-                              backgroundColor: "rgba(255, 255, 255, 0.9)",
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.backgroundColor = "#00AEC7"
-                              e.currentTarget.style.color = "white"
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.9)"
-                              e.currentTarget.style.color = "#00AEC7"
-                            }}
+                            className="text-primary hover:bg-primary hover:text-white bg-white/90 border-0"
+                            style={gradientBorderStyle}
                           >
                             <Edit className="mr-2 h-4 w-4" />
                             {t("dashboard.editProfile")}
@@ -289,14 +271,12 @@ function OverviewTab({
                             disabled={!profileComplete}
                             className={`border-0 ${
                               profileComplete
-                                ? "text-black hover:opacity-90"
+                                ? "bg-secondary text-black hover:bg-secondary/90"
                                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
                             }`}
-                            style={profileComplete ? { backgroundColor: "#FFF32A", ...gradientBorderStyle } : undefined}
+                            style={profileComplete ? gradientBorderStyle : undefined}
                           >
-                            <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.296c-.146.658-.537.818-1.084.51l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121L8.48 13.278l-2.95-.924c-.642-.204-.654-.642.135-.953l11.447-4.415c.538-.196 1.006.13.45 1.262z" />
-                            </svg>
+                            <MessageCircle className="mr-2 h-4 w-4" />
                             {t("dashboard.attachTelegram")}
                           </Button>
                         </Link>
@@ -337,19 +317,14 @@ function OverviewTab({
               }}
             />
 
-            {/* Полупрозрачный белый overlay для читаемости - уменьшена прозрачность */}
-            <div className="absolute inset-0 bg-white bg-opacity-20" />
+            {/* Полупрозрачный белый overlay для читаемости */}
+            <div className="absolute inset-0 bg-white/40" />
 
             <div className="relative z-10 h-full">
               <CardContent className="p-6 relative z-20">
                 <div className="flex items-center gap-4">
                   <div className="flex-shrink-0">
-                    <div
-                      className="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-xl"
-                      style={{
-                        background: "linear-gradient(to bottom right, #00AEC7, #0891b2)",
-                      }}
-                    >
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-cyan-600 flex items-center justify-center text-white font-bold text-xl">
                       {profile?.first_name?.[0]?.toUpperCase() || "U"}
                     </div>
                   </div>
@@ -367,11 +342,8 @@ function OverviewTab({
                         <Button
                           size="sm"
                           variant="outline"
-                          className="text-gray-700 hover:bg-gray-50 border-0 bg-transparent"
-                          style={{
-                            backgroundColor: "rgba(255, 255, 255, 0.9)",
-                            ...gradientBorderStyle,
-                          }}
+                          className="text-gray-700 hover:bg-gray-50 bg-white/90 border-0"
+                          style={gradientBorderStyle}
                         >
                           <ExternalLink className="mr-2 h-4 w-4" />
                           {t("dashboard.view")}
@@ -382,20 +354,8 @@ function OverviewTab({
                         size="sm"
                         variant="outline"
                         onClick={onEditProfile}
-                        className="bg-white bg-opacity-90 border-0 hover:text-white"
-                        style={{
-                          color: "#00AEC7",
-                          ...gradientBorderStyle,
-                          backgroundColor: "rgba(255, 255, 255, 0.9)",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = "#00AEC7"
-                          e.currentTarget.style.color = "white"
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.9)"
-                          e.currentTarget.style.color = "#00AEC7"
-                        }}
+                        className="text-primary hover:bg-primary hover:text-white bg-white/90 border-0"
+                        style={gradientBorderStyle}
                       >
                         <Edit className="mr-2 h-4 w-4" />
                         {t("dashboard.complete")}
@@ -444,9 +404,7 @@ function ProfileTab({
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2" style={{ color: "#00AEC7" }}>
-          {t("dashboard.yourProfile")}
-        </h2>
+        <h2 className="text-2xl font-bold text-primary mb-2">{t("dashboard.yourProfile")}</h2>
         <p className="text-gray-400">{t("dashboard.manageProfileSettings")}</p>
       </div>
       <ProfileCard profile={profile} loading={loading} error={error} onEditProfile={onEditProfile} />
@@ -489,15 +447,13 @@ function SearchTab() {
             }}
           />
 
-          {/* Полупрозрачный белый overlay для читаемости - уменьшена прозрачность */}
-          <div className="absolute inset-0 bg-white bg-opacity-20" />
+          {/* Полупрозрачный белый overlay для читаемости */}
+          <div className="absolute inset-0 bg-white/40" />
 
           <div className="relative z-10 h-full">
             {/* Заголовок внутри карточки */}
             <CardHeader className="text-center relative z-20">
-              <CardTitle className="text-2xl font-bold" style={{ color: "#00AEC7" }}>
-                {t("dashboard.communityMembers")}
-              </CardTitle>
+              <CardTitle className="text-2xl font-bold text-primary">{t("dashboard.communityMembers")}</CardTitle>
               <CardDescription className="text-gray-600">{t("dashboard.findCommunityMembers")}</CardDescription>
             </CardHeader>
 
@@ -572,20 +528,8 @@ function Dashboard() {
       <div className="container py-8">
         <div className="flex justify-center items-center min-h-[60vh]">
           <div className="relative">
-            <div
-              className="w-16 h-16 border-4 rounded-full animate-spin"
-              style={{
-                borderColor: "rgba(0, 174, 199, 0.2)",
-                borderTopColor: "#00AEC7",
-              }}
-            />
-            <div
-              className="absolute inset-0 w-16 h-16 border-4 rounded-full animate-spin animate-reverse"
-              style={{
-                borderColor: "rgba(255, 243, 42, 0.2)",
-                borderBottomColor: "#FFF32A",
-              }}
-            />
+            <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+            <div className="absolute inset-0 w-16 h-16 border-4 border-secondary/20 border-b-secondary rounded-full animate-spin animate-reverse" />
           </div>
         </div>
       </div>
@@ -613,36 +557,24 @@ function Dashboard() {
     <div className="container py-6 sm:py-12 px-4 sm:px-6 max-w-6xl mx-auto">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="flex justify-center mb-8">
-          <TabsList className="grid w-full max-w-md grid-cols-3 bg-gray-900 bg-opacity-50 border border-gray-700">
+          <TabsList className="grid w-full max-w-md grid-cols-3 bg-gray-900/50 border border-gray-700">
             <TabsTrigger
               value="overview"
-              className="text-gray-400"
-              style={{
-                backgroundColor: activeTab === "overview" ? "#00AEC7" : "transparent",
-                color: activeTab === "overview" ? "white" : "#9ca3af",
-              }}
+              className="data-[state=active]:bg-primary data-[state=active]:text-white text-gray-400"
             >
               <Home className="mr-2 h-4 w-4" />
               <span className="hidden sm:inline">{t("dashboard.overview")}</span>
             </TabsTrigger>
             <TabsTrigger
               value="profile"
-              className="text-gray-400"
-              style={{
-                backgroundColor: activeTab === "profile" ? "#00AEC7" : "transparent",
-                color: activeTab === "profile" ? "white" : "#9ca3af",
-              }}
+              className="data-[state=active]:bg-primary data-[state=active]:text-white text-gray-400"
             >
               <User className="mr-2 h-4 w-4" />
               <span className="hidden sm:inline">{t("dashboard.profile")}</span>
             </TabsTrigger>
             <TabsTrigger
               value="search"
-              className="text-gray-400"
-              style={{
-                backgroundColor: activeTab === "search" ? "#00AEC7" : "transparent",
-                color: activeTab === "search" ? "white" : "#9ca3af",
-              }}
+              className="data-[state=active]:bg-primary data-[state=active]:text-white text-gray-400"
             >
               <Search className="mr-2 h-4 w-4" />
               <span className="hidden sm:inline">{t("dashboard.search")}</span>

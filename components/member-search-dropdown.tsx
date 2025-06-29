@@ -1,146 +1,234 @@
 "use client"
 
-import { useEffect } from "react"
+import type React from "react"
 
-import { useState } from "react"
-
-import { useRef } from "react"
-import { useRouter } from "next/navigation"
-import { useTranslation } from "@/hooks/use-translation"
-import { useAuth } from "@/contexts/auth-context"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect, useRef } from "react"
+import { Search, User, MapPin, Building, Loader2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Search, User, X, Loader2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { useTranslation } from "@/hooks/use-translation"
 import { useMemberSearch } from "@/hooks/use-member-search"
-import { MemberMiniCard } from "@/components/member-mini-card"
+import { useClickOutside } from "@/hooks/use-click-outside"
+import Link from "next/link"
+
+interface Member {
+  id: string
+  nickname: string
+  first_name: string
+  last_name: string
+  current_city?: string
+  relevant_company?: string
+  relevant_position?: string
+  about_you?: string
+  avatar_url?: string
+}
 
 export function MemberSearchDropdown() {
-  const [isOpen, setIsOpen] = useState(false)
-  const { user } = useAuth()
-  const router = useRouter()
   const { t } = useTranslation()
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [query, setQuery] = useState("")
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedIndex, setSelectedIndex] = useState(-1)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
-  const { query, setQuery, results, loading, error, selectedIndex, setSelectedIndex, handleKeyDown } = useMemberSearch()
+  const { members, loading, error } = useMemberSearch(query)
 
-  // Focus input when dropdown opens
-  useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [isOpen])
-
-  // Handle clicks outside to close dropdown
-  useEffect(() => {
-    if (!isOpen) return
-
-    const handleDocumentClick = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setIsOpen(false)
-      }
-    }
-
-    document.addEventListener("mousedown", handleDocumentClick)
-    return () => {
-      document.removeEventListener("mousedown", handleDocumentClick)
-    }
-  }, [isOpen])
-
-  const handleOpenChange = (open: boolean) => {
-    setIsOpen(open)
-    if (!open) {
-      setQuery("")
-    }
-  }
-
-  const handleViewAllResults = () => {
+  useClickOutside(dropdownRef, () => {
     setIsOpen(false)
-    router.push(`/search?q=${encodeURIComponent(query)}`)
+    setSelectedIndex(-1)
+  })
+
+  useEffect(() => {
+    if (query.trim() && members.length > 0) {
+      setIsOpen(true)
+    } else {
+      setIsOpen(false)
+    }
+    setSelectedIndex(-1)
+  }, [query, members])
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value)
   }
 
-  const handleClearSearch = () => {
-    setQuery("")
-    if (inputRef.current) {
-      inputRef.current.focus()
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isOpen || members.length === 0) return
+
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault()
+        setSelectedIndex((prev) => (prev < members.length - 1 ? prev + 1 : 0))
+        break
+      case "ArrowUp":
+        e.preventDefault()
+        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : members.length - 1))
+        break
+      case "Enter":
+        e.preventDefault()
+        if (selectedIndex >= 0 && selectedIndex < members.length) {
+          const member = members[selectedIndex]
+          window.open(`/users/${member.nickname}`, "_blank")
+          setIsOpen(false)
+          setQuery("")
+          setSelectedIndex(-1)
+        }
+        break
+      case "Escape":
+        setIsOpen(false)
+        setSelectedIndex(-1)
+        inputRef.current?.blur()
+        break
     }
+  }
+
+  const handleMemberClick = (member: Member) => {
+    setIsOpen(false)
+    setQuery("")
+    setSelectedIndex(-1)
+  }
+
+  const clearSearch = () => {
+    setQuery("")
+    setIsOpen(false)
+    setSelectedIndex(-1)
+    inputRef.current?.focus()
   }
 
   return (
-    <div ref={dropdownRef}>
-      <DropdownMenu open={isOpen} onOpenChange={handleOpenChange}>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="gap-2">
-            <Search className="h-4 w-4" />
-            <span className="hidden md:inline">{t("dashboard.findCommunityMembers")}</span>
+    <div className="relative w-full" ref={dropdownRef}>
+      {/* Search Input */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <Input
+          ref={inputRef}
+          type="text"
+          placeholder={t("search.placeholder")}
+          value={query}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          className="pl-10 pr-10 h-12 text-base bg-white border-gray-200 focus:border-[#00AEC7] focus:ring-[#00AEC7] rounded-xl shadow-sm"
+        />
+        {query && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={clearSearch}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-gray-100 rounded-full"
+          >
+            ×
           </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[320px] p-0" align="end">
-          <div className="flex items-center border-b p-2">
-            <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-            <Input
-              ref={inputRef}
-              placeholder={t("search.membersPlaceholder") || "Search members..."}
-              className="flex h-8 w-full rounded-md border-0 bg-transparent py-2 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-            {query && (
-              <Button variant="ghost" size="sm" className="h-8 px-2" onClick={handleClearSearch}>
-                <X className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-          <div className="max-h-[300px] overflow-auto">
-            {loading ? (
-              <div className="flex justify-center items-center p-4">
-                <Loader2 className="h-5 w-5 animate-spin text-[#00b2b2]" />
-                <span className="ml-2 text-sm">{t("search.searching") || "Searching..."}</span>
-              </div>
-            ) : error ? (
-              <div className="p-4">
-                <div className="text-sm text-destructive mb-2">{error}</div>
-                <div className="text-xs text-muted-foreground">
-                  Try a different search term or check if there are members in the database.
+        )}
+        {loading && (
+          <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#00AEC7] animate-spin" />
+        )}
+      </div>
+
+      {/* Dropdown Results */}
+      {isOpen && (
+        <div className="absolute top-full left-0 right-0 mt-2 z-50">
+          <Card className="border-0 shadow-2xl bg-white backdrop-blur-sm">
+            <CardContent className="p-0 max-h-96 overflow-y-auto bg-white rounded-lg">
+              {error && (
+                <div className="p-4 text-center text-red-600 bg-white">
+                  <p className="text-sm">{t("search.error")}</p>
                 </div>
-              </div>
-            ) : results.length > 0 ? (
-              <>
-                <div className="py-1">
-                  {results.map((member, index) => (
-                    <DropdownMenuItem key={member.id} asChild>
-                      <div className="p-0">
-                        <MemberMiniCard
-                          member={member}
-                          isSelected={index === selectedIndex}
-                          onClick={() => setIsOpen(false)}
-                        />
+              )}
+
+              {!loading && !error && members.length === 0 && query.trim() && (
+                <div className="p-6 text-center text-gray-500 bg-white">
+                  <User className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+                  <p className="text-sm font-medium">{t("search.noResults")}</p>
+                  <p className="text-xs text-gray-400 mt-1">{t("search.tryDifferentKeywords")}</p>
+                </div>
+              )}
+
+              {members.length > 0 && (
+                <div className="py-2 bg-white">
+                  {members.map((member, index) => (
+                    <Link
+                      key={member.id}
+                      href={`/users/${member.nickname}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => handleMemberClick(member)}
+                      className={`block px-4 py-3 hover:bg-gray-50 transition-colors duration-150 cursor-pointer ${
+                        index === selectedIndex ? "bg-[#00AEC7]/5 border-l-4 border-[#00AEC7]" : ""
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        {/* Avatar */}
+                        <div className="flex-shrink-0">
+                          {member.avatar_url ? (
+                            <img
+                              src={member.avatar_url || "/placeholder.svg"}
+                              alt={`${member.first_name} ${member.last_name}`}
+                              className="w-10 h-10 rounded-full object-cover border-2 border-gray-100"
+                            />
+                          ) : (
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#00AEC7] to-blue-600 flex items-center justify-center text-white text-sm font-semibold">
+                              {member.first_name?.[0] || member.nickname[0]}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Member Info */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h4 className="font-semibold text-gray-900 truncate">
+                              {member.first_name} {member.last_name}
+                            </h4>
+                            <Badge variant="outline" className="text-xs bg-gray-50 text-gray-600 border-gray-200">
+                              @{member.nickname}
+                            </Badge>
+                          </div>
+
+                          {/* Position & Company */}
+                          {(member.relevant_position || member.relevant_company) && (
+                            <div className="flex items-center gap-1 mb-1">
+                              <Building className="h-3 w-3 text-gray-400 flex-shrink-0" />
+                              <p className="text-sm text-gray-600 truncate">
+                                {member.relevant_position}
+                                {member.relevant_position && member.relevant_company && " • "}
+                                {member.relevant_company}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Location */}
+                          {member.current_city && (
+                            <div className="flex items-center gap-1 mb-2">
+                              <MapPin className="h-3 w-3 text-gray-400 flex-shrink-0" />
+                              <p className="text-sm text-gray-500 truncate">{member.current_city}</p>
+                            </div>
+                          )}
+
+                          {/* Bio Preview */}
+                          {member.about_you && (
+                            <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed">
+                              {member.about_you.length > 100
+                                ? `${member.about_you.substring(0, 100)}...`
+                                : member.about_you}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </DropdownMenuItem>
+                    </Link>
                   ))}
+
+                  {/* Show more results hint */}
+                  {members.length >= 10 && (
+                    <div className="px-4 py-2 text-center border-t border-gray-100 bg-gray-50">
+                      <p className="text-xs text-gray-500">{t("search.showingFirst10")}</p>
+                    </div>
+                  )}
                 </div>
-                <DropdownMenuItem onClick={handleViewAllResults} className="justify-center border-t">
-                  <span className="text-xs">{t("dashboard.viewAllResults")}</span>
-                </DropdownMenuItem>
-              </>
-            ) : query.length > 0 ? (
-              <div className="p-4 text-center">
-                <p className="text-sm text-muted-foreground">{t("dashboard.noUsersFound")}</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Try a different search term or check if there are members in the database.
-                </p>
-              </div>
-            ) : (
-              <div className="p-4 text-center text-sm text-muted-foreground">
-                <User className="mx-auto h-6 w-6 opacity-50" />
-                <p className="mt-2">{t("dashboard.startTypingToSearch")}</p>
-              </div>
-            )}
-          </div>
-        </DropdownMenuContent>
-      </DropdownMenu>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }

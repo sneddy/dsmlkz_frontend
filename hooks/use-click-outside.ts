@@ -22,3 +22,6 @@ export function useOnClickOutside(ref: RefObject<HTMLElement>, handler: (event: 
     }
   }, [ref, handler])
 }
+
+// Allow consumers to import either name
+export { useOnClickOutside as useClickOutside }

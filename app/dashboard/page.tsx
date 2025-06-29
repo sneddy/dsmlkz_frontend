@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ProfileCard } from "@/components/profile-card"
 import { MemberSearch } from "@/components/member-search"
@@ -19,12 +19,21 @@ import {
   MessageCircle,
   FileText,
   Sparkles,
+  Star,
+  Zap,
+  Heart,
+  Clock,
+  Shield,
+  Rocket,
+  Target,
+  TrendingUp,
 } from "lucide-react"
 import { AuthGuard } from "@/components/auth-guard"
 import { ErrorBoundaryWrapper } from "@/components/error-boundary-wrapper"
 import { toast } from "@/components/ui/use-toast"
 import { useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
+import { Progress } from "@/components/ui/progress"
 
 export default function DashboardPage() {
   return (
@@ -72,12 +81,59 @@ function isProfileComplete(profile: any): boolean {
   return true
 }
 
+// Компонент прогресс-бара
+function ProgressIndicator({
+  profile,
+  profileComplete,
+  realProfile,
+}: { profile: any; profileComplete: boolean; realProfile: boolean }) {
+  const { t } = useTranslation()
+
+  const getProgress = () => {
+    if (!realProfile) return 0
+    if (realProfile && !profileComplete) return 33
+    if (profileComplete) return 66
+    return 100 // Если все шаги завершены
+  }
+
+  const progress = getProgress()
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-gray-900">{t("dashboard.yourProgress")}</h3>
+        <Badge variant="outline" className="bg-white/80 backdrop-blur-sm">
+          {progress}% {t("dashboard.complete")}
+        </Badge>
+      </div>
+      <div className="space-y-2">
+        <Progress value={progress} className="h-3 bg-gray-200/50 backdrop-blur-sm" />
+        <div className="flex justify-between text-xs text-gray-600">
+          <span>{t("dashboard.started")}</span>
+          <span>{t("dashboard.almostThere")}</span>
+          <span>{t("dashboard.completed")}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // Компонент для отображения шагов
 function StepGuide({
   profile,
   profileComplete,
   realProfile,
-}: { profile: any; profileComplete: boolean; realProfile: boolean }) {
+  onEditProfile,
+  onSignOut,
+  isSigningOut,
+}: {
+  profile: any
+  profileComplete: boolean
+  realProfile: boolean
+  onEditProfile: () => void
+  onSignOut: () => void
+  isSigningOut: boolean
+}) {
   const { t } = useTranslation()
 
   const steps = [
@@ -88,78 +144,263 @@ function StepGuide({
       completed: realProfile && profileComplete,
       current: !realProfile || !profileComplete,
       icon: FileText,
+      estimatedTime: "5 min",
+      difficulty: "Easy",
     },
     {
       id: 2,
       title: t("dashboard.step2Title"),
       description: t("dashboard.step2Description"),
-      completed: false, // Мы не можем отследить это автоматически
+      completed: false,
       current: realProfile && profileComplete,
       icon: MessageCircle,
+      estimatedTime: "2 min",
+      difficulty: "Easy",
     },
     {
       id: 3,
       title: t("dashboard.step3Title"),
       description: t("dashboard.step3Description"),
-      completed: false, // Мы не можем отследить это автоматически
+      completed: false,
       current: false,
       icon: CheckCircle,
+      estimatedTime: "1 min",
+      difficulty: "Easy",
     },
   ]
 
   return (
-    <Card className="border-2 border-dashed border-[#00AEC7]/30 bg-gradient-to-br from-[#00AEC7]/5 to-[#FFF32A]/5">
-      <CardHeader>
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-[#00AEC7]" />
-          <CardTitle className="text-[#00AEC7]">{t("dashboard.quickStartTitle")}</CardTitle>
-        </div>
-        <CardDescription>{t("dashboard.quickStartDescription")}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {steps.map((step, index) => (
-          <div key={step.id} className="flex items-start gap-4">
-            <div className="flex flex-col items-center">
-              <div
-                className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${
-                  step.completed
-                    ? "bg-green-100 border-green-500 text-green-600"
-                    : step.current
-                      ? "bg-[#FFF32A] border-[#FFF32A] text-black"
-                      : "bg-gray-100 border-gray-300 text-gray-400"
-                }`}
-              >
-                {step.completed ? (
-                  <CheckCircle className="h-4 w-4" />
-                ) : (
-                  <span className="text-sm font-semibold">{step.id}</span>
-                )}
+    <Card className="overflow-hidden bg-gradient-to-br from-white via-gray-50 to-blue-50/30 border-0 shadow-2xl">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#00AEC7]/5 via-transparent to-[#FFF32A]/5" />
+
+      <CardHeader className="relative pb-6 bg-gradient-to-r from-[#00AEC7]/10 to-[#FFF32A]/10 border-b border-gray-200/50">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00AEC7] to-cyan-600 flex items-center justify-center shadow-lg">
+                <Rocket className="h-6 w-6 text-white" />
               </div>
-              {index < steps.length - 1 && (
-                <div className={`w-0.5 h-8 mt-2 ${step.completed ? "bg-green-300" : "bg-gray-200"}`} />
-              )}
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-[#FFF32A] rounded-full flex items-center justify-center">
+                <Sparkles className="h-2.5 w-2.5 text-black" />
+              </div>
             </div>
-            <div className="flex-1 pb-8">
-              <div className="flex items-center gap-2 mb-1">
-                <step.icon className="h-4 w-4 text-[#00AEC7]" />
-                <h3
-                  className={`font-medium ${
-                    step.completed ? "text-green-600" : step.current ? "text-[#00AEC7]" : "text-gray-600"
+            <div>
+              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-[#00AEC7] to-cyan-600 bg-clip-text text-transparent">
+                {t("dashboard.quickStartTitle")}
+              </CardTitle>
+              <CardDescription className="text-gray-600 mt-1">{t("dashboard.quickStartDescription")}</CardDescription>
+            </div>
+          </div>
+          <div className="hidden sm:block">
+            <Badge variant="outline" className="bg-white/80 backdrop-blur-sm border-[#00AEC7]/20">
+              <Target className="h-3 w-3 mr-1" />
+              {t("dashboard.getStarted")}
+            </Badge>
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <ProgressIndicator profile={profile} profileComplete={profileComplete} realProfile={realProfile} />
+        </div>
+      </CardHeader>
+
+      <CardContent className="relative p-8 space-y-8">
+        {steps.map((step, index) => (
+          <div key={step.id} className="group relative">
+            {/* Connection line */}
+            {index < steps.length - 1 && (
+              <div className="absolute left-6 top-16 w-0.5 h-16 bg-gradient-to-b from-gray-300 to-gray-200 group-hover:from-[#00AEC7]/50 group-hover:to-[#00AEC7]/20 transition-all duration-500" />
+            )}
+
+            <div className="flex gap-6">
+              {/* Step indicator */}
+              <div className="relative z-10 flex-shrink-0">
+                <div
+                  className={`w-12 h-12 rounded-2xl border-2 flex items-center justify-center transition-all duration-500 ${
+                    step.completed
+                      ? "bg-gradient-to-br from-green-500 to-emerald-600 border-green-400 shadow-lg shadow-green-500/25"
+                      : step.current
+                        ? "bg-gradient-to-br from-[#FFF32A] to-yellow-400 border-[#FFF32A] shadow-lg shadow-yellow-500/25 animate-pulse"
+                        : "bg-white border-gray-300 shadow-md hover:shadow-lg hover:border-[#00AEC7]/50"
                   }`}
                 >
-                  {step.title}
-                </h3>
-                {step.completed && (
-                  <Badge variant="secondary" className="bg-green-100 text-green-700 text-xs">
-                    {t("dashboard.completed")}
-                  </Badge>
-                )}
-                {step.current && <Badge className="bg-[#FFF32A] text-black text-xs">{t("dashboard.current")}</Badge>}
+                  {step.completed ? (
+                    <CheckCircle className="h-6 w-6 text-white" />
+                  ) : (
+                    <step.icon className={`h-6 w-6 ${step.current ? "text-black" : "text-gray-500"}`} />
+                  )}
+                </div>
               </div>
-              <p className="text-sm text-muted-foreground">{step.description}</p>
+
+              {/* Step content */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <h3
+                      className={`text-xl font-bold transition-colors duration-300 ${
+                        step.completed ? "text-green-600" : step.current ? "text-[#00AEC7]" : "text-gray-700"
+                      }`}
+                    >
+                      {step.title}
+                    </h3>
+
+                    <div className="flex gap-2">
+                      {step.completed && (
+                        <Badge className="bg-green-100 text-green-700 border-green-200">
+                          <Star className="h-3 w-3 mr-1" />
+                          {t("dashboard.completed")}
+                        </Badge>
+                      )}
+                      {step.current && (
+                        <Badge className="bg-[#FFF32A] text-black border-yellow-300">
+                          <Zap className="h-3 w-3 mr-1" />
+                          {t("dashboard.current")}
+                        </Badge>
+                      )}
+                      <Badge variant="outline" className="bg-white/60 backdrop-blur-sm">
+                        <Clock className="h-3 w-3 mr-1" />
+                        {step.estimatedTime}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-gray-600 mb-6 leading-relaxed">{step.description}</p>
+
+                {/* Step actions */}
+                <div className="space-y-4">
+                  {/* Step 1: Fill your profile */}
+                  {step.id === 1 && (
+                    <div className="space-y-4">
+                      {!realProfile ? (
+                        <Link href="/profile?mode=create" className="block relative z-10">
+                          <Button
+                            size="lg"
+                            className="w-full bg-gradient-to-r from-[#FFF32A] to-yellow-400 text-black hover:from-yellow-400 hover:to-[#FFF32A] border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] font-semibold cursor-pointer"
+                          >
+                            <UserPlus className="mr-3 h-5 w-5" />
+                            {t("dashboard.createProfile")}
+                            <ArrowRight className="ml-3 h-5 w-5" />
+                          </Button>
+                        </Link>
+                      ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <Button
+                            variant="outline"
+                            size="lg"
+                            onClick={onEditProfile}
+                            className="relative z-10 bg-white/90 backdrop-blur-sm border-[#00AEC7]/30 text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white transition-all duration-300 font-semibold cursor-pointer"
+                          >
+                            <Edit className="mr-2 h-4 w-4" />
+                            {t("dashboard.editProfile")}
+                          </Button>
+                          {profileComplete && (
+                            <Link href={`/users/${profile.nickname}`} className="relative z-10">
+                              <Button
+                                variant="outline"
+                                size="lg"
+                                className="w-full bg-white/90 backdrop-blur-sm border-[#FFF32A]/50 text-gray-700 hover:bg-[#FFF32A] hover:text-black transition-all duration-300 font-semibold cursor-pointer"
+                              >
+                                <ExternalLink className="mr-2 h-4 w-4" />
+                                {t("dashboard.viewProfile")}
+                              </Button>
+                            </Link>
+                          )}
+                        </div>
+                      )}
+                      {realProfile && !profileComplete && (
+                        <div className="bg-amber-50/80 backdrop-blur-sm border border-amber-200/50 rounded-xl p-4 shadow-inner">
+                          <div className="flex items-center gap-3">
+                            <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                            <p className="text-sm font-medium text-amber-800">
+                              {t("dashboard.incompleteProfileMessage")}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Step 2: Attach your Telegram */}
+                  {step.id === 2 && (
+                    <div className="space-y-4">
+                      {!profileComplete && (
+                        <div className="bg-blue-50/80 backdrop-blur-sm border border-blue-200/50 rounded-xl p-4 shadow-inner">
+                          <div className="flex items-center gap-3">
+                            <Shield className="h-4 w-4 text-blue-600" />
+                            <p className="text-sm font-medium text-blue-800">
+                              {t("dashboard.completeProfileForTelegram")}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                      <Link
+                        href={
+                          profileComplete
+                            ? `https://t.me/databek_bot?start=verify_${profile.nickname}_${profile.secret_number || 0}`
+                            : "#"
+                        }
+                        target={profileComplete ? "_blank" : undefined}
+                        rel={profileComplete ? "noopener noreferrer" : undefined}
+                        className={`block relative z-10 ${!profileComplete ? "pointer-events-none" : "cursor-pointer"}`}
+                        onClick={(e) => {
+                          if (!profileComplete) {
+                            e.preventDefault()
+                            e.stopPropagation()
+                          }
+                        }}
+                      >
+                        <Button
+                          size="lg"
+                          disabled={!profileComplete}
+                          className={`w-full font-semibold transition-all duration-300 transform hover:scale-[1.02] relative z-10 ${
+                            profileComplete
+                              ? "bg-gradient-to-r from-[#FFF32A] to-yellow-400 text-black hover:from-yellow-400 hover:to-[#FFF32A] border-0 shadow-lg hover:shadow-xl cursor-pointer"
+                              : "bg-gray-200 text-gray-500 cursor-not-allowed border-0"
+                          }`}
+                        >
+                          <svg className="mr-3 h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.296c-.146.658-.537.818-1.084.51l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121L8.48 13.278l-2.95-.924c-.642-.204-.654-.642.135-.953l11.447-4.415c.538-.196 1.006.13.45 1.262z" />
+                          </svg>
+                          {t("dashboard.attachTelegram")}
+                          {profileComplete && <ArrowRight className="ml-3 h-5 w-5" />}
+                        </Button>
+                      </Link>
+                    </div>
+                  )}
+
+                  {/* Step 3: Join our Discussion Hub */}
+                  {step.id === 3 && (
+                    <div className="space-y-4">
+                      <div className="bg-green-50/80 backdrop-blur-sm border border-green-200/50 rounded-xl p-4 shadow-inner">
+                        <div className="flex items-center gap-3">
+                          <Heart className="h-4 w-4 text-green-600" />
+                          <p className="text-sm font-medium text-green-800">{t("dashboard.enjoyTelegramCommunity")}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         ))}
+
+        {/* Sign Out Button */}
+        {realProfile && (
+          <div className="border-t border-gray-200/50 pt-8 mt-8">
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={onSignOut}
+              disabled={isSigningOut}
+              className="w-full bg-red-50/80 backdrop-blur-sm text-red-600 border-red-200/50 hover:bg-red-100 hover:border-red-300 transition-all duration-300 font-semibold"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              {isSigningOut ? t("dashboard.signingOut") : t("dashboard.signOut")}
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   )
@@ -170,30 +411,43 @@ function DashboardInfo() {
   const { t } = useTranslation()
 
   return (
-    <Card className="bg-gradient-to-r from-[#00AEC7]/10 to-[#FFF32A]/10 border-[#00AEC7]/20">
-      <CardContent className="pt-6">
-        <div className="flex items-start gap-4">
+    <Card className="overflow-hidden bg-gradient-to-br from-white via-gray-50 to-cyan-50/30 border-0 shadow-xl hover:shadow-2xl transition-all duration-500">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#00AEC7]/5 via-transparent to-[#FFF32A]/5" />
+
+      <CardContent className="relative pt-8">
+        <div className="flex items-start gap-6">
           <div className="flex-shrink-0">
-            <div className="w-12 h-12 rounded-full bg-[#00AEC7] flex items-center justify-center">
-              <Users className="h-6 w-6 text-white" />
+            <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-[#00AEC7] to-cyan-600 flex items-center justify-center shadow-xl relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <TrendingUp className="h-8 w-8 text-white relative z-10 group-hover:scale-110 transition-transform duration-300" />
             </div>
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-[#00AEC7] mb-2">{t("dashboard.whatIsDashboardTitle")}</h3>
-            <p className="text-sm text-muted-foreground mb-4">{t("dashboard.whatIsDashboardDescription")}</p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <div className="w-2 h-2 rounded-full bg-[#00AEC7]" />
-                {t("dashboard.feature1")}
-              </div>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <div className="w-2 h-2 rounded-full bg-[#FFF32A]" />
-                {t("dashboard.feature2")}
-              </div>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <div className="w-2 h-2 rounded-full bg-[#00AEC7]" />
-                {t("dashboard.feature3")}
-              </div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-[#00AEC7] to-cyan-600 bg-clip-text text-transparent mb-3">
+              {t("dashboard.whatIsDashboardTitle")}
+            </h3>
+            <p className="text-gray-600 mb-6 leading-relaxed text-lg">{t("dashboard.whatIsDashboardDescription")}</p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {[
+                { color: "bg-[#00AEC7]", text: t("dashboard.feature1"), icon: Edit },
+                { color: "bg-[#FFF32A]", text: t("dashboard.feature2"), icon: Users },
+                { color: "bg-green-500", text: t("dashboard.feature3"), icon: Rocket },
+              ].map((feature, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-3 text-sm text-gray-600 group p-3 rounded-lg hover:bg-white/60 transition-all duration-300"
+                >
+                  <div
+                    className={`w-8 h-8 rounded-lg ${feature.color} flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300`}
+                  >
+                    <feature.icon className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="group-hover:text-gray-800 transition-colors duration-300 font-medium">
+                    {feature.text}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -210,30 +464,6 @@ function Dashboard() {
   const [isClient, setIsClient] = useState(false)
   const [isSigningOut, setIsSigningOut] = useState(false)
 
-  // Добавим отладочный вывод для проверки состояния профиля
-  useEffect(() => {
-    if (profile) {
-      console.log("Profile state:", {
-        isRealProfile: isRealProfile(profile),
-        isProfileComplete: isProfileComplete(profile),
-        hasSecretNumber: profile.secret_number !== undefined && profile.secret_number !== null,
-        requiredFields: {
-          nickname: !!profile.nickname,
-          first_name: !!profile.first_name,
-          last_name: !!profile.last_name,
-          current_city: !!profile.current_city,
-          about_you: !!profile.about_you,
-          motivation: !!profile.motivation,
-        },
-        wordCounts: {
-          about_you: profile.about_you ? profile.about_you.trim().split(/\s+/).filter(Boolean).length : 0,
-          motivation: profile.motivation ? profile.motivation.trim().split(/\s+/).filter(Boolean).length : 0,
-        },
-        profile: profile,
-      })
-    }
-  }, [profile])
-
   // Проверяем, заполнен ли профиль полностью
   const profileComplete = isProfileComplete(profile)
   const realProfile = isRealProfile(profile)
@@ -243,265 +473,149 @@ function Dashboard() {
     setIsClient(true)
   }, [])
 
-  // Define the gradient border style
-  const gradientBorderStyle = {
-    borderWidth: "4px",
-    borderStyle: "solid",
-    borderImage: "linear-gradient(to right, #FFEB3B, #00AEC7) 1",
-  }
-
   const handleEditProfile = () => {
     router.push("/profile")
   }
 
   // Улучшенная функция выхода из системы
   const handleSignOut = async () => {
-    if (isSigningOut) return // Предотвращаем повторные нажатия
+    if (isSigningOut) return
 
     setIsSigningOut(true)
 
-    // Показываем уведомление о выходе
     toast({
-      title: "Signing out...",
-      description: "Please wait while we sign you out.",
+      title: t("dashboard.signingOut"),
+      description: t("dashboard.pleaseWait"),
     })
 
     try {
-      // Добавляем таймаут безопасности для случая, если signOut зависнет
       const timeoutId = setTimeout(() => {
         console.warn("Sign out timeout - forcing page reload")
         window.location.replace("/")
       }, 3000)
 
-      // Вызываем signOut напрямую
       await signOut()
-
-      // Очищаем таймаут, если signOut выполнился успешно
       clearTimeout(timeoutId)
     } catch (error) {
       console.error("Error during sign out:", error)
       setIsSigningOut(false)
 
       toast({
-        title: "Error",
-        description: "There was an error signing out. Please try again.",
+        title: t("dashboard.error"),
+        description: t("dashboard.signOutError"),
         variant: "destructive",
       })
 
-      // В случае ошибки, все равно пытаемся перенаправить пользователя
       setTimeout(() => {
         window.location.replace("/")
       }, 1000)
     }
   }
 
-  // Показываем загрузку только если не инициализировано
-  // Но НЕ блокируем рендеринг, если просто loading=true, так как это может быть загрузка профиля
+  // Loading state
   if (!initialized) {
     return (
       <div className="container py-8">
         <div className="flex justify-center items-center min-h-[60vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-[#00AEC7]/20 border-t-[#00AEC7] rounded-full animate-spin" />
+            <div className="absolute inset-0 w-16 h-16 border-4 border-[#FFF32A]/20 border-b-[#FFF32A] rounded-full animate-spin animate-reverse" />
+          </div>
         </div>
       </div>
     )
   }
 
-  // Если нет пользователя после инициализации, перенаправляем на страницу входа
+  // Redirect if no user
   if (!user) {
     router.push("/signin")
     return null
   }
 
-  // Если компонент еще не смонтирован на клиенте, показываем скелетон
+  // Client-side skeleton
   if (!isClient) {
     return (
-      <div className="container py-8">
-        <div className="mb-8">
-          <div className="h-8 w-64 bg-gray-200 rounded animate-pulse mb-2"></div>
-          <div className="h-4 w-96 bg-gray-200 rounded animate-pulse"></div>
+      <div className="container py-12 space-y-8">
+        <div className="text-center space-y-4">
+          <div className="h-16 w-96 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl animate-pulse mx-auto" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="md:col-span-1">
-            <div className="h-96 bg-gray-200 rounded animate-pulse"></div>
-          </div>
-          <div className="md:col-span-1 space-y-6">
-            <div className="h-40 bg-gray-200 rounded animate-pulse"></div>
-            <div className="h-60 bg-gray-200 rounded animate-pulse"></div>
-          </div>
+        <div className="h-48 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl animate-pulse" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="h-96 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl animate-pulse" />
+          <div className="h-96 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl animate-pulse" />
         </div>
       </div>
     )
   }
 
-  // Общий стиль для всех кнопок на странице дашборда
-  const yellowButtonStyle = "bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90 border-[#FFF32A]"
-
   return (
-    <div className="container py-8 space-y-8">
-      {/* Заголовок и приветствие */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold text-[#00AEC7]">
-          {t("dashboard.welcome")}
-          {profile ? `, ${profile.first_name}` : ""}!
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t("dashboard.description")}</p>
+    <div className="container py-12 space-y-12">
+      {/* Hero Section */}
+      <div className="text-center space-y-8">
+        <div className="relative inline-block">
+          <h1 className="text-5xl md:text-7xl font-black bg-gradient-to-r from-[#00AEC7] via-cyan-500 to-blue-600 bg-clip-text text-transparent leading-tight">
+            {t("dashboard.welcome")}
+          </h1>
+          {profile && (
+            <div className="mt-4">
+              <span className="text-4xl md:text-6xl font-black bg-gradient-to-r from-[#FFF32A] via-yellow-400 to-orange-400 bg-clip-text text-transparent">
+                {profile.first_name}!
+              </span>
+            </div>
+          )}
+          <div className="absolute -top-6 -right-6 text-4xl animate-bounce">✨</div>
+          <div className="absolute -bottom-4 -left-6 text-3xl animate-pulse">🚀</div>
+        </div>
       </div>
 
-      {/* Информационный блок о дашборде */}
+      {/* Dashboard Info */}
       <DashboardInfo />
 
-      {/* Пошаговый гайд */}
-      <StepGuide profile={profile} profileComplete={profileComplete} realProfile={realProfile} />
-
-      {/* Основной контент */}
+      {/* Main Content Grid - Profile Card и Quick Start Guide рядом */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Profile Card */}
         <div className="space-y-6">
           <ProfileCard profile={profile} loading={loading} error={profileError} />
         </div>
 
+        {/* Quick Start Guide */}
         <div className="space-y-6">
-          {/* Карточка для создания профиля - показываем только если профиль не существует или не реальный */}
-          {(!profile || !realProfile) && !loading && !profileError && (
-            <Card className="border-2 border-dashed border-[#FFF32A]/50">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <UserPlus className="h-5 w-5 text-[#00AEC7]" />
-                  <CardTitle className="text-[#00AEC7]">{t("dashboard.registerCardTitle")}</CardTitle>
-                </div>
-                <CardDescription>{t("dashboard.registerCardDescription")}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="bg-[#FFF32A]/10 border border-[#FFF32A]/20 rounded-lg p-4 mb-4">
-                  <p className="text-sm text-muted-foreground">{t("dashboard.reason_to_fill_profile")}</p>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Link href="/profile?mode=create" className="w-full">
-                  <Button className={`w-full ${yellowButtonStyle}`}>
-                    <UserPlus className="mr-2 h-4 w-4" />
-                    {t("dashboard.registerCard")}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
-          )}
-
-          {/* Карточка для управления профилем - показываем только если профиль существует и реальный */}
-          {profile && realProfile && (
-            <Card style={gradientBorderStyle}>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Edit className="h-5 w-5 text-[#00AEC7]" />
-                  <CardTitle className="text-[#00AEC7]">
-                    {profileComplete ? t("dashboard.profileCompleteTitle") : t("dashboard.incompleteProfile")}
-                  </CardTitle>
-                </div>
-                {profileComplete && (
-                  <Badge className="bg-green-100 text-green-700 w-fit">
-                    <CheckCircle className="mr-1 h-3 w-3" />
-                    {t("dashboard.profileReady")}
-                  </Badge>
-                )}
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {profileComplete ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <Button variant="outline" className={`${yellowButtonStyle}`} onClick={handleEditProfile}>
-                      <Edit className="mr-2 h-4 w-4" />
-                      {t("dashboard.editProfile")}
-                    </Button>
-                    <Link href={`/users/${profile.nickname}`}>
-                      <Button variant="outline" className={`w-full ${yellowButtonStyle}`}>
-                        <ExternalLink className="mr-2 h-4 w-4" />
-                        {t("dashboard.viewProfile")}
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="outline"
-                      className={`${yellowButtonStyle} sm:col-span-2`}
-                      onClick={handleSignOut}
-                      disabled={isSigningOut}
-                    >
-                      <LogOut className="mr-2 h-4 w-4" />
-                      {t("dashboard.signOut")}
-                    </Button>
-                  </div>
-                ) : (
-                  <>
-                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                      <p className="text-sm text-amber-800">{t("dashboard.incompleteProfileMessage")}</p>
-                    </div>
-                    <Button className={`w-full ${yellowButtonStyle}`} onClick={handleEditProfile}>
-                      <Edit className="mr-2 h-4 w-4" />
-                      {t("dashboard.completeProfileButton")}
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </>
-                )}
-
-                {/* Telegram Verification Button - always visible but disabled when profile is incomplete */}
-                <div className="border-t pt-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <MessageCircle className="h-4 w-4 text-[#00AEC7]" />
-                    <span className="font-medium text-[#00AEC7]">{t("dashboard.telegramVerificationTitle")}</span>
-                  </div>
-                  {!profileComplete && (
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
-                      <p className="text-sm text-blue-800">{t("dashboard.completeProfileForTelegram")}</p>
-                    </div>
-                  )}
-                  <Link
-                    href={
-                      profileComplete
-                        ? `https://t.me/databek_bot?start=verify_${profile.nickname}_${profile.secret_number || 0}`
-                        : "#"
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`block w-full ${!profileComplete ? "pointer-events-none" : ""}`}
-                    onClick={(e) => !profileComplete && e.preventDefault()}
-                  >
-                    <Button
-                      className={`w-full ${profileComplete ? yellowButtonStyle : "bg-[#FFF32A]/50 text-black border-[#FFF32A]/50"}`}
-                      disabled={!profileComplete}
-                    >
-                      <svg
-                        className="mr-2 h-4 w-4"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.296c-.146.658-.537.818-1.084.51l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121L8.48 13.278l-2.95-.924c-.642-.204-.654-.642.135-.953l11.447-4.415c.538-.196 1.006.13.45 1.262z" />
-                      </svg>
-                      {t("dashboard.completeRegistration")}
-                      {profileComplete && <ArrowRight className="ml-2 h-4 w-4" />}
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          <Card style={gradientBorderStyle}>
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-[#00AEC7]" />
-                <CardTitle className="text-[#00AEC7]">{t("dashboard.communityMembers")}</CardTitle>
-              </div>
-              <CardDescription>{t("dashboard.findCommunityMembers")}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Using the exact same MemberSearch component from /search */}
-              <MemberSearch />
-
-              <div className="bg-gray-50 rounded-lg p-3">
-                <p className="text-sm text-muted-foreground">💡 {t("dashboard.searchTip")}</p>
-              </div>
-            </CardContent>
-          </Card>
+          <StepGuide
+            profile={profile}
+            profileComplete={profileComplete}
+            realProfile={realProfile}
+            onEditProfile={handleEditProfile}
+            onSignOut={handleSignOut}
+            isSigningOut={isSigningOut}
+          />
         </div>
+      </div>
+
+      {/* Community Search - размещаем ниже */}
+      <div className="max-w-4xl mx-auto">
+        <Card className="overflow-hidden bg-gradient-to-br from-white via-gray-50 to-cyan-50/30 border-0 shadow-xl hover:shadow-2xl transition-all duration-500">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#00AEC7]/5 via-transparent to-[#FFF32A]/5" />
+
+          <CardHeader className="relative pb-4 bg-gradient-to-r from-[#00AEC7]/10 to-[#FFF32A]/10 border-b border-gray-200/50">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00AEC7] to-cyan-600 flex items-center justify-center shadow-lg">
+                <Users className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-[#00AEC7] to-cyan-600 bg-clip-text text-transparent">
+                  {t("dashboard.communityMembers")}
+                </CardTitle>
+                <CardDescription className="text-gray-600 mt-1">{t("dashboard.findCommunityMembers")}</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+
+          <CardContent className="relative p-8 space-y-6">
+            <div className="transform hover:scale-[1.01] transition-transform duration-200">
+              <MemberSearch />
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

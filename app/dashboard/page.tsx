@@ -7,33 +7,27 @@ import { Button } from "@/components/ui/button"
 import { ProfileCard } from "@/components/profile-card"
 import { MemberSearch } from "@/components/member-search"
 import { useTranslation } from "@/hooks/use-translation"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
 import {
   Edit,
   ExternalLink,
   UserPlus,
   LogOut,
-  CheckCircle,
-  ArrowRight,
-  Users,
   MessageCircle,
   FileText,
-  Sparkles,
-  Star,
-  Zap,
   Heart,
   Clock,
-  Shield,
-  Rocket,
-  Target,
-  TrendingUp,
+  User,
+  Search,
+  Home,
+  Check,
 } from "lucide-react"
 import { AuthGuard } from "@/components/auth-guard"
 import { ErrorBoundaryWrapper } from "@/components/error-boundary-wrapper"
 import { toast } from "@/components/ui/use-toast"
 import { useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
 
 export default function DashboardPage() {
   return (
@@ -81,45 +75,8 @@ function isProfileComplete(profile: any): boolean {
   return true
 }
 
-// Компонент прогресс-бара
-function ProgressIndicator({
-  profile,
-  profileComplete,
-  realProfile,
-}: { profile: any; profileComplete: boolean; realProfile: boolean }) {
-  const { t } = useTranslation()
-
-  const getProgress = () => {
-    if (!realProfile) return 0
-    if (realProfile && !profileComplete) return 33
-    if (profileComplete) return 66
-    return 100 // Если все шаги завершены
-  }
-
-  const progress = getProgress()
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900">{t("dashboard.yourProgress")}</h3>
-        <Badge variant="outline" className="bg-white/80 backdrop-blur-sm">
-          {progress}% {t("dashboard.complete")}
-        </Badge>
-      </div>
-      <div className="space-y-2">
-        <Progress value={progress} className="h-3 bg-gray-200/50 backdrop-blur-sm" />
-        <div className="flex justify-between text-xs text-gray-600">
-          <span>{t("dashboard.started")}</span>
-          <span>{t("dashboard.almostThere")}</span>
-          <span>{t("dashboard.completed")}</span>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Компонент для отображения шагов
-function StepGuide({
+// Компонент Overview Tab
+function OverviewTab({
   profile,
   profileComplete,
   realProfile,
@@ -136,335 +93,318 @@ function StepGuide({
 }) {
   const { t } = useTranslation()
 
+  const getStepStatus = (stepId: number) => {
+    switch (stepId) {
+      case 1:
+        return profileComplete ? "completed" : realProfile ? "in-progress" : "not-started"
+      case 2:
+        return profileComplete ? "in-progress" : "not-started"
+      case 3:
+        return "not-started" // This would be determined by actual Telegram verification
+      default:
+        return "not-started"
+    }
+  }
+
   const steps = [
     {
       id: 1,
-      title: t("dashboard.step1Title"),
-      description: t("dashboard.step1Description"),
-      completed: realProfile && profileComplete,
-      current: !realProfile || !profileComplete,
+      title: "Complete Profile",
+      description: "Fill out your profile information",
+      status: getStepStatus(1),
       icon: FileText,
-      estimatedTime: "5 min",
-      difficulty: "Easy",
     },
     {
       id: 2,
-      title: t("dashboard.step2Title"),
-      description: t("dashboard.step2Description"),
-      completed: false,
-      current: realProfile && profileComplete,
+      title: "Connect Telegram",
+      description: "Link your Telegram account",
+      status: getStepStatus(2),
       icon: MessageCircle,
-      estimatedTime: "2 min",
-      difficulty: "Easy",
     },
     {
       id: 3,
-      title: t("dashboard.step3Title"),
-      description: t("dashboard.step3Description"),
-      completed: false,
-      current: false,
-      icon: CheckCircle,
-      estimatedTime: "1 min",
-      difficulty: "Easy",
+      title: "Follow the invite link and enjoy",
+      description: "Join our community chat",
+      status: getStepStatus(3),
+      icon: Heart,
     },
   ]
 
   return (
-    <Card className="overflow-hidden bg-gradient-to-br from-white via-gray-50 to-blue-50/30 border-0 shadow-2xl h-fit">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#00AEC7]/5 via-transparent to-[#FFF32A]/5" />
+    <div className="space-y-6 sm:space-y-8">
+      {/* Welcome Section */}
+      <div className="text-center space-y-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#00AEC7]">
+          Welcome{profile?.first_name ? `, ${profile.first_name}` : ""}!
+        </h1>
+        <p className="text-gray-400 text-base sm:text-lg max-w-4xl mx-auto leading-relaxed">
+          Your central hub for connecting with the DSML Kazakhstan Community. Here you can fill out your profile card,
+          join our private Telegram chat, find other community residents, and get early access to new features.
+        </p>
+      </div>
 
-      <CardHeader className="relative pb-6 bg-gradient-to-r from-[#00AEC7]/10 to-[#FFF32A]/10 border-b border-gray-200/50">
-        <div className="flex items-center justify-between">
+      {/* Join Telegram Chat Widget - с фоновым изображением как в карточках */}
+      <Card
+        className="bg-gray-900/50 border border-gray-700 shadow-2xl backdrop-blur-sm relative overflow-hidden"
+        style={{
+          backgroundImage: "url('/images/card_background.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Overlay для лучшей читаемости текста */}
+        <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm" />
+
+        <CardHeader className="bg-[#00AEC7] text-white relative z-10">
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00AEC7] to-cyan-600 flex items-center justify-center shadow-lg">
-                <Rocket className="h-6 w-6 text-white" />
-              </div>
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-[#FFF32A] rounded-full flex items-center justify-center">
-                <Sparkles className="h-2.5 w-2.5 text-black" />
-              </div>
+            <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
+              <MessageCircle className="h-6 w-6 text-white" />
             </div>
             <div>
-              <CardTitle className="text-xl font-bold bg-gradient-to-r from-[#00AEC7] to-cyan-600 bg-clip-text text-transparent">
-                {t("dashboard.quickStartTitle")}
-              </CardTitle>
-              <CardDescription className="text-gray-600 mt-1 text-sm">
-                {t("dashboard.quickStartDescription")}
+              <CardTitle className="text-xl font-bold">Join Telegram Chat</CardTitle>
+              <CardDescription className="text-white/80">
+                Follow these steps to join our private community
               </CardDescription>
             </div>
           </div>
-          <div className="hidden sm:block">
-            <Badge variant="outline" className="bg-white/80 backdrop-blur-sm border-[#00AEC7]/20 text-xs">
-              <Target className="h-3 w-3 mr-1" />
-              {t("dashboard.getStarted")}
-            </Badge>
-          </div>
-        </div>
-
-        <div className="mt-6">
-          <ProgressIndicator profile={profile} profileComplete={profileComplete} realProfile={realProfile} />
-        </div>
-      </CardHeader>
-
-      <CardContent className="relative p-6 space-y-6">
-        {steps.map((step, index) => (
-          <div key={step.id} className="group relative">
-            {/* Connection line */}
-            {index < steps.length - 1 && (
-              <div className="absolute left-6 top-14 w-0.5 h-12 bg-gradient-to-b from-gray-300 to-gray-200 group-hover:from-[#00AEC7]/50 group-hover:to-[#00AEC7]/20 transition-all duration-500" />
-            )}
-
-            <div className="flex gap-4">
+        </CardHeader>
+        <CardContent className="p-6 space-y-6 relative z-10">
+          {steps.map((step, index) => (
+            <div key={step.id} className="flex items-start gap-4">
               {/* Step indicator */}
-              <div className="relative z-10 flex-shrink-0">
+              <div className="flex-shrink-0">
                 <div
-                  className={`w-12 h-12 rounded-2xl border-2 flex items-center justify-center transition-all duration-500 ${
-                    step.completed
-                      ? "bg-gradient-to-br from-green-500 to-emerald-600 border-green-400 shadow-lg shadow-green-500/25"
-                      : step.current
-                        ? "bg-gradient-to-br from-[#FFF32A] to-yellow-400 border-[#FFF32A] shadow-lg shadow-yellow-500/25 animate-pulse"
-                        : "bg-white border-gray-300 shadow-md hover:shadow-lg hover:border-[#00AEC7]/50"
+                  className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                    step.status === "completed"
+                      ? "bg-green-500 border-green-400"
+                      : step.status === "in-progress"
+                        ? "bg-[#FFF32A] border-[#FFF32A]"
+                        : "bg-gray-800 border-gray-600"
                   }`}
                 >
-                  {step.completed ? (
-                    <CheckCircle className="h-5 w-5 text-white" />
+                  {step.status === "completed" ? (
+                    <Check className="h-5 w-5 text-white" />
+                  ) : step.status === "in-progress" ? (
+                    <Clock className="h-5 w-5 text-black" />
                   ) : (
-                    <step.icon className={`h-5 w-5 ${step.current ? "text-black" : "text-gray-500"}`} />
+                    <step.icon className="h-5 w-5 text-gray-400" />
                   )}
                 </div>
               </div>
 
               {/* Step content */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between mb-2">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h3
-                      className={`text-lg font-bold transition-colors duration-300 ${
-                        step.completed ? "text-green-600" : step.current ? "text-[#00AEC7]" : "text-gray-700"
-                      }`}
-                    >
-                      {step.title}
-                    </h3>
-
-                    <div className="flex gap-1">
-                      {step.completed && (
-                        <Badge className="bg-green-100 text-green-700 border-green-200 text-xs">
-                          <Star className="h-2.5 w-2.5 mr-1" />
-                          {t("dashboard.completed")}
-                        </Badge>
-                      )}
-                      {step.current && (
-                        <Badge className="bg-[#FFF32A] text-black border-yellow-300 text-xs">
-                          <Zap className="h-2.5 w-2.5 mr-1" />
-                          {t("dashboard.current")}
-                        </Badge>
-                      )}
-                      <Badge variant="outline" className="bg-white/60 backdrop-blur-sm text-xs">
-                        <Clock className="h-2.5 w-2.5 mr-1" />
-                        {step.estimatedTime}
-                      </Badge>
-                    </div>
-                  </div>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+                  <h3
+                    className={`font-semibold ${
+                      step.status === "completed"
+                        ? "text-green-400"
+                        : step.status === "in-progress"
+                          ? "text-[#00AEC7]"
+                          : "text-gray-300"
+                    }`}
+                  >
+                    Step {step.id}: {step.title}
+                  </h3>
+                  <Badge
+                    variant="outline"
+                    className={`text-xs ${
+                      step.status === "completed"
+                        ? "bg-green-900/50 text-green-400 border-green-700"
+                        : step.status === "in-progress"
+                          ? "bg-yellow-900/50 text-yellow-400 border-yellow-700"
+                          : "bg-gray-800/50 text-gray-400 border-gray-600"
+                    }`}
+                  >
+                    {step.status === "completed"
+                      ? "Completed"
+                      : step.status === "in-progress"
+                        ? "In Progress"
+                        : "Not Started"}
+                  </Badge>
                 </div>
-
-                <p className="text-gray-600 mb-4 leading-relaxed text-sm">{step.description}</p>
+                <p className="text-gray-300 text-sm mb-3">{step.description}</p>
 
                 {/* Step actions */}
-                <div className="space-y-3">
-                  {/* Step 1: Fill your profile */}
-                  {step.id === 1 && (
-                    <div className="space-y-3">
-                      {!realProfile ? (
-                        <Link href="/profile?mode=create" className="block relative z-10">
-                          <Button
-                            size="sm"
-                            className="w-full bg-gradient-to-r from-[#FFF32A] to-yellow-400 text-black hover:from-yellow-400 hover:to-[#FFF32A] border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] font-semibold cursor-pointer"
-                          >
-                            <UserPlus className="mr-2 h-4 w-4" />
-                            {t("dashboard.createProfile")}
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          </Button>
-                        </Link>
-                      ) : (
-                        <div className="grid grid-cols-1 gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={onEditProfile}
-                            className="relative z-10 bg-white/90 backdrop-blur-sm border-[#00AEC7]/30 text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white transition-all duration-300 font-semibold cursor-pointer"
-                          >
-                            <Edit className="mr-2 h-3 w-3" />
-                            {t("dashboard.editProfile")}
-                          </Button>
-                          {profileComplete && (
-                            <Link href={`/users/${profile.nickname}`} className="relative z-10">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="w-full bg-white/90 backdrop-blur-sm border-[#FFF32A]/50 text-gray-700 hover:bg-[#FFF32A] hover:text-black transition-all duration-300 font-semibold cursor-pointer"
-                              >
-                                <ExternalLink className="mr-2 h-3 w-3" />
-                                {t("dashboard.viewProfile")}
-                              </Button>
-                            </Link>
-                          )}
-                        </div>
-                      )}
-                      {realProfile && !profileComplete && (
-                        <div className="bg-amber-50/80 backdrop-blur-sm border border-amber-200/50 rounded-lg p-3 shadow-inner">
-                          <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                            <p className="text-xs font-medium text-amber-800">
-                              {t("dashboard.incompleteProfileMessage")}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Step 2: Attach your Telegram */}
-                  {step.id === 2 && (
-                    <div className="space-y-3">
-                      {!profileComplete && (
-                        <div className="bg-blue-50/80 backdrop-blur-sm border border-blue-200/50 rounded-lg p-3 shadow-inner">
-                          <div className="flex items-center gap-2">
-                            <Shield className="h-3 w-3 text-blue-600" />
-                            <p className="text-xs font-medium text-blue-800">
-                              {t("dashboard.completeProfileForTelegram")}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                      <Link
-                        href={
-                          profileComplete
-                            ? `https://t.me/databek_bot?start=verify_${profile.nickname}_${profile.secret_number || 0}`
-                            : "#"
-                        }
-                        target={profileComplete ? "_blank" : undefined}
-                        rel={profileComplete ? "noopener noreferrer" : undefined}
-                        className={`block relative z-10 ${!profileComplete ? "pointer-events-none" : "cursor-pointer"}`}
-                        onClick={(e) => {
-                          if (!profileComplete) {
-                            e.preventDefault()
-                            e.stopPropagation()
-                          }
-                        }}
-                      >
-                        <Button
-                          size="sm"
-                          disabled={!profileComplete}
-                          className={`w-full font-semibold transition-all duration-300 transform hover:scale-[1.02] relative z-10 ${
-                            profileComplete
-                              ? "bg-gradient-to-r from-[#FFF32A] to-yellow-400 text-black hover:from-yellow-400 hover:to-[#FFF32A] border-0 shadow-lg hover:shadow-xl cursor-pointer"
-                              : "bg-gray-200 text-gray-500 cursor-not-allowed border-0"
-                          }`}
-                        >
-                          <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.296c-.146.658-.537.818-1.084.51l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121L8.48 13.278l-2.95-.924c-.642-.204-.654-.642.135-.953l11.447-4.415c.538-.196 1.006.13.45 1.262z" />
-                          </svg>
-                          {t("dashboard.attachTelegram")}
-                          {profileComplete && <ArrowRight className="ml-2 h-4 w-4" />}
+                {step.id === 1 && (
+                  <div className="space-y-2">
+                    {!realProfile ? (
+                      <Link href="/profile?mode=create">
+                        <Button size="sm" className="bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90">
+                          <UserPlus className="mr-2 h-4 w-4" />
+                          Create Profile
                         </Button>
                       </Link>
-                    </div>
-                  )}
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={onEditProfile}
+                        className="bg-gray-800/80 border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white backdrop-blur-sm"
+                      >
+                        <Edit className="mr-2 h-4 w-4" />
+                        Edit Profile
+                      </Button>
+                    )}
+                  </div>
+                )}
 
-                  {/* Step 3: Join our Discussion Hub */}
-                  {step.id === 3 && (
-                    <div className="space-y-3">
-                      <div className="bg-green-50/80 backdrop-blur-sm border border-green-200/50 rounded-lg p-3 shadow-inner">
-                        <div className="flex items-center gap-2">
-                          <Heart className="h-3 w-3 text-green-600" />
-                          <p className="text-xs font-medium text-green-800">{t("dashboard.enjoyTelegramCommunity")}</p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                {step.id === 2 && (
+                  <div className="space-y-2">
+                    <Link
+                      href={
+                        profileComplete
+                          ? `https://t.me/databek_bot?start=verify_${profile.nickname}_${profile.secret_number || 0}`
+                          : "#"
+                      }
+                      target={profileComplete ? "_blank" : undefined}
+                      rel={profileComplete ? "noopener noreferrer" : undefined}
+                      className={!profileComplete ? "pointer-events-none" : ""}
+                    >
+                      <Button
+                        size="sm"
+                        disabled={!profileComplete}
+                        className={
+                          profileComplete
+                            ? "bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90"
+                            : "bg-gray-700/80 text-gray-500 cursor-not-allowed backdrop-blur-sm"
+                        }
+                      >
+                        <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.296c-.146.658-.537.818-1.084.51l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121L8.48 13.278l-2.95-.924c-.642-.204-.654-.642.135-.953l11.447-4.415c.538-.196 1.006.13.45 1.262z" />
+                        </svg>
+                        Connect Telegram
+                      </Button>
+                    </Link>
+                    {!profileComplete && <p className="text-xs text-amber-400">Complete your profile first</p>}
+                  </div>
+                )}
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </CardContent>
+      </Card>
 
-        {/* Sign Out Button */}
-        {realProfile && (
-          <div className="border-t border-gray-200/50 pt-6 mt-6">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onSignOut}
-              disabled={isSigningOut}
-              className="w-full bg-red-50/80 backdrop-blur-sm text-red-600 border-red-200/50 hover:bg-red-100 hover:border-red-300 transition-all duration-300 font-semibold"
-            >
-              <LogOut className="mr-2 h-3 w-3" />
-              {isSigningOut ? t("dashboard.signingOut") : t("dashboard.signOut")}
-            </Button>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+      {/* Profile Widget - также с фоновым изображением */}
+      {realProfile && (
+        <Card
+          className="bg-gray-900/50 border border-gray-700 shadow-xl backdrop-blur-sm relative overflow-hidden"
+          style={{
+            backgroundImage: "url('/images/card_background.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          {/* Overlay для лучшей читаемости текста */}
+          <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm" />
+
+          <CardContent className="p-6 relative z-10">
+            <div className="flex items-center gap-4">
+              {/* Avatar */}
+              <div className="flex-shrink-0">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#00AEC7] to-cyan-600 flex items-center justify-center text-white font-bold text-xl">
+                  {profile?.first_name?.[0]?.toUpperCase() || "U"}
+                </div>
+              </div>
+
+              {/* Name and username */}
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg font-semibold text-white truncate">
+                  {profile?.first_name} {profile?.last_name}
+                </h3>
+                <p className="text-gray-300 text-sm">@{profile?.nickname}</p>
+              </div>
+
+              {/* View button */}
+              <div className="flex-shrink-0">
+                {profileComplete ? (
+                  <Link href={`/users/${profile.nickname}`}>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="bg-gray-800/80 border-gray-600 text-gray-300 backdrop-blur-sm hover:bg-gray-700/80"
+                    >
+                      <ExternalLink className="mr-2 h-4 w-4" />
+                      View
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={onEditProfile}
+                    className="bg-gray-800/80 border-[#00AEC7] text-[#00AEC7] backdrop-blur-sm hover:bg-[#00AEC7] hover:text-white"
+                  >
+                    <Edit className="mr-2 h-4 w-4" />
+                    Complete
+                  </Button>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Sign Out Button */}
+      {realProfile && (
+        <div className="flex justify-center">
+          <Button
+            variant="outline"
+            onClick={onSignOut}
+            disabled={isSigningOut}
+            className="bg-red-900/30 text-red-400 border-red-700/50 hover:bg-red-900/50"
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            {isSigningOut ? "Signing Out..." : "Sign Out"}
+          </Button>
+        </div>
+      )}
+    </div>
   )
 }
 
-// Компонент информационного блока о дашборде
-function DashboardInfo() {
+// Компонент Profile Tab
+function ProfileTab({ profile, loading, error }: { profile: any; loading: boolean; error: any }) {
+  return (
+    <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-[#00AEC7] mb-2">Your Profile</h2>
+        <p className="text-gray-400">Manage your profile information and settings</p>
+      </div>
+      <ProfileCard profile={profile} loading={loading} error={error} />
+    </div>
+  )
+}
+
+// Компонент Search Tab
+function SearchTab() {
   const { t } = useTranslation()
 
   return (
-    <Card className="overflow-hidden bg-gradient-to-br from-white via-gray-50 to-cyan-50/30 border-0 shadow-xl hover:shadow-2xl transition-all duration-500">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#00AEC7]/5 via-transparent to-[#FFF32A]/5" />
-
-      <CardContent className="relative pt-8">
-        <div className="flex items-start gap-6">
-          <div className="flex-shrink-0">
-            <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-[#00AEC7] to-cyan-600 flex items-center justify-center shadow-xl relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <TrendingUp className="h-8 w-8 text-white relative z-10 group-hover:scale-110 transition-transform duration-300" />
-            </div>
-          </div>
-          <div className="flex-1">
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-[#00AEC7] to-cyan-600 bg-clip-text text-transparent mb-3">
-              {t("dashboard.whatIsDashboardTitle")}
-            </h3>
-            <p className="text-gray-600 mb-6 leading-relaxed text-lg">{t("dashboard.whatIsDashboardDescription")}</p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {[
-                { color: "bg-[#00AEC7]", text: t("dashboard.feature1"), icon: Edit },
-                { color: "bg-[#FFF32A]", text: t("dashboard.feature2"), icon: Users },
-                { color: "bg-green-500", text: t("dashboard.feature3"), icon: Rocket },
-              ].map((feature, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-3 text-sm text-gray-600 group p-3 rounded-lg hover:bg-white/60 transition-all duration-300"
-                >
-                  <div
-                    className={`w-8 h-8 rounded-lg ${feature.color} flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300`}
-                  >
-                    <feature.icon className="h-4 w-4 text-white" />
-                  </div>
-                  <span className="group-hover:text-gray-800 transition-colors duration-300 font-medium">
-                    {feature.text}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-[#00AEC7] mb-2">{t("dashboard.communityMembers")}</h2>
+        <p className="text-gray-400">{t("dashboard.findCommunityMembers")}</p>
+      </div>
+      <Card className="bg-gray-900/50 border border-gray-700 shadow-xl backdrop-blur-sm">
+        <CardContent className="p-6">
+          <MemberSearch />
+        </CardContent>
+      </Card>
+    </div>
   )
 }
 
-// Обновим функцию Dashboard для лучшей обработки состояний
+// Главный компонент Dashboard
 function Dashboard() {
   const { user, profile, loading, profileError, signOut, initialized } = useAuth()
   const router = useRouter()
   const { t } = useTranslation()
   const [isClient, setIsClient] = useState(false)
   const [isSigningOut, setIsSigningOut] = useState(false)
+  const [activeTab, setActiveTab] = useState("overview")
 
   // Проверяем, заполнен ли профиль полностью
   const profileComplete = isProfileComplete(profile)
@@ -537,52 +477,49 @@ function Dashboard() {
   // Client-side skeleton
   if (!isClient) {
     return (
-      <div className="container py-12 space-y-8">
+      <div className="container py-6 sm:py-12 space-y-6 sm:space-y-8">
         <div className="text-center space-y-4">
-          <div className="h-16 w-96 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl animate-pulse mx-auto" />
+          <div className="h-12 sm:h-16 w-80 sm:w-96 bg-gray-800 rounded-2xl animate-pulse mx-auto" />
         </div>
-        <div className="h-48 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl animate-pulse" />
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-          <div className="h-96 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl animate-pulse" />
-          <div className="h-96 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl animate-pulse" />
-        </div>
+        <div className="h-32 sm:h-48 bg-gray-800 rounded-2xl animate-pulse" />
+        <div className="h-80 sm:h-96 bg-gray-800 rounded-2xl animate-pulse" />
       </div>
     )
   }
 
   return (
-    <div className="container py-12 space-y-12">
-      {/* Hero Section */}
-      <div className="text-center space-y-8">
-        <div className="relative inline-block">
-          <h1 className="text-5xl md:text-7xl font-black bg-gradient-to-r from-[#00AEC7] via-cyan-500 to-blue-600 bg-clip-text text-transparent leading-tight">
-            {t("dashboard.welcome")}
-          </h1>
-          {profile && (
-            <div className="mt-4">
-              <span className="text-4xl md:text-6xl font-black bg-gradient-to-r from-[#FFF32A] via-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                {profile.first_name}!
-              </span>
-            </div>
-          )}
-          <div className="absolute -top-6 -right-6 text-4xl animate-bounce">✨</div>
-          <div className="absolute -bottom-4 -left-6 text-3xl animate-pulse">🚀</div>
+    <div className="container py-6 sm:py-12 px-4 sm:px-6 max-w-6xl mx-auto">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        {/* Navigation Tabs */}
+        <div className="flex justify-center mb-8">
+          <TabsList className="grid w-full max-w-md grid-cols-3 bg-gray-900/50 border border-gray-700">
+            <TabsTrigger
+              value="overview"
+              className="data-[state=active]:bg-[#00AEC7] data-[state=active]:text-white text-gray-400"
+            >
+              <Home className="mr-2 h-4 w-4" />
+              <span className="hidden sm:inline">Overview</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="profile"
+              className="data-[state=active]:bg-[#00AEC7] data-[state=active]:text-white text-gray-400"
+            >
+              <User className="mr-2 h-4 w-4" />
+              <span className="hidden sm:inline">Profile</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="search"
+              className="data-[state=active]:bg-[#00AEC7] data-[state=active]:text-white text-gray-400"
+            >
+              <Search className="mr-2 h-4 w-4" />
+              <span className="hidden sm:inline">Search</span>
+            </TabsTrigger>
+          </TabsList>
         </div>
-      </div>
 
-      {/* Dashboard Info */}
-      <DashboardInfo />
-
-      {/* Main Content Grid - Profile Card и Quick Start Guide рядом */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
-        {/* Profile Card */}
-        <div className="w-full">
-          <ProfileCard profile={profile} loading={loading} error={profileError} />
-        </div>
-
-        {/* Quick Start Guide */}
-        <div className="w-full">
-          <StepGuide
+        {/* Tab Contents */}
+        <TabsContent value="overview" className="mt-0">
+          <OverviewTab
             profile={profile}
             profileComplete={profileComplete}
             realProfile={realProfile}
@@ -590,35 +527,16 @@ function Dashboard() {
             onSignOut={handleSignOut}
             isSigningOut={isSigningOut}
           />
-        </div>
-      </div>
+        </TabsContent>
 
-      {/* Community Search - размещаем ниже */}
-      <div className="max-w-4xl mx-auto">
-        <Card className="overflow-hidden bg-gradient-to-br from-white via-gray-50 to-cyan-50/30 border-0 shadow-xl hover:shadow-2xl transition-all duration-500">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#00AEC7]/5 via-transparent to-[#FFF32A]/5" />
+        <TabsContent value="profile" className="mt-0">
+          <ProfileTab profile={profile} loading={loading} error={profileError} />
+        </TabsContent>
 
-          <CardHeader className="relative pb-4 bg-gradient-to-r from-[#00AEC7]/10 to-[#FFF32A]/10 border-b border-gray-200/50">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00AEC7] to-cyan-600 flex items-center justify-center shadow-lg">
-                <Users className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-[#00AEC7] to-cyan-600 bg-clip-text text-transparent">
-                  {t("dashboard.communityMembers")}
-                </CardTitle>
-                <CardDescription className="text-gray-600 mt-1">{t("dashboard.findCommunityMembers")}</CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-
-          <CardContent className="relative p-8 space-y-6">
-            <div className="transform hover:scale-[1.01] transition-transform duration-200">
-              <MemberSearch />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+        <TabsContent value="search" className="mt-0">
+          <SearchTab />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

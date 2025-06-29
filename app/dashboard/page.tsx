@@ -135,7 +135,7 @@ function OverviewTab({
       {/* Join Telegram Chat Widget */}
       <Card className="shadow-lg border border-gray-700 bg-white">
         <div className="relative overflow-hidden rounded-xl min-h-[400px]">
-          {/* Фоновое изображение - адаптивное для веб и мобильных */}
+          {/* Фоновое изображение - исправлен URL для горизонтального фона */}
           <div
             className="absolute inset-0 block sm:hidden"
             style={{
@@ -155,8 +155,8 @@ function OverviewTab({
             }}
           />
 
-          {/* Полупрозрачный белый overlay для читаемости */}
-          <div className="absolute inset-0 bg-white/50" />
+          {/* Полупрозрачный белый overlay для читаемости - уменьшена прозрачность */}
+          <div className="absolute inset-0 bg-white/30" />
 
           <div className="relative z-10 h-full">
             <CardHeader className="bg-[#00AEC7] text-white relative z-20">
@@ -201,7 +201,7 @@ function OverviewTab({
                             ? "text-green-600"
                             : step.status === "in-progress"
                               ? "text-[#00AEC7]"
-                              : "text-gray-700"
+                              : "text-gray-800"
                         }`}
                       >
                         {t("dashboard.step")} {step.id}: {step.title}
@@ -223,7 +223,7 @@ function OverviewTab({
                             : t("dashboard.notStarted")}
                       </Badge>
                     </div>
-                    <p className="text-gray-600 text-sm mb-3">{step.description}</p>
+                    <p className="text-gray-700 text-sm mb-3">{step.description}</p>
 
                     {step.id === 1 && (
                       <div className="space-y-2">
@@ -292,7 +292,7 @@ function OverviewTab({
       {realProfile && (
         <Card className="shadow-lg border border-gray-700 bg-white">
           <div className="relative overflow-hidden rounded-xl min-h-[120px]">
-            {/* Фоновое изображение - адаптивное для веб и мобильных */}
+            {/* Фоновое изображение - исправлен URL для горизонтального фона */}
             <div
               className="absolute inset-0 block sm:hidden"
               style={{
@@ -312,8 +312,8 @@ function OverviewTab({
               }}
             />
 
-            {/* Полупрозрачный белый overlay для читаемости */}
-            <div className="absolute inset-0 bg-white/50" />
+            {/* Полупрозрачный белый overlay для читаемости - уменьшена прозрачность */}
+            <div className="absolute inset-0 bg-white/30" />
 
             <div className="relative z-10 h-full">
               <CardContent className="p-6 relative z-20">
@@ -412,7 +412,7 @@ function SearchTab() {
       {/* Search Widget */}
       <Card className="shadow-lg border border-gray-700 bg-white">
         <div className="relative overflow-hidden rounded-xl min-h-[500px]">
-          {/* Фоновое изображение - адаптивное для веб и мобильных */}
+          {/* Фоновое изображение - исправлен URL для горизонтального фона */}
           <div
             className="absolute inset-0 block sm:hidden"
             style={{
@@ -432,8 +432,8 @@ function SearchTab() {
             }}
           />
 
-          {/* Полупрозрачный белый overlay для читаемости */}
-          <div className="absolute inset-0 bg-white/50" />
+          {/* Полупрозрачный белый overlay для читаемости - уменьшена прозрачность */}
+          <div className="absolute inset-0 bg-white/30" />
 
           <div className="relative z-10 h-full">
             {/* Заголовок внутри карточки */}

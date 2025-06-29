@@ -95,9 +95,9 @@ export function ProfileForm({ initialProfile, isCreateMode, isOffline }: Profile
       return false
     }
 
-    // Check about_you word count
+    // Check about_you word count - changed from 10 to 15
     const aboutYouWords = formData.about_you.trim().split(/\s+/).filter(Boolean).length
-    if (aboutYouWords < 10) {
+    if (aboutYouWords < 15) {
       setError(t("profile.textLengthError"))
       toast({
         title: "Validation Error",
@@ -107,9 +107,9 @@ export function ProfileForm({ initialProfile, isCreateMode, isOffline }: Profile
       return false
     }
 
-    // Check motivation word count
+    // Check motivation word count - changed from 10 to 15
     const motivationWords = formData.motivation.trim().split(/\s+/).filter(Boolean).length
-    if (motivationWords < 10) {
+    if (motivationWords < 15) {
       setError(t("profile.textLengthError"))
       toast({
         title: "Validation Error",
@@ -402,8 +402,8 @@ export function ProfileForm({ initialProfile, isCreateMode, isOffline }: Profile
             required
             className="border-[#00AEC7]/30 focus-visible:ring-[#FFF32A]/50 focus-visible:border-[#00AEC7]"
           />
-          <p className="text-xs text-muted-foreground">{t("profile.aboutYouMinWords")}</p>
-          <WordCounter text={formData.about_you} minWords={10} onChange={setIsAboutYouValid} />
+          <p className="text-xs text-muted-foreground">Минимум 15 слов</p>
+          <WordCounter text={formData.about_you} minWords={15} onChange={setIsAboutYouValid} />
         </div>
 
         <div className="space-y-2">
@@ -420,8 +420,8 @@ export function ProfileForm({ initialProfile, isCreateMode, isOffline }: Profile
             placeholder={t("profile.motivationHint")}
             className="border-[#00AEC7]/30 focus-visible:ring-[#FFF32A]/50 focus-visible:border-[#00AEC7]"
           />
-          <p className="text-xs text-muted-foreground">{t("profile.motivationMinWords")}</p>
-          <WordCounter text={formData.motivation} minWords={10} onChange={setIsMotivationValid} />
+          <p className="text-xs text-muted-foreground">Минимум 15 слов</p>
+          <WordCounter text={formData.motivation} minWords={15} onChange={setIsMotivationValid} />
         </div>
       </div>
 

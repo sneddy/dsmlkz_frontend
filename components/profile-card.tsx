@@ -2,7 +2,7 @@
 import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { AlertTriangle, MapPin, Linkedin, Globe } from "lucide-react"
+import { AlertTriangle, MapPin, Linkedin, Globe, Edit, Eye } from "lucide-react"
 import { useTranslation } from "@/hooks/use-translation"
 import { BlobImage } from "@/components/ui/blob-image"
 import Link from "next/link"
@@ -31,9 +31,10 @@ interface ProfileCardProps {
   isPublic?: boolean
   error?: Error | null
   loading?: boolean
+  onEditProfile?: () => void
 }
 
-export function ProfileCard({ profile, isPublic = false, error, loading }: ProfileCardProps) {
+export function ProfileCard({ profile, isPublic = false, error, loading, onEditProfile }: ProfileCardProps) {
   const { t } = useTranslation()
   const [imageError, setImageError] = useState(false)
 
@@ -200,14 +201,27 @@ export function ProfileCard({ profile, isPublic = false, error, loading }: Profi
           )}
         </div>
 
-        {/* View Full Profile */}
+        {/* Action Buttons - only show for non-public profiles */}
         {!isPublic && (
-          <div className="mt-4">
-            <Link href={`/users/${profile.nickname}`}>
-              <Button variant="outline" size="sm" className="bg-[#00AEC7] text-white hover:bg-[#00AEC7]/90">
-                {t("dashboard.viewProfile")}
-              </Button>
-            </Link>
+          <div className="w-full pt-4 mt-4 border-t border-gray-200">
+            <div className="flex gap-3 justify-center">
+              {onEditProfile && (
+                <Button onClick={onEditProfile} size="sm" className="bg-[#00AEC7] text-white hover:bg-[#00AEC7]/90">
+                  <Edit className="h-4 w-4 mr-2" />
+                  {t("dashboard.editProfile")}
+                </Button>
+              )}
+              <Link href={`/users/${profile.nickname}`}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7]/10 bg-transparent"
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  {t("dashboard.viewProfile")}
+                </Button>
+              </Link>
+            </div>
           </div>
         )}
       </CardContent>

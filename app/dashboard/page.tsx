@@ -55,10 +55,11 @@ function isProfileComplete(profile: any): boolean {
     }
   }
 
+  // Updated to check for 15 words instead of 10
   const aboutYouWords = profile.about_you.trim().split(/\s+/).filter(Boolean).length
   const motivationWords = profile.motivation.trim().split(/\s+/).filter(Boolean).length
 
-  if (aboutYouWords < 10 || motivationWords < 10) {
+  if (aboutYouWords < 15 || motivationWords < 15) {
     return false
   }
 
@@ -134,7 +135,7 @@ function OverviewTab({
         <div className="relative overflow-hidden rounded-xl min-h-[400px]">
           {/* Фоновое изображение - адаптивное для веб и мобильных */}
           <div
-            className="absolute inset-0 sm:hidden"
+            className="absolute inset-0 block sm:hidden"
             style={{
               backgroundImage: `url('https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/general/card_background.png')`,
               backgroundSize: "cover",
@@ -153,7 +154,7 @@ function OverviewTab({
           />
 
           {/* Полупрозрачный белый overlay для читаемости */}
-          <div className="absolute inset-0 bg-white/60" />
+          <div className="absolute inset-0 bg-white/50" />
 
           <div className="relative z-10 h-full">
             <CardHeader className="bg-[#00AEC7] text-white relative z-20">
@@ -162,8 +163,8 @@ function OverviewTab({
                   <MessageCircle className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <CardTitle className="text-xl font-bold">Join Telegram Chat</CardTitle>
-                  <CardDescription className="text-white/80">
+                  <CardTitle className="text-xl font-bold text-white">Join Telegram Chat</CardTitle>
+                  <CardDescription className="text-white/90">
                     Follow these steps to join our private community
                   </CardDescription>
                 </div>
@@ -291,7 +292,7 @@ function OverviewTab({
           <div className="relative overflow-hidden rounded-xl min-h-[120px]">
             {/* Фоновое изображение - адаптивное для веб и мобильных */}
             <div
-              className="absolute inset-0 sm:hidden"
+              className="absolute inset-0 block sm:hidden"
               style={{
                 backgroundImage: `url('https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/general/card_background.png')`,
                 backgroundSize: "cover",
@@ -310,7 +311,7 @@ function OverviewTab({
             />
 
             {/* Полупрозрачный белый overlay для читаемости */}
-            <div className="absolute inset-0 bg-white/60" />
+            <div className="absolute inset-0 bg-white/50" />
 
             <div className="relative z-10 h-full">
               <CardContent className="p-6 relative z-20">
@@ -377,14 +378,24 @@ function OverviewTab({
   )
 }
 
-function ProfileTab({ profile, loading, error }: { profile: any; loading: boolean; error: any }) {
+function ProfileTab({
+  profile,
+  loading,
+  error,
+  onEditProfile,
+}: {
+  profile: any
+  loading: boolean
+  error: any
+  onEditProfile: () => void
+}) {
   return (
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-[#00AEC7] mb-2">Your Profile</h2>
         <p className="text-gray-400">Manage your profile information and settings</p>
       </div>
-      <ProfileCard profile={profile} loading={loading} error={error} />
+      <ProfileCard profile={profile} loading={loading} error={error} onEditProfile={onEditProfile} />
     </div>
   )
 }
@@ -397,7 +408,7 @@ function SearchTab() {
         <div className="relative overflow-hidden rounded-xl min-h-[500px]">
           {/* Фоновое изображение - адаптивное для веб и мобильных */}
           <div
-            className="absolute inset-0 sm:hidden"
+            className="absolute inset-0 block sm:hidden"
             style={{
               backgroundImage: `url('https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/general/card_background.png')`,
               backgroundSize: "cover",
@@ -416,7 +427,7 @@ function SearchTab() {
           />
 
           {/* Полупрозрачный белый overlay для читаемости */}
-          <div className="absolute inset-0 bg-white/60" />
+          <div className="absolute inset-0 bg-white/50" />
 
           <div className="relative z-10 h-full">
             {/* Заголовок внутри карточки */}
@@ -562,7 +573,7 @@ function Dashboard() {
         </TabsContent>
 
         <TabsContent value="profile" className="mt-0">
-          <ProfileTab profile={profile} loading={loading} error={profileError} />
+          <ProfileTab profile={profile} loading={loading} error={profileError} onEditProfile={handleEditProfile} />
         </TabsContent>
 
         <TabsContent value="search" className="mt-0">

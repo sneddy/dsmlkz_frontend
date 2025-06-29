@@ -83,6 +83,13 @@ function OverviewTab({
 }) {
   const { t } = useTranslation()
 
+  // Gradient border style like in profile card
+  const gradientBorderStyle = {
+    borderWidth: "4px",
+    borderStyle: "solid",
+    borderImage: "linear-gradient(to right, #FFD700, #00b2b2) 1",
+  }
+
   const getStepStatus = (stepId: number) => {
     switch (stepId) {
       case 1:
@@ -133,8 +140,8 @@ function OverviewTab({
       </div>
 
       {/* Join Telegram Chat Widget */}
-      <Card className="shadow-lg border border-gray-700 bg-white">
-        <div className="relative overflow-hidden rounded-xl min-h-[400px]">
+      <Card className="shadow-lg border-0 bg-white overflow-hidden" style={gradientBorderStyle}>
+        <div className="relative rounded-xl min-h-[400px]">
           {/* Фоновое изображение - исправлен URL для горизонтального фона */}
           <div
             className="absolute inset-0 block sm:hidden"
@@ -201,7 +208,7 @@ function OverviewTab({
                             ? "text-green-600"
                             : step.status === "in-progress"
                               ? "text-[#00AEC7]"
-                              : "text-gray-800"
+                              : "text-[#00AEC7]"
                         }`}
                       >
                         {t("dashboard.step")} {step.id}: {step.title}
@@ -229,7 +236,11 @@ function OverviewTab({
                       <div className="space-y-2">
                         {!realProfile ? (
                           <Link href="/profile?mode=create">
-                            <Button size="sm" className="bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90">
+                            <Button
+                              size="sm"
+                              className="bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90 border-0"
+                              style={gradientBorderStyle}
+                            >
                               <UserPlus className="mr-2 h-4 w-4" />
                               {t("dashboard.createProfile")}
                             </Button>
@@ -239,7 +250,8 @@ function OverviewTab({
                             size="sm"
                             variant="outline"
                             onClick={onEditProfile}
-                            className="border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white bg-white/90"
+                            className="text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white bg-white/90 border-0"
+                            style={gradientBorderStyle}
                           >
                             <Edit className="mr-2 h-4 w-4" />
                             {t("dashboard.editProfile")}
@@ -263,11 +275,12 @@ function OverviewTab({
                           <Button
                             size="sm"
                             disabled={!profileComplete}
-                            className={
+                            className={`border-0 ${
                               profileComplete
                                 ? "bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90"
                                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                            }
+                            }`}
+                            style={profileComplete ? gradientBorderStyle : undefined}
                           >
                             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
                               <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.296c-.146.658-.537.818-1.084.51l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121L8.48 13.278l-2.95-.924c-.642-.204-.654-.642.135-.953l11.447-4.415c.538-.196 1.006.13.45 1.262z" />
@@ -290,8 +303,8 @@ function OverviewTab({
 
       {/* Profile Widget */}
       {realProfile && (
-        <Card className="shadow-lg border border-gray-700 bg-white">
-          <div className="relative overflow-hidden rounded-xl min-h-[120px]">
+        <Card className="shadow-lg border-0 bg-white overflow-hidden" style={gradientBorderStyle}>
+          <div className="relative rounded-xl min-h-[120px]">
             {/* Фоновое изображение - исправлен URL для горизонтального фона */}
             <div
               className="absolute inset-0 block sm:hidden"
@@ -337,7 +350,8 @@ function OverviewTab({
                         <Button
                           size="sm"
                           variant="outline"
-                          className="border-gray-300 text-gray-700 hover:bg-gray-50 bg-white/90"
+                          className="text-gray-700 hover:bg-gray-50 bg-white/90 border-0"
+                          style={gradientBorderStyle}
                         >
                           <ExternalLink className="mr-2 h-4 w-4" />
                           {t("dashboard.view")}
@@ -348,7 +362,8 @@ function OverviewTab({
                         size="sm"
                         variant="outline"
                         onClick={onEditProfile}
-                        className="border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white bg-white/90"
+                        className="text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white bg-white/90 border-0"
+                        style={gradientBorderStyle}
                       >
                         <Edit className="mr-2 h-4 w-4" />
                         {t("dashboard.complete")}
@@ -369,7 +384,8 @@ function OverviewTab({
             variant="outline"
             onClick={onSignOut}
             disabled={isSigningOut}
-            className="bg-red-50 text-red-600 border-red-300 hover:bg-red-100"
+            className="bg-red-50 text-red-600 hover:bg-red-100 border-0"
+            style={gradientBorderStyle}
           >
             <LogOut className="mr-2 h-4 w-4" />
             {isSigningOut ? t("dashboard.signingOut") : t("dashboard.signOut")}
@@ -407,11 +423,18 @@ function ProfileTab({
 function SearchTab() {
   const { t } = useTranslation()
 
+  // Gradient border style like in profile card
+  const gradientBorderStyle = {
+    borderWidth: "4px",
+    borderStyle: "solid",
+    borderImage: "linear-gradient(to right, #FFD700, #00b2b2) 1",
+  }
+
   return (
     <div className="space-y-6">
       {/* Search Widget */}
-      <Card className="shadow-lg border border-gray-700 bg-white">
-        <div className="relative overflow-hidden rounded-xl min-h-[500px]">
+      <Card className="shadow-lg border-0 bg-white overflow-hidden" style={gradientBorderStyle}>
+        <div className="relative rounded-xl min-h-[500px]">
           {/* Фоновое изображение - исправлен URL для горизонтального фона */}
           <div
             className="absolute inset-0 block sm:hidden"

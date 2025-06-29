@@ -4,6 +4,7 @@
 import "@radix-ui/react-dialog"
 import "@radix-ui/react-dropdown-menu"
 import "@radix-ui/react-label"
+import "@radix-ui/react-progress"
 import "@radix-ui/react-slot"
 import "@radix-ui/react-switch"
 import "@radix-ui/react-tabs"

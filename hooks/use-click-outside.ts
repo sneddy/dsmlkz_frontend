@@ -1,12 +1,16 @@
 "use client"
 
-import { useEffect, type RefObject } from "react"
+import { useEffect, useRef } from "react"
 
-export function useOnClickOutside(ref: RefObject<HTMLElement>, handler: (event: MouseEvent | TouchEvent) => void) {
+export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
+  handler: (event: MouseEvent | TouchEvent) => void,
+) {
+  const ref = useRef<T>(null)
+
   useEffect(() => {
     const listener = (event: MouseEvent | TouchEvent) => {
       const el = ref?.current
-      if (!el || el.contains(event.target as Node)) {
+      if (!el || el.contains((event?.target as Node) || null)) {
         return
       }
 
@@ -20,8 +24,10 @@ export function useOnClickOutside(ref: RefObject<HTMLElement>, handler: (event: 
       document.removeEventListener("mousedown", listener)
       document.removeEventListener("touchstart", listener)
     }
-  }, [ref, handler])
+  }, [handler])
+
+  return ref
 }
 
-// Allow consumers to import either name
-export { useOnClickOutside as useClickOutside }
+// Export alias for compatibility
+export const useClickOutside = useOnClickOutside

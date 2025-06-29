@@ -170,7 +170,7 @@ function StepGuide({
   ]
 
   return (
-    <Card className="overflow-hidden bg-gradient-to-br from-white via-gray-50 to-blue-50/30 border-0 shadow-2xl">
+    <Card className="overflow-hidden bg-gradient-to-br from-white via-gray-50 to-blue-50/30 border-0 shadow-2xl h-fit">
       <div className="absolute inset-0 bg-gradient-to-br from-[#00AEC7]/5 via-transparent to-[#FFF32A]/5" />
 
       <CardHeader className="relative pb-6 bg-gradient-to-r from-[#00AEC7]/10 to-[#FFF32A]/10 border-b border-gray-200/50">
@@ -185,14 +185,16 @@ function StepGuide({
               </div>
             </div>
             <div>
-              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-[#00AEC7] to-cyan-600 bg-clip-text text-transparent">
+              <CardTitle className="text-xl font-bold bg-gradient-to-r from-[#00AEC7] to-cyan-600 bg-clip-text text-transparent">
                 {t("dashboard.quickStartTitle")}
               </CardTitle>
-              <CardDescription className="text-gray-600 mt-1">{t("dashboard.quickStartDescription")}</CardDescription>
+              <CardDescription className="text-gray-600 mt-1 text-sm">
+                {t("dashboard.quickStartDescription")}
+              </CardDescription>
             </div>
           </div>
           <div className="hidden sm:block">
-            <Badge variant="outline" className="bg-white/80 backdrop-blur-sm border-[#00AEC7]/20">
+            <Badge variant="outline" className="bg-white/80 backdrop-blur-sm border-[#00AEC7]/20 text-xs">
               <Target className="h-3 w-3 mr-1" />
               {t("dashboard.getStarted")}
             </Badge>
@@ -204,15 +206,15 @@ function StepGuide({
         </div>
       </CardHeader>
 
-      <CardContent className="relative p-8 space-y-8">
+      <CardContent className="relative p-6 space-y-6">
         {steps.map((step, index) => (
           <div key={step.id} className="group relative">
             {/* Connection line */}
             {index < steps.length - 1 && (
-              <div className="absolute left-6 top-16 w-0.5 h-16 bg-gradient-to-b from-gray-300 to-gray-200 group-hover:from-[#00AEC7]/50 group-hover:to-[#00AEC7]/20 transition-all duration-500" />
+              <div className="absolute left-6 top-14 w-0.5 h-12 bg-gradient-to-b from-gray-300 to-gray-200 group-hover:from-[#00AEC7]/50 group-hover:to-[#00AEC7]/20 transition-all duration-500" />
             )}
 
-            <div className="flex gap-6">
+            <div className="flex gap-4">
               {/* Step indicator */}
               <div className="relative z-10 flex-shrink-0">
                 <div
@@ -225,83 +227,83 @@ function StepGuide({
                   }`}
                 >
                   {step.completed ? (
-                    <CheckCircle className="h-6 w-6 text-white" />
+                    <CheckCircle className="h-5 w-5 text-white" />
                   ) : (
-                    <step.icon className={`h-6 w-6 ${step.current ? "text-black" : "text-gray-500"}`} />
+                    <step.icon className={`h-5 w-5 ${step.current ? "text-black" : "text-gray-500"}`} />
                   )}
                 </div>
               </div>
 
               {/* Step content */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <h3
-                      className={`text-xl font-bold transition-colors duration-300 ${
+                      className={`text-lg font-bold transition-colors duration-300 ${
                         step.completed ? "text-green-600" : step.current ? "text-[#00AEC7]" : "text-gray-700"
                       }`}
                     >
                       {step.title}
                     </h3>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-1">
                       {step.completed && (
-                        <Badge className="bg-green-100 text-green-700 border-green-200">
-                          <Star className="h-3 w-3 mr-1" />
+                        <Badge className="bg-green-100 text-green-700 border-green-200 text-xs">
+                          <Star className="h-2.5 w-2.5 mr-1" />
                           {t("dashboard.completed")}
                         </Badge>
                       )}
                       {step.current && (
-                        <Badge className="bg-[#FFF32A] text-black border-yellow-300">
-                          <Zap className="h-3 w-3 mr-1" />
+                        <Badge className="bg-[#FFF32A] text-black border-yellow-300 text-xs">
+                          <Zap className="h-2.5 w-2.5 mr-1" />
                           {t("dashboard.current")}
                         </Badge>
                       )}
-                      <Badge variant="outline" className="bg-white/60 backdrop-blur-sm">
-                        <Clock className="h-3 w-3 mr-1" />
+                      <Badge variant="outline" className="bg-white/60 backdrop-blur-sm text-xs">
+                        <Clock className="h-2.5 w-2.5 mr-1" />
                         {step.estimatedTime}
                       </Badge>
                     </div>
                   </div>
                 </div>
 
-                <p className="text-gray-600 mb-6 leading-relaxed">{step.description}</p>
+                <p className="text-gray-600 mb-4 leading-relaxed text-sm">{step.description}</p>
 
                 {/* Step actions */}
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {/* Step 1: Fill your profile */}
                   {step.id === 1 && (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       {!realProfile ? (
                         <Link href="/profile?mode=create" className="block relative z-10">
                           <Button
-                            size="lg"
+                            size="sm"
                             className="w-full bg-gradient-to-r from-[#FFF32A] to-yellow-400 text-black hover:from-yellow-400 hover:to-[#FFF32A] border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] font-semibold cursor-pointer"
                           >
-                            <UserPlus className="mr-3 h-5 w-5" />
+                            <UserPlus className="mr-2 h-4 w-4" />
                             {t("dashboard.createProfile")}
-                            <ArrowRight className="ml-3 h-5 w-5" />
+                            <ArrowRight className="ml-2 h-4 w-4" />
                           </Button>
                         </Link>
                       ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 gap-2">
                           <Button
                             variant="outline"
-                            size="lg"
+                            size="sm"
                             onClick={onEditProfile}
                             className="relative z-10 bg-white/90 backdrop-blur-sm border-[#00AEC7]/30 text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white transition-all duration-300 font-semibold cursor-pointer"
                           >
-                            <Edit className="mr-2 h-4 w-4" />
+                            <Edit className="mr-2 h-3 w-3" />
                             {t("dashboard.editProfile")}
                           </Button>
                           {profileComplete && (
                             <Link href={`/users/${profile.nickname}`} className="relative z-10">
                               <Button
                                 variant="outline"
-                                size="lg"
+                                size="sm"
                                 className="w-full bg-white/90 backdrop-blur-sm border-[#FFF32A]/50 text-gray-700 hover:bg-[#FFF32A] hover:text-black transition-all duration-300 font-semibold cursor-pointer"
                               >
-                                <ExternalLink className="mr-2 h-4 w-4" />
+                                <ExternalLink className="mr-2 h-3 w-3" />
                                 {t("dashboard.viewProfile")}
                               </Button>
                             </Link>
@@ -309,10 +311,10 @@ function StepGuide({
                         </div>
                       )}
                       {realProfile && !profileComplete && (
-                        <div className="bg-amber-50/80 backdrop-blur-sm border border-amber-200/50 rounded-xl p-4 shadow-inner">
-                          <div className="flex items-center gap-3">
+                        <div className="bg-amber-50/80 backdrop-blur-sm border border-amber-200/50 rounded-lg p-3 shadow-inner">
+                          <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                            <p className="text-sm font-medium text-amber-800">
+                            <p className="text-xs font-medium text-amber-800">
                               {t("dashboard.incompleteProfileMessage")}
                             </p>
                           </div>
@@ -323,12 +325,12 @@ function StepGuide({
 
                   {/* Step 2: Attach your Telegram */}
                   {step.id === 2 && (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       {!profileComplete && (
-                        <div className="bg-blue-50/80 backdrop-blur-sm border border-blue-200/50 rounded-xl p-4 shadow-inner">
-                          <div className="flex items-center gap-3">
-                            <Shield className="h-4 w-4 text-blue-600" />
-                            <p className="text-sm font-medium text-blue-800">
+                        <div className="bg-blue-50/80 backdrop-blur-sm border border-blue-200/50 rounded-lg p-3 shadow-inner">
+                          <div className="flex items-center gap-2">
+                            <Shield className="h-3 w-3 text-blue-600" />
+                            <p className="text-xs font-medium text-blue-800">
                               {t("dashboard.completeProfileForTelegram")}
                             </p>
                           </div>
@@ -351,7 +353,7 @@ function StepGuide({
                         }}
                       >
                         <Button
-                          size="lg"
+                          size="sm"
                           disabled={!profileComplete}
                           className={`w-full font-semibold transition-all duration-300 transform hover:scale-[1.02] relative z-10 ${
                             profileComplete
@@ -359,11 +361,11 @@ function StepGuide({
                               : "bg-gray-200 text-gray-500 cursor-not-allowed border-0"
                           }`}
                         >
-                          <svg className="mr-3 h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                          <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.296c-.146.658-.537.818-1.084.51l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121L8.48 13.278l-2.95-.924c-.642-.204-.654-.642.135-.953l11.447-4.415c.538-.196 1.006.13.45 1.262z" />
                           </svg>
                           {t("dashboard.attachTelegram")}
-                          {profileComplete && <ArrowRight className="ml-3 h-5 w-5" />}
+                          {profileComplete && <ArrowRight className="ml-2 h-4 w-4" />}
                         </Button>
                       </Link>
                     </div>
@@ -371,11 +373,11 @@ function StepGuide({
 
                   {/* Step 3: Join our Discussion Hub */}
                   {step.id === 3 && (
-                    <div className="space-y-4">
-                      <div className="bg-green-50/80 backdrop-blur-sm border border-green-200/50 rounded-xl p-4 shadow-inner">
-                        <div className="flex items-center gap-3">
-                          <Heart className="h-4 w-4 text-green-600" />
-                          <p className="text-sm font-medium text-green-800">{t("dashboard.enjoyTelegramCommunity")}</p>
+                    <div className="space-y-3">
+                      <div className="bg-green-50/80 backdrop-blur-sm border border-green-200/50 rounded-lg p-3 shadow-inner">
+                        <div className="flex items-center gap-2">
+                          <Heart className="h-3 w-3 text-green-600" />
+                          <p className="text-xs font-medium text-green-800">{t("dashboard.enjoyTelegramCommunity")}</p>
                         </div>
                       </div>
                     </div>
@@ -388,15 +390,15 @@ function StepGuide({
 
         {/* Sign Out Button */}
         {realProfile && (
-          <div className="border-t border-gray-200/50 pt-8 mt-8">
+          <div className="border-t border-gray-200/50 pt-6 mt-6">
             <Button
               variant="outline"
-              size="lg"
+              size="sm"
               onClick={onSignOut}
               disabled={isSigningOut}
               className="w-full bg-red-50/80 backdrop-blur-sm text-red-600 border-red-200/50 hover:bg-red-100 hover:border-red-300 transition-all duration-300 font-semibold"
             >
-              <LogOut className="mr-2 h-4 w-4" />
+              <LogOut className="mr-2 h-3 w-3" />
               {isSigningOut ? t("dashboard.signingOut") : t("dashboard.signOut")}
             </Button>
           </div>
@@ -540,7 +542,7 @@ function Dashboard() {
           <div className="h-16 w-96 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl animate-pulse mx-auto" />
         </div>
         <div className="h-48 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl animate-pulse" />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
           <div className="h-96 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl animate-pulse" />
           <div className="h-96 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl animate-pulse" />
         </div>
@@ -572,14 +574,14 @@ function Dashboard() {
       <DashboardInfo />
 
       {/* Main Content Grid - Profile Card и Quick Start Guide рядом */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
         {/* Profile Card */}
-        <div className="space-y-6">
+        <div className="w-full">
           <ProfileCard profile={profile} loading={loading} error={profileError} />
         </div>
 
         {/* Quick Start Guide */}
-        <div className="space-y-6">
+        <div className="w-full">
           <StepGuide
             profile={profile}
             profileComplete={profileComplete}

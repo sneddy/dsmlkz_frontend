@@ -209,40 +209,7 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Community Values Section */}
-      <section className="bg-muted py-12">
-        <div className="container px-4 md:px-6">
-          <h2 className="text-2xl font-bold mb-6 text-center font-pixel text-[#FFF32A]">{t("rules.valuesTitle")}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="bg-background" style={gradientBorderStyle}>
-              <CardHeader>
-                <CardTitle className="font-pixel text-[#00AEC7]">{t("home.communityFirst")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">{t("home.communityFirstDesc")}</p>
-              </CardContent>
-            </Card>
-            <Card className="bg-background" style={gradientBorderStyle}>
-              <CardHeader>
-                <CardTitle className="font-pixel text-[#00AEC7]">{t("home.continuousLearning")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">{t("home.continuousLearningDesc")}</p>
-              </CardContent>
-            </Card>
-            <Card className="bg-background" style={gradientBorderStyle}>
-              <CardHeader>
-                <CardTitle className="font-pixel text-[#00AEC7]">{t("home.careerGrowth")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">{t("home.careerGrowthDesc")}</p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Collaboration Section */}
+      {/* Collaboration Section - moved above Community Values */}
       <section className="container px-4 md:px-6 py-12">
         <div className="text-center mb-12">
           <h2 className="text-2xl font-bold mb-4 font-pixel text-[#FFF32A]">{t("home.collaborationTitle")}</h2>
@@ -287,6 +254,39 @@ export function HomeContent() {
               {t("home.collaborationContact")}
             </Button>
           </Link>
+        </div>
+      </section>
+
+      {/* Community Values Section - moved below Collaboration */}
+      <section className="bg-muted py-12">
+        <div className="container px-4 md:px-6">
+          <h2 className="text-2xl font-bold mb-6 text-center font-pixel text-[#FFF32A]">{t("rules.valuesTitle")}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="bg-background" style={gradientBorderStyle}>
+              <CardHeader>
+                <CardTitle className="font-pixel text-[#00AEC7]">{t("home.communityFirst")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">{t("home.communityFirstDesc")}</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-background" style={gradientBorderStyle}>
+              <CardHeader>
+                <CardTitle className="font-pixel text-[#00AEC7]">{t("home.continuousLearning")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">{t("home.continuousLearningDesc")}</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-background" style={gradientBorderStyle}>
+              <CardHeader>
+                <CardTitle className="font-pixel text-[#00AEC7]">{t("home.careerGrowth")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">{t("home.careerGrowthDesc")}</p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
     </div>

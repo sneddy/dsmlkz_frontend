@@ -1,60 +1,49 @@
 {
   "title": "DSML Kazakhstan",
-  "subtitle": "The hub for Data Science and Machine Learning enthusiasts in Kazakhstan",
+  "subtitle": "Data Science & Machine Learning Community",
   "joinButton": "Join Community",
-  "channelsTitle": "Join Our Channels",
-  "registerTitle": "Register for Our Community",
-  "followUs": "Follow Us",
-  "communityFirst": "Community First",
-  "communityFirstDesc": "Join our vibrant community of data enthusiasts",
-  "continuousLearning": "Continuous Learning",
-  "continuousLearningDesc": "Access resources and learn from experts",
-  "careerGrowth": "Career Growth",
-  "careerGrowthDesc": "Find opportunities in Data Science & ML",
-  "signIn": "Sign In",
-  "signUp": "Sign Up",
-  "newsFeed": {
-    "title": "News Feed",
-    "subtitle": "Stay updated with the latest in Data Science and Machine Learning",
-    "highlights": "Highlights",
-    "highlightsDesc": "Key updates and trending topics in the DSML community"
-  },
-  "communityDescription": "We are the Kazakhstan's largest AI community, fostering knowledge sharing and professional growth in AI/ML. Established in October 2017, DSML KZ actively shapes the AI ecosystem in Central Asia through a thriving network of community channels, media platforms, and career resources.",
-  "discussionHubTitle": "Discussion Hub",
-  "discussionHubDescription": "Join our active Telegram community with specialized topics and AI-generated business cards for members.",
-  "newsFeedTitle": "News Feed",
-  "newsFeedDescription": "Stay updated with the latest news and announcements from the DSML Kazakhstan community.",
-  "dataJobsTitle": "DS Jobs",
-  "dataJobsDescription": "Find the latest Data Science and Machine Learning job opportunities in Kazakhstan.",
-  "itJobsTitle": "IT Jobs",
-  "itJobsDescription": "Discover IT job opportunities across various tech domains in Kazakhstan.",
-  "youtubeChannelTitle": "YouTube Channel",
-  "youtubeChannelDescription": "Watch tutorials, talks, and interviews about Data Science",
-  "linkedinPageTitle": "LinkedIn Page",
-  "linkedinPageDescription": "Connect with industry professionals and follow the latest updates from our community.",
-  "joinButton": "Join",
   "subscribeButton": "Subscribe",
-  "collaborationTitle": "Partnership & Collaboration",
-  "collaborationSubtitle": "Discover how we can help your business grow with AI/ML expertise",
-  "collaborationContact": "Contact us",
+  "channelsTitle": "Our Channels",
+  "communityDescription": "Join our thriving community of data scientists, ML engineers, and AI enthusiasts across Kazakhstan",
+  "discussionHubTitle": "Discussion Hub",
+  "discussionHubDescription": "Main community chat for discussions, networking, and knowledge sharing",
+  "newsFeedTitle": "News Channel",
+  "newsFeedDescription": "Latest updates, events, and industry news",
+  "dataJobsTitle": "DS Jobs",
+  "dataJobsDescription": "Data Science and Machine Learning job opportunities",
+  "itJobsTitle": "IT Jobs",
+  "itJobsDescription": "General IT and tech job opportunities",
+  "youtubeChannelTitle": "YouTube Channel",
+  "youtubeChannelDescription": "Educational content and community events",
+  "linkedinPageTitle": "LinkedIn Page",
+  "linkedinPageDescription": "Professional networking and industry insights",
+  "communityFirst": "Community First",
+  "communityFirstDesc": "We prioritize building strong relationships and supporting each other's growth",
+  "continuousLearning": "Continuous Learning",
+  "continuousLearningDesc": "We believe in lifelong learning and sharing knowledge with the community",
+  "careerGrowth": "Career Growth",
+  "careerGrowthDesc": "We help members advance their careers through mentorship and opportunities",
+  "collaborationTitle": "Partnership Opportunities",
+  "collaborationSubtitle": "Discover how we can help your business grow with our expertise and community reach",
+  "collaborationContact": "Contact Us",
   "mediaSupport": {
     "title": "Media Support & Advertising",
     "description": "Reach 10K+ loyal AI/ML professionals",
-    "details": "We have a network of Telegram channels, LinkedIn, and YouTube with more than 10,000 unique loyal users that we have been leading since 2017. Our audience consists of highly engaged AI/ML professionals, researchers, and enthusiasts."
+    "details": "We have a network of Telegram channels, LinkedIn, and YouTube with more than 10K unique loyal users that we have been leading since 2017. Our audience consists of highly engaged data scientists, ML engineers, and AI enthusiasts across Kazakhstan and Central Asia."
   },
   "hiring": {
     "title": "Hiring & Interviews",
-    "description": "Connect with top-tier AI/ML specialists",
-    "details": "We help with hiring top-tier AI and ML specialists and managers since 2017. Among our community residents are many hiring managers with extensive experience in building successful ML and AI teams."
+    "description": "Find top-tier AI/ML specialists and managers",
+    "details": "We help with hiring top-tier specialists and managers in AI and ML since 2017. Among our community residents are many hiring managers with extensive experience in building successful ML and AI teams. We can connect you with the right talent and provide interview support."
   },
   "corporateTraining": {
     "title": "Corporate AI Training",
-    "description": "Custom AI courses and competitions",
-    "details": "We organize corporate courses on Artificial Intelligence. The community has accumulated unique expertise in organizing AI competitions (for example, we held the first AI Republican Olympiad in Kazakhstan and participated in training the main team of the country), which can help strengthen your HR brand in the region and even prototype solutions to real company problems with the help of participants. The founder of the Community ranked 14th in the world on kaggle.com and has unique experience in both solving and creating such competitions."
+    "description": "Custom AI courses and competitions for your team",
+    "details": "The community has accumulated unique expertise in organizing AI competitions (for example, we conducted the first AI Republican Olympiad in Kazakhstan and participated in training the main team of the country). This can help strengthen your HR brand in the region and even prototype solutions to real company problems with the help of participants. The founder of the Community ranked 14th in the world on kaggle.com and has unique experience in both solving and creating such competitions."
   },
   "consulting": {
     "title": "Investment Consulting",
-    "description": "Early-stage business evaluation",
-    "details": "We provide consultations on assessing the prospects of various businesses at an early stage for investments. Our community residents have extensive experience in evaluating AI/ML startups and understanding market trends in the region."
+    "description": "Early-stage business evaluation for investments",
+    "details": "Our experienced community members provide consulting on evaluating the prospects of various businesses at an early stage for investments. We leverage our deep technical expertise and market knowledge to help investors make informed decisions in the AI/ML space."
   }
 }

@@ -2,12 +2,12 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ExternalLink } from "lucide-react"
+import { ExternalLink, MessageCircle } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-import { NewsFeed } from "@/components/news-feed"
 import { useTranslation } from "@/hooks/use-translation"
 import { useEffect, useState } from "react"
+import { CollaborationCard } from "@/components/collaboration-card"
 
 export function HomeContent() {
   const { t } = useTranslation()
@@ -242,10 +242,52 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* News Feed Section - moved to the end */}
-      <section className="container px-4 md:px-6 py-6">
-        <h2 className="text-2xl font-bold mb-6 font-pixel text-[#FFF32A] text-center">{t("newsFeed.title")}</h2>
-        <NewsFeed showFullText={true} />
+      {/* Collaboration Section */}
+      <section className="container px-4 md:px-6 py-12">
+        <div className="text-center mb-12">
+          <h2 className="text-2xl font-bold mb-4 font-pixel text-[#FFF32A]">{t("home.collaborationTitle")}</h2>
+          <p className="text-center mb-8 max-w-3xl mx-auto text-white">{t("home.collaborationSubtitle")}</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <CollaborationCard
+            title={t("home.mediaSupport.title")}
+            description={t("home.mediaSupport.description")}
+            details={t("home.mediaSupport.details")}
+            gradientBorderStyle={gradientBorderStyle}
+          />
+
+          <CollaborationCard
+            title={t("home.hiring.title")}
+            description={t("home.hiring.description")}
+            details={t("home.hiring.details")}
+            gradientBorderStyle={gradientBorderStyle}
+          />
+
+          <CollaborationCard
+            title={t("home.corporateTraining.title")}
+            description={t("home.corporateTraining.description")}
+            details={t("home.corporateTraining.details")}
+            gradientBorderStyle={gradientBorderStyle}
+          />
+
+          <CollaborationCard
+            title={t("home.consulting.title")}
+            description={t("home.consulting.description")}
+            details={t("home.consulting.details")}
+            gradientBorderStyle={gradientBorderStyle}
+          />
+        </div>
+
+        {/* Contact CTA */}
+        <div className="text-center">
+          <Link href="https://t.me/DSMLmeetup" target="_blank" rel="noopener noreferrer">
+            <Button className="bg-[#00AEC7] text-white hover:bg-[#00AEC7]/90 font-pixel text-lg px-8 py-3" size="lg">
+              <MessageCircle className="mr-2 h-5 w-5" />
+              {t("home.collaborationContact")}
+            </Button>
+          </Link>
+        </div>
       </section>
     </div>
   )

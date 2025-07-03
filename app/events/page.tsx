@@ -41,6 +41,11 @@ const speakerProfiles = [
     profileUrl: "https://www.dsml.kz/users/yamazaki",
     imageUrl: "https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/meetup2025/speakers/max.jpg",
   },
+  {
+    key: "ivan",
+    profileUrl: "#",
+    imageUrl: "/images/speakers/ivan.jpg",
+  },
 ]
 
 export default function EventsPage() {
@@ -134,7 +139,7 @@ export default function EventsPage() {
                   <Users className="h-5 w-5" />
                   {t("events_announcements.dsml_meetup_2025.speakers_title")}
                 </h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
                   {speakerProfiles.map((speaker, index) => (
                     <Link
                       key={index}
@@ -337,10 +342,33 @@ export default function EventsPage() {
                             </div>
                           </div>
 
-                          {/* Talk 7 - Anuar Delivery */}
+                          {/* Talk 7 - Ivan NEW SPEAKER */}
                           <div className="border-l-4 border-[#FFF32A] pl-4">
                             <div className="flex items-start gap-3">
                               <div className="w-2 h-2 bg-[#FFF32A] rounded-full mt-2 flex-shrink-0"></div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-3 mb-1">
+                                  <Badge variant="outline" className="text-xs font-mono">
+                                    {t("events_announcements.dsml_meetup_2025.talks.ivan.time")}
+                                  </Badge>
+                                  <h5 className="font-semibold text-[#00AEC7]">
+                                    {t("events_announcements.dsml_meetup_2025.talks.ivan.speaker")}
+                                  </h5>
+                                </div>
+                                <p className="font-medium mb-2">
+                                  {t("events_announcements.dsml_meetup_2025.talks.ivan.topic")}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  {t("events_announcements.dsml_meetup_2025.talks.ivan.abstract")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Talk 8 - Anuar Delivery */}
+                          <div className="border-l-4 border-[#00AEC7] pl-4">
+                            <div className="flex items-start gap-3">
+                              <div className="w-2 h-2 bg-[#00AEC7] rounded-full mt-2 flex-shrink-0"></div>
                               <div className="flex-1">
                                 <div className="flex items-center gap-3 mb-1">
                                   <Badge variant="outline" className="text-xs font-mono">

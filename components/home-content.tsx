@@ -101,7 +101,7 @@ export function HomeContent() {
             <CardContent>
               <div className="flex mb-4">
                 <span className="bg-[#00AEC7]/10 text-[#00AEC7] text-xs font-medium px-2 py-1 rounded-full">
-                  3,400 subscribers
+                  3,500 subscribers
                 </span>
               </div>
               <Link
@@ -124,7 +124,7 @@ export function HomeContent() {
             <CardContent>
               <div className="flex mb-4">
                 <span className="bg-[#00AEC7]/10 text-[#00AEC7] text-xs font-medium px-2 py-1 rounded-full">
-                  8,200 subscribers
+                  8,700 subscribers
                 </span>
               </div>
               <Link
@@ -147,7 +147,7 @@ export function HomeContent() {
             <CardContent>
               <div className="flex mb-4">
                 <span className="bg-[#00AEC7]/10 text-[#00AEC7] text-xs font-medium px-2 py-1 rounded-full">
-                  6,000 subscribers
+                  6,350 subscribers
                 </span>
               </div>
               <Link
@@ -193,7 +193,7 @@ export function HomeContent() {
             <CardContent>
               <div className="flex mb-4">
                 <span className="bg-[#00AEC7]/10 text-[#00AEC7] text-xs font-medium px-2 py-1 rounded-full">
-                  1,200 followers
+                  1,600 followers
                 </span>
               </div>
               <Link

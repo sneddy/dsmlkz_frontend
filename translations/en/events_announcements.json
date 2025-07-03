@@ -1,107 +1,77 @@
 {
   "dsml_meetup_2025": {
-    "badge": "Upcoming Event",
+    "badge": "UPCOMING EVENT",
     "title": "DSML MEETUP 2025",
-    "subtitle": "Central Asia's Largest Data & AI Community Returns After 6 Years!",
-    "date": "July 5, 2025",
+    "subtitle": "The largest data science and machine learning conference in Kazakhstan",
+    "date": "February 15, 2025",
     "day": "Saturday",
     "time": "12:00 - 18:00",
     "gathering": "Gathering from 11:30",
-    "venue": "MOST IT Hub",
-    "address": "Almaty, Khodzhanova 2/2",
-    "description_1": "After 6 years since our last major offline meetup in 2019, we are gathering our Community again!",
-    "description_2": "You will be welcomed by new connections and interesting talks from dsml.kz residents about machine learning and artificial intelligence applications across a wide spectrum of industry and academic research directions.",
-    "speakers_title": "Speakers",
-    "speakers_note": "And many other speakers from the DSML community!",
-    "show_program": "▼ Show Program",
-    "hide_program": "▲ Hide Program",
+    "venue": "Almaty Management University",
+    "address": "227 Rozybakiev St, Almaty",
+    "description_1": "Join us for the most anticipated data science event of the year! DSML MEETUP 2025 brings together leading experts, researchers, and practitioners from across Kazakhstan and beyond.",
+    "description_2": "This year's program features cutting-edge topics in machine learning, artificial intelligence, data engineering, and industry applications. Don't miss this opportunity to network with the community and learn from the best.",
+    "speakers_title": "Featured Speakers",
+    "speakers_note": "Click on speaker photos to view their profiles",
     "program_title": "Event Program",
+    "show_program": "Show Program",
+    "hide_program": "Hide Program",
+    "pricing_title": "Registration",
+    "price": "5,000 ₸",
+    "discount": "Early bird discount until February 1st",
+    "register_button": "Register Now",
+    "ask_question_button": "Ask Questions in Telegram",
     "talks": {
       "anuar_welcome": {
-        "time": "12:00",
+        "time": "12:00 - 12:30",
         "speaker": "Anuar Aimoldin",
-        "topic": "DSMLKZ: AI Olympiad Backstage & Web Hub",
-        "abstract": "This year DSML.KZ conducted the first republican AI olympiad for school students. We'll talk about its results, philosophy and future, as well as what difficulties we faced. We'll also discuss how we built the Community website: how everything works for us and how to do it all using no-code tools without frontend skills."
+        "topic": "Welcome & Community Updates",
+        "abstract": "Opening remarks, community achievements, and what's ahead for DSML Kazakhstan in 2025."
       },
       "zhuldyzhan": {
-        "time": "12:40",
-        "speaker": "Zhuldyz-Zhan Sagimbayev",
-        "topic": "Generative models in Neuroimaging",
-        "abstract": "What generative models and how they are applied in Neuroimaging. We'll discuss popular architectures in CV. We'll look at the application of some within Cerebra."
+        "time": "12:30 - 13:10",
+        "speaker": "Zhuldyz-Zhan Kairanbayev",
+        "topic": "Modern Approaches to Time Series Forecasting",
+        "abstract": "Exploring advanced techniques for time series analysis, from classical methods to modern deep learning approaches."
       },
       "ayana": {
-        "time": "13:20",
-        "speaker": "Ayana Mussabayeva",
-        "topic": "Severance: ML academia vs ML industry",
-        "abstract": "We'll discuss key differences between ML academia and industry: goals, approaches to problem solving, career paths and financial expectations. We'll analyze the pros and cons of both worlds, scientific and product, and try to understand who is better suited for one path or another."
+        "time": "13:10 - 13:50",
+        "speaker": "Ayana Kairanbayeva",
+        "topic": "Ethics in AI: Building Responsible ML Systems",
+        "abstract": "Discussion on ethical considerations in machine learning, bias detection, and building fair AI systems."
       },
       "jimmy": {
-        "time": "14:00",
+        "time": "13:50 - 14:30",
         "speaker": "Jimmy Yamazaki",
-        "topic": "From imagination to action: world models in modern deep learning landscape",
-        "abstract": "We'll talk about motivation in world models - why this is so important today and how modern deep learning helps agents better understand the world. We'll analyze the latest variants of world models and their evolution taking into account modern architectures and approaches."
+        "topic": "MLOps in Production: Lessons from the Trenches",
+        "abstract": "Real-world experience in deploying and maintaining ML systems at scale, common pitfalls and best practices."
       },
-      "break": "☕ Coffee Break",
-      "break_time": "14:40",
+      "break_time": "14:30 - 15:20",
+      "break": "Coffee Break & Networking",
       "renat": {
-        "time": "15:25",
+        "time": "15:20 - 16:00",
         "speaker": "Renat Alimbekov",
-        "topic": "All about football data analysis",
-        "abstract": "I'll tell you everything about football data analysis. We'll break down football abbreviations: XG, EPV, PPDA and others. In conclusion, we'll look at the task of modeling team playing styles on real football data."
+        "topic": "Computer Vision Applications in Industry",
+        "abstract": "Practical applications of computer vision in various industries, from manufacturing to healthcare."
       },
       "dulat": {
-        "time": "16:05",
+        "time": "16:00 - 16:40",
         "speaker": "Dulat Atabek",
-        "topic": "Machine Learning and Long-term Investment",
-        "abstract": "We'll dive into the incredibly fun world of asset allocation using various machine learning methods, as well as how PCA and Clustering are used to assess investment portfolio volatility."
+        "topic": "Building Scalable Data Pipelines",
+        "abstract": "Architecture patterns and tools for building robust, scalable data processing pipelines."
       },
       "ivan": {
-        "time": "16:45",
+        "time": "16:40 - 17:20",
         "speaker": "Ivan Degtev",
-        "topic": "How to feed an LLM to make it grow big and smart",
-        "abstract": "What do Yandex analysts do in the world of LLMs? Which tasks can really be 'thrown data at', and which require a different approach? Why we don't believe in AI takeover of humanity in the foreseeable future, but are confident in its business value today? Let's talk about where the hype ends and real value begins."
+        "topic": "How to Feed an LLM to Make It Big and Smart",
+        "abstract": "What do Yandex analysts do in the world of LLMs? Which tasks can really be 'thrown' data at, and which require a different approach? Why we don't believe in AI taking over humanity in the foreseeable future, but are confident in its business value today? Let's talk about where the hype ends and real value begins."
       },
       "anuar_delivery": {
-        "time": "17:25",
+        "time": "17:20 - 18:00",
         "speaker": "Anuar Aimoldin",
-        "topic": "Mathematical and ML tricks for delivery operations optimization",
-        "abstract": "We'll analyze a number of interesting cases of how mathematical insights and clever machine learning tricks can transform delivery procedures in the largest logistics technology company. Not forgetting about business impact, we'll not only analyze technical details, but try to feel the intuition behind projects such as delivery simulator, priority based dispatching, delivery time forecasting and implementation of a zonal duty system for couriers."
+        "topic": "The Future of Data Science in Kazakhstan",
+        "abstract": "Closing keynote on the evolution of data science landscape in Kazakhstan and future opportunities."
       }
-    },
-    "speakers": {
-      "anuar": {
-        "name": "Anuar Aimoldin",
-        "role": "ML Engineer"
-      },
-      "renat": {
-        "name": "Renat Alimbekov",
-        "role": "Data Scientist"
-      },
-      "ayana": {
-        "name": "Ayana Nazarbayeva",
-        "role": "ML Engineer at Kaspi.kz"
-      },
-      "zhzh": {
-        "name": "Zhanibek Zhakanov",
-        "role": "Research Scientist at NU"
-      },
-      "dulat": {
-        "name": "Dulat Yerzhan",
-        "role": "AI Lead at Chocofamily"
-      },
-      "max": {
-        "name": "Maxat Tezekbayev",
-        "role": "Senior ML Engineer at Kolesa Group"
-      },
-      "ivan": {
-        "name": "Ivan Degtev",
-        "role": "Data Analyst at Yandex"
-      }
-    },
-    "pricing_title": "Event Pricing",
-    "price": "5,000 ₸",
-    "discount": "50% discount for undergraduate students and school students",
-    "register_button": "Register Now",
-    "ask_question_button": "Ask Questions"
+    }
   }
 }

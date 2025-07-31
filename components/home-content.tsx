@@ -147,7 +147,7 @@ export function HomeContent() {
             <CardContent>
               <div className="flex mb-4">
                 <span className="bg-[#00AEC7]/10 text-[#00AEC7] text-xs font-medium px-2 py-1 rounded-full">
-                  6,350 subscribers
+                  6,400 subscribers
                 </span>
               </div>
               <Link
@@ -193,7 +193,7 @@ export function HomeContent() {
             <CardContent>
               <div className="flex mb-4">
                 <span className="bg-[#00AEC7]/10 text-[#00AEC7] text-xs font-medium px-2 py-1 rounded-full">
-                  1,600 followers
+                  1,700 followers
                 </span>
               </div>
               <Link

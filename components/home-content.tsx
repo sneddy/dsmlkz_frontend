@@ -59,21 +59,19 @@ export function HomeContent() {
     <div
       className={`min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800 transition-opacity duration-1000 ${isVisible ? "opacity-100" : "opacity-0"}`}
     >
-      {/* Hero Section with buttons */}
-      <section
-        className="relative overflow-hidden py-16 px-4"
-        style={{
-          backgroundImage: "linear-gradient(to right, #00AEC7, #FFF32A)",
-        }}
-      >
-        <div className="absolute inset-0 bg-black/20"></div>
+      {/* Hero Section with transparent background and gradient text */}
+      <section className="relative overflow-hidden py-16 px-4 bg-transparent">
         <div className="relative max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight font-pixel">
-            {t("home.title")}
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight font-pixel">
+            <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
+              {t("home.title")}
+            </span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8">
-            {t("home.subtitle")}
+          <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed mb-8">
+            <span className="bg-gradient-to-r from-[#FFF32A]/90 to-[#00AEC7]/90 bg-clip-text text-transparent">
+              {t("home.subtitle")}
+            </span>
           </p>
 
           {/* Buttons in hero section */}
@@ -81,7 +79,7 @@ export function HomeContent() {
             <Link href="/signup">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-white to-white/90 text-black hover:from-white/90 hover:to-white/80 font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+                className="bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
               >
                 {t("home.joinButton")}
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -91,7 +89,7 @@ export function HomeContent() {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-3 rounded-full transition-all duration-300 group bg-transparent"
+                className="border-[#FFF32A]/30 text-[#FFF32A] hover:bg-[#FFF32A]/10 backdrop-blur-sm px-8 py-3 rounded-full transition-all duration-300 group bg-transparent"
               >
                 <Play className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
                 Watch Events
@@ -101,15 +99,15 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Hero Image Section - Reduced height */}
+      {/* Hero Image Section - Using transparent moon image */}
       <section className="relative w-full overflow-hidden">
         <div className="relative w-full">
           <Image
-            src="/images/moon-hero.png"
+            src="/images/moon_hero_transparent.png"
             alt="DSML Kazakhstan Community"
             width={1920}
-            height={400}
-            className="w-full h-[40vh] object-cover"
+            height={600}
+            className="w-full h-auto object-cover"
             priority
           />
         </div>
@@ -149,189 +147,166 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Telegram Channels Section - Simplified cards without growth indicators */}
+      {/* Telegram Channels Section - Compact cards for mobile */}
       <section className="py-16 container px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {/* Discussion Hub */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
-            <CardHeader className="pb-4">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-[#00AEC7]/20 rounded-lg">
-                  <MessageCircle className="h-5 w-5 text-[#00AEC7]" />
-                </div>
-              </div>
-              <CardTitle className="font-pixel text-[#00AEC7] text-lg group-hover:text-[#00AEC7]/80 transition-colors">
+            <CardHeader className="pb-3">
+              <CardTitle className="font-pixel text-[#00AEC7] text-sm md:text-base group-hover:text-[#00AEC7]/80 transition-colors">
                 {t("home.discussionHubTitle")}
               </CardTitle>
-              <CardDescription className="text-gray-400 leading-relaxed">
+              <CardDescription className="text-gray-400 text-xs md:text-sm leading-relaxed">
                 {t("home.discussionHubDescription")}
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2 mb-4">
-                <Badge variant="secondary" className="bg-[#00AEC7]/10 text-[#00AEC7] border-[#00AEC7]/20">
+            <CardContent className="pt-0">
+              <div className="flex items-center gap-2 mb-3">
+                <Badge variant="secondary" className="bg-[#00AEC7]/10 text-[#00AEC7] border-[#00AEC7]/20 text-xs">
                   <Users className="h-3 w-3 mr-1" />
                   1,500 members
                 </Badge>
               </div>
               <Link
                 href="/signup"
-                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs md:text-sm"
               >
                 Register to join
-                <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
+                <ExternalLink className="ml-1 h-3 w-3 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
           </Card>
 
           {/* News Feed */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
-            <CardHeader className="pb-4">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-[#FFF32A]/20 rounded-lg">
-                  <MessageCircle className="h-5 w-5 text-[#FFF32A]" />
-                </div>
-              </div>
-              <CardTitle className="font-pixel text-[#00AEC7] text-lg group-hover:text-[#00AEC7]/80 transition-colors">
+            <CardHeader className="pb-3">
+              <CardTitle className="font-pixel text-[#00AEC7] text-sm md:text-base group-hover:text-[#00AEC7]/80 transition-colors">
                 {t("home.newsFeedTitle")}
               </CardTitle>
-              <CardDescription className="text-gray-400 leading-relaxed">
+              <CardDescription className="text-gray-400 text-xs md:text-sm leading-relaxed">
                 {t("home.newsFeedDescription")}
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2 mb-4">
-                <Badge variant="secondary" className="bg-[#FFF32A]/10 text-[#FFF32A] border-[#FFF32A]/20">
-                  3,500 subscribers
+            <CardContent className="pt-0">
+              <div className="flex items-center gap-2 mb-3">
+                <Badge variant="secondary" className="bg-[#FFF32A]/10 text-[#FFF32A] border-[#FFF32A]/20 text-xs">
+                  <Users className="h-3 w-3 mr-1" />
+                  3,500 members
                 </Badge>
               </div>
               <Link
                 href="https://t.me/dsmlkz_news"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs md:text-sm"
               >
                 {t("home.joinButton")}
-                <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
+                <ExternalLink className="ml-1 h-3 w-3 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
           </Card>
 
           {/* DS Jobs */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
-            <CardHeader className="pb-4">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-purple-500/20 rounded-lg">
-                  <Briefcase className="h-5 w-5 text-purple-400" />
-                </div>
-              </div>
-              <CardTitle className="font-pixel text-[#00AEC7] text-lg group-hover:text-[#00AEC7]/80 transition-colors">
+            <CardHeader className="pb-3">
+              <CardTitle className="font-pixel text-[#00AEC7] text-sm md:text-base group-hover:text-[#00AEC7]/80 transition-colors">
                 {t("home.dataJobsTitle")}
               </CardTitle>
-              <CardDescription className="text-gray-400 leading-relaxed">
+              <CardDescription className="text-gray-400 text-xs md:text-sm leading-relaxed">
                 {t("home.dataJobsDescription")}
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2 mb-4">
-                <Badge variant="secondary" className="bg-purple-500/10 text-purple-400 border-purple-500/20">
-                  8,700 subscribers
+            <CardContent className="pt-0">
+              <div className="flex items-center gap-2 mb-3">
+                <Badge variant="secondary" className="bg-purple-500/10 text-purple-400 border-purple-500/20 text-xs">
+                  <Users className="h-3 w-3 mr-1" />
+                  8,700 members
                 </Badge>
               </div>
               <Link
                 href="https://t.me/ml_jobs_kz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs md:text-sm"
               >
                 {t("home.joinButton")}
-                <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
+                <ExternalLink className="ml-1 h-3 w-3 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
           </Card>
 
           {/* IT Jobs */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
-            <CardHeader className="pb-4">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-orange-500/20 rounded-lg">
-                  <Briefcase className="h-5 w-5 text-orange-400" />
-                </div>
-              </div>
-              <CardTitle className="font-pixel text-[#00AEC7] text-lg group-hover:text-[#00AEC7]/80 transition-colors">
+            <CardHeader className="pb-3">
+              <CardTitle className="font-pixel text-[#00AEC7] text-sm md:text-base group-hover:text-[#00AEC7]/80 transition-colors">
                 {t("home.itJobsTitle")}
               </CardTitle>
-              <CardDescription className="text-gray-400 leading-relaxed">{t("home.itJobsDescription")}</CardDescription>
+              <CardDescription className="text-gray-400 text-xs md:text-sm leading-relaxed">
+                {t("home.itJobsDescription")}
+              </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2 mb-4">
-                <Badge variant="secondary" className="bg-orange-500/10 text-orange-400 border-orange-500/20">
-                  6,400 subscribers
+            <CardContent className="pt-0">
+              <div className="flex items-center gap-2 mb-3">
+                <Badge variant="secondary" className="bg-orange-500/10 text-orange-400 border-orange-500/20 text-xs">
+                  <Users className="h-3 w-3 mr-1" />
+                  6,400 members
                 </Badge>
               </div>
               <Link
                 href="https://t.me/it_jobs_kz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs md:text-sm"
               >
                 {t("home.joinButton")}
-                <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
+                <ExternalLink className="ml-1 h-3 w-3 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
           </Card>
 
           {/* YouTube Channel */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
-            <CardHeader className="pb-4">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-red-500/20 rounded-lg">
-                  <Play className="h-5 w-5 text-red-400" />
-                </div>
-              </div>
-              <CardTitle className="font-pixel text-[#00AEC7] text-lg group-hover:text-[#00AEC7]/80 transition-colors">
+            <CardHeader className="pb-3">
+              <CardTitle className="font-pixel text-[#00AEC7] text-sm md:text-base group-hover:text-[#00AEC7]/80 transition-colors">
                 {t("home.youtubeChannelTitle")}
               </CardTitle>
-              <CardDescription className="text-gray-400 leading-relaxed">
+              <CardDescription className="text-gray-400 text-xs md:text-sm leading-relaxed">
                 {t("home.youtubeChannelDescription")}
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2 mb-4">
-                <Badge variant="secondary" className="bg-red-500/10 text-red-400 border-red-500/20">
-                  Educational content
+            <CardContent className="pt-0">
+              <div className="flex items-center gap-2 mb-3">
+                <Badge variant="secondary" className="bg-red-500/10 text-red-400 border-red-500/20 text-xs">
+                  <Users className="h-3 w-3 mr-1" />
+                  800 subscribers
                 </Badge>
               </div>
               <Link
                 href="https://www.youtube.com/c/DataScienceKazakhstan"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs md:text-sm"
               >
                 {t("home.subscribeButton")}
-                <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
+                <ExternalLink className="ml-1 h-3 w-3 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
           </Card>
 
           {/* LinkedIn Page */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
-            <CardHeader className="pb-4">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-blue-600/20 rounded-lg">
-                  <Users className="h-5 w-5 text-blue-400" />
-                </div>
-              </div>
-              <CardTitle className="font-pixel text-[#00AEC7] text-lg group-hover:text-[#00AEC7]/80 transition-colors">
+            <CardHeader className="pb-3">
+              <CardTitle className="font-pixel text-[#00AEC7] text-sm md:text-base group-hover:text-[#00AEC7]/80 transition-colors">
                 {t("home.linkedinPageTitle")}
               </CardTitle>
-              <CardDescription className="text-gray-400 leading-relaxed">
+              <CardDescription className="text-gray-400 text-xs md:text-sm leading-relaxed">
                 {t("home.linkedinPageDescription")}
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-2 mb-4">
-                <Badge variant="secondary" className="bg-blue-600/10 text-blue-400 border-blue-600/20">
+            <CardContent className="pt-0">
+              <div className="flex items-center gap-2 mb-3">
+                <Badge variant="secondary" className="bg-blue-600/10 text-blue-400 border-blue-600/20 text-xs">
+                  <Users className="h-3 w-3 mr-1" />
                   1,700 followers
                 </Badge>
               </div>
@@ -339,10 +314,10 @@ export function HomeContent() {
                 href="https://www.linkedin.com/company/53101063/admin/dashboard/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs md:text-sm"
               >
                 {t("home.subscribeButton")}
-                <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
+                <ExternalLink className="ml-1 h-3 w-3 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
           </Card>
@@ -353,9 +328,6 @@ export function HomeContent() {
       <section className="py-20 bg-gradient-to-r from-slate-800/30 to-slate-900/30 backdrop-blur-sm">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-16">
-            <Badge className="mb-6 bg-[#00AEC7]/20 text-[#00AEC7] border-[#00AEC7]/30">
-              🤝 Partnership Opportunities
-            </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-6 font-pixel">
               <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
                 {t("home.collaborationTitle")}
@@ -414,7 +386,6 @@ export function HomeContent() {
       <section className="py-20 bg-gradient-to-br from-slate-900/50 to-black/50">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-16">
-            <Badge className="mb-6 bg-[#FFF32A]/20 text-[#FFF32A] border-[#FFF32A]/30">💎 Our Values</Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-6 font-pixel">
               <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
                 Community Values

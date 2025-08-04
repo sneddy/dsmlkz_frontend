@@ -60,26 +60,26 @@ export function HomeContent() {
       className={`min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800 transition-opacity duration-1000 ${isVisible ? "opacity-100" : "opacity-0"}`}
     >
       {/* Hero Section with transparent background and gradient text */}
-      <section className="relative overflow-hidden py-16 px-4 bg-transparent">
+      <section className="relative overflow-hidden py-8 sm:py-12 md:py-16 px-4 bg-transparent">
         <div className="relative max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight font-pixel">
+          <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 tracking-tight font-pixel leading-tight">
             <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
               {t("home.title")}
             </span>
           </h1>
 
-          <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed mb-8">
+          <p className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed mb-6 sm:mb-8 px-2">
             <span className="bg-gradient-to-r from-[#FFF32A]/90 to-[#00AEC7]/90 bg-clip-text text-transparent">
               {t("home.subtitle")}
             </span>
           </p>
 
           {/* Buttons in hero section */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4">
             <Link href="/signup">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+                className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 font-semibold px-6 sm:px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-sm sm:text-base"
               >
                 {t("home.joinButton")}
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -89,7 +89,7 @@ export function HomeContent() {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-[#FFF32A]/30 text-[#FFF32A] hover:bg-[#FFF32A]/10 backdrop-blur-sm px-8 py-3 rounded-full transition-all duration-300 group bg-transparent"
+                className="w-full sm:w-auto border-[#FFF32A]/30 text-[#FFF32A] hover:bg-[#FFF32A]/10 backdrop-blur-sm px-6 sm:px-8 py-3 rounded-full transition-all duration-300 group bg-transparent text-sm sm:text-base"
               >
                 <Play className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
                 Watch Events
@@ -114,18 +114,18 @@ export function HomeContent() {
       </section>
 
       {/* Stats Section - Updated with new stats */}
-      <section className="py-16 relative">
+      <section className="py-8 sm:py-12 md:py-16 relative">
         <div className="absolute inset-0 bg-gradient-to-r from-[#00AEC7]/5 to-[#FFF32A]/5"></div>
         <div className="container px-4 md:px-6 relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-8 sm:mb-12 md:mb-16">
             {communityStats.map((stat, index) => (
               <div key={index} className="text-center group hover:scale-105 transition-transform duration-300">
-                <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-colors">
+                <div className="bg-white/5 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 border border-white/10 hover:border-white/20 transition-colors">
                   <stat.icon
-                    className={`h-8 w-8 mx-auto mb-3 ${stat.color} group-hover:scale-110 transition-transform`}
+                    className={`h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 mx-auto mb-2 sm:mb-3 ${stat.color} group-hover:scale-110 transition-transform`}
                   />
-                  <div className={`text-2xl font-bold ${stat.color} mb-1`}>{stat.value}</div>
-                  <div className="text-gray-400 text-sm">{stat.label}</div>
+                  <div className={`text-lg sm:text-xl md:text-2xl font-bold ${stat.color} mb-1`}>{stat.value}</div>
+                  <div className="text-gray-400 text-xs sm:text-sm leading-tight">{stat.label}</div>
                 </div>
               </div>
             ))}
@@ -134,29 +134,31 @@ export function HomeContent() {
       </section>
 
       {/* Community Description - Enhanced typography */}
-      <section className="py-16 bg-gradient-to-r from-slate-800/50 to-slate-900/50 backdrop-blur-sm">
+      <section className="py-8 sm:py-12 md:py-16 bg-gradient-to-r from-slate-800/50 to-slate-900/50 backdrop-blur-sm">
         <div className="container px-4 md:px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 font-pixel">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 font-pixel">
               <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
                 {t("home.channelsTitle")}
               </span>
             </h2>
-            <p className="text-gray-300 text-lg leading-relaxed mb-12">{t("home.communityDescription")}</p>
+            <p className="text-gray-300 text-base sm:text-lg leading-relaxed mb-8 sm:mb-12 px-2">
+              {t("home.communityDescription")}
+            </p>
           </div>
         </div>
       </section>
 
       {/* Telegram Channels Section - Compact cards for mobile */}
-      <section className="py-16 container px-4 md:px-6">
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+      <section className="py-8 sm:py-12 md:py-16 container px-4 md:px-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {/* Discussion Hub */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
             <CardHeader className="pb-3">
-              <CardTitle className="font-pixel text-[#00AEC7] text-sm md:text-base group-hover:text-[#00AEC7]/80 transition-colors">
+              <CardTitle className="font-pixel text-[#00AEC7] text-sm sm:text-base group-hover:text-[#00AEC7]/80 transition-colors">
                 {t("home.discussionHubTitle")}
               </CardTitle>
-              <CardDescription className="text-gray-400 text-xs md:text-sm leading-relaxed">
+              <CardDescription className="text-gray-400 text-xs sm:text-sm leading-relaxed">
                 {t("home.discussionHubDescription")}
               </CardDescription>
             </CardHeader>
@@ -169,7 +171,7 @@ export function HomeContent() {
               </div>
               <Link
                 href="/signup"
-                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs md:text-sm"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs sm:text-sm"
               >
                 Register to join
                 <ExternalLink className="ml-1 h-3 w-3 group-hover/link:translate-x-1 transition-transform" />
@@ -180,10 +182,10 @@ export function HomeContent() {
           {/* News Feed */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
             <CardHeader className="pb-3">
-              <CardTitle className="font-pixel text-[#00AEC7] text-sm md:text-base group-hover:text-[#00AEC7]/80 transition-colors">
+              <CardTitle className="font-pixel text-[#00AEC7] text-sm sm:text-base group-hover:text-[#00AEC7]/80 transition-colors">
                 {t("home.newsFeedTitle")}
               </CardTitle>
-              <CardDescription className="text-gray-400 text-xs md:text-sm leading-relaxed">
+              <CardDescription className="text-gray-400 text-xs sm:text-sm leading-relaxed">
                 {t("home.newsFeedDescription")}
               </CardDescription>
             </CardHeader>
@@ -198,7 +200,7 @@ export function HomeContent() {
                 href="https://t.me/dsmlkz_news"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs md:text-sm"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs sm:text-sm"
               >
                 {t("home.joinButton")}
                 <ExternalLink className="ml-1 h-3 w-3 group-hover/link:translate-x-1 transition-transform" />
@@ -209,10 +211,10 @@ export function HomeContent() {
           {/* DS Jobs */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
             <CardHeader className="pb-3">
-              <CardTitle className="font-pixel text-[#00AEC7] text-sm md:text-base group-hover:text-[#00AEC7]/80 transition-colors">
+              <CardTitle className="font-pixel text-[#00AEC7] text-sm sm:text-base group-hover:text-[#00AEC7]/80 transition-colors">
                 {t("home.dataJobsTitle")}
               </CardTitle>
-              <CardDescription className="text-gray-400 text-xs md:text-sm leading-relaxed">
+              <CardDescription className="text-gray-400 text-xs sm:text-sm leading-relaxed">
                 {t("home.dataJobsDescription")}
               </CardDescription>
             </CardHeader>
@@ -227,7 +229,7 @@ export function HomeContent() {
                 href="https://t.me/ml_jobs_kz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs md:text-sm"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs sm:text-sm"
               >
                 {t("home.joinButton")}
                 <ExternalLink className="ml-1 h-3 w-3 group-hover/link:translate-x-1 transition-transform" />
@@ -238,10 +240,10 @@ export function HomeContent() {
           {/* IT Jobs */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
             <CardHeader className="pb-3">
-              <CardTitle className="font-pixel text-[#00AEC7] text-sm md:text-base group-hover:text-[#00AEC7]/80 transition-colors">
+              <CardTitle className="font-pixel text-[#00AEC7] text-sm sm:text-base group-hover:text-[#00AEC7]/80 transition-colors">
                 {t("home.itJobsTitle")}
               </CardTitle>
-              <CardDescription className="text-gray-400 text-xs md:text-sm leading-relaxed">
+              <CardDescription className="text-gray-400 text-xs sm:text-sm leading-relaxed">
                 {t("home.itJobsDescription")}
               </CardDescription>
             </CardHeader>
@@ -256,7 +258,7 @@ export function HomeContent() {
                 href="https://t.me/it_jobs_kz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs md:text-sm"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs sm:text-sm"
               >
                 {t("home.joinButton")}
                 <ExternalLink className="ml-1 h-3 w-3 group-hover/link:translate-x-1 transition-transform" />
@@ -267,10 +269,10 @@ export function HomeContent() {
           {/* YouTube Channel */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
             <CardHeader className="pb-3">
-              <CardTitle className="font-pixel text-[#00AEC7] text-sm md:text-base group-hover:text-[#00AEC7]/80 transition-colors">
+              <CardTitle className="font-pixel text-[#00AEC7] text-sm sm:text-base group-hover:text-[#00AEC7]/80 transition-colors">
                 {t("home.youtubeChannelTitle")}
               </CardTitle>
-              <CardDescription className="text-gray-400 text-xs md:text-sm leading-relaxed">
+              <CardDescription className="text-gray-400 text-xs sm:text-sm leading-relaxed">
                 {t("home.youtubeChannelDescription")}
               </CardDescription>
             </CardHeader>
@@ -285,7 +287,7 @@ export function HomeContent() {
                 href="https://www.youtube.com/c/DataScienceKazakhstan"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs md:text-sm"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs sm:text-sm"
               >
                 {t("home.subscribeButton")}
                 <ExternalLink className="ml-1 h-3 w-3 group-hover/link:translate-x-1 transition-transform" />
@@ -296,10 +298,10 @@ export function HomeContent() {
           {/* LinkedIn Page */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
             <CardHeader className="pb-3">
-              <CardTitle className="font-pixel text-[#00AEC7] text-sm md:text-base group-hover:text-[#00AEC7]/80 transition-colors">
+              <CardTitle className="font-pixel text-[#00AEC7] text-sm sm:text-base group-hover:text-[#00AEC7]/80 transition-colors">
                 {t("home.linkedinPageTitle")}
               </CardTitle>
-              <CardDescription className="text-gray-400 text-xs md:text-sm leading-relaxed">
+              <CardDescription className="text-gray-400 text-xs sm:text-sm leading-relaxed">
                 {t("home.linkedinPageDescription")}
               </CardDescription>
             </CardHeader>
@@ -314,7 +316,7 @@ export function HomeContent() {
                 href="https://www.linkedin.com/company/53101063/admin/dashboard/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs md:text-sm"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link text-xs sm:text-sm"
               >
                 {t("home.subscribeButton")}
                 <ExternalLink className="ml-1 h-3 w-3 group-hover/link:translate-x-1 transition-transform" />
@@ -325,18 +327,20 @@ export function HomeContent() {
       </section>
 
       {/* Collaboration Section - Enhanced with modern design */}
-      <section className="py-20 bg-gradient-to-r from-slate-800/30 to-slate-900/30 backdrop-blur-sm">
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-r from-slate-800/30 to-slate-900/30 backdrop-blur-sm">
         <div className="container px-4 md:px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 font-pixel">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 font-pixel">
               <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
                 {t("home.collaborationTitle")}
               </span>
             </h2>
-            <p className="text-gray-300 text-lg max-w-3xl mx-auto leading-relaxed">{t("home.collaborationSubtitle")}</p>
+            <p className="text-gray-300 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed px-2">
+              {t("home.collaborationSubtitle")}
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-12">
             <CollaborationCard
               title={t("home.mediaSupport.title")}
               description={t("home.mediaSupport.description")}
@@ -371,11 +375,11 @@ export function HomeContent() {
             <Link href="https://t.me/DSMLmeetup" target="_blank" rel="noopener noreferrer">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-[#00AEC7] to-[#00AEC7]/80 text-white hover:from-[#00AEC7]/90 hover:to-[#00AEC7]/70 font-pixel text-lg px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+                className="w-full sm:w-auto bg-gradient-to-r from-[#00AEC7] to-[#00AEC7]/80 text-white hover:from-[#00AEC7]/90 hover:to-[#00AEC7]/70 font-pixel text-base sm:text-lg px-8 sm:px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
               >
-                <MessageCircle className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" />
+                <MessageCircle className="mr-2 sm:mr-3 h-4 sm:h-5 w-4 sm:w-5 group-hover:scale-110 transition-transform" />
                 {t("home.collaborationContact")}
-                <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-2 sm:ml-3 h-4 sm:h-5 w-4 sm:w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
           </div>
@@ -383,55 +387,55 @@ export function HomeContent() {
       </section>
 
       {/* Community Values Section - Enhanced with modern cards */}
-      <section className="py-20 bg-gradient-to-br from-slate-900/50 to-black/50">
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-slate-900/50 to-black/50">
         <div className="container px-4 md:px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 font-pixel">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 font-pixel">
               <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
                 Community Values
               </span>
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
               <CardHeader>
                 <div className="p-3 bg-[#00AEC7]/20 rounded-xl w-fit mb-4">
-                  <Users className="h-6 w-6 text-[#00AEC7]" />
+                  <Users className="h-5 sm:h-6 w-5 sm:w-6 text-[#00AEC7]" />
                 </div>
-                <CardTitle className="font-pixel text-[#00AEC7] group-hover:text-[#00AEC7]/80 transition-colors">
+                <CardTitle className="font-pixel text-[#00AEC7] group-hover:text-[#00AEC7]/80 transition-colors text-base sm:text-lg">
                   {t("home.communityFirst")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400 leading-relaxed">{t("home.communityFirstDesc")}</p>
+                <p className="text-gray-400 leading-relaxed text-sm sm:text-base">{t("home.communityFirstDesc")}</p>
               </CardContent>
             </Card>
 
             <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
               <CardHeader>
                 <div className="p-3 bg-[#FFF32A]/20 rounded-xl w-fit mb-4">
-                  <MessageCircle className="h-6 w-6 text-[#FFF32A]" />
+                  <MessageCircle className="h-5 sm:h-6 w-5 sm:w-6 text-[#FFF32A]" />
                 </div>
-                <CardTitle className="font-pixel text-[#00AEC7] group-hover:text-[#00AEC7]/80 transition-colors">
+                <CardTitle className="font-pixel text-[#00AEC7] group-hover:text-[#00AEC7]/80 transition-colors text-base sm:text-lg">
                   {t("home.continuousLearning")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400 leading-relaxed">{t("home.continuousLearningDesc")}</p>
+                <p className="text-gray-400 leading-relaxed text-sm sm:text-base">{t("home.continuousLearningDesc")}</p>
               </CardContent>
             </Card>
 
             <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
               <CardHeader>
                 <div className="p-3 bg-purple-500/20 rounded-xl w-fit mb-4">
-                  <Briefcase className="h-6 w-6 text-purple-400" />
+                  <Briefcase className="h-5 sm:h-6 w-5 sm:w-6 text-purple-400" />
                 </div>
-                <CardTitle className="font-pixel text-[#00AEC7] group-hover:text-[#00AEC7]/80 transition-colors">
+                <CardTitle className="font-pixel text-[#00AEC7] group-hover:text-[#00AEC7]/80 transition-colors text-base sm:text-lg">
                   {t("home.careerGrowth")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-400 leading-relaxed">{t("home.careerGrowthDesc")}</p>
+                <p className="text-gray-400 leading-relaxed text-sm sm:text-base">{t("home.careerGrowthDesc")}</p>
               </CardContent>
             </Card>
           </div>
@@ -439,19 +443,19 @@ export function HomeContent() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-[#00AEC7]/10 via-transparent to-[#FFF32A]/10">
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-r from-[#00AEC7]/10 via-transparent to-[#FFF32A]/10">
         <div className="container px-4 md:px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 font-pixel text-white">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 font-pixel text-white">
             Ready to Join the Future of AI in Central Asia?
           </h2>
-          <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+          <p className="text-gray-300 text-base sm:text-lg mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
             Connect with like-minded professionals, access exclusive resources, and accelerate your career in AI/ML.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
             <Link href="/signup">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+                className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-semibold px-6 sm:px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-sm sm:text-base"
               >
                 Get Started Today
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -461,7 +465,7 @@ export function HomeContent() {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-3 rounded-full transition-all duration-300 bg-transparent"
+                className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-6 sm:px-8 py-3 rounded-full transition-all duration-300 bg-transparent text-sm sm:text-base"
               >
                 Explore Events
               </Button>

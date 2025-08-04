@@ -2,7 +2,8 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, MessageCircle } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { ExternalLink, MessageCircle, Users, Calendar, Briefcase, ArrowRight, Play } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useTranslation } from "@/hooks/use-translation"
@@ -12,27 +13,34 @@ import { CollaborationCard } from "@/components/collaboration-card"
 export function HomeContent() {
   const { t } = useTranslation()
   const [isClient, setIsClient] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
 
   // Устанавливаем флаг isClient после монтирования компонента
   useEffect(() => {
     setIsClient(true)
+    // Добавляем небольшую задержку для плавной анимации появления
+    const timer = setTimeout(() => setIsVisible(true), 100)
+    return () => clearTimeout(timer)
   }, [])
 
   const gradientBorderStyle = {
-    borderWidth: "4px",
+    borderWidth: "2px",
     borderStyle: "solid",
-    borderImage: "linear-gradient(to right, #FFF32A, #00AEC7) 1",
+    borderImage: "linear-gradient(135deg, #FFF32A, #00AEC7, #FFF32A) 1",
   }
 
-  // Если компонент еще не смонтирован на клиенте, показываем скелетон
+  // Если компонент еще не смонтирован на клиенте, показываем улучшенный скелетон
   if (!isClient) {
     return (
-      <div className="flex flex-col gap-8 py-8 bg-black">
-        <div className="container py-8">
-          <div className="h-96 bg-gray-800 animate-pulse rounded-lg mb-8"></div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
+        <div className="container py-8 space-y-8">
+          <div className="h-96 bg-gradient-to-r from-slate-800 to-slate-700 animate-pulse rounded-2xl mb-8 shadow-2xl"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="h-64 bg-gray-800 animate-pulse rounded-lg"></div>
+              <div
+                key={i}
+                className="h-64 bg-gradient-to-br from-slate-800 to-slate-700 animate-pulse rounded-xl shadow-lg"
+              ></div>
             ))}
           </div>
         </div>
@@ -40,252 +48,450 @@ export function HomeContent() {
     )
   }
 
+  const communityStats = [
+    { icon: Users, label: "Members Across Platforms", value: "10,000+", color: "text-[#00AEC7]" },
+    { icon: Users, label: "Active Members", value: "1,500", color: "text-[#FFF32A]" },
+    { icon: Calendar, label: "Offline Events Hosted", value: "8", color: "text-purple-400" },
+    { icon: Briefcase, label: "Job Placements", value: "500+", color: "text-green-400" },
+  ]
+
   return (
-    <div className="flex flex-col gap-8 py-8 bg-black">
-      {/* Hero Section */}
-      <section className="relative w-full z-0">
+    <div
+      className={`min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800 transition-opacity duration-1000 ${isVisible ? "opacity-100" : "opacity-0"}`}
+    >
+      {/* Hero Section - Enhanced with modern design */}
+      <section className="relative w-full overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent z-10"></div>
         <div className="relative w-full">
           <Image
             src="/images/hero-banner.png"
             alt="DSML Kazakhstan - Deeper Is Better"
             width={1920}
             height={600}
-            className="w-full h-auto object-cover"
+            className="w-full h-[70vh] object-cover"
             priority
           />
-          <div className="absolute inset-x-0 bottom-0 pb-6 md:pb-10">
+          <div className="absolute inset-0 flex items-center justify-center z-20">
             <div className="container px-4 md:px-6 text-center">
-              <div className="bg-black/30 p-5 rounded-lg backdrop-blur-sm inline-block">
-                <h1 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl lg:text-5xl text-[#FFF32A] mb-3 font-pixel">
-                  {t("home.title")}
+              <div className="backdrop-blur-md bg-black/20 p-8 rounded-3xl border border-white/10 shadow-2xl max-w-4xl mx-auto">
+                <Badge className="mb-6 bg-[#FFF32A]/20 text-[#FFF32A] border-[#FFF32A]/30 hover:bg-[#FFF32A]/30 transition-colors">
+                  🚀 #1 Data&AI Community in Central Asia
+                </Badge>
+                <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl text-white mb-6 font-pixel leading-tight">
+                  <span className="bg-gradient-to-r from-[#FFF32A] via-white to-[#00AEC7] bg-clip-text text-transparent">
+                    {t("home.title")}
+                  </span>
                 </h1>
-                <p className="mx-auto max-w-[650px] text-[#FFF32A] text-base md:text-lg mb-5">{t("home.subtitle")}</p>
-                <Link href="/signup">
-                  <Button className="bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90">{t("home.joinButton")}</Button>
-                </Link>
+                <p className="mx-auto max-w-2xl text-gray-200 text-lg md:text-xl mb-8 leading-relaxed">
+                  {t("home.subtitle")}
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  <Link href="/signup">
+                    <Button
+                      size="lg"
+                      className="bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+                    >
+                      {t("home.joinButton")}
+                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </Link>
+                  <Link href="/events">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-3 rounded-full transition-all duration-300 group bg-transparent"
+                    >
+                      <Play className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                      Watch Events
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Telegram Channels Section */}
-      <section className="container px-4 md:px-6 py-6">
-        <h2 className="text-2xl font-bold mb-4 font-pixel text-[#FFF32A] text-center">{t("home.channelsTitle")}</h2>
-        <p className="text-center mb-8 max-w-3xl mx-auto text-white">{t("home.communityDescription")}</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Stats Section - Updated with new stats */}
+      <section className="py-16 relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#00AEC7]/5 to-[#FFF32A]/5"></div>
+        <div className="container px-4 md:px-6 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+            {communityStats.map((stat, index) => (
+              <div key={index} className="text-center group hover:scale-105 transition-transform duration-300">
+                <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-colors">
+                  <stat.icon
+                    className={`h-8 w-8 mx-auto mb-3 ${stat.color} group-hover:scale-110 transition-transform`}
+                  />
+                  <div className={`text-2xl font-bold ${stat.color} mb-1`}>{stat.value}</div>
+                  <div className="text-gray-400 text-sm">{stat.label}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Community Description - Enhanced typography */}
+      <section className="py-16 bg-gradient-to-r from-slate-800/50 to-slate-900/50 backdrop-blur-sm">
+        <div className="container px-4 md:px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 font-pixel">
+              <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
+                {t("home.channelsTitle")}
+              </span>
+            </h2>
+            <p className="text-gray-300 text-lg leading-relaxed mb-12">{t("home.communityDescription")}</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Telegram Channels Section - Simplified cards without growth indicators */}
+      <section className="py-16 container px-4 md:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Discussion Hub */}
-          <Card style={gradientBorderStyle}>
-            <CardHeader>
-              <CardTitle className="font-pixel text-[#00AEC7]">{t("home.discussionHubTitle")}</CardTitle>
-              <CardDescription>{t("home.discussionHubDescription")}</CardDescription>
+          <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-[#00AEC7]/20 rounded-lg">
+                  <MessageCircle className="h-5 w-5 text-[#00AEC7]" />
+                </div>
+              </div>
+              <CardTitle className="font-pixel text-[#00AEC7] text-lg group-hover:text-[#00AEC7]/80 transition-colors">
+                {t("home.discussionHubTitle")}
+              </CardTitle>
+              <CardDescription className="text-gray-400 leading-relaxed">
+                {t("home.discussionHubDescription")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex mb-4">
-                <span className="bg-[#00AEC7]/10 text-[#00AEC7] text-xs font-medium px-2 py-1 rounded-full">
-                  1,500+ active members
-                </span>
+              <div className="flex items-center gap-2 mb-4">
+                <Badge variant="secondary" className="bg-[#00AEC7]/10 text-[#00AEC7] border-[#00AEC7]/20">
+                  <Users className="h-3 w-3 mr-1" />
+                  1,500 members
+                </Badge>
               </div>
-              <Link href="/signup" className="flex items-center text-[#00AEC7] hover:underline">
-                Register to join <ExternalLink className="ml-1 h-4 w-4" />
+              <Link
+                href="/signup"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link"
+              >
+                Register to join
+                <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
           </Card>
 
           {/* News Feed */}
-          <Card style={gradientBorderStyle}>
-            <CardHeader>
-              <CardTitle className="font-pixel text-[#00AEC7]">{t("home.newsFeedTitle")}</CardTitle>
-              <CardDescription>{t("home.newsFeedDescription")}</CardDescription>
+          <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-[#FFF32A]/20 rounded-lg">
+                  <MessageCircle className="h-5 w-5 text-[#FFF32A]" />
+                </div>
+              </div>
+              <CardTitle className="font-pixel text-[#00AEC7] text-lg group-hover:text-[#00AEC7]/80 transition-colors">
+                {t("home.newsFeedTitle")}
+              </CardTitle>
+              <CardDescription className="text-gray-400 leading-relaxed">
+                {t("home.newsFeedDescription")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex mb-4">
-                <span className="bg-[#00AEC7]/10 text-[#00AEC7] text-xs font-medium px-2 py-1 rounded-full">
+              <div className="flex items-center gap-2 mb-4">
+                <Badge variant="secondary" className="bg-[#FFF32A]/10 text-[#FFF32A] border-[#FFF32A]/20">
                   3,500 subscribers
-                </span>
+                </Badge>
               </div>
               <Link
                 href="https://t.me/dsmlkz_news"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center text-[#00AEC7] hover:underline"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link"
               >
-                {t("home.joinButton")} <ExternalLink className="ml-1 h-4 w-4" />
+                {t("home.joinButton")}
+                <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
           </Card>
 
           {/* DS Jobs */}
-          <Card style={gradientBorderStyle}>
-            <CardHeader>
-              <CardTitle className="font-pixel text-[#00AEC7]">{t("home.dataJobsTitle")}</CardTitle>
-              <CardDescription>{t("home.dataJobsDescription")}</CardDescription>
+          <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-purple-500/20 rounded-lg">
+                  <Briefcase className="h-5 w-5 text-purple-400" />
+                </div>
+              </div>
+              <CardTitle className="font-pixel text-[#00AEC7] text-lg group-hover:text-[#00AEC7]/80 transition-colors">
+                {t("home.dataJobsTitle")}
+              </CardTitle>
+              <CardDescription className="text-gray-400 leading-relaxed">
+                {t("home.dataJobsDescription")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex mb-4">
-                <span className="bg-[#00AEC7]/10 text-[#00AEC7] text-xs font-medium px-2 py-1 rounded-full">
+              <div className="flex items-center gap-2 mb-4">
+                <Badge variant="secondary" className="bg-purple-500/10 text-purple-400 border-purple-500/20">
                   8,700 subscribers
-                </span>
+                </Badge>
               </div>
               <Link
                 href="https://t.me/ml_jobs_kz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center text-[#00AEC7] hover:underline"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link"
               >
-                {t("home.joinButton")} <ExternalLink className="ml-1 h-4 w-4" />
+                {t("home.joinButton")}
+                <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
           </Card>
 
           {/* IT Jobs */}
-          <Card style={gradientBorderStyle}>
-            <CardHeader>
-              <CardTitle className="font-pixel text-[#00AEC7]">{t("home.itJobsTitle")}</CardTitle>
-              <CardDescription>{t("home.itJobsDescription")}</CardDescription>
+          <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-orange-500/20 rounded-lg">
+                  <Briefcase className="h-5 w-5 text-orange-400" />
+                </div>
+              </div>
+              <CardTitle className="font-pixel text-[#00AEC7] text-lg group-hover:text-[#00AEC7]/80 transition-colors">
+                {t("home.itJobsTitle")}
+              </CardTitle>
+              <CardDescription className="text-gray-400 leading-relaxed">{t("home.itJobsDescription")}</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex mb-4">
-                <span className="bg-[#00AEC7]/10 text-[#00AEC7] text-xs font-medium px-2 py-1 rounded-full">
+              <div className="flex items-center gap-2 mb-4">
+                <Badge variant="secondary" className="bg-orange-500/10 text-orange-400 border-orange-500/20">
                   6,400 subscribers
-                </span>
+                </Badge>
               </div>
               <Link
                 href="https://t.me/it_jobs_kz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center text-[#00AEC7] hover:underline"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link"
               >
-                {t("home.joinButton")} <ExternalLink className="ml-1 h-4 w-4" />
+                {t("home.joinButton")}
+                <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
           </Card>
 
           {/* YouTube Channel */}
-          <Card style={gradientBorderStyle}>
-            <CardHeader>
-              <CardTitle className="font-pixel text-[#00AEC7]">{t("home.youtubeChannelTitle")}</CardTitle>
-              <CardDescription>{t("home.youtubeChannelDescription")}</CardDescription>
+          <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-red-500/20 rounded-lg">
+                  <Play className="h-5 w-5 text-red-400" />
+                </div>
+              </div>
+              <CardTitle className="font-pixel text-[#00AEC7] text-lg group-hover:text-[#00AEC7]/80 transition-colors">
+                {t("home.youtubeChannelTitle")}
+              </CardTitle>
+              <CardDescription className="text-gray-400 leading-relaxed">
+                {t("home.youtubeChannelDescription")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex mb-4">
-                <span className="bg-[#00AEC7]/10 text-[#00AEC7] text-xs font-medium px-2 py-1 rounded-full">
+              <div className="flex items-center gap-2 mb-4">
+                <Badge variant="secondary" className="bg-red-500/10 text-red-400 border-red-500/20">
                   Educational content
-                </span>
+                </Badge>
               </div>
               <Link
                 href="https://www.youtube.com/c/DataScienceKazakhstan"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center text-[#00AEC7] hover:underline"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link"
               >
-                {t("home.subscribeButton")} <ExternalLink className="ml-1 h-4 w-4" />
+                {t("home.subscribeButton")}
+                <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
           </Card>
 
           {/* LinkedIn Page */}
-          <Card style={gradientBorderStyle}>
-            <CardHeader>
-              <CardTitle className="font-pixel text-[#00AEC7]">{t("home.linkedinPageTitle")}</CardTitle>
-              <CardDescription>{t("home.linkedinPageDescription")}</CardDescription>
+          <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-blue-600/20 rounded-lg">
+                  <Users className="h-5 w-5 text-blue-400" />
+                </div>
+              </div>
+              <CardTitle className="font-pixel text-[#00AEC7] text-lg group-hover:text-[#00AEC7]/80 transition-colors">
+                {t("home.linkedinPageTitle")}
+              </CardTitle>
+              <CardDescription className="text-gray-400 leading-relaxed">
+                {t("home.linkedinPageDescription")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex mb-4">
-                <span className="bg-[#00AEC7]/10 text-[#00AEC7] text-xs font-medium px-2 py-1 rounded-full">
+              <div className="flex items-center gap-2 mb-4">
+                <Badge variant="secondary" className="bg-blue-600/10 text-blue-400 border-blue-600/20">
                   1,700 followers
-                </span>
+                </Badge>
               </div>
               <Link
                 href="https://www.linkedin.com/company/53101063/admin/dashboard/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center text-[#00AEC7] hover:underline"
+                className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link"
               >
-                {t("home.subscribeButton")} <ExternalLink className="ml-1 h-4 w-4" />
+                {t("home.subscribeButton")}
+                <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
           </Card>
         </div>
       </section>
 
-      {/* Collaboration Section - moved above Community Values */}
-      <section className="container px-4 md:px-6 py-12">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl font-bold mb-4 font-pixel text-[#FFF32A]">{t("home.collaborationTitle")}</h2>
-          <p className="text-center mb-8 max-w-3xl mx-auto text-white">{t("home.collaborationSubtitle")}</p>
-        </div>
+      {/* Collaboration Section - Enhanced with modern design */}
+      <section className="py-20 bg-gradient-to-r from-slate-800/30 to-slate-900/30 backdrop-blur-sm">
+        <div className="container px-4 md:px-6">
+          <div className="text-center mb-16">
+            <Badge className="mb-6 bg-[#00AEC7]/20 text-[#00AEC7] border-[#00AEC7]/30">
+              🤝 Partnership Opportunities
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 font-pixel">
+              <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
+                {t("home.collaborationTitle")}
+              </span>
+            </h2>
+            <p className="text-gray-300 text-lg max-w-3xl mx-auto leading-relaxed">{t("home.collaborationSubtitle")}</p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <CollaborationCard
-            title={t("home.mediaSupport.title")}
-            description={t("home.mediaSupport.description")}
-            details={t("home.mediaSupport.details")}
-            gradientBorderStyle={gradientBorderStyle}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <CollaborationCard
+              title={t("home.mediaSupport.title")}
+              description={t("home.mediaSupport.description")}
+              details={t("home.mediaSupport.details")}
+              gradientBorderStyle={gradientBorderStyle}
+            />
 
-          <CollaborationCard
-            title={t("home.hiring.title")}
-            description={t("home.hiring.description")}
-            details={t("home.hiring.details")}
-            gradientBorderStyle={gradientBorderStyle}
-          />
+            <CollaborationCard
+              title={t("home.hiring.title")}
+              description={t("home.hiring.description")}
+              details={t("home.hiring.details")}
+              gradientBorderStyle={gradientBorderStyle}
+            />
 
-          <CollaborationCard
-            title={t("home.corporateTraining.title")}
-            description={t("home.corporateTraining.description")}
-            details={t("home.corporateTraining.details")}
-            gradientBorderStyle={gradientBorderStyle}
-          />
+            <CollaborationCard
+              title={t("home.corporateTraining.title")}
+              description={t("home.corporateTraining.description")}
+              details={t("home.corporateTraining.details")}
+              gradientBorderStyle={gradientBorderStyle}
+            />
 
-          <CollaborationCard
-            title={t("home.consulting.title")}
-            description={t("home.consulting.description")}
-            details={t("home.consulting.details")}
-            gradientBorderStyle={gradientBorderStyle}
-          />
-        </div>
+            <CollaborationCard
+              title={t("home.consulting.title")}
+              description={t("home.consulting.description")}
+              details={t("home.consulting.details")}
+              gradientBorderStyle={gradientBorderStyle}
+            />
+          </div>
 
-        {/* Contact CTA */}
-        <div className="text-center">
-          <Link href="https://t.me/DSMLmeetup" target="_blank" rel="noopener noreferrer">
-            <Button className="bg-[#00AEC7] text-white hover:bg-[#00AEC7]/90 font-pixel text-lg px-8 py-3" size="lg">
-              <MessageCircle className="mr-2 h-5 w-5" />
-              {t("home.collaborationContact")}
-            </Button>
-          </Link>
+          {/* Enhanced CTA */}
+          <div className="text-center">
+            <Link href="https://t.me/DSMLmeetup" target="_blank" rel="noopener noreferrer">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-[#00AEC7] to-[#00AEC7]/80 text-white hover:from-[#00AEC7]/90 hover:to-[#00AEC7]/70 font-pixel text-lg px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+              >
+                <MessageCircle className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" />
+                {t("home.collaborationContact")}
+                <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Community Values Section - moved below Collaboration */}
-      <section className="bg-muted py-12">
+      {/* Community Values Section - Enhanced with modern cards */}
+      <section className="py-20 bg-gradient-to-br from-slate-900/50 to-black/50">
         <div className="container px-4 md:px-6">
-          <h2 className="text-2xl font-bold mb-6 text-center font-pixel text-[#FFF32A]">{t("rules.valuesTitle")}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="bg-background" style={gradientBorderStyle}>
+          <div className="text-center mb-16">
+            <Badge className="mb-6 bg-[#FFF32A]/20 text-[#FFF32A] border-[#FFF32A]/30">💎 Our Values</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 font-pixel">
+              <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
+                Community Values
+              </span>
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
               <CardHeader>
-                <CardTitle className="font-pixel text-[#00AEC7]">{t("home.communityFirst")}</CardTitle>
+                <div className="p-3 bg-[#00AEC7]/20 rounded-xl w-fit mb-4">
+                  <Users className="h-6 w-6 text-[#00AEC7]" />
+                </div>
+                <CardTitle className="font-pixel text-[#00AEC7] group-hover:text-[#00AEC7]/80 transition-colors">
+                  {t("home.communityFirst")}
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">{t("home.communityFirstDesc")}</p>
+                <p className="text-gray-400 leading-relaxed">{t("home.communityFirstDesc")}</p>
               </CardContent>
             </Card>
-            <Card className="bg-background" style={gradientBorderStyle}>
+
+            <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
               <CardHeader>
-                <CardTitle className="font-pixel text-[#00AEC7]">{t("home.continuousLearning")}</CardTitle>
+                <div className="p-3 bg-[#FFF32A]/20 rounded-xl w-fit mb-4">
+                  <MessageCircle className="h-6 w-6 text-[#FFF32A]" />
+                </div>
+                <CardTitle className="font-pixel text-[#00AEC7] group-hover:text-[#00AEC7]/80 transition-colors">
+                  {t("home.continuousLearning")}
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">{t("home.continuousLearningDesc")}</p>
+                <p className="text-gray-400 leading-relaxed">{t("home.continuousLearningDesc")}</p>
               </CardContent>
             </Card>
-            <Card className="bg-background" style={gradientBorderStyle}>
+
+            <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
               <CardHeader>
-                <CardTitle className="font-pixel text-[#00AEC7]">{t("home.careerGrowth")}</CardTitle>
+                <div className="p-3 bg-purple-500/20 rounded-xl w-fit mb-4">
+                  <Briefcase className="h-6 w-6 text-purple-400" />
+                </div>
+                <CardTitle className="font-pixel text-[#00AEC7] group-hover:text-[#00AEC7]/80 transition-colors">
+                  {t("home.careerGrowth")}
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">{t("home.careerGrowthDesc")}</p>
+                <p className="text-gray-400 leading-relaxed">{t("home.careerGrowthDesc")}</p>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-[#00AEC7]/10 via-transparent to-[#FFF32A]/10">
+        <div className="container px-4 md:px-6 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 font-pixel text-white">
+            Ready to Join the Future of AI in Central Asia?
+          </h2>
+          <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+            Connect with like-minded professionals, access exclusive resources, and accelerate your career in AI/ML.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/signup">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+              >
+                Get Started Today
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+            <Link href="/events">
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-3 rounded-full transition-all duration-300 bg-transparent"
+              >
+                Explore Events
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

@@ -1,32 +1,35 @@
 {
-  "language": "kk",
-  "telegramChannels": {
-    "newsFeed": {
-      "title": "Жаңалықтар лентасы",
-      "description": "Data Science саласындағы соңғы жаңалықтардан хабардар болыңыз"
-    },
-    "dataJobs": {
-      "title": "DS жұмыстары",
-      "description": "ML және Data Science саласындағы жұмыс мүмкіндіктері"
-    },
-    "itJobs": {
-      "title": "IT жұмыстары",
-      "description": "Бағдарламалық жасақтама және IT саласындағы жұмыс мүмкіндіктері"
-    },
-    "joinButton": "Арнаға қосылу"
-  },
-  "back": "Артқа",
-  "view": "Профильді қарау",
-  "viewAllResults": "Барлық нәтижелерді көру",
-  "startTypingToSearch": "Мүшелерді іздеу үшін теруді бастаңыз",
-  "newsFeed": {
-    "title": "Жаңалықтар лентасы",
-    "subtitle": "Data Science және Machine Learning саласындағы соңғы жаңалықтардан хабардар болыңыз"
-  },
-  "dashboard": {
-    "searchTip": "Мүшелерді аты, лақап аты немесе лауазымы бойынша іздеңіз"
-  },
   "title": "DSML Қазақстан",
-  "subtitle": "Қазақстандағы Data Science және Machine Learning әуесқойларына арналған орталық",
-  "joinButton": "Қауымдастыққа қосылу"
+  "description": "Қазақстандағы Data Science және Machine Learning қауымдастығы",
+  "loading": "Жүктелуде...",
+  "error": "Қате орын алды",
+  "success": "Сәтті",
+  "cancel": "Болдырмау",
+  "save": "Сақтау",
+  "edit": "Өңдеу",
+  "delete": "Жою",
+  "confirm": "Растау",
+  "back": "Артқа",
+  "next": "Келесі",
+  "previous": "Алдыңғы",
+  "search": "Іздеу",
+  "filter": "Сүзгі",
+  "sort": "Сұрыптау",
+  "clear": "Тазалау",
+  "apply": "Қолдану",
+  "reset": "Қалпына келтіру",
+  "submit": "Жіберу",
+  "close": "Жабу",
+  "open": "Ашу",
+  "view": "Көру",
+  "download": "Жүктеп алу",
+  "upload": "Жүктеп салу",
+  "share": "Бөлісу",
+  "copy": "Көшіру",
+  "paste": "Қою",
+  "cut": "Кесу",
+  "undo": "Болдырмау",
+  "redo": "Қайталау",
+  "select_all": "Барлығын таңдау",
+  "deselect_all": "Таңдауды алып тастау"
 }

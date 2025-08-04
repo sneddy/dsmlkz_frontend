@@ -1,32 +1,35 @@
 {
-  "language": "ru",
-  "telegramChannels": {
-    "newsFeed": {
-      "title": "Новостная лента",
-      "description": "Будьте в курсе последних новостей в Data Science"
-    },
-    "dataJobs": {
-      "title": "DS вакансии",
-      "description": "Вакансии в ML и Data Science"
-    },
-    "itJobs": {
-      "title": "IT вакансии",
-      "description": "Вакансии в разработке ПО и IT"
-    },
-    "joinButton": "Присоединиться к каналу"
-  },
-  "back": "Назад",
-  "view": "Просмотреть профиль",
-  "viewAllResults": "Просмотреть все результаты",
-  "startTypingToSearch": "Начните вводить текст для поиска участников",
-  "newsFeed": {
-    "title": "Новостная лента",
-    "subtitle": "Будьте в курсе последних новостей в области Data Science и Machine Learning"
-  },
-  "dashboard": {
-    "searchTip": "Ищите участников по имени, никнейму или должности"
-  },
   "title": "DSML Казахстан",
-  "subtitle": "Центр для энтузиастов Data Science и Machine Learning в Казахстане",
-  "joinButton": "Присоединиться к сообществу"
+  "description": "Сообщество Data Science и Machine Learning в Казахстане",
+  "loading": "Загрузка...",
+  "error": "Произошла ошибка",
+  "success": "Успешно",
+  "cancel": "Отмена",
+  "save": "Сохранить",
+  "edit": "Редактировать",
+  "delete": "Удалить",
+  "confirm": "Подтвердить",
+  "back": "Назад",
+  "next": "Далее",
+  "previous": "Предыдущий",
+  "search": "Поиск",
+  "filter": "Фильтр",
+  "sort": "Сортировка",
+  "clear": "Очистить",
+  "apply": "Применить",
+  "reset": "Сбросить",
+  "submit": "Отправить",
+  "close": "Закрыть",
+  "open": "Открыть",
+  "view": "Просмотр",
+  "download": "Скачать",
+  "upload": "Загрузить",
+  "share": "Поделиться",
+  "copy": "Копировать",
+  "paste": "Вставить",
+  "cut": "Вырезать",
+  "undo": "Отменить",
+  "redo": "Повторить",
+  "select_all": "Выбрать все",
+  "deselect_all": "Снять выделение"
 }

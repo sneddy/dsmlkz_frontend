@@ -112,10 +112,15 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
     if (diffDays === 1) return t("news.yesterday")
     if (diffDays < 7) return `${diffDays} ${t("news.days_ago")}`
 
-    return date.toLocaleDateString("ru-RU", {
-      day: "numeric",
-      month: "short",
-    })
+    // Для дат старше недели показываем день и месяц с переводом
+    const day = date.getDate()
+    const month = date.getMonth()
+
+    const monthKeys = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+    const monthKey = monthKeys[month]
+    const monthName = t(`news.months.${monthKey}`)
+
+    return `${day} ${monthName}`
   }
 
   if (error) {
@@ -166,7 +171,7 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
         <Card className="mb-4">
           <CardContent className="p-4">
             <div className="text-center text-[#00AEC7] font-medium">
-              <p>{t("news.no_posts")}</p>
+              <p>{t("news.no_posts_available")}</p>
             </div>
           </CardContent>
         </Card>
@@ -245,7 +250,7 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center px-4 py-3 border-2 border-[#00AEC7]/30 text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white hover:border-[#00AEC7] text-sm font-medium rounded-xl transition-all duration-200 ease-out focus:ring-2 focus:ring-[#00AEC7]/50 focus:outline-none group/btn"
-                            title="Открыть в Telegram"
+                            title={t("news.open_in_telegram")}
                           >
                             <ExternalLink className="h-4 w-4 mr-2 transition-transform duration-200 group-hover/btn:scale-110" />
                             {t("news.telegram")}

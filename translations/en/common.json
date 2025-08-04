@@ -1,32 +1,35 @@
 {
-  "language": "en",
-  "telegramChannels": {
-    "newsFeed": {
-      "title": "News Feed",
-      "description": "Stay updated with the latest in Data Science"
-    },
-    "dataJobs": {
-      "title": "DS Jobs",
-      "description": "ML and Data Science job opportunities"
-    },
-    "itJobs": {
-      "title": "IT Jobs",
-      "description": "Software and IT job opportunities"
-    },
-    "joinButton": "Join Channel"
-  },
-  "back": "Back",
-  "view": "View Profile",
-  "viewAllResults": "View all results",
-  "startTypingToSearch": "Start typing to search for members",
-  "newsFeed": {
-    "title": "News Feed",
-    "subtitle": "Stay updated with the latest in Data Science and Machine Learning"
-  },
-  "dashboard": {
-    "searchTip": "Search for members by name, nickname, or position"
-  },
   "title": "DSML Kazakhstan",
-  "subtitle": "The hub for Data Science and Machine Learning enthusiasts in Kazakhstan",
-  "joinButton": "Join Community"
+  "description": "Data Science and Machine Learning community in Kazakhstan",
+  "loading": "Loading...",
+  "error": "An error occurred",
+  "success": "Success",
+  "cancel": "Cancel",
+  "save": "Save",
+  "edit": "Edit",
+  "delete": "Delete",
+  "confirm": "Confirm",
+  "back": "Back",
+  "next": "Next",
+  "previous": "Previous",
+  "search": "Search",
+  "filter": "Filter",
+  "sort": "Sort",
+  "clear": "Clear",
+  "apply": "Apply",
+  "reset": "Reset",
+  "submit": "Submit",
+  "close": "Close",
+  "open": "Open",
+  "view": "View",
+  "download": "Download",
+  "upload": "Upload",
+  "share": "Share",
+  "copy": "Copy",
+  "paste": "Paste",
+  "cut": "Cut",
+  "undo": "Undo",
+  "redo": "Redo",
+  "select_all": "Select All",
+  "deselect_all": "Deselect All"
 }

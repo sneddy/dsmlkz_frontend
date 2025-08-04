@@ -1,20 +1,5 @@
 {
   "language": "en",
-  "nav": {
-    "home": "Home",
-    "newsFeed": "News",
-    "jobsFeed": "Jobs",
-    "itJobs": "IT Jobs",
-    "rules": "Rules",
-    "faces": "Faces",
-    "about": "About",
-    "dashboard": "Dashboard",
-    "profile": "Profile",
-    "registerCard": "Register Card",
-    "articles": "Articles",
-    "events": "Events",
-    "companies": "Companies"
-  },
   "telegramChannels": {
     "newsFeed": {
       "title": "News Feed",

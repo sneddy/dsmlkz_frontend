@@ -1,0 +1,17 @@
+{
+  "page_title": "Новости - DSML Kazakhstan",
+  "page_description": "Последние новости и обновления от сообщества Data Science и Machine Learning Казахстана",
+  "main_title": "Новости DSML Kazakhstan",
+  "subtitle_line1": "Последние обновления и события из мира",
+  "subtitle_line2": "Data Science и Machine Learning",
+  "daily_updates": "Ежедневные обновления",
+  "current_news": "Актуальные новости",
+  "read_more": "Читать далее",
+  "telegram": "Telegram",
+  "show_more": "Показать ещё",
+  "loading": "Загрузка...",
+  "yesterday": "Вчера",
+  "days_ago": "дн. назад",
+  "no_posts": "На данный момент нет доступных постов.",
+  "failed_to_load": "Не удалось загрузить ленту новостей. Попробуйте позже."
+}

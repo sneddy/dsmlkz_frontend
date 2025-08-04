@@ -1,34 +1,34 @@
-import { getTranslations as getTranslationsFromIndex } from "@/translations"
+import { getTranslations } from "@/translations"
 
-// Default language to use on the server
-const DEFAULT_LANGUAGE = "en"
+/**
+ * Получает переводы для серверных компонентов
+ * @param language Код языка
+ * @returns Объект с переводами
+ */
+export const getServerTranslations = (language: string) => {
+  return getTranslations(language)
+}
 
-// Re-export getTranslations from the index file
-export const getTranslations = getTranslationsFromIndex
-
-export function getServerTranslation(key: string, language: string = DEFAULT_LANGUAGE) {
+/**
+ * Получает конкретный перевод по ключу
+ * @param language Код языка
+ * @param key Ключ перевода в формате "module.key" или "module.nested.key"
+ * @param fallback Значение по умолчанию
+ * @returns Переведенная строка
+ */
+export const getServerTranslation = (language: string, key: string, fallback?: string): string => {
   const translations = getTranslations(language)
 
-  // Split the key by dots to access nested properties
   const keys = key.split(".")
   let value = translations
 
-  // Navigate through the nested properties
   for (const k of keys) {
     if (value && typeof value === "object" && k in value) {
       value = value[k]
     } else {
-      // Return the key if translation not found
-      console.log(`Translation key not found: ${key}`, value)
-      return key
+      return fallback || key
     }
   }
 
-  // If the value is not a string, return the key
-  if (typeof value !== "string") {
-    console.log(`Translation value is not a string: ${key}`, value)
-    return key
-  }
-
-  return value
+  return typeof value === "string" ? value : fallback || key
 }

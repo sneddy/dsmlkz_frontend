@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, ChevronDown } from "lucide-react"
@@ -32,16 +32,9 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
   const [error, setError] = useState<string | null>(null)
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
-  const postsPerPage = 5
+  const postsPerPage = 9
   const { t } = useTranslation()
   const supabase = getSupabaseClient()
-
-  // Gradient border style - same as profile card
-  const gradientBorderStyle = {
-    borderWidth: "4px",
-    borderStyle: "solid",
-    borderImage: "linear-gradient(to right, #FFF32A, #00AEC7) 1",
-  }
 
   const fetchPosts = async (pageNumber = 1, append = false) => {
     try {
@@ -51,10 +44,8 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
         setLoadingMore(true)
       }
 
-      // Calculate offset based on page number
       const offset = (pageNumber - 1) * postsPerPage
 
-      // Fetch posts from the specified channel with pagination
       const { data, error } = await supabase
         .from("channels_content")
         .select("*")
@@ -66,7 +57,6 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
         throw error
       }
 
-      // Check if we have more posts to load
       setHasMore(data.length === postsPerPage)
 
       if (append) {
@@ -76,7 +66,7 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
       }
     } catch (err) {
       console.error("Error fetching news:", err)
-      setError("Failed to load news feed. Please try again later.")
+      setError(t("news.failed_to_load"))
     } finally {
       setLoading(false)
       setLoadingMore(false)
@@ -93,48 +83,45 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
     fetchPosts(nextPage, true)
   }
 
-  // Function to convert HTML to plain text and truncate if needed
-  const formatText = (html: string, maxLength = 200) => {
-    // First replace <br> tags with newlines for plain text
-    let text = html.replace(/<br\s*\/?>/gi, "\n")
-    // Then remove all other HTML tags
+  // Функция для обрезки текста с проверкой на переполнение
+  const truncateText = (html: string, maxLength = 400) => {
+    // Убираем HTML теги
+    let text = html.replace(/<br\s*\/?>/gi, " ")
     text = text.replace(/<[^>]*>?/gm, "")
-    // Normalize whitespace
     text = text.replace(/\s+/g, " ").trim()
 
-    if (showFullText || text.length <= maxLength) return text
+    if (text.length <= maxLength) return { text, isTruncated: false }
 
-    // Find a good breaking point (end of sentence or space)
-    let breakPoint = text.lastIndexOf(". ", maxLength - 3)
-    if (breakPoint === -1 || breakPoint < maxLength / 2) {
-      breakPoint = text.lastIndexOf(" ", maxLength - 3)
-    }
+    // Находим хорошее место для обрезки
+    let breakPoint = text.lastIndexOf(" ", maxLength - 3)
     if (breakPoint === -1) breakPoint = maxLength - 3
 
-    return text.substring(0, breakPoint) + "..."
+    return {
+      text: text.substring(0, breakPoint) + "...",
+      isTruncated: true,
+    }
   }
 
-  // Function to format date
+  // Компактный формат даты с переводами
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
-    return date.toLocaleDateString(undefined, {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
-  }
+    const now = new Date()
+    const diffTime = Math.abs(now.getTime() - date.getTime())
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
-  // Process HTML to ensure line breaks are properly handled
-  const processHtml = (html: string) => {
-    return html
-      .replace(/\n/g, "<br />") // Replace newlines with <br> tags
-      .replace(/<br \/><br \/>/g, "</p><p>") // Replace double breaks with paragraph breaks
+    if (diffDays === 1) return t("news.yesterday")
+    if (diffDays < 7) return `${diffDays} ${t("news.days_ago")}`
+
+    return date.toLocaleDateString("ru-RU", {
+      day: "numeric",
+      month: "short",
+    })
   }
 
   if (error) {
     return (
-      <Card className="mb-6">
-        <CardContent className="p-6">
+      <Card className="mb-4">
+        <CardContent className="p-4">
           <div className="text-center text-[#00AEC7] font-medium">
             <p>{error}</p>
           </div>
@@ -145,15 +132,27 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
 
   if (loading) {
     return (
-      <div className="space-y-4">
-        {[1, 2, 3].map((i) => (
-          <Card key={i} className="mb-4">
-            <CardHeader>
-              <Skeleton className="h-5 w-40" />
-              <Skeleton className="h-4 w-24" />
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <Card
+            key={i}
+            className="h-[53rem] bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-0 shadow-lg rounded-xl overflow-hidden animate-pulse"
+          >
+            <div className="h-1 bg-gradient-to-r from-gray-200 to-gray-300"></div>
+            <CardHeader className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-sm pb-3 border-b border-white/10">
+              <Skeleton className="h-3 w-20 bg-gray-200" />
             </CardHeader>
-            <CardContent>
-              <Skeleton className="h-20 w-full" />
+            <CardContent className="pt-4">
+              <Skeleton className="h-[26rem] w-full mb-4 rounded-xl bg-gray-200" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-full bg-gray-200" />
+                <Skeleton className="h-4 w-full bg-gray-200" />
+                <Skeleton className="h-4 w-3/4 bg-gray-200" />
+              </div>
+              <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-100">
+                <Skeleton className="h-12 w-32 rounded-xl bg-gray-200" />
+                <Skeleton className="h-12 w-24 rounded-xl bg-gray-200" />
+              </div>
             </CardContent>
           </Card>
         ))}
@@ -162,84 +161,122 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {posts.length === 0 ? (
         <Card className="mb-4">
-          <CardContent className="p-6">
+          <CardContent className="p-4">
             <div className="text-center text-[#00AEC7] font-medium">
-              <p>No posts available at the moment.</p>
+              <p>{t("news.no_posts")}</p>
             </div>
           </CardContent>
         </Card>
       ) : (
         <>
-          {posts.map((post) => (
-            <Card key={post.post_id} className="mb-4" style={gradientBorderStyle}>
-              <CardHeader className="bg-gradient-to-r from-[#FFF32A]/10 to-[#00AEC7]/10">
-                <CardTitle className="text-lg text-[#FFF32A]">{post.channel_name || "Telegram Post"}</CardTitle>
-                <CardDescription className="text-[#00AEC7] font-medium">
-                  {formatDate(post.created_at)}
-                  {post.sender_name && ` • ${post.sender_name}`}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col md:flex-row gap-3">
-                  {/* Text content on the left */}
-                  <div className={`flex-1 ${post.image_url ? "md:w-3/5" : "w-full"}`}>
-                    {showFullText ? (
-                      <div
-                        className="mb-3 prose prose-compact max-w-none prose-headings:text-[#FFF32A] prose-a:text-[#00AEC7]"
-                        dangerouslySetInnerHTML={{ __html: processHtml(post.html_text || "") }}
-                      />
-                    ) : (
-                      <p className="mb-3 text-[#00AEC7] font-medium">{formatText(post.html_text || "")}</p>
+          {/* Сетка карточек */}
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {posts.map((post) => {
+              const { text, isTruncated } = truncateText(post.html_text || "")
+
+              return (
+                <Card
+                  key={post.post_id}
+                  className="h-[53rem] bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-0 shadow-lg rounded-xl overflow-hidden hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 ease-out flex flex-col group"
+                  style={{
+                    animationDelay: `${posts.indexOf(post) * 50}ms`,
+                    transform: "translateZ(0)", // Force hardware acceleration
+                  }}
+                >
+                  {/* Gradient accent strip */}
+                  <div className="h-1 bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                  {/* Header with glassmorphism effect */}
+                  <CardHeader className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-sm pb-3 flex-shrink-0 border-b border-white/10">
+                    <CardDescription className="text-[#00AEC7] font-semibold text-sm tracking-wide">
+                      {formatDate(post.created_at)}
+                      {post.sender_name && <span className="text-gray-500 font-normal ml-2">• {post.sender_name}</span>}
+                    </CardDescription>
+                  </CardHeader>
+
+                  {/* Content with improved spacing */}
+                  <CardContent className="pt-4 pb-6 flex-1 flex flex-col space-y-4">
+                    {/* Enhanced image with modern hover effects */}
+                    {post.image_url && (
+                      <div className="w-full h-[26rem] flex-shrink-0 relative group/image cursor-pointer overflow-hidden rounded-xl shadow-md">
+                        <BlobImage
+                          src={post.image_url}
+                          alt="Post image"
+                          width={400}
+                          height={416}
+                          className="w-full h-full object-cover transition-all duration-500 ease-out group-hover/image:scale-110 group-hover/image:brightness-110"
+                        />
+                        {/* Subtle overlay on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-300"></div>
+                      </div>
                     )}
-                  </div>
 
-                  {/* Image on the right - increased from 1/3 to 2/5 (20% larger) */}
-                  {post.image_url && (
-                    <div className="md:w-2/5">
-                      <BlobImage
-                        src={post.image_url}
-                        alt="Post image"
-                        width={400}
-                        height={200}
-                        className="rounded-md w-full h-auto object-cover border-2 border-[#00AEC7]"
-                      />
+                    {/* Text content with better typography */}
+                    <div className="flex-1 flex flex-col justify-between space-y-4">
+                      <p className="text-gray-700 dark:text-gray-300 font-medium text-sm leading-relaxed line-clamp-8 tracking-wide">
+                        {text}
+                      </p>
+
+                      {/* Modern button layout */}
+                      <div className="flex justify-between items-center pt-4 border-t border-gray-100 dark:border-gray-800">
+                        {/* Primary CTA button */}
+                        <Link
+                          href={`/news/${post.post_id}`}
+                          className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] text-white text-sm font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 ease-out focus:ring-2 focus:ring-[#00AEC7]/50 focus:outline-none"
+                        >
+                          {t("news.read_more")}
+                          <svg
+                            className="ml-2 w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </Link>
+
+                        {/* Secondary action button */}
+                        {post.post_link && (
+                          <Link
+                            href={post.post_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center px-4 py-3 border-2 border-[#00AEC7]/30 text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white hover:border-[#00AEC7] text-sm font-medium rounded-xl transition-all duration-200 ease-out focus:ring-2 focus:ring-[#00AEC7]/50 focus:outline-none group/btn"
+                            title="Открыть в Telegram"
+                          >
+                            <ExternalLink className="h-4 w-4 mr-2 transition-transform duration-200 group-hover/btn:scale-110" />
+                            {t("news.telegram")}
+                          </Link>
+                        )}
+                      </div>
                     </div>
-                  )}
-                </div>
+                  </CardContent>
+                </Card>
+              )
+            })}
+          </div>
 
-                {post.post_link && (
-                  <Link
-                    href={post.post_link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center text-[#FFF32A] hover:underline mt-3 font-bold"
-                  >
-                    View on Telegram <ExternalLink className="ml-1 h-4 w-4" />
-                  </Link>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-
-          {/* Show More Button */}
+          {/* Кнопка "Показать ещё" */}
           {hasMore && (
-            <div className="flex justify-center mt-6">
+            <div className="flex justify-center mt-8">
               <Button
                 onClick={handleLoadMore}
                 disabled={loadingMore}
-                className="flex items-center gap-2 bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-white"
+                size="lg"
+                className="flex items-center gap-3 bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-white px-10 py-4 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 ease-out focus:ring-2 focus:ring-[#00AEC7]/50 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {loadingMore ? (
                   <>
-                    <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
-                    Loading...
+                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                    {t("news.loading")}
                   </>
                 ) : (
                   <>
-                    Show More <ChevronDown className="h-4 w-4" />
+                    {t("news.show_more")}
+                    <ChevronDown className="h-5 w-5 transition-transform duration-200 group-hover:translate-y-1" />
                   </>
                 )}
               </Button>

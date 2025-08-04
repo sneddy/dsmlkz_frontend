@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useTranslation } from "@/hooks/use-translation"
 import { SectionHero } from "@/components/section-hero"
-import { Users, MessageSquare, Shield, Heart, BookOpen, Lightbulb, Target, Globe, Award, UserCheck } from "lucide-react"
+import { Users, MessageSquare, Shield, Heart, Lightbulb, Target, Globe, Award, Calendar, Gamepad2 } from "lucide-react"
 
 export function RulesContent() {
   const { t } = useTranslation()
@@ -15,42 +15,42 @@ export function RulesContent() {
 
   const communityValues = [
     {
+      icon: <MessageSquare className="h-8 w-8 text-[#00AEC7]" />,
+      title: t("values.values.respect.title"),
+      description: t("values.values.respect.description"),
+    },
+    {
       icon: <Heart className="h-8 w-8 text-[#FFF32A]" />,
-      title: t("rules.values.respect.title"),
-      description: t("rules.values.respect.description"),
-    },
-    {
-      icon: <BookOpen className="h-8 w-8 text-[#00AEC7]" />,
-      title: t("rules.values.learning.title"),
-      description: t("rules.values.learning.description"),
-    },
-    {
-      icon: <UserCheck className="h-8 w-8 text-[#FFF32A]" />,
-      title: t("rules.values.collaboration.title"),
-      description: t("rules.values.collaboration.description"),
+      title: t("values.values.newcomers.title"),
+      description: t("values.values.newcomers.description"),
     },
     {
       icon: <Lightbulb className="h-8 w-8 text-[#00AEC7]" />,
-      title: t("rules.values.innovation.title"),
-      description: t("rules.values.innovation.description"),
+      title: t("values.values.innovation.title"),
+      description: t("values.values.innovation.description"),
     },
     {
-      icon: <Globe className="h-8 w-8 text-[#FFF32A]" />,
-      title: t("rules.values.diversity.title"),
-      description: t("rules.values.diversity.description"),
+      icon: <Award className="h-8 w-8 text-[#FFF32A]" />,
+      title: t("values.values.celebration.title"),
+      description: t("values.values.celebration.description"),
     },
     {
-      icon: <Award className="h-8 w-8 text-[#00AEC7]" />,
-      title: t("rules.values.excellence.title"),
-      description: t("rules.values.excellence.description"),
+      icon: <Calendar className="h-8 w-8 text-[#00AEC7]" />,
+      title: t("values.values.meetings.title"),
+      description: t("values.values.meetings.description"),
+    },
+    {
+      icon: <Gamepad2 className="h-8 w-8 text-[#FFF32A]" />,
+      title: t("values.values.interests.title"),
+      description: t("values.values.interests.description"),
     },
   ]
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <SectionHero
-        title={t("rules.title")}
-        subtitleLine1={t("rules.description")}
+        title={t("values.title")}
+        subtitleLine1={t("values.description")}
         gradientFrom="#00AEC7"
         gradientTo="#FFF32A"
       />
@@ -60,15 +60,15 @@ export function RulesContent() {
           <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="welcome" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
-              {t("rules.tabs.welcome")}
+              {t("values.tabs.welcome")}
             </TabsTrigger>
             <TabsTrigger value="content" className="flex items-center gap-2">
               <MessageSquare className="h-4 w-4" />
-              {t("rules.tabs.content")}
+              {t("values.tabs.content")}
             </TabsTrigger>
             <TabsTrigger value="moderation" className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
-              {t("rules.tabs.moderation")}
+              {t("values.tabs.moderation")}
             </TabsTrigger>
           </TabsList>
 
@@ -77,24 +77,24 @@ export function RulesContent() {
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <Users className="h-5 w-5 text-[#FFF32A]" />
-                  {t("rules.welcome.title")}
+                  {t("values.welcome.title")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-white/90 space-y-4">
-                <p>{t("rules.welcome.intro")}</p>
+                <p>{t("values.welcome.intro")}</p>
                 <div className="grid gap-4">
                   <div className="flex items-start gap-3">
                     <Target className="h-5 w-5 text-[#00AEC7] mt-1 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold text-white mb-1">{t("rules.welcome.mission.title")}</h4>
-                      <p className="text-sm">{t("rules.welcome.mission.description")}</p>
+                      <h4 className="font-semibold text-white mb-1">{t("values.welcome.mission.title")}</h4>
+                      <p className="text-sm">{t("values.welcome.mission.description")}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <Globe className="h-5 w-5 text-[#FFF32A] mt-1 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold text-white mb-1">{t("rules.welcome.community.title")}</h4>
-                      <p className="text-sm">{t("rules.welcome.community.description")}</p>
+                      <h4 className="font-semibold text-white mb-1">{t("values.welcome.community.title")}</h4>
+                      <p className="text-sm">{t("values.welcome.community.description")}</p>
                     </div>
                   </div>
                 </div>
@@ -108,26 +108,26 @@ export function RulesContent() {
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
                     <MessageSquare className="h-5 w-5 text-[#00AEC7]" />
-                    {t("rules.content.guidelines.title")}
+                    {t("values.content.guidelines.title")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-white/90">
                   <ul className="space-y-3">
                     <li className="flex items-start gap-2">
                       <span className="text-[#FFF32A] mt-1">•</span>
-                      {t("rules.content.guidelines.relevant")}
+                      {t("values.content.guidelines.relevant")}
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#FFF32A] mt-1">•</span>
-                      {t("rules.content.guidelines.respectful")}
+                      {t("values.content.guidelines.respectful")}
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#FFF32A] mt-1">•</span>
-                      {t("rules.content.guidelines.constructive")}
+                      {t("values.content.guidelines.constructive")}
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#FFF32A] mt-1">•</span>
-                      {t("rules.content.guidelines.original")}
+                      {t("values.content.guidelines.original")}
                     </li>
                   </ul>
                 </CardContent>
@@ -137,22 +137,22 @@ export function RulesContent() {
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
                     <Shield className="h-5 w-5 text-[#FFF32A]" />
-                    {t("rules.content.prohibited.title")}
+                    {t("values.content.prohibited.title")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-white/90">
                   <div className="grid gap-3">
                     <Badge variant="destructive" className="w-fit">
-                      {t("rules.content.prohibited.spam")}
+                      {t("values.content.prohibited.spam")}
                     </Badge>
                     <Badge variant="destructive" className="w-fit">
-                      {t("rules.content.prohibited.harassment")}
+                      {t("values.content.prohibited.harassment")}
                     </Badge>
                     <Badge variant="destructive" className="w-fit">
-                      {t("rules.content.prohibited.offtopic")}
+                      {t("values.content.prohibited.offtopic")}
                     </Badge>
                     <Badge variant="destructive" className="w-fit">
-                      {t("rules.content.prohibited.inappropriate")}
+                      {t("values.content.prohibited.inappropriate")}
                     </Badge>
                   </div>
                 </CardContent>
@@ -165,23 +165,23 @@ export function RulesContent() {
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <Shield className="h-5 w-5 text-[#00AEC7]" />
-                  {t("rules.moderation.process.title")}
+                  {t("values.moderation.process.title")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-white/90 space-y-4">
-                <p>{t("rules.moderation.process.description")}</p>
+                <p>{t("values.moderation.process.description")}</p>
                 <div className="grid gap-4">
                   <div className="flex items-center gap-3 p-3 bg-yellow-500/20 rounded-lg border border-yellow-500/30">
                     <span className="bg-yellow-500 text-black px-2 py-1 rounded text-sm font-semibold">1</span>
-                    <span>{t("rules.moderation.steps.warning")}</span>
+                    <span>{t("values.moderation.steps.warning")}</span>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-orange-500/20 rounded-lg border border-orange-500/30">
                     <span className="bg-orange-500 text-white px-2 py-1 rounded text-sm font-semibold">2</span>
-                    <span>{t("rules.moderation.steps.temporary")}</span>
+                    <span>{t("values.moderation.steps.temporary")}</span>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-red-500/20 rounded-lg border border-red-500/30">
                     <span className="bg-red-500 text-white px-2 py-1 rounded text-sm font-semibold">3</span>
-                    <span>{t("rules.moderation.steps.permanent")}</span>
+                    <span>{t("values.moderation.steps.permanent")}</span>
                   </div>
                 </div>
               </CardContent>
@@ -191,7 +191,7 @@ export function RulesContent() {
 
         {/* Community Values Section */}
         <div className="mt-12">
-          <h2 className="text-3xl font-bold text-white text-center mb-8 font-pixel">{t("rules.values.title")}</h2>
+          <h2 className="text-3xl font-bold text-white text-center mb-8 font-pixel">{t("values.values.title")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {communityValues.map((value, index) => (
               <Card
@@ -214,10 +214,10 @@ export function RulesContent() {
         <div className="mt-12 text-center">
           <Card className="bg-gradient-to-r from-[#00AEC7]/20 to-[#FFF32A]/20 backdrop-blur-sm border-white/20">
             <CardContent className="p-8">
-              <h3 className="text-2xl font-bold text-white mb-4 font-pixel">{t("rules.cta.title")}</h3>
-              <p className="text-white/90 mb-6 max-w-2xl mx-auto">{t("rules.cta.description")}</p>
+              <h3 className="text-2xl font-bold text-white mb-4 font-pixel">{t("values.cta.title")}</h3>
+              <p className="text-white/90 mb-6 max-w-2xl mx-auto">{t("values.cta.description")}</p>
               <Button size="lg" className="bg-[#00AEC7] hover:bg-[#0095a8] text-white font-semibold px-8">
-                {t("rules.cta.button")}
+                {t("values.cta.button")}
               </Button>
             </CardContent>
           </Card>

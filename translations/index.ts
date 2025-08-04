@@ -7,7 +7,6 @@ import enFaces from "./en/faces.json"
 import enSearch from "./en/search.json"
 import enRegisterCard from "./en/register_card.json"
 import enProfile from "./en/profile.json"
-import enRules from "./en/rules.json"
 import enAuth from "./en/auth.json"
 import enArticles from "./en/articles.json"
 import enEvents from "./en/events.json"
@@ -15,6 +14,7 @@ import enEventsPast from "./en/events_past.json"
 import enEventsAnnouncements from "./en/events_announcements.json"
 import enDashboard from "./en/dashboard.json"
 import enHome from "./en/home.json"
+import enValues from "./en/values.json"
 
 import ruCommon from "./ru/common.json"
 import ruNews from "./ru/news.json"
@@ -24,7 +24,6 @@ import ruFaces from "./ru/faces.json"
 import ruSearch from "./ru/search.json"
 import ruRegisterCard from "./ru/register_card.json"
 import ruProfile from "./ru/profile.json"
-import ruRules from "./ru/rules.json"
 import ruAuth from "./ru/auth.json"
 import ruArticles from "./ru/articles.json"
 import ruEvents from "./ru/events.json"
@@ -32,6 +31,7 @@ import ruEventsPast from "./ru/events_past.json"
 import ruEventsAnnouncements from "./ru/events_announcements.json"
 import ruDashboard from "./ru/dashboard.json"
 import ruHome from "./ru/home.json"
+import ruValues from "./ru/values.json"
 
 import kkCommon from "./kk/common.json"
 import kkNews from "./kk/news.json"
@@ -41,7 +41,6 @@ import kkFaces from "./kk/faces.json"
 import kkSearch from "./kk/search.json"
 import kkRegisterCard from "./kk/register_card.json"
 import kkProfile from "./kk/profile.json"
-import kkRules from "./kk/rules.json"
 import kkAuth from "./kk/auth.json"
 import kkArticles from "./kk/articles.json"
 import kkEvents from "./kk/events.json"
@@ -49,6 +48,7 @@ import kkEventsPast from "./kk/events_past.json"
 import kkEventsAnnouncements from "./kk/events_announcements.json"
 import kkDashboard from "./kk/dashboard.json"
 import kkHome from "./kk/home.json"
+import kkValues from "./kk/values.json"
 
 type Translations = Record<string, any>
 
@@ -63,7 +63,6 @@ const clientTranslations: Record<string, Translations> = {
     search: enSearch,
     register_card: enRegisterCard,
     profile: enProfile,
-    rules: enRules,
     auth: enAuth,
     articles: enArticles,
     events: enEvents,
@@ -71,6 +70,7 @@ const clientTranslations: Record<string, Translations> = {
     events_announcements: enEventsAnnouncements,
     dashboard: enDashboard,
     home: enHome,
+    values: enValues,
   },
   ru: {
     common: ruCommon,
@@ -81,7 +81,6 @@ const clientTranslations: Record<string, Translations> = {
     search: ruSearch,
     register_card: ruRegisterCard,
     profile: ruProfile,
-    rules: ruRules,
     auth: ruAuth,
     articles: ruArticles,
     events: ruEvents,
@@ -89,6 +88,7 @@ const clientTranslations: Record<string, Translations> = {
     events_announcements: ruEventsAnnouncements,
     dashboard: ruDashboard,
     home: ruHome,
+    values: ruValues,
   },
   kk: {
     common: kkCommon,
@@ -99,7 +99,6 @@ const clientTranslations: Record<string, Translations> = {
     search: kkSearch,
     register_card: kkRegisterCard,
     profile: kkProfile,
-    rules: kkRules,
     auth: kkAuth,
     articles: kkArticles,
     events: kkEvents,
@@ -107,6 +106,7 @@ const clientTranslations: Record<string, Translations> = {
     events_announcements: kkEventsAnnouncements,
     dashboard: kkDashboard,
     home: kkHome,
+    values: kkValues,
   },
 }
 

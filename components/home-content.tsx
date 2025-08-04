@@ -92,7 +92,7 @@ export function HomeContent() {
                 className="w-full sm:w-auto border-[#FFF32A]/30 text-[#FFF32A] hover:bg-[#FFF32A]/10 backdrop-blur-sm px-6 sm:px-8 py-3 rounded-full transition-all duration-300 group bg-transparent text-sm sm:text-base"
               >
                 <Play className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
-                Watch Events
+                {t("home.watchEvents")}
               </Button>
             </Link>
           </div>
@@ -336,6 +336,37 @@ export function HomeContent() {
         </div>
       </section>
 
+      {/* What is DSML KZ Section */}
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-r from-slate-800/30 to-slate-900/30 backdrop-blur-sm">
+        <div className="container px-4 md:px-6">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 font-pixel">
+              <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
+                {t("home.whatIsDsmlTitle")}
+              </span>
+            </h2>
+            <p className="text-gray-300 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed px-2 mb-8 sm:mb-12">
+              {t("home.whatIsDsmlDescription")}
+            </p>
+          </div>
+
+          {/* YouTube Video Embed */}
+          <div className="max-w-4xl mx-auto">
+            <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+              <iframe
+                className="absolute top-0 left-0 w-full h-full rounded-xl shadow-2xl"
+                src="https://www.youtube.com/embed/qZ8XGMjok0U?si=3pGFCv3ZI77NDYkR"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Collaboration Section - Enhanced with modern design */}
       <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-r from-slate-800/30 to-slate-900/30 backdrop-blur-sm">
         <div className="container px-4 md:px-6">
@@ -396,70 +427,14 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Community Values Section - Enhanced with modern cards */}
-      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-slate-900/50 to-black/50">
-        <div className="container px-4 md:px-6">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 font-pixel">
-              <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
-                Community Values
-              </span>
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
-              <CardHeader>
-                <div className="p-3 bg-[#00AEC7]/20 rounded-xl w-fit mb-4">
-                  <Users className="h-5 sm:h-6 w-5 sm:w-6 text-[#00AEC7]" />
-                </div>
-                <CardTitle className="font-pixel text-[#00AEC7] group-hover:text-[#00AEC7]/80 transition-colors text-base sm:text-lg">
-                  {t("home.communityFirst")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-400 leading-relaxed text-sm sm:text-base">{t("home.communityFirstDesc")}</p>
-              </CardContent>
-            </Card>
-
-            <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
-              <CardHeader>
-                <div className="p-3 bg-[#FFF32A]/20 rounded-xl w-fit mb-4">
-                  <MessageCircle className="h-5 sm:h-6 w-5 sm:w-6 text-[#FFF32A]" />
-                </div>
-                <CardTitle className="font-pixel text-[#00AEC7] group-hover:text-[#00AEC7]/80 transition-colors text-base sm:text-lg">
-                  {t("home.continuousLearning")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-400 leading-relaxed text-sm sm:text-base">{t("home.continuousLearningDesc")}</p>
-              </CardContent>
-            </Card>
-
-            <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
-              <CardHeader>
-                <div className="p-3 bg-purple-500/20 rounded-xl w-fit mb-4">
-                  <Briefcase className="h-5 sm:h-6 w-5 sm:w-6 text-purple-400" />
-                </div>
-                <CardTitle className="font-pixel text-[#00AEC7] group-hover:text-[#00AEC7]/80 transition-colors text-base sm:text-lg">
-                  {t("home.careerGrowth")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-400 leading-relaxed text-sm sm:text-base">{t("home.careerGrowthDesc")}</p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
       {/* Final CTA Section */}
       <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-r from-[#00AEC7]/10 via-transparent to-[#FFF32A]/10">
         <div className="container px-4 md:px-6 text-center">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 font-pixel text-white">
-            Ready to Join the Future of AI in Central Asia?
+            {t("home.heroCallToAction")}
           </h2>
           <p className="text-gray-300 text-base sm:text-lg mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
-            Connect with like-minded professionals, access exclusive resources, and accelerate your career in AI/ML.
+            {t("home.heroCallToActionDesc")}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
             <Link href="/signup">
@@ -467,7 +442,7 @@ export function HomeContent() {
                 size="lg"
                 className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-semibold px-6 sm:px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-sm sm:text-base"
               >
-                Get Started Today
+                {t("home.getStartedToday")}
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -477,7 +452,7 @@ export function HomeContent() {
                 size="lg"
                 className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-6 sm:px-8 py-3 rounded-full transition-all duration-300 bg-transparent text-sm sm:text-base"
               >
-                Explore Events
+                {t("home.exploreEvents")}
               </Button>
             </Link>
           </div>

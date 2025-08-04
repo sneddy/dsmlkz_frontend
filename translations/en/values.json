@@ -1,6 +1,6 @@
 {
   "title": "Community Values",
-  "description": "Our community is built on mutual respect, support, and the pursuit of development in artificial intelligence and machine learning.",
+  "description": "The principles that guide our community and shape our interactions",
   "tabs": {
     "welcome": "Welcome",
     "content": "Content Guidelines",
@@ -8,73 +8,73 @@
   },
   "welcome": {
     "title": "Welcome to DSML Kazakhstan",
-    "intro": "Welcome to DSML Kazakhstan — the largest community of machine learning and artificial intelligence specialists in Kazakhstan! We unite professionals, students, and enthusiasts who share a passion for data, algorithms, and innovation.",
+    "intro": "We are a vibrant community of Data Science and Machine Learning enthusiasts in Kazakhstan. Our mission is to foster learning, innovation, and collaboration in the field of artificial intelligence.",
     "mission": {
       "title": "Our Mission",
-      "description": "To create an open and supportive environment for sharing knowledge, experience, and ideas in the field of AI and ML."
+      "description": "To create an inclusive environment where everyone can learn, grow, and contribute to the advancement of AI and ML in Kazakhstan."
     },
     "community": {
-      "title": "What Makes Us Special",
-      "description": "Professional development through mentorship, regular events and workshops, career growth opportunities, and genuine connections between like-minded individuals."
+      "title": "Our Community",
+      "description": "We bring together students, professionals, researchers, and enthusiasts from all backgrounds and experience levels."
     }
   },
   "content": {
     "guidelines": {
       "title": "Content Guidelines",
-      "relevant": "Share content relevant to AI, ML, data science, and related technologies",
-      "respectful": "Maintain a respectful and professional tone in all interactions",
+      "relevant": "Keep discussions relevant to Data Science, Machine Learning, AI, or related topics",
+      "respectful": "Maintain respectful and professional communication at all times",
       "constructive": "Provide constructive feedback and engage in meaningful discussions",
-      "original": "Share original work and properly attribute sources when sharing others' content"
+      "original": "Share original content and properly attribute sources when sharing others' work"
     },
     "prohibited": {
       "title": "Prohibited Content",
-      "spam": "Spam & Unauthorized Advertising",
-      "harassment": "Harassment & Toxic Behavior",
-      "offtopic": "Off-topic Political Discussions",
-      "inappropriate": "Inappropriate or Offensive Content"
+      "spam": "Spam or excessive self-promotion",
+      "harassment": "Harassment or discriminatory behavior",
+      "offtopic": "Off-topic discussions unrelated to our community focus",
+      "inappropriate": "Inappropriate or offensive content"
     }
   },
   "moderation": {
     "process": {
       "title": "Moderation Process",
-      "description": "We maintain a fair and transparent moderation system to ensure a healthy community atmosphere. Our goal is to help each member become their best professional self."
+      "description": "We maintain a fair and transparent moderation process to ensure our community remains welcoming and productive for everyone."
     },
     "steps": {
       "warning": "First violation: Warning and guidance",
-      "temporary": "Repeated violations: Temporary restrictions",
-      "permanent": "Severe violations: Permanent removal"
+      "temporary": "Repeated violations: Temporary suspension",
+      "permanent": "Severe or continued violations: Permanent ban"
     }
   },
   "values": {
     "title": "Our Core Values",
     "respect": {
-      "title": "Mutual Respect",
-      "description": "We value every member regardless of their experience level and treat everyone with dignity and respect."
+      "title": "Respectful Communication",
+      "description": "We value respectful dialogue and constructive exchange of opinions among all community members."
     },
-    "learning": {
-      "title": "Continuous Learning",
-      "description": "We foster an environment where learning never stops and knowledge sharing is encouraged."
-    },
-    "collaboration": {
-      "title": "Collaboration",
-      "description": "We believe in the power of working together to solve complex problems and achieve common goals."
+    "newcomers": {
+      "title": "Support for Newcomers",
+      "description": "We actively help and guide those who are just starting their journey in AI and machine learning."
     },
     "innovation": {
-      "title": "Innovation",
-      "description": "We encourage creative thinking and innovative approaches to challenges in AI and ML."
+      "title": "Fostering Innovation Culture",
+      "description": "Through olympiads, research seminars, and scientific articles, we develop innovation and academic excellence."
     },
-    "diversity": {
-      "title": "Diversity & Inclusion",
-      "description": "We celebrate diverse perspectives and ensure everyone feels welcome in our community."
+    "celebration": {
+      "title": "Celebrating Our Successes",
+      "description": "We share and congratulate our residents on their small successes and achievements."
     },
-    "excellence": {
-      "title": "Excellence",
-      "description": "We strive for high standards in everything we do while supporting each other's growth."
+    "meetings": {
+      "title": "Live Non-Anonymous Communication",
+      "description": "Support for weekly meetings in major cities of Kazakhstan and the world to create real connections."
+    },
+    "interests": {
+      "title": "Common Interests Beyond AI",
+      "description": "Games, books, anime, football, movies, real estate - we share diverse interests that enrich our community."
     }
   },
   "cta": {
-    "title": "Ready to Join Our Community?",
-    "description": "Become part of Kazakhstan's leading AI and ML community. Connect with professionals, learn from experts, and grow your career.",
-    "button": "Join DSML Kazakhstan"
+    "title": "Join Our Community",
+    "description": "Ready to be part of Kazakhstan's leading Data Science and Machine Learning community? Join us today and start your journey!",
+    "button": "Get Started"
   }
 }

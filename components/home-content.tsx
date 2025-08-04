@@ -99,15 +99,25 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Hero Image Section - Using transparent moon image */}
+      {/* Hero Image Section - Using different images for mobile and desktop */}
       <section className="relative w-full overflow-hidden">
         <div className="relative w-full">
+          {/* Mobile version - tall image */}
+          <Image
+            src="/images/moon_hero_transparent_wide.png"
+            alt="DSML Kazakhstan Community"
+            width={1920}
+            height={800}
+            className="w-full h-auto object-cover md:hidden"
+            priority
+          />
+          {/* Desktop version - original image */}
           <Image
             src="/images/moon_hero_transparent.png"
             alt="DSML Kazakhstan Community"
             width={1920}
             height={600}
-            className="w-full h-auto object-cover"
+            className="w-full h-auto object-cover hidden md:block"
             priority
           />
         </div>

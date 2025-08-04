@@ -1,106 +1,63 @@
 "use client"
 
-import { useState } from "react"
 import { JobsFeed } from "@/components/jobs-feed"
 import { useTranslation } from "@/hooks/use-translation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Briefcase, Brain, Code, Users } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Briefcase, Users, TrendingUp, MapPin } from "lucide-react"
 
 export function JobsContent() {
-  const [activeTab, setActiveTab] = useState("all")
   const { t } = useTranslation()
 
-  // Channel IDs для разных типов вакансий
-  const channelIds = {
-    all: -1001055767503, // Основной канал с новостями (пока используем его)
-    ml: -1001055767503, // ML/Data Science вакансии
-    it: -1001055767503, // IT/Development вакансии
-  }
-
-  const tabs = [
-    {
-      id: "all",
-      label: t("jobs.all"),
-      icon: Briefcase,
-      channelId: channelIds.all,
-    },
-    {
-      id: "ml",
-      label: t("jobs.dataJobs"),
-      icon: Brain,
-      channelId: channelIds.ml,
-    },
-    {
-      id: "it",
-      label: t("jobs.itJobs"),
-      icon: Code,
-      channelId: channelIds.it,
-    },
-  ]
+  // Channel IDs for ML/Data Science and IT/Development
+  const channelIds = [-1001120572276, -1001944996511]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="container mx-auto px-4 py-8">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
-            {t("jobs.main_title")}
-          </h1>
-          <div className="space-y-2 text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            <p>{t("jobs.subtitle_line1")}</p>
-            <p>{t("jobs.subtitle_line2")}</p>
-          </div>
-        </div>
-
-        {/* Filter Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-8">
-          {tabs.map((tab) => {
-            const Icon = tab.icon
-            return (
-              <Button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                variant={activeTab === tab.id ? "default" : "outline"}
-                size="lg"
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
-                  activeTab === tab.id
-                    ? "bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] text-white shadow-lg hover:shadow-xl"
-                    : "border-2 border-[#00AEC7]/30 text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white"
-                }`}
-              >
-                <Icon className="h-5 w-5" />
-                {tab.label}
-              </Button>
-            )
-          })}
-        </div>
-
-        {/* Jobs Feed */}
-        <div className="mb-12">
-          <JobsFeed channelId={tabs.find((tab) => tab.id === activeTab)?.channelId || channelIds.all} />
-        </div>
-
-        {/* Call to Action Section */}
-        <Card className="bg-gradient-to-r from-[#FFF32A]/10 to-[#00AEC7]/10 border-2 border-[#00AEC7]/20">
-          <CardHeader className="text-center">
-            <div className="flex justify-center mb-4">
-              <Users className="h-12 w-12 text-[#00AEC7]" />
+    <div className="space-y-8">
+      {/* Stats Section */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <CardContent className="p-6 text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] rounded-lg mb-4">
+              <Briefcase className="h-6 w-6 text-white" />
             </div>
-            <CardTitle className="text-2xl text-[#FFF32A] mb-2">{t("jobs.postJob")}</CardTitle>
-            <CardDescription className="text-[#00AEC7] text-lg">{t("jobs.postJobDesc")}</CardDescription>
-          </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-gray-700 dark:text-gray-300 mb-6 max-w-2xl mx-auto">{t("jobs.postJobContent")}</p>
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
-            >
-              {t("jobs.contactToPost")}
-            </Button>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">500+</h3>
+            <p className="text-gray-600 text-sm">{t("jobs.total_jobs")}</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <CardContent className="p-6 text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg mb-4">
+              <TrendingUp className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">200+</h3>
+            <p className="text-gray-600 text-sm">{t("jobs.ml_jobs_stat")}</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <CardContent className="p-6 text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg mb-4">
+              <Users className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">300+</h3>
+            <p className="text-gray-600 text-sm">{t("jobs.it_jobs_stat")}</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <CardContent className="p-6 text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-lg mb-4">
+              <MapPin className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">150+</h3>
+            <p className="text-gray-600 text-sm">{t("jobs.remote_jobs_stat")}</p>
           </CardContent>
         </Card>
       </div>
+
+      {/* Jobs Feed */}
+      <JobsFeed channelIds={channelIds} />
     </div>
   )
 }

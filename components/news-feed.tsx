@@ -125,7 +125,7 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
 
   if (error) {
     return (
-      <Card className="mb-4">
+      <Card className="mb-4 bg-gray-800/50 border-gray-700">
         <CardContent className="p-4">
           <div className="text-center text-[#00AEC7] font-medium">
             <p>{error}</p>
@@ -141,22 +141,22 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <Card
             key={i}
-            className="h-[53rem] bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-0 shadow-lg rounded-xl overflow-hidden animate-pulse"
+            className="h-[53rem] bg-gray-800/50 border-gray-700 backdrop-blur-sm shadow-lg rounded-xl overflow-hidden animate-pulse"
           >
-            <div className="h-1 bg-gradient-to-r from-gray-200 to-gray-300"></div>
-            <CardHeader className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-sm pb-3 border-b border-white/10">
-              <Skeleton className="h-3 w-20 bg-gray-200" />
+            <div className="h-1 bg-gradient-to-r from-gray-600 to-gray-500"></div>
+            <CardHeader className="bg-gradient-to-r from-gray-700/20 to-gray-600/10 backdrop-blur-sm pb-3 border-b border-gray-600/20">
+              <Skeleton className="h-3 w-20 bg-gray-600" />
             </CardHeader>
             <CardContent className="pt-4">
-              <Skeleton className="h-[26rem] w-full mb-4 rounded-xl bg-gray-200" />
+              <Skeleton className="h-[26rem] w-full mb-4 rounded-xl bg-gray-600" />
               <div className="space-y-2">
-                <Skeleton className="h-4 w-full bg-gray-200" />
-                <Skeleton className="h-4 w-full bg-gray-200" />
-                <Skeleton className="h-4 w-3/4 bg-gray-200" />
+                <Skeleton className="h-4 w-full bg-gray-600" />
+                <Skeleton className="h-4 w-full bg-gray-600" />
+                <Skeleton className="h-4 w-3/4 bg-gray-600" />
               </div>
-              <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-100">
-                <Skeleton className="h-12 w-32 rounded-xl bg-gray-200" />
-                <Skeleton className="h-12 w-24 rounded-xl bg-gray-200" />
+              <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-600">
+                <Skeleton className="h-12 w-32 rounded-xl bg-gray-600" />
+                <Skeleton className="h-12 w-24 rounded-xl bg-gray-600" />
               </div>
             </CardContent>
           </Card>
@@ -168,7 +168,7 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
   return (
     <div className="space-y-6">
       {posts.length === 0 ? (
-        <Card className="mb-4">
+        <Card className="mb-4 bg-gray-800/50 border-gray-700">
           <CardContent className="p-4">
             <div className="text-center text-[#00AEC7] font-medium">
               <p>{t("news.no_posts_available")}</p>
@@ -185,7 +185,7 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
               return (
                 <Card
                   key={post.post_id}
-                  className="h-[53rem] bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-0 shadow-lg rounded-xl overflow-hidden hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 ease-out flex flex-col group"
+                  className="h-[53rem] bg-gray-800/50 border-gray-700 backdrop-blur-sm shadow-lg rounded-xl overflow-hidden hover:shadow-2xl hover:scale-[1.02] hover:bg-gray-800/70 transition-all duration-300 ease-out flex flex-col group"
                   style={{
                     animationDelay: `${posts.indexOf(post) * 50}ms`,
                     transform: "translateZ(0)", // Force hardware acceleration
@@ -195,10 +195,10 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
                   <div className="h-1 bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                   {/* Header with glassmorphism effect */}
-                  <CardHeader className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-sm pb-3 flex-shrink-0 border-b border-white/10">
+                  <CardHeader className="bg-gradient-to-r from-gray-700/20 to-gray-600/10 backdrop-blur-sm pb-3 flex-shrink-0 border-b border-gray-600/20">
                     <CardDescription className="text-[#00AEC7] font-semibold text-sm tracking-wide">
                       {formatDate(post.created_at)}
-                      {post.sender_name && <span className="text-gray-500 font-normal ml-2">• {post.sender_name}</span>}
+                      {post.sender_name && <span className="text-gray-400 font-normal ml-2">• {post.sender_name}</span>}
                     </CardDescription>
                   </CardHeader>
 
@@ -221,12 +221,12 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
 
                     {/* Text content with better typography */}
                     <div className="flex-1 flex flex-col justify-between space-y-4">
-                      <p className="text-gray-700 dark:text-gray-300 font-medium text-sm leading-relaxed line-clamp-8 tracking-wide">
+                      <p className="text-gray-300 font-medium text-sm leading-relaxed line-clamp-8 tracking-wide">
                         {text}
                       </p>
 
                       {/* Modern button layout */}
-                      <div className="flex justify-between items-center pt-4 border-t border-gray-100 dark:border-gray-800">
+                      <div className="flex justify-between items-center pt-4 border-t border-gray-600/30">
                         {/* Primary CTA button */}
                         <Link
                           href={`/news/${post.post_id}`}

@@ -68,68 +68,72 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      {/* Кнопка назад */}
-      <div className="mb-6">
-        <Link href="/news">
-          <Button variant="outline" className="flex items-center gap-2 bg-transparent">
-            <ArrowLeft className="h-4 w-4" />
-            Назад к новостям
-          </Button>
-        </Link>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        {/* Кнопка назад */}
+        <div className="mb-6">
+          <Link href="/news">
+            <Button
+              variant="outline"
+              className="flex items-center gap-2 bg-gray-800/50 border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:text-white"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Назад к новостям
+            </Button>
+          </Link>
+        </div>
 
-      {/* Основная карточка новости */}
-      <Card
-        className="border-2 border-solid"
-        style={{
-          borderImage: "linear-gradient(to right, #FFF32A, #00AEC7) 1",
-        }}
-      >
-        <CardHeader className="bg-gradient-to-r from-[#FFF32A]/5 to-[#00AEC7]/5">
-          <div className="flex justify-between items-start">
-            <div>
-              <CardTitle className="text-2xl text-[#FFF32A] mb-2">{post.channel_name || "DSML Kazakhstan"}</CardTitle>
-              <p className="text-[#00AEC7] font-medium">
-                {formatDate(post.created_at)}
-                {post.sender_name && ` • ${post.sender_name}`}
-              </p>
+        {/* Основная карточка новости */}
+        <Card className="border-2 bg-gray-800/50 border-gray-700 backdrop-blur-sm">
+          <div className="h-1 bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A]"></div>
+
+          <CardHeader className="bg-gradient-to-r from-gray-700/20 to-gray-600/10 backdrop-blur-sm">
+            <div className="flex justify-between items-start">
+              <div>
+                <CardTitle className="text-2xl text-[#FFF32A] mb-2 font-pixel">
+                  {post.channel_name || "DSML Kazakhstan"}
+                </CardTitle>
+                <p className="text-[#00AEC7] font-medium">
+                  {formatDate(post.created_at)}
+                  {post.sender_name && ` • ${post.sender_name}`}
+                </p>
+              </div>
+              {post.post_link && (
+                <Link
+                  href={post.post_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center px-4 py-2 border border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white text-sm font-medium rounded-md transition-all duration-200"
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Открыть в Telegram
+                </Link>
+              )}
             </div>
-            {post.post_link && (
-              <Link
-                href={post.post_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center px-4 py-2 border border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white text-sm font-medium rounded-md transition-all duration-200"
-              >
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Открыть в Telegram
-              </Link>
+          </CardHeader>
+
+          <CardContent className="pt-6">
+            {/* Изображение */}
+            {post.image_url && (
+              <div className="mb-6">
+                <BlobImage
+                  src={post.image_url}
+                  alt="News image"
+                  width={800}
+                  height={400}
+                  className="w-full max-h-96 object-cover rounded-lg border border-gray-600/30"
+                />
+              </div>
             )}
-          </div>
-        </CardHeader>
 
-        <CardContent className="pt-6">
-          {/* Изображение */}
-          {post.image_url && (
-            <div className="mb-6">
-              <BlobImage
-                src={post.image_url}
-                alt="News image"
-                width={800}
-                height={400}
-                className="w-full max-h-96 object-cover rounded-lg border border-[#00AEC7]/20"
-              />
-            </div>
-          )}
-
-          {/* Контент */}
-          <div
-            className="prose prose-lg max-w-none prose-headings:text-[#FFF32A] prose-a:text-[#00AEC7] prose-strong:text-[#00AEC7]"
-            dangerouslySetInnerHTML={{ __html: processHtml(post.html_text || "") }}
-          />
-        </CardContent>
-      </Card>
+            {/* Контент */}
+            <div
+              className="prose prose-lg max-w-none prose-headings:text-[#FFF32A] prose-a:text-[#00AEC7] prose-strong:text-[#00AEC7] prose-p:text-gray-300 prose-li:text-gray-300"
+              dangerouslySetInnerHTML={{ __html: processHtml(post.html_text || "") }}
+            />
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

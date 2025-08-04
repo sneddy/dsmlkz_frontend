@@ -2,6 +2,7 @@
 
 import { useTranslation } from "@/hooks/use-translation"
 import { JobsFeed } from "./jobs-feed"
+import { SectionHero } from "@/components/section-hero"
 
 export function JobsFeedPage() {
   const { t } = useTranslation()
@@ -11,28 +12,14 @@ export function JobsFeedPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-[#00AEC7] to-[#FFF32A] py-16 px-4">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight font-pixel">
-            {t("jobs.main_title")}
-          </h1>
-          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-            {t("jobs.subtitle_line1")} <br />
-            <span className="font-semibold">{t("jobs.subtitle_line2")}</span>
-          </p>
-
-          {/* Feature badges */}
-          <div className="flex flex-wrap justify-center gap-4 mt-8">
-            <span className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full text-white font-medium border border-white/30">
-              500+ {t("jobs.total_jobs")}
-            </span>
-            <span className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full text-white font-medium border border-white/30">
-              {t("jobs.remote_jobs")} Available
-            </span>
-          </div>
-        </div>
-      </div>
+      <SectionHero
+        title={t("jobs.main_title")}
+        subtitleLine1={t("jobs.subtitle_line1")}
+        subtitleLine2={t("jobs.subtitle_line2")}
+        gradientFrom="#00AEC7"
+        gradientTo="#FFF32A"
+        badges={[`500+ ${t("jobs.total_jobs")}`, `${t("jobs.remote_jobs")} Available`]}
+      />
 
       {/* Jobs Feed */}
       <div className="max-w-7xl mx-auto px-4 py-12">

@@ -1,188 +1,170 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useParams } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useParams, useRouter } from "next/navigation"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, ExternalLink, MapPin, Calendar, User, Building, Briefcase, Brain, Code } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
+import {
+  ArrowLeft,
+  MapPin,
+  Building2,
+  Calendar,
+  DollarSign,
+  Clock,
+  Users,
+  ExternalLink,
+  Briefcase,
+  Globe,
+} from "lucide-react"
 import Link from "next/link"
 import { BlobImage } from "@/components/ui/blob-image"
 import { getSupabaseClient } from "@/lib/supabase-client"
 import { useTranslation } from "@/hooks/use-translation"
 
-type JobPost = {
-  post_id: string
-  channel_name: string
-  channel_id: number
-  message_id: number
-  image_url: string | null
-  created_at: string
-  html_text: string
-  post_link: string | null
-  sender_name: string | null
-  location?: string | null
-  company?: string | null
-  position?: string | null
-  salary?: string | null
+type JobPosting = {
+  id: string
+  title: string
+  company: string
+  location: string
+  salary_range: string | null
+  employment_type: string
+  experience_level: string
+  description: string
+  requirements: string | null
+  benefits: string | null
+  application_url: string | null
+  contact_email: string | null
+  posted_date: string
+  expires_date: string | null
+  is_active: boolean
+  company_logo: string | null
+  channel: string
+  tags: string[] | null
+  remote_work: boolean
 }
 
 export default function JobDetailPage() {
   const params = useParams()
+  const router = useRouter()
   const { t } = useTranslation()
-  const [job, setJob] = useState<JobPost | null>(null)
+  const [job, setJob] = useState<JobPosting | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const supabase = getSupabaseClient()
 
   useEffect(() => {
     const fetchJob = async () => {
-      try {
-        setLoading(true)
-        setError(null)
+      if (!params?.id) {
+        setError(t("jobs.job_not_found"))
+        setLoading(false)
+        return
+      }
 
+      try {
         console.log("Fetching job with ID:", params.id)
 
-        if (!params.id) {
-          throw new Error("No job ID provided")
-        }
+        const { data, error } = await supabase.from("job_postings").select("*").eq("id", params.id).maybeSingle()
 
-        // Get the job post from channels_content
-        const { data: jobData, error: jobError } = await supabase
-          .from("channels_content")
-          .select("*")
-          .eq("post_id", params.id)
-          .single()
+        console.log("Supabase response:", { data, error })
 
-        console.log("Job data:", jobData)
-        console.log("Job error:", jobError)
-
-        if (jobError) {
-          if (jobError.code === "PGRST116") {
-            throw new Error("Job not found")
+        if (error) {
+          console.error("Supabase error:", error)
+          if (error.code === "PGRST116") {
+            setError(t("jobs.job_not_found"))
+          } else {
+            setError(t("jobs.error_occurred"))
           }
-          throw jobError
+          return
         }
 
-        if (!jobData) {
-          throw new Error("Job not found")
+        if (!data) {
+          console.log("No job data found")
+          setError(t("jobs.job_not_found"))
+          return
         }
 
-        // Get job details (optional)
-        const { data: jobDetailsData, error: jobDetailsError } = await supabase
-          .from("job_details")
-          .select("*")
-          .eq("post_id", params.id)
-          .maybeSingle()
-
-        if (jobDetailsError) {
-          console.warn("Error fetching job details:", jobDetailsError)
-        }
-
-        // Combine the data
-        const combinedJob = {
-          ...jobData,
-          location: jobDetailsData?.location || null,
-          company: jobDetailsData?.company || null,
-          position: jobDetailsData?.position || null,
-          salary: jobDetailsData?.salary || null,
-        } as JobPost
-
-        console.log("Combined job:", combinedJob)
-        setJob(combinedJob)
+        setJob(data as JobPosting)
       } catch (err) {
         console.error("Error fetching job:", err)
-        const errorMessage = err instanceof Error ? err.message : "Unknown error"
-        setError(errorMessage)
+        setError(t("jobs.error_occurred"))
       } finally {
         setLoading(false)
       }
     }
 
-    if (params.id) {
-      fetchJob()
-    }
-  }, [params.id, supabase])
-
-  const getChannelInfo = (channelId: number) => {
-    if (channelId === -1001120572276) {
-      return {
-        type: "ML Jobs",
-        icon: Brain,
-        color: "text-purple-400",
-        bgColor: "bg-purple-900/50",
-        borderColor: "border-purple-700",
-      }
-    } else if (channelId === -1001944996511) {
-      return {
-        type: "IT Jobs",
-        icon: Code,
-        color: "text-blue-400",
-        bgColor: "bg-blue-900/50",
-        borderColor: "border-blue-700",
-      }
-    }
-    return {
-      type: "General",
-      icon: Briefcase,
-      color: "text-gray-400",
-      bgColor: "bg-gray-800",
-      borderColor: "border-gray-600",
-    }
-  }
+    fetchJob()
+  }, [params?.id, supabase, t])
 
   const formatDate = (dateString: string) => {
     try {
-      const date = new Date(dateString)
-      return date.toLocaleDateString("en-US", {
+      return new Date(dateString).toLocaleDateString(undefined, {
         year: "numeric",
         month: "long",
         day: "numeric",
       })
-    } catch (error) {
-      console.error("Error formatting date:", error)
+    } catch {
       return dateString
     }
   }
 
-  // Loading state
+  const isRemote = (location: string) => {
+    return location.toLowerCase().includes("remote") || location.toLowerCase().includes("удаленно")
+  }
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          {/* Back Button Skeleton */}
-          <div className="h-6 w-32 bg-gray-700 rounded mb-6 animate-pulse"></div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-8">
+        <div className="max-w-4xl mx-auto px-4">
+          {/* Back button skeleton */}
+          <div className="mb-6">
+            <Skeleton className="h-10 w-32 bg-gray-700" />
+          </div>
 
-          <Card className="bg-gray-800/80 border-gray-700 shadow-xl">
-            <CardHeader className="border-b border-gray-700">
-              <div className="flex items-start justify-between">
-                <div className="space-y-2 flex-1">
-                  <div className="flex items-center gap-2">
-                    <div className="h-6 w-20 bg-gray-600 rounded animate-pulse"></div>
-                    <div className="h-6 w-16 bg-gray-600 rounded animate-pulse"></div>
+          {/* Main card skeleton */}
+          <Card className="bg-gray-800/50 border-gray-700 backdrop-blur-sm shadow-xl">
+            <CardHeader className="pb-6">
+              <div className="flex items-start gap-4">
+                <Skeleton className="h-16 w-16 rounded-xl bg-gray-600" />
+                <div className="flex-1 space-y-3">
+                  <Skeleton className="h-8 w-3/4 bg-gray-600" />
+                  <Skeleton className="h-6 w-1/2 bg-gray-600" />
+                  <div className="flex gap-2">
+                    <Skeleton className="h-6 w-20 bg-gray-600" />
+                    <Skeleton className="h-6 w-24 bg-gray-600" />
                   </div>
-                  <div className="h-8 w-3/4 bg-gray-600 rounded animate-pulse"></div>
-                  <div className="h-5 w-1/2 bg-gray-600 rounded animate-pulse"></div>
-                </div>
-                <div className="text-right space-y-2">
-                  <div className="h-4 w-24 bg-gray-600 rounded animate-pulse"></div>
-                  <div className="h-4 w-20 bg-gray-600 rounded animate-pulse"></div>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-6">
-              <div className="space-y-6">
-                <div className="w-full max-w-2xl mx-auto h-96 bg-gray-600 rounded-lg animate-pulse"></div>
-                <div className="space-y-3">
-                  <div className="h-4 w-full bg-gray-600 rounded animate-pulse"></div>
-                  <div className="h-4 w-full bg-gray-600 rounded animate-pulse"></div>
-                  <div className="h-4 w-3/4 bg-gray-600 rounded animate-pulse"></div>
+            <CardContent className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <Skeleton className="h-5 w-5 bg-gray-600" />
+                      <Skeleton className="h-5 w-32 bg-gray-600" />
+                    </div>
+                  ))}
                 </div>
-                <div className="flex gap-4 pt-6 border-t border-gray-700">
-                  <div className="h-12 w-32 bg-gray-600 rounded animate-pulse"></div>
-                  <div className="h-12 w-40 bg-gray-600 rounded animate-pulse"></div>
+                <div className="space-y-4">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <Skeleton className="h-5 w-5 bg-gray-600" />
+                      <Skeleton className="h-5 w-28 bg-gray-600" />
+                    </div>
+                  ))}
                 </div>
               </div>
+              <div className="space-y-4">
+                <Skeleton className="h-6 w-32 bg-gray-600" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-full bg-gray-600" />
+                  <Skeleton className="h-4 w-full bg-gray-600" />
+                  <Skeleton className="h-4 w-3/4 bg-gray-600" />
+                </div>
+              </div>
+              <Skeleton className="h-12 w-full bg-gray-600" />
             </CardContent>
           </Card>
         </div>
@@ -190,43 +172,35 @@ export default function JobDetailPage() {
     )
   }
 
-  // Error state
   if (error || !job) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          {/* Back Button */}
-          <Link
-            href="/jobs"
-            className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] mb-6 transition-colors"
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-8">
+        <div className="max-w-4xl mx-auto px-4">
+          <Button
+            onClick={() => router.back()}
+            variant="ghost"
+            className="mb-6 text-[#00AEC7] hover:text-[#00AEC7]/80 hover:bg-[#00AEC7]/10"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            {t("jobs.back_to_jobs") || "Back to Jobs"}
-          </Link>
+            {t("jobs.back_to_jobs")}
+          </Button>
 
-          <Card className="bg-gray-800/80 border-gray-700 shadow-xl">
-            <CardContent className="p-8 text-center">
-              <div className="space-y-4">
-                <div className="text-6xl">😔</div>
-                <h2 className="text-2xl font-bold text-white">
-                  {error === "Job not found"
-                    ? t("jobs.job_not_found") || "Job Not Found"
-                    : t("jobs.error_occurred") || "An Error Occurred"}
-                </h2>
-                <p className="text-gray-400">
-                  {error === "Job not found"
-                    ? t("jobs.job_not_found_desc") || "The job you're looking for doesn't exist or has been removed."
-                    : t("jobs.error_occurred_desc") || "Something went wrong while loading the job details."}
-                </p>
-                <div className="pt-4">
-                  <Link href="/jobs">
-                    <Button className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] text-gray-900 hover:scale-105 transition-transform">
-                      <ArrowLeft className="h-4 w-4 mr-2" />
-                      {t("jobs.back_to_jobs") || "Back to Jobs"}
-                    </Button>
-                  </Link>
-                </div>
-              </div>
+          <Card className="bg-gray-800/50 border-gray-700 backdrop-blur-sm shadow-xl">
+            <CardContent className="p-12 text-center">
+              <div className="text-6xl mb-4">😕</div>
+              <h1 className="text-2xl font-bold text-white mb-2">
+                {error === t("jobs.job_not_found") ? t("jobs.job_not_found") : t("jobs.error_occurred")}
+              </h1>
+              <p className="text-gray-400 mb-6">
+                {error === t("jobs.job_not_found")
+                  ? t("jobs.job_not_found_description")
+                  : t("jobs.error_occurred_description")}
+              </p>
+              <Link href="/jobs">
+                <Button className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-white">
+                  {t("jobs.back_to_jobs")}
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>
@@ -234,123 +208,188 @@ export default function JobDetailPage() {
     )
   }
 
-  const channelInfo = getChannelInfo(job.channel_id)
-  const ChannelIcon = channelInfo.icon
-  const isRemote = job.location?.toLowerCase().includes("remote")
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-8">
+      <div className="max-w-4xl mx-auto px-4">
         {/* Back Button */}
-        <Link
-          href="/jobs"
-          className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] mb-6 transition-colors"
+        <Button
+          onClick={() => router.back()}
+          variant="ghost"
+          className="mb-6 text-[#00AEC7] hover:text-[#00AEC7]/80 hover:bg-[#00AEC7]/10 transition-colors"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          {t("jobs.back_to_jobs") || "Back to Jobs"}
-        </Link>
+          {t("jobs.back_to_jobs")}
+        </Button>
 
-        <Card className="bg-gray-800/80 border-gray-700 shadow-xl">
-          {/* Header */}
-          <CardHeader className="border-b border-gray-700">
-            <div className="flex items-start justify-between">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Badge className={`${channelInfo.bgColor} ${channelInfo.color} border ${channelInfo.borderColor}`}>
-                    <ChannelIcon className="h-3 w-3 mr-1" />
-                    {channelInfo.type}
-                  </Badge>
-                  {isRemote && (
-                    <Badge className="bg-green-900/50 text-green-400 border border-green-700">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      {t("jobs.remote")}
-                    </Badge>
-                  )}
-                </div>
-                {job.position && <CardTitle className="text-2xl text-white">{job.position}</CardTitle>}
-                {job.company && (
-                  <p className="text-gray-400 flex items-center">
-                    <Building className="h-4 w-4 mr-2" />
-                    {job.company}
-                  </p>
-                )}
-              </div>
-              <div className="text-right text-sm text-gray-400">
-                <div className="flex items-center">
-                  <Calendar className="h-4 w-4 mr-1" />
-                  {formatDate(job.created_at)}
-                </div>
-                {job.sender_name && (
-                  <div className="flex items-center mt-1">
-                    <User className="h-4 w-4 mr-1" />
-                    {job.sender_name}
-                  </div>
-                )}
-              </div>
-            </div>
-          </CardHeader>
-
-          <CardContent className="p-6">
-            <div className="space-y-6">
-              {/* Job Image */}
-              {job.image_url && (
-                <div className="w-full max-w-2xl mx-auto">
+        {/* Main Job Card */}
+        <Card className="bg-gray-800/50 border-gray-700 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300">
+          <CardHeader className="pb-6 border-b border-gray-600/30">
+            <div className="flex items-start gap-4">
+              {/* Company Logo */}
+              {job.company_logo && (
+                <div className="flex-shrink-0">
                   <BlobImage
-                    src={job.image_url}
-                    alt="Job posting"
-                    width={800}
-                    height={600}
-                    className="w-full h-auto rounded-lg shadow-lg"
+                    src={job.company_logo}
+                    alt={`${job.company} logo`}
+                    width={64}
+                    height={64}
+                    className="w-16 h-16 rounded-xl object-cover border border-gray-600"
                   />
                 </div>
               )}
 
-              {/* Job Details */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {job.location && (
-                  <div className="flex items-center text-gray-300">
-                    <MapPin className="h-5 w-5 mr-3 text-[#00AEC7]" />
-                    <span>{job.location}</span>
-                  </div>
-                )}
-                {job.salary && (
-                  <div className="flex items-center text-gray-300">
-                    <Briefcase className="h-5 w-5 mr-3 text-[#00AEC7]" />
-                    <span>{job.salary}</span>
-                  </div>
-                )}
+              <div className="flex-1 min-w-0">
+                <CardTitle className="text-2xl md:text-3xl font-bold text-white mb-2 leading-tight">
+                  {job.title}
+                </CardTitle>
+                <CardDescription className="text-lg text-[#00AEC7] font-semibold mb-3">{job.company}</CardDescription>
+
+                {/* Key badges */}
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary" className="bg-[#00AEC7]/20 text-[#00AEC7] border-[#00AEC7]/30">
+                    <MapPin className="h-3 w-3 mr-1" />
+                    {job.location}
+                  </Badge>
+                  {isRemote(job.location) && (
+                    <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-green-500/30">
+                      <Globe className="h-3 w-3 mr-1" />
+                      {t("jobs.remote")}
+                    </Badge>
+                  )}
+                  <Badge variant="secondary" className="bg-[#FFF32A]/20 text-[#FFF32A] border-[#FFF32A]/30">
+                    <Briefcase className="h-3 w-3 mr-1" />
+                    {job.employment_type}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </CardHeader>
+
+          <CardContent className="pt-6 space-y-8">
+            {/* Job Details Grid */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 text-gray-300">
+                  <Building2 className="h-5 w-5 text-[#00AEC7]" />
+                  <span className="font-medium">{t("jobs.company")}:</span>
+                  <span>{job.company}</span>
+                </div>
+
+                <div className="flex items-center gap-3 text-gray-300">
+                  <MapPin className="h-5 w-5 text-[#00AEC7]" />
+                  <span className="font-medium">{t("jobs.location")}:</span>
+                  <span>{job.location}</span>
+                </div>
+
+                <div className="flex items-center gap-3 text-gray-300">
+                  <Clock className="h-5 w-5 text-[#00AEC7]" />
+                  <span className="font-medium">{t("jobs.employment_type")}:</span>
+                  <span>{job.employment_type}</span>
+                </div>
+
+                <div className="flex items-center gap-3 text-gray-300">
+                  <Users className="h-5 w-5 text-[#00AEC7]" />
+                  <span className="font-medium">{t("jobs.experience_level")}:</span>
+                  <span>{job.experience_level}</span>
+                </div>
               </div>
 
-              {/* Job Description */}
+              <div className="space-y-4">
+                {job.salary_range && (
+                  <div className="flex items-center gap-3 text-gray-300">
+                    <DollarSign className="h-5 w-5 text-[#00AEC7]" />
+                    <span className="font-medium">{t("jobs.salary")}:</span>
+                    <span>{job.salary_range}</span>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-3 text-gray-300">
+                  <Calendar className="h-5 w-5 text-[#00AEC7]" />
+                  <span className="font-medium">{t("jobs.posted_date")}:</span>
+                  <span>{formatDate(job.posted_date)}</span>
+                </div>
+
+                {job.expires_date && (
+                  <div className="flex items-center gap-3 text-gray-300">
+                    <Calendar className="h-5 w-5 text-red-400" />
+                    <span className="font-medium">{t("jobs.expires_date")}:</span>
+                    <span>{formatDate(job.expires_date)}</span>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-3 text-gray-300">
+                  <Badge variant="outline" className="border-[#00AEC7]/30 text-[#00AEC7]">
+                    {job.channel}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+
+            {/* Tags */}
+            {job.tags && job.tags.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-white">{t("jobs.tags")}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {job.tags.map((tag, index) => (
+                    <Badge key={index} variant="outline" className="border-gray-600 text-gray-300">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Description */}
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold text-white">{t("jobs.description")}</h3>
               <div className="prose prose-invert max-w-none">
-                <div
-                  className="text-gray-300 leading-relaxed whitespace-pre-wrap"
-                  dangerouslySetInnerHTML={{ __html: job.html_text || "" }}
-                />
+                <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">{job.description}</p>
               </div>
+            </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-700">
-                {job.post_link && (
-                  <Link href={job.post_link} target="_blank" rel="noopener noreferrer" className="flex-1">
-                    <Button className="w-full bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] text-gray-900 hover:scale-105 transition-transform">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      {t("jobs.apply")}
-                    </Button>
-                  </Link>
-                )}
-                {job.post_link && (
-                  <Link href={job.post_link} target="_blank" rel="noopener noreferrer" className="flex-1">
-                    <Button
-                      variant="outline"
-                      className="w-full border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7] hover:text-gray-900 bg-transparent"
-                    >
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      {t("jobs.open_in_telegram")}
-                    </Button>
-                  </Link>
-                )}
+            {/* Requirements */}
+            {job.requirements && (
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-white">{t("jobs.requirements")}</h3>
+                <div className="prose prose-invert max-w-none">
+                  <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">{job.requirements}</p>
+                </div>
               </div>
+            )}
+
+            {/* Benefits */}
+            {job.benefits && (
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-white">{t("jobs.benefits")}</h3>
+                <div className="prose prose-invert max-w-none">
+                  <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">{job.benefits}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Apply Button */}
+            <div className="pt-6 border-t border-gray-600/30">
+              {job.application_url ? (
+                <Link
+                  href={job.application_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center w-full px-8 py-4 bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 ease-out focus:ring-2 focus:ring-[#00AEC7]/50 focus:outline-none"
+                >
+                  {t("jobs.apply_now")}
+                  <ExternalLink className="ml-2 h-5 w-5" />
+                </Link>
+              ) : job.contact_email ? (
+                <Link
+                  href={`mailto:${job.contact_email}?subject=${encodeURIComponent(`Application for ${job.title}`)}`}
+                  className="inline-flex items-center justify-center w-full px-8 py-4 bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 ease-out focus:ring-2 focus:ring-[#00AEC7]/50 focus:outline-none"
+                >
+                  {t("jobs.contact_employer")}
+                  <ExternalLink className="ml-2 h-5 w-5" />
+                </Link>
+              ) : (
+                <div className="text-center text-gray-400">{t("jobs.no_application_method")}</div>
+              )}
             </div>
           </CardContent>
         </Card>

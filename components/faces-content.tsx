@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { useTranslation } from "@/hooks/use-translation"
 import { getSupabaseClient } from "@/lib/supabase-client"
 import { CommunityFaceCard } from "@/components/community-face-card"
+import { SectionHero } from "@/components/section-hero"
 
 export function FacesContent() {
   const [faces, setFaces] = useState<any[]>([])
@@ -60,54 +61,58 @@ export function FacesContent() {
   const hasMore = visibleCount < faces.length
 
   return (
-    <div className="container py-8">
-      <div className="flex flex-col items-center mb-8">
-        <h1 className="text-3xl font-bold mb-2 font-pixel text-[#FFF32A]">{t("faces.title")}</h1>
-        <p className="text-muted-foreground text-center max-w-2xl mb-6">{t("faces.description")}</p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      <SectionHero
+        title={t("faces.title")}
+        subtitleLine1={t("faces.description")}
+        gradientFrom="#00AEC7"
+        gradientTo="#FFF32A"
+      />
 
-      {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <Card key={i}>
-              <CardContent className="p-6">
-                <div className="flex flex-col items-center gap-4">
-                  <Skeleton className="h-40 w-40 rounded-md" />
-                  <div className="space-y-2 w-full">
-                    <Skeleton className="h-4 w-32 mx-auto" />
-                    <Skeleton className="h-3 w-24 mx-auto" />
-                    <Skeleton className="h-3 w-40 mx-auto" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : error ? (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">{error}</p>
-        </div>
-      ) : faces.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">{t("faces.noResults")}</p>
-        </div>
-      ) : (
-        <>
+      <div className="container py-8">
+        {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {visibleFaces.map((face) => (
-              <CommunityFaceCard key={face.id} face={face} />
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <Card key={i}>
+                <CardContent className="p-6">
+                  <div className="flex flex-col items-center gap-4">
+                    <Skeleton className="h-40 w-40 rounded-md" />
+                    <div className="space-y-2 w-full">
+                      <Skeleton className="h-4 w-32 mx-auto" />
+                      <Skeleton className="h-3 w-24 mx-auto" />
+                      <Skeleton className="h-3 w-40 mx-auto" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
-
-          {hasMore && (
-            <div className="flex justify-center mt-8">
-              <Button onClick={loadMore} className="bg-[#00AEC7] hover:bg-[#0095a8] text-white">
-                Load More
-              </Button>
+        ) : error ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">{error}</p>
+          </div>
+        ) : faces.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">{t("faces.noResults")}</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {visibleFaces.map((face) => (
+                <CommunityFaceCard key={face.id} face={face} />
+              ))}
             </div>
-          )}
-        </>
-      )}
+
+            {hasMore && (
+              <div className="flex justify-center mt-8">
+                <Button onClick={loadMore} className="bg-[#00AEC7] hover:bg-[#0095a8] text-white">
+                  Load More
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   )
 }

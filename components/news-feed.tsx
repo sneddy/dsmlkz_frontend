@@ -1,10 +1,13 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import type React from "react"
+
+import { useEffect, useState, useCallback, useRef } from "react"
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, ChevronDown } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { ExternalLink, ChevronDown, Search } from "lucide-react"
 import Link from "next/link"
 import { BlobImage } from "@/components/ui/blob-image"
 import { getSupabaseClient } from "@/lib/supabase-client"
@@ -32,56 +35,108 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
   const [error, setError] = useState<string | null>(null)
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [isSearching, setIsSearching] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
   const postsPerPage = 9
   const { t } = useTranslation()
   const supabase = getSupabaseClient()
+  const searchTimeoutRef = useRef<NodeJS.Timeout>()
 
-  const fetchPosts = async (pageNumber = 1, append = false) => {
-    try {
-      if (pageNumber === 1) {
-        setLoading(true)
-      } else {
-        setLoadingMore(true)
+  const fetchPosts = useCallback(
+    async (pageNumber = 1, append = false, query = "") => {
+      try {
+        if (pageNumber === 1 && !append) {
+          setLoading(true)
+        } else {
+          setLoadingMore(true)
+        }
+
+        const offset = (pageNumber - 1) * postsPerPage
+
+        let supabaseQuery = supabase
+          .from("channels_content")
+          .select("*")
+          .eq("channel_id", -1001055767503)
+          .order("created_at", { ascending: false })
+
+        // Добавляем поиск по тексту если есть запрос
+        if (query.trim()) {
+          supabaseQuery = supabaseQuery.ilike("html_text", `%${query.trim()}%`)
+        }
+
+        const { data, error } = await supabaseQuery.range(offset, offset + postsPerPage - 1)
+
+        if (error) {
+          throw error
+        }
+
+        setHasMore(data.length === postsPerPage)
+
+        if (append) {
+          setPosts((prevPosts) => [...prevPosts, ...(data as TelegramPost[])])
+        } else {
+          setPosts(data as TelegramPost[])
+        }
+      } catch (err) {
+        console.error("Error fetching news:", err)
+        setError(t("news.failed_to_load"))
+      } finally {
+        setLoading(false)
+        setLoadingMore(false)
+        setIsSearching(false)
+        if (!isInitialized) {
+          setIsInitialized(true)
+        }
       }
+    },
+    [supabase, t, isInitialized],
+  )
 
-      const offset = (pageNumber - 1) * postsPerPage
-
-      const { data, error } = await supabase
-        .from("channels_content")
-        .select("*")
-        .eq("channel_id", -1001055767503)
-        .order("created_at", { ascending: false })
-        .range(offset, offset + postsPerPage - 1)
-
-      if (error) {
-        throw error
-      }
-
-      setHasMore(data.length === postsPerPage)
-
-      if (append) {
-        setPosts((prevPosts) => [...prevPosts, ...(data as TelegramPost[])])
-      } else {
-        setPosts(data as TelegramPost[])
-      }
-    } catch (err) {
-      console.error("Error fetching news:", err)
-      setError(t("news.failed_to_load"))
-    } finally {
-      setLoading(false)
-      setLoadingMore(false)
-    }
-  }
-
+  // Первоначальная загрузка только один раз
   useEffect(() => {
-    fetchPosts()
-  }, [])
+    if (!isInitialized) {
+      fetchPosts()
+    }
+  }, [fetchPosts, isInitialized])
 
   const handleLoadMore = () => {
     const nextPage = page + 1
     setPage(nextPage)
-    fetchPosts(nextPage, true)
+    fetchPosts(nextPage, true, searchQuery)
   }
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value
+    setSearchQuery(query)
+
+    // Очищаем предыдущий таймер
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current)
+    }
+
+    // Показываем индикатор поиска только если есть текст
+    if (query.trim()) {
+      setIsSearching(true)
+    } else {
+      setIsSearching(false)
+    }
+
+    // Устанавливаем новый таймер
+    searchTimeoutRef.current = setTimeout(() => {
+      setPage(1)
+      fetchPosts(1, false, query)
+    }, 800)
+  }
+
+  // Очистка таймера при размонтировании
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current)
+      }
+    }
+  }, [])
 
   // Функция для обрезки текста с проверкой на переполнение
   const truncateText = (html: string, maxLength = 400) => {
@@ -135,43 +190,69 @@ export function NewsFeed({ showFullText = false }: NewsFeedProps) {
     )
   }
 
-  if (loading) {
-    return (
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {[1, 2, 3, 4, 5, 6].map((i) => (
-          <Card
-            key={i}
-            className="h-[53rem] bg-gray-800/50 border-gray-700 backdrop-blur-sm shadow-lg rounded-xl overflow-hidden animate-pulse"
-          >
-            <div className="h-1 bg-gradient-to-r from-gray-600 to-gray-500"></div>
-            <CardHeader className="bg-gradient-to-r from-gray-700/20 to-gray-600/10 backdrop-blur-sm pb-3 border-b border-gray-600/20">
-              <Skeleton className="h-3 w-20 bg-gray-600" />
-            </CardHeader>
-            <CardContent className="pt-4">
-              <Skeleton className="h-[26rem] w-full mb-4 rounded-xl bg-gray-600" />
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-full bg-gray-600" />
-                <Skeleton className="h-4 w-full bg-gray-600" />
-                <Skeleton className="h-4 w-3/4 bg-gray-600" />
-              </div>
-              <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-600">
-                <Skeleton className="h-12 w-32 rounded-xl bg-gray-600" />
-                <Skeleton className="h-12 w-24 rounded-xl bg-gray-600" />
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    )
-  }
-
   return (
     <div className="space-y-6">
-      {posts.length === 0 ? (
+      {/* Search Bar */}
+      <div className="max-w-md mx-auto">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            type="text"
+            placeholder={t("news.search_placeholder")}
+            value={searchQuery}
+            onChange={handleSearchInputChange}
+            className="pl-10 bg-gray-800/50 border-gray-600 text-white placeholder-gray-400 focus:border-[#00AEC7] focus:ring-[#00AEC7]/20"
+          />
+          {isSearching && searchQuery.trim() && (
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#00AEC7] border-t-transparent"></div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Search Results Info */}
+      {searchQuery && !loading && isInitialized && (
+        <div className="text-center text-gray-400 text-sm">
+          {posts.length > 0 ? (
+            <p>{t("news.search_results", { count: posts.length, query: searchQuery })}</p>
+          ) : (
+            <p>{t("news.no_search_results", { query: searchQuery })}</p>
+          )}
+        </div>
+      )}
+
+      {loading && !isInitialized ? (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <Card
+              key={i}
+              className="h-[53rem] bg-gray-800/50 border-gray-700 backdrop-blur-sm shadow-lg rounded-xl overflow-hidden animate-pulse"
+            >
+              <div className="h-1 bg-gradient-to-r from-gray-600 to-gray-500"></div>
+              <CardHeader className="bg-gradient-to-r from-gray-700/20 to-gray-600/10 backdrop-blur-sm pb-3 border-b border-gray-600/20">
+                <Skeleton className="h-3 w-20 bg-gray-600" />
+              </CardHeader>
+              <CardContent className="pt-4">
+                <Skeleton className="h-[26rem] w-full mb-4 rounded-xl bg-gray-600" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-full bg-gray-600" />
+                  <Skeleton className="h-4 w-full bg-gray-600" />
+                  <Skeleton className="h-4 w-3/4 bg-gray-600" />
+                </div>
+                <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-600">
+                  <Skeleton className="h-12 w-32 rounded-xl bg-gray-600" />
+                  <Skeleton className="h-12 w-24 rounded-xl bg-gray-600" />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : posts.length === 0 && isInitialized ? (
         <Card className="mb-4 bg-gray-800/50 border-gray-700">
           <CardContent className="p-4">
             <div className="text-center text-[#00AEC7] font-medium">
-              <p>{t("news.no_posts_available")}</p>
+              <p>{searchQuery ? t("news.no_search_results", { query: searchQuery }) : t("news.no_posts_available")}</p>
             </div>
           </CardContent>
         </Card>

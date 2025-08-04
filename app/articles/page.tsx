@@ -3,6 +3,7 @@
 import { useTranslation } from "@/hooks/use-translation"
 import { ArticleCard } from "@/components/article-card"
 import { articlesMetadata } from "./utils/articles-metadata"
+import { SectionHero } from "@/components/section-hero"
 
 export default function ArticlesPage() {
   const { t } = useTranslation()
@@ -12,21 +13,16 @@ export default function ArticlesPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <div className="container py-8">
-        {/* Hero Section */}
-        <div className="relative mb-12">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#FFF32A]/10 to-[#00AEC7]/10 rounded-2xl blur-3xl"></div>
-          <div className="relative bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 text-center">
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] rounded-full"></div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-4 font-pixel bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] bg-clip-text text-transparent animate-pulse">
-              {t("nav.articles") || "Статьи"}
-            </h1>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-              {t("articles.description") || "Исследования, интервью и аналитика от экспертов DSML Kazakhstan"}
-            </p>
-          </div>
-        </div>
+      {/* Hero Section */}
+      <SectionHero
+        title={t("articles.title") || "Статьи"}
+        subtitleLine1={t("articles.description") || "Исследования, интервью и аналитика от экспертов DSML Kazakhstan"}
+        gradientFrom="#FFF32A"
+        gradientTo="#00AEC7"
+        className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
+      />
 
+      <div className="container py-8">
         {/* Articles Grid */}
         <div className="space-y-8">
           {visibleArticles.map((article) => (

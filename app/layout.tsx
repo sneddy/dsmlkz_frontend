@@ -23,7 +23,7 @@ const pixelFont = Press_Start_2P({
 
 export const metadata: Metadata = {
   title: "DSML Kazakhstan Community",
-  description: "A community platform for Data Science and Machine Learning enthusiasts in Kazakhstan",
+  description: "DSMLKZ Community - Сообщество энтузиастов AI и Машинного обучения в Казахстане",
   icons: {
     icon: "/images/dsml-logo.png",
     apple: "/images/dsml-logo.png",

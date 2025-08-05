@@ -1,58 +1,57 @@
 {
   "title": "DSML Kazakhstan",
-  "subtitle": "The hub for Data Science and Machine Learning enthusiasts in Kazakhstan",
+  "subtitle": "DSMLKZ Community - AI and Machine Learning enthusiasts community in Kazakhstan",
   "joinButton": "Join Community",
-  "watchEvents": "Watch Events",
+  "subscribeButton": "Subscribe",
   "signIn": "Sign In",
   "signUp": "Sign Up",
   "channelsTitle": "Our Community Channels",
-  "communityDescription": "Join thousands of data scientists, machine learning engineers, and AI enthusiasts across Kazakhstan. Connect, learn, and grow together in our vibrant community.",
+  "communityDescription": "Connect with over 10,000 AI and ML enthusiasts across Kazakhstan through our diverse platforms. From technical discussions to career opportunities, we've built a comprehensive ecosystem for data science professionals.",
   "discussionHubTitle": "Discussion Hub",
-  "discussionHubDescription": "Main community chat for discussions, questions, and networking",
+  "discussionHubDescription": "Main community chat for technical discussions, Q&A, and networking with fellow data scientists and ML engineers.",
   "newsFeedTitle": "News & Updates",
-  "newsFeedDescription": "Latest news, events, and announcements from the community",
-  "dataJobsTitle": "Data Science Jobs",
-  "dataJobsDescription": "Job opportunities in data science, ML, and AI fields",
+  "newsFeedDescription": "Stay updated with the latest AI/ML news, research papers, conference announcements, and community updates.",
+  "dataJobsTitle": "DS/ML Jobs",
+  "dataJobsDescription": "Exclusive job opportunities in data science, machine learning, and AI roles across Kazakhstan and internationally.",
   "itJobsTitle": "IT Jobs Kazakhstan",
-  "itJobsDescription": "General IT and tech job opportunities across Kazakhstan",
+  "itJobsDescription": "Broader IT job opportunities including software development, DevOps, and technical leadership positions.",
   "youtubeChannelTitle": "YouTube Channel",
-  "youtubeChannelDescription": "Educational content, talks, and event recordings",
+  "youtubeChannelDescription": "Educational content, conference recordings, interviews with industry experts, and technical tutorials.",
   "linkedinPageTitle": "LinkedIn Page",
-  "linkedinPageDescription": "Professional networking and industry insights",
-  "subscribeButton": "Subscribe",
-  "whatIsDsmlTitle": "What is DSML KZ?",
-  "whatIsDsmlDescription": "Learn about our community's mission, values, and the impact we're making in Kazakhstan's tech ecosystem.",
+  "linkedinPageDescription": "Professional networking, industry insights, and career development content for AI/ML professionals.",
   "collaborationTitle": "Partnership Opportunities",
-  "collaborationSubtitle": "We collaborate with companies, educational institutions, and organizations to advance the data science ecosystem in Kazakhstan.",
+  "collaborationSubtitle": "We partner with leading companies and organizations to create value for our community members.",
   "collaborationContact": "Contact Us",
   "mediaSupport": {
-    "title": "Media Support",
-    "description": "Event coverage and content promotion",
-    "details": "We provide media coverage for tech events, promote educational content, and help amplify important industry news across our community channels."
+    "title": "Media Partnership",
+    "description": "Amplify your events and announcements",
+    "details": "Reach our 10,000+ community members through our channels. We provide media support for conferences, workshops, and industry events."
   },
   "hiring": {
     "title": "Talent Acquisition",
-    "description": "Connect with top data science talent",
-    "details": "Access our network of skilled data scientists, ML engineers, and AI specialists. We help companies find the right talent and professionals find great opportunities."
+    "description": "Connect with top AI/ML talent",
+    "details": "Access our pool of skilled data scientists, ML engineers, and AI researchers. We help companies find the right talent for their projects."
   },
   "corporateTraining": {
     "title": "Corporate Training",
-    "description": "Custom training programs for teams",
-    "details": "We offer tailored training programs in data science, machine learning, and AI for corporate teams, helping organizations upskill their workforce."
+    "description": "Upskill your teams in AI/ML",
+    "details": "Custom training programs designed for corporate teams. From basic data science to advanced machine learning implementations."
   },
   "consulting": {
     "title": "Technical Consulting",
-    "description": "Expert guidance for your projects",
-    "details": "Our community experts provide consulting services for data science projects, ML implementations, and AI strategy development."
+    "description": "Expert guidance for AI/ML projects",
+    "details": "Our community experts provide consulting services for AI/ML strategy, implementation, and optimization projects."
   },
-  "heroCallToAction": "Ready to Join the Future of AI in Central Asia?",
-  "heroCallToActionDesc": "Connect with like-minded professionals, learn from industry experts, and advance your career in data science and machine learning.",
-  "getStartedToday": "Get Started Today",
-  "exploreEvents": "Explore Events",
   "communityFirst": "Community First",
-  "communityFirstDesc": "We prioritize building meaningful connections and fostering collaboration among our members.",
+  "communityFirstDesc": "We prioritize the needs and growth of our community members above all else.",
   "continuousLearning": "Continuous Learning",
-  "continuousLearningDesc": "We believe in the power of continuous education and knowledge sharing to drive innovation.",
+  "continuousLearningDesc": "We foster an environment of constant learning and knowledge sharing.",
   "careerGrowth": "Career Growth",
-  "careerGrowthDesc": "We support our members' professional development and career advancement in the tech industry."
+  "careerGrowthDesc": "We help our members advance their careers through networking and opportunities.",
+  "newsFeed": {
+    "title": "News Feed",
+    "subtitle": "Stay updated with the latest in Data Science and Machine Learning",
+    "highlights": "Highlights",
+    "highlightsDesc": "Key updates and trending topics in the DSML community"
+  }
 }

@@ -59,16 +59,10 @@ export function HomeContent() {
     <div
       className={`min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800 transition-opacity duration-1000 ${isVisible ? "opacity-100" : "opacity-0"}`}
     >
-      {/* Hero Section with buttons */}
-      <section
-        className="relative overflow-hidden py-16 px-4"
-        style={{
-          backgroundImage: "linear-gradient(to right, #00AEC7, #FFF32A)",
-        }}
-      >
-        <div className="absolute inset-0 bg-black/20"></div>
+      {/* Hero Section with transparent background and gradient text */}
+      <section className="relative overflow-hidden py-16 px-4 bg-transparent">
         <div className="relative max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight font-pixel">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight font-pixel bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
             {t("home.title")}
           </h1>
 

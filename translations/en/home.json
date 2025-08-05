@@ -4,46 +4,46 @@
   "joinButton": "Join Community",
   "subscribeButton": "Subscribe",
   "channelsTitle": "Our Community Channels",
-  "communityDescription": "Connect with over 10,000 AI and ML professionals across Kazakhstan through our diverse ecosystem of channels, each designed to serve different aspects of your professional journey.",
+  "communityDescription": "Connect with over 10,000 AI and ML enthusiasts across Kazakhstan through our diverse platforms. From technical discussions to career opportunities, we've built a comprehensive ecosystem for data science professionals.",
   "discussionHubTitle": "Discussion Hub",
-  "discussionHubDescription": "Main community chat for discussions, networking, and knowledge sharing among AI/ML professionals.",
+  "discussionHubDescription": "Main community chat for technical discussions, Q&A, and networking with fellow data scientists and ML engineers.",
   "newsFeedTitle": "News & Updates",
-  "newsFeedDescription": "Stay updated with the latest AI/ML news, research breakthroughs, and community announcements.",
-  "dataJobsTitle": "Data Science Jobs",
-  "dataJobsDescription": "Exclusive job opportunities in data science, machine learning, and AI across Kazakhstan and beyond.",
+  "newsFeedDescription": "Stay updated with the latest AI/ML news, research papers, conference announcements, and community updates.",
+  "dataJobsTitle": "DS/ML Jobs",
+  "dataJobsDescription": "Exclusive job opportunities in data science, machine learning, and AI roles across Kazakhstan and internationally.",
   "itJobsTitle": "IT Jobs Kazakhstan",
-  "itJobsDescription": "Broader IT job opportunities including software development, DevOps, and technical roles.",
+  "itJobsDescription": "Broader IT job opportunities including software development, DevOps, and technical leadership positions.",
   "youtubeChannelTitle": "YouTube Channel",
-  "youtubeChannelDescription": "Educational content, tutorials, and recordings of our community events and workshops.",
+  "youtubeChannelDescription": "Educational content, conference recordings, interviews with industry experts, and technical tutorials.",
   "linkedinPageTitle": "LinkedIn Page",
-  "linkedinPageDescription": "Professional networking, industry insights, and career development resources.",
-  "collaborationTitle": "Partnership & Collaboration",
-  "collaborationSubtitle": "We partner with leading companies, educational institutions, and organizations to create value for our community.",
-  "collaborationContact": "Contact for Partnership",
+  "linkedinPageDescription": "Professional networking, industry insights, and career development content for AI/ML professionals.",
+  "collaborationTitle": "Partnership Opportunities",
+  "collaborationSubtitle": "We partner with leading companies and organizations to create value for our community members.",
+  "collaborationContact": "Contact Us",
   "mediaSupport": {
-    "title": "Media Support",
-    "description": "Event coverage and content promotion",
-    "details": "We provide comprehensive media coverage for AI/ML events, including live streaming, content creation, and promotional support to maximize reach and impact."
+    "title": "Media Partnership",
+    "description": "Amplify your events and announcements",
+    "details": "Reach our 10,000+ community members through our channels. We provide media support for conferences, workshops, and industry events."
   },
   "hiring": {
     "title": "Talent Acquisition",
-    "description": "Access to qualified AI/ML professionals",
-    "details": "Connect with our network of 10,000+ AI/ML professionals. We help companies find the right talent through targeted job postings and recruitment support."
+    "description": "Connect with top AI/ML talent",
+    "details": "Access our pool of skilled data scientists, ML engineers, and AI researchers. We help companies find the right talent for their projects."
   },
   "corporateTraining": {
     "title": "Corporate Training",
-    "description": "Custom AI/ML training programs",
-    "details": "Tailored training programs for your team, covering everything from AI fundamentals to advanced machine learning techniques, delivered by industry experts."
+    "description": "Upskill your teams in AI/ML",
+    "details": "Custom training programs designed for corporate teams. From basic data science to advanced machine learning implementations."
   },
   "consulting": {
     "title": "Technical Consulting",
-    "description": "AI/ML project guidance and expertise",
-    "details": "Strategic consulting for AI/ML initiatives, from project planning and architecture design to implementation guidance and best practices."
+    "description": "Expert guidance for AI/ML projects",
+    "details": "Our community experts provide consulting services for AI/ML strategy, implementation, and optimization projects."
   },
   "communityFirst": "Community First",
   "communityFirstDesc": "We prioritize the needs and growth of our community members above all else.",
   "continuousLearning": "Continuous Learning",
   "continuousLearningDesc": "We foster an environment of constant learning and knowledge sharing.",
   "careerGrowth": "Career Growth",
-  "careerGrowthDesc": "We support our members' professional development and career advancement."
+  "careerGrowthDesc": "We help our members advance their careers through networking and opportunities."
 }

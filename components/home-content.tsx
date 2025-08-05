@@ -95,11 +95,11 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Hero Image Section */}
+      {/* Hero Image Section with new transparent wide image */}
       <section className="relative w-full overflow-hidden">
         <div className="relative w-full">
           <Image
-            src="/images/moon-hero.png"
+            src="/images/moon-hero-transparent-wide.png"
             alt="DSML Kazakhstan Community"
             width={1920}
             height={800}

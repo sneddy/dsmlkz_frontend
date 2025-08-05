@@ -46,7 +46,7 @@ export default function ClientLayout({
                 height={32}
                 className="rounded-sm"
               />
-              <span className="font-medium font-pixel">DSML KZ</span>
+              <span className="font-medium font-pixel">DSMLKZ</span>
             </Link>
 
             {/* -------- Desktop navigation -------- */}

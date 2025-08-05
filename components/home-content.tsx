@@ -347,9 +347,6 @@ export function HomeContent() {
       <section className="py-20 bg-gradient-to-r from-slate-800/30 to-slate-900/30 backdrop-blur-sm">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-16">
-            <Badge className="mb-6 bg-[#00AEC7]/20 text-[#00AEC7] border-[#00AEC7]/30">
-              🤝 Partnership Opportunities
-            </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-6 font-pixel">
               <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
                 {t("home.collaborationTitle")}
@@ -400,63 +397,6 @@ export function HomeContent() {
                 <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Community Values Section - Enhanced with modern cards */}
-      <section className="py-20 bg-gradient-to-br from-slate-900/50 to-black/50">
-        <div className="container px-4 md:px-6">
-          <div className="text-center mb-16">
-            <Badge className="mb-6 bg-[#FFF32A]/20 text-[#FFF32A] border-[#FFF32A]/30">💎 Our Values</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 font-pixel">
-              <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
-                Community Values
-              </span>
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
-              <CardHeader>
-                <div className="p-3 bg-[#00AEC7]/20 rounded-xl w-fit mb-4">
-                  <Users className="h-6 w-6 text-[#00AEC7]" />
-                </div>
-                <CardTitle className="font-pixel text-[#00AEC7] group-hover:text-[#00AEC7]/80 transition-colors">
-                  {t("home.communityFirst")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-400 leading-relaxed">{t("home.communityFirstDesc")}</p>
-              </CardContent>
-            </Card>
-
-            <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
-              <CardHeader>
-                <div className="p-3 bg-[#FFF32A]/20 rounded-xl w-fit mb-4">
-                  <MessageCircle className="h-6 w-6 text-[#FFF32A]" />
-                </div>
-                <CardTitle className="font-pixel text-[#00AEC7] group-hover:text-[#00AEC7]/80 transition-colors">
-                  {t("home.continuousLearning")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-400 leading-relaxed">{t("home.continuousLearningDesc")}</p>
-              </CardContent>
-            </Card>
-
-            <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
-              <CardHeader>
-                <div className="p-3 bg-purple-500/20 rounded-xl w-fit mb-4">
-                  <Briefcase className="h-6 w-6 text-purple-400" />
-                </div>
-                <CardTitle className="font-pixel text-[#00AEC7] group-hover:text-[#00AEC7]/80 transition-colors">
-                  {t("home.careerGrowth")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-400 leading-relaxed">{t("home.careerGrowthDesc")}</p>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </section>

@@ -62,30 +62,30 @@ export function HomeContent() {
       {/* Hero Section with transparent background and gradient text */}
       <section className="relative overflow-hidden py-16 px-4 bg-transparent">
         <div className="relative max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight font-pixel bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 tracking-tight font-pixel bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent px-4">
             {t("home.title")}
           </h1>
 
-          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8">
+          <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-6 sm:mb-8 px-4">
             {t("home.subtitle")}
           </p>
 
           {/* Buttons in hero section */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/signup">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4">
+            <Link href="/signup" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-white to-white/90 text-black hover:from-white/90 hover:to-white/80 font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+                className="w-full sm:w-auto bg-gradient-to-r from-white to-white/90 text-black hover:from-white/90 hover:to-white/80 font-semibold px-6 sm:px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-sm sm:text-base"
               >
                 {t("home.joinButton")}
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Link href="/events">
+            <Link href="/events" className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="lg"
-                className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-3 rounded-full transition-all duration-300 group bg-transparent"
+                className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-6 sm:px-8 py-3 rounded-full transition-all duration-300 group bg-transparent text-sm sm:text-base"
               >
                 <Play className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
                 Watch Events
@@ -95,15 +95,25 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Hero Image Section with new transparent wide image */}
+      {/* Hero Image Section with responsive images */}
       <section className="relative w-full overflow-hidden">
         <div className="relative w-full">
+          {/* Desktop image */}
           <Image
             src="/images/moon-hero-transparent-wide.png"
             alt="DSML Kazakhstan Community"
             width={1920}
             height={800}
-            className="w-full h-[80vh] object-cover"
+            className="hidden md:block w-full h-[80vh] object-cover"
+            priority
+          />
+          {/* Mobile image */}
+          <Image
+            src="/images/moon-hero-mobile.png"
+            alt="DSML Kazakhstan Community"
+            width={800}
+            height={1200}
+            className="block md:hidden w-full h-[60vh] object-cover"
             priority
           />
         </div>
@@ -386,15 +396,20 @@ export function HomeContent() {
           </div>
 
           {/* Enhanced CTA */}
-          <div className="text-center">
-            <Link href="https://t.me/DSMLmeetup" target="_blank" rel="noopener noreferrer">
+          <div className="text-center px-4">
+            <Link
+              href="https://t.me/DSMLmeetup"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block w-full sm:w-auto"
+            >
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-[#00AEC7] to-[#00AEC7]/80 text-white hover:from-[#00AEC7]/90 hover:to-[#00AEC7]/70 font-pixel text-lg px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+                className="w-full sm:w-auto bg-gradient-to-r from-[#00AEC7] to-[#00AEC7]/80 text-white hover:from-[#00AEC7]/90 hover:to-[#00AEC7]/70 font-pixel text-sm sm:text-lg px-6 sm:px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
               >
-                <MessageCircle className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" />
-                {t("home.collaborationContact")}
-                <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                <MessageCircle className="mr-2 sm:mr-3 h-4 sm:h-5 w-4 sm:w-5 group-hover:scale-110 transition-transform" />
+                <span className="truncate">{t("home.collaborationContact")}</span>
+                <ArrowRight className="ml-2 sm:ml-3 h-4 sm:h-5 w-4 sm:w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
           </div>
@@ -410,21 +425,21 @@ export function HomeContent() {
           <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
             Connect with like-minded professionals, access exclusive resources, and accelerate your career in AI/ML.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/signup">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
+            <Link href="/signup" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+                className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-semibold px-6 sm:px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-sm sm:text-base"
               >
                 Get Started Today
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Link href="/events">
+            <Link href="/events" className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="lg"
-                className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-3 rounded-full transition-all duration-300 bg-transparent"
+                className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-6 sm:px-8 py-3 rounded-full transition-all duration-300 bg-transparent text-sm sm:text-base"
               >
                 Explore Events
               </Button>

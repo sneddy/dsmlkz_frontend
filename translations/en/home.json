@@ -1,8 +1,10 @@
 {
   "title": "DSML Kazakhstan",
-  "subtitle": "DSMLKZ Community - Сообщество энтузиастов AI и Машинного обучения в Казахстане",
+  "subtitle": "DSMLKZ Community - AI and Machine Learning enthusiasts community in Kazakhstan",
   "joinButton": "Join Community",
   "subscribeButton": "Subscribe",
+  "signIn": "Sign In",
+  "signUp": "Sign Up",
   "channelsTitle": "Our Community Channels",
   "communityDescription": "Connect with over 10,000 AI and ML enthusiasts across Kazakhstan through our diverse platforms. From technical discussions to career opportunities, we've built a comprehensive ecosystem for data science professionals.",
   "discussionHubTitle": "Discussion Hub",
@@ -45,5 +47,11 @@
   "continuousLearning": "Continuous Learning",
   "continuousLearningDesc": "We foster an environment of constant learning and knowledge sharing.",
   "careerGrowth": "Career Growth",
-  "careerGrowthDesc": "We help our members advance their careers through networking and opportunities."
+  "careerGrowthDesc": "We help our members advance their careers through networking and opportunities.",
+  "newsFeed": {
+    "title": "News Feed",
+    "subtitle": "Stay updated with the latest in Data Science and Machine Learning",
+    "highlights": "Highlights",
+    "highlightsDesc": "Key updates and trending topics in the DSML community"
+  }
 }

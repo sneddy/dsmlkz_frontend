@@ -1,28 +1,64 @@
 {
   "title": "Research Hub",
   "subtitle": "Central Asian AI/ML Research Community",
-  "description": "Connecting researchers, sharing knowledge, and advancing artificial intelligence and machine learning research across Central Asia",
-  "sections": {
-    "researchers": {
-      "title": "Central Asian Researchers",
-      "description": "Join our growing network of AI/ML researchers from Kazakhstan, Kyrgyzstan, Uzbekistan, Tajikistan, and Turkmenistan",
-      "joinForm": "Submit Your Profile",
-      "joinFormDescription": "Share your research profile and connect with the community"
+  "description": "Our goal is to gradually build a representative database of AI&ML researchers with ties to Central Asia, including those currently based abroad. This initiative aims to foster international collaborations, educational outreach, and global visibility for Central Asia in the AI/ML research ecosystem.",
+  "mission": {
+    "title": "Our Mission",
+    "description": "We want to create the DSML KZ Research Hub that connects AI/ML researchers with Central Asian roots, whether they're based in Almaty, Silicon Valley, or anywhere else in the world."
+  },
+  "goals": {
+    "collaborations": {
+      "title": "International Collaborations",
+      "description": "Connect researchers across borders to foster groundbreaking partnerships and joint research projects"
     },
-    "seminars": {
-      "title": "Research Seminars & Videos",
-      "description": "Watch presentations from leading researchers and participate in our reading club discussions",
-      "viewAll": "View All Seminars"
+    "education": {
+      "title": "Educational Outreach", 
+      "description": "Expand access to AI/ML education and research opportunities throughout Central Asia"
     },
-    "publications": {
-      "title": "Recent Publications",
-      "description": "Explore the latest research papers and publications from our community members across various AI and ML domains.",
-      "viewAll": "View All Publications"
+    "visibility": {
+      "title": "Global Visibility",
+      "description": "Showcase Central Asian AI/ML research excellence on the international stage"
+    },
+    "branding": {
+      "title": "Local Personal Brand Development",
+      "description": "Help researchers maintain connections with Central Asia, increase recognition in the region, and discover new opportunities without losing their roots"
     }
   },
+  "join": {
+    "title": "Join the Movement",
+    "description": "Whether you're a PhD student in Tashkent, a researcher at Google, or a professor in Bishkek - if you have ties to Central Asia, work in AI/ML, and have at least one or two scientific publications in AI, Optimization, Machine Learning, or related fields, then we kindly invite you to fill out the form below.",
+    "profile": {
+      "title": "Share Your Profile",
+      "description": "Help us build the database by sharing your research profile, interests, and background",
+      "benefits": [
+        "Simple 5-minute registration",
+        "Network with regional peers", 
+        "Boost your visibility in Central Asia",
+        "Discover collaboration opportunities"
+      ],
+      "button": "Submit Your Profile"
+    },
+    "spread": {
+      "title": "Spread the Word",
+      "description": "Know other researchers with Central Asian ties? Help us reach them!",
+      "benefits": [
+        "Share with your network",
+        "Recommend colleagues",
+        "Post in research groups", 
+        "Help us grow the community"
+      ],
+      "button": "Share This Initiative"
+    }
+  },
+  "learning": {
+    "title": "Community Learning",
+    "description": "While we build our researcher database, join our reading club sessions where we discuss cutting-edge AI/ML papers and share knowledge.",
+    "button": "View All Sessions"
+  },
   "cta": {
-    "joinHub": "Join the Research Hub",
-    "submitProfile": "Submit Research Profile",
-    "watchSeminars": "Watch Seminars"
+    "title": "Ready to Make History?",
+    "description": "Help us create the first comprehensive network of Central Asian AI/ML researchers worldwide",
+    "joinButton": "Join the Database",
+    "watchButton": "Watch Our Sessions"
   }
 }

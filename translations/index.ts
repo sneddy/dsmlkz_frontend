@@ -15,6 +15,8 @@ import enEventsPast from "./en/events_past.json"
 import enEventsAnnouncements from "./en/events_announcements.json"
 import enDashboard from "./en/dashboard.json"
 import enHome from "./en/home.json"
+import enResearch from "./en/research.json"
+import enValues from "./en/values.json"
 
 import ruCommon from "./ru/common.json"
 import ruNews from "./ru/news.json"
@@ -32,6 +34,8 @@ import ruEventsPast from "./ru/events_past.json"
 import ruEventsAnnouncements from "./ru/events_announcements.json"
 import ruDashboard from "./ru/dashboard.json"
 import ruHome from "./ru/home.json"
+import ruResearch from "./ru/research.json"
+import ruValues from "./ru/values.json"
 
 import kkCommon from "./kk/common.json"
 import kkNews from "./kk/news.json"
@@ -49,6 +53,8 @@ import kkEventsPast from "./kk/events_past.json"
 import kkEventsAnnouncements from "./kk/events_announcements.json"
 import kkDashboard from "./kk/dashboard.json"
 import kkHome from "./kk/home.json"
+import kkResearch from "./kk/research.json"
+import kkValues from "./kk/values.json"
 
 type Translations = Record<string, any>
 
@@ -71,6 +77,8 @@ const clientTranslations: Record<string, Translations> = {
     events_announcements: enEventsAnnouncements,
     dashboard: enDashboard,
     home: enHome,
+    research: enResearch,
+    values: enValues,
   },
   ru: {
     common: ruCommon,
@@ -89,6 +97,8 @@ const clientTranslations: Record<string, Translations> = {
     events_announcements: ruEventsAnnouncements,
     dashboard: ruDashboard,
     home: ruHome,
+    research: ruResearch,
+    values: ruValues,
   },
   kk: {
     common: kkCommon,
@@ -107,6 +117,8 @@ const clientTranslations: Record<string, Translations> = {
     events_announcements: kkEventsAnnouncements,
     dashboard: kkDashboard,
     home: kkHome,
+    research: kkResearch,
+    values: kkValues,
   },
 }
 

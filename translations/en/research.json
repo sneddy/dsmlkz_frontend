@@ -1,0 +1,28 @@
+{
+  "title": "Research Hub",
+  "subtitle": "Central Asian AI/ML Research Community",
+  "description": "Connecting researchers, sharing knowledge, and advancing artificial intelligence and machine learning research across Central Asia",
+  "sections": {
+    "researchers": {
+      "title": "Central Asian Researchers",
+      "description": "Join our growing network of AI/ML researchers from Kazakhstan, Kyrgyzstan, Uzbekistan, Tajikistan, and Turkmenistan",
+      "joinForm": "Submit Your Profile",
+      "joinFormDescription": "Share your research profile and connect with the community"
+    },
+    "seminars": {
+      "title": "Research Seminars & Videos",
+      "description": "Watch presentations from leading researchers and participate in our reading club discussions",
+      "viewAll": "View All Seminars"
+    },
+    "publications": {
+      "title": "Recent Publications",
+      "description": "Explore the latest research papers and publications from our community members across various AI and ML domains.",
+      "viewAll": "View All Publications"
+    }
+  },
+  "cta": {
+    "joinHub": "Join the Research Hub",
+    "submitProfile": "Submit Research Profile",
+    "watchSeminars": "Watch Seminars"
+  }
+}

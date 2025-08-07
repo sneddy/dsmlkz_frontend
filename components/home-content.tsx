@@ -270,7 +270,7 @@ export function HomeContent() {
             <CardContent>
               <div className="flex items-center gap-2 mb-4">
                 <Badge variant="secondary" className="bg-orange-500/10 text-orange-400 border-orange-500/20">
-                  6,400 subscribers
+                  6,500 subscribers
                 </Badge>
               </div>
               <Link
@@ -303,7 +303,7 @@ export function HomeContent() {
             <CardContent>
               <div className="flex items-center gap-2 mb-4">
                 <Badge variant="secondary" className="bg-red-500/10 text-red-400 border-red-500/20">
-                  Educational content
+                  800 subscribers
                 </Badge>
               </div>
               <Link

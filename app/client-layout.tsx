@@ -6,7 +6,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { Menu, User, X } from "lucide-react"
+import { Menu, User, X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/auth-context"
 import LanguageSelector from "@/components/language-selector"
@@ -76,6 +76,14 @@ export default function ClientLayout({
                 {t("nav.jobsFeed")}
               </Link>
               <Link
+                href="/research"
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/research" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {t("nav.research")}
+              </Link>
+              <Link
                 href="/articles"
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/articles" ? "text-primary" : "text-muted-foreground hover:text-foreground"
@@ -91,7 +99,6 @@ export default function ClientLayout({
               >
                 {t("nav.events") || "Ивенты"}
               </Link>
-              {/* ------------- Companies link removed ------------- */}
               <Link
                 href="/faces"
                 className={`text-sm font-medium font-pixel ${
@@ -183,6 +190,14 @@ export default function ClientLayout({
                 {t("nav.jobsFeed")}
               </Link>
               <Link
+                href="/research"
+                className={`text-sm font-medium font-pixel ${
+                  pathname === "/research" ? "text-primary" : "text-muted-foreground"
+                }`}
+              >
+                {t("nav.research")}
+              </Link>
+              <Link
                 href="/articles"
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/articles" ? "text-primary" : "text-muted-foreground"
@@ -198,7 +213,6 @@ export default function ClientLayout({
               >
                 {t("nav.events") || "Ивенты"}
               </Link>
-              {/* ------------- Companies link removed ------------- */}
               <Link
                 href="/faces"
                 className={`text-sm font-medium font-pixel ${

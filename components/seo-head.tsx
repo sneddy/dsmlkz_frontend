@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import Head from "next/head"
+import Head from 'next/head'
 
 interface SEOHeadProps {
   title?: string
@@ -12,8 +12,8 @@ interface SEOHeadProps {
 
 export function SEOHead({
   title = "DSMLKZ - Data Science & Machine Learning Kazakhstan Community",
-  description = "DSMLKZ (DSML Kazakhstan) - крупнейшее сообщество специалистов по Data Science и Machine Learning в Казахстане. Присоединяйтесь к 10,000+ участников!",
-  keywords = "DSMLKZ, DSML Kazakhstan, Data Science Kazakhstan, Machine Learning Kazakhstan, AI Kazakhstan, искусственный интеллект Казахстан, машинное обучение, анализ данных",
+  description = "DSMLKZ - крупнейшее сообщество специалистов по Data Science и Machine Learning в Казахстане. Более 10,000 участников, вакансии, обучение, нетворкинг.",
+  keywords = "DSMLKZ, Data Science Kazakhstan, Machine Learning Kazakhstan, AI Kazakhstan, ML jobs, датасайенс казахстан",
   url = "https://dsml.kz",
   image = "https://dsml.kz/images/dsml-logo.png"
 }: SEOHeadProps) {
@@ -21,7 +21,7 @@ export function SEOHead({
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "DSMLKZ",
-    "alternateName": ["DSML Kazakhstan", "Data Science Machine Learning Kazakhstan"],
+    "alternateName": ["Data Science Machine Learning Kazakhstan", "DSML Kazakhstan", "DSML KZ"],
     "url": url,
     "logo": image,
     "description": description,
@@ -32,45 +32,36 @@ export function SEOHead({
     },
     "sameAs": [
       "https://t.me/dsmlkz_news",
-      "https://t.me/ml_jobs_kz",
       "https://www.youtube.com/c/DataScienceKazakhstan",
-      "https://www.linkedin.com/company/53101063"
+      "https://www.linkedin.com/company/53101063/"
     ],
     "memberOf": {
-      "@type": "Thing",
-      "name": "Data Science Community"
+      "@type": "Organization",
+      "name": "Global Data Science Community"
     }
   }
 
   return (
     <Head>
-      {/* Basic Meta Tags */}
       <title>{title}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
-      <meta name="author" content="DSMLKZ Community" />
       <meta name="robots" content="index, follow" />
-      <link rel="canonical" href={url} />
-
-      {/* Open Graph Meta Tags */}
+      <meta name="author" content="DSMLKZ Team" />
+      
+      {/* Open Graph */}
       <meta property="og:type" content="website" />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={url} />
       <meta property="og:image" content={image} />
       <meta property="og:site_name" content="DSMLKZ" />
-      <meta property="og:locale" content="ru_KZ" />
-
-      {/* Twitter Card Meta Tags */}
+      
+      {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
-
-      {/* Additional Meta Tags for DSMLKZ */}
-      <meta name="geo.region" content="KZ" />
-      <meta name="geo.country" content="Kazakhstan" />
-      <meta name="language" content="ru,en,kk" />
       
       {/* Structured Data */}
       <script

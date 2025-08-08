@@ -26,14 +26,19 @@ Allow: /
 User-agent: YandexBot
 Allow: /
 
-# Disallow admin and private areas
+# Block access to admin and private areas
 Disallow: /admin/
 Disallow: /api/
-Disallow: /dashboard/search/
+Disallow: /dashboard/
 Disallow: /profile/
-Disallow: /post-signup/
-Disallow: /email-verification/
-Disallow: /reset-password/
-Disallow: /forgot-password/
 Disallow: /signin/
 Disallow: /signup/
+Disallow: /reset-password/
+Disallow: /email-verification/
+Disallow: /post-signup/
+
+# Allow access to public assets
+Allow: /images/
+Allow: /icons/
+Allow: /favicon.ico
+Allow: /llms.txt

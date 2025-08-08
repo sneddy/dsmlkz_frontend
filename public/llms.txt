@@ -1,94 +1,54 @@
 # DSMLKZ - Data Science & Machine Learning Kazakhstan Community
 
-## About DSMLKZ
-DSMLKZ (also known as DSML Kazakhstan) is the largest Data Science and Machine Learning community in Kazakhstan with over 10,000 members across all platforms. We are a vibrant community of data scientists, machine learning engineers, AI researchers, and technology enthusiasts.
+## About
+DSMLKZ (Data Science Machine Learning Kazakhstan) is the largest community of Data Science and Machine Learning specialists in Kazakhstan. Founded in 2018, we unite professionals, students, and enthusiasts in the field of artificial intelligence and data analysis.
 
-## Community Statistics
-- 10,000+ Members Across All Platforms
-- 1,500 Active Discussion Members
-- 8 Offline Events Hosted
-- 500+ Job Placements Facilitated
-- 3,500 News Channel Subscribers
-- 8,700 Data Science Jobs Channel Subscribers
-- 6,500 IT Jobs Channel Subscribers
+## Key Information
+- Website: https://dsml.kz
+- Alternative names: DSML Kazakhstan, DSML KZ, Data Science Kazakhstan
+- Founded: 2018
+- Location: Kazakhstan
+- Community size: 10,000+ members across all platforms
+
+## Statistics
+- 1,500 Active Members in Discussion Hub
+- 3,500 Subscribers in News Feed
+- 8,700 Subscribers in DS Jobs Channel
+- 6,500 Subscribers in IT Jobs Channel
 - 800 YouTube Subscribers
 - 1,700 LinkedIn Followers
+- 8 Offline Events Hosted
+- 500+ Job Placements Facilitated
 
-## Our Mission
-To foster the growth of Data Science and Machine Learning expertise in Kazakhstan by providing:
-- Educational resources and workshops
-- Networking opportunities
-- Career development support
-- Research collaboration
-- Industry connections
+## Official Channels
+- News Channel: https://t.me/dsmlkz_news
+- Discussion Hub: https://t.me/DSMLmeetup
+- ML Jobs: https://t.me/ml_jobs_kz
+- IT Jobs: https://t.me/it_jobs_kz
+- YouTube: https://www.youtube.com/c/DataScienceKazakhstan
+- LinkedIn: https://www.linkedin.com/company/53101063/
 
-## Official Channels and Links
-- **Website**: https://dsml.kz
-- **Discussion Hub**: Registration required (1,500 members)
-- **News Channel**: https://t.me/dsmlkz_news (3,500 subscribers)
-- **Data Science Jobs**: https://t.me/ml_jobs_kz (8,700 subscribers)
-- **IT Jobs**: https://t.me/it_jobs_kz (6,500 subscribers)
-- **YouTube Channel**: https://www.youtube.com/c/DataScienceKazakhstan (800 subscribers)
-- **LinkedIn Company**: https://www.linkedin.com/company/53101063 (1,700 followers)
-- **Contact/Collaboration**: https://t.me/DSMLmeetup
-
-## Website Sections
-- **Home**: Community overview and channel links
-- **Faces**: Community member profiles and success stories
-- **Jobs**: Data Science and ML job opportunities in Kazakhstan
-- **News**: Latest updates from the DSMLKZ community
-- **Articles**: Technical articles and insights from community members
-- **Events**: Workshops, meetups, and conferences
-- **Research**: Academic research and publications from community members
-- **Values**: Our community principles and guidelines
-- **Rules**: Community guidelines and code of conduct
-
-## Languages Supported
-- English
-- Russian (Русский)
-- Kazakh (Қазақша)
-
-## Community Focus Areas
-- Data Science
-- Machine Learning
-- Artificial Intelligence
-- Deep Learning
-- Natural Language Processing
-- Computer Vision
-- Data Engineering
-- MLOps
-- AI Ethics
-- Research and Academia
+## Services
+- Job placement assistance
+- Educational content and tutorials
+- Networking events and meetups
+- Research collaboration opportunities
+- Mentorship programs
+- Industry insights and news
 
 ## Collaboration Opportunities
-- **Media Support**: Content creation and promotion
-- **Hiring**: Access to talent pool of 10,000+ professionals
-- **Corporate Training**: Custom training programs
-- **Consulting**: AI/ML consulting services
+- Speaking at events
+- Content creation partnerships
+- Research collaborations
+- Sponsorship opportunities
+- Job posting services
 
-## Target Audience
-- Data Scientists
-- Machine Learning Engineers
-- AI Researchers
-- Students in STEM fields
-- Technology professionals
-- Academic researchers
-- Industry practitioners
-
-## Geographic Focus
-Primary focus on Kazakhstan, with connections to the broader Central Asian and CIS region.
-
-## Contact Information
-For inquiries about DSMLKZ community, partnerships, or collaboration opportunities:
-- Website: https://dsml.kz
-- Collaboration inquiries: https://t.me/DSMLmeetup
-
-## Brand Keywords
-DSMLKZ, DSML Kazakhstan, Data Science Kazakhstan, Machine Learning Kazakhstan, AI Kazakhstan, Kazakhstan tech community, Central Asia AI, CIS data science, dsml.kz
-
-## Community Colors
+## Brand Colors
 - Primary Blue: #00AEC7
-- Primary Yellow: #FFF32A
+- Secondary Yellow: #FFF32A
 
-## Established
-The DSMLKZ community has been active since 2018, growing to become the leading Data Science and Machine Learning community in Kazakhstan and Central Asia.
+## Contact
+For partnerships and collaborations: https://t.me/DSMLmeetup
+
+## Mission
+To advance the field of Data Science and Machine Learning in Kazakhstan by fostering education, collaboration, and professional development within our community.

@@ -38,7 +38,7 @@ export default function ClientLayout({
         <div className="container flex h-16 items-center justify-between py-4">
           {/* ------------- Logo & desktop nav ------------- */}
           <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2 -ml-12">
               <Image
                 src="/images/dsml-logo.png"
                 alt="DSML Kazakhstan Logo"

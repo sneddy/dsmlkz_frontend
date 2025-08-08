@@ -89,7 +89,7 @@ export const articlesMetadata: ArticleMetadata[] = [
     id: "6",
     title: "DSML Interview: Александр Пак",
     preview:
-      "В рамках рубрики DS/ML интервью, мы начинаем серию интервью c @AlexPak83. Александр Пак - кандидат технических наук, ассоциированный профессор ШИТиИ КБТУ.",
+      "В рамках рубрики DS/ML интервью, мы начинаем се��ию интервью c @AlexPak83. Александр Пак - кандидат технических наук, ассоциированный профессор ШИТиИ КБТУ.",
     imageUrl:
       "https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/articles//photo_2023-03-09_16-16-12.jpg",
     slug: "dsml-interview-alexander-pak",

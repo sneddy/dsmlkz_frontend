@@ -7,7 +7,7 @@
   "lastName": "Фамилия",
   "currentCity": "Текущий город",
   "birthday": "Дата рождения",
-  "recentUniversity": "Недавний университет (необязательно)",
+  "recentUniversity": "Недавний униве��ситет (необязательно)",
   "relevantCompany": "Соответствующая компания",
   "relevantPosition": "Соответствующая должность",
   "relevantPositionPlaceholder": "например, Data Scientist, ML Engineer",
@@ -78,6 +78,6 @@
   "profileExists": "Профиль уже существует",
   "redirectingToEdit": "У вас уже есть профиль. Перенаправление в режим редактирования...",
   "noProfileFound": "Профиль не найден",
-  "redirectingToCreate": "У вас еще нет профиля. Перенаправление в режим создания...",
+  "redirectingToCreate": "У вас еще нет профиля. Перенаправление в режим созд��ния...",
   "enterCity": "Введите название города"
 }

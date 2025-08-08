@@ -15,10 +15,8 @@ export function JobsFeedPage() {
       <SectionHero
         title={t("jobs.main_title")}
         subtitleLine1={t("jobs.subtitle_line1")}
-        subtitleLine2={t("jobs.subtitle_line2")}
         gradientFrom="#00AEC7"
         gradientTo="#FFF32A"
-        badges={[`500+ ${t("jobs.total_jobs")}`, `${t("jobs.remote_jobs")} Available`]}
       />
 
       {/* Jobs Feed */}

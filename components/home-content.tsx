@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ExternalLink, MessageCircle, Users, Calendar, Briefcase, ArrowRight, Play } from "lucide-react"
+import { ExternalLink, MessageCircle, Users, Calendar, Briefcase, ArrowRight, Play } from 'lucide-react'
 import Link from "next/link"
 import Image from "next/image"
 import { useTranslation } from "@/hooks/use-translation"
@@ -100,7 +100,7 @@ export function HomeContent() {
         <div className="relative w-full">
           {/* Desktop image */}
           <Image
-            src="/images/moon-hero-transparent-wide.png"
+            src="https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/general/moon_hero_transparent.png"
             alt="DSML Kazakhstan Community"
             width={1920}
             height={800}
@@ -109,7 +109,7 @@ export function HomeContent() {
           />
           {/* Mobile image */}
           <Image
-            src="/images/moon-hero-mobile.png"
+            src="https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/general/moon_hero_transparent_wide.png"
             alt="DSML Kazakhstan Community"
             width={800}
             height={1200}

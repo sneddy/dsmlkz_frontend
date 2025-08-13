@@ -16,7 +16,7 @@ export const articlesMetadata: ArticleMetadata[] = [
     id: "12",
     title: "Абу Канабек - интервью с золотым медалистом IOAI",
     preview:
-      "Казахстан дебютировал на International Olympiad in Artificial Intelligence (IOAI) и занял **4-е место в командном зачёте**. Лучшим в сборной стал 9-классник **Абу Канабек** — **золото** и **9-е место в личном зачёте**. Поговорили с ним о его пути к награде, подготовке и планах на будущее",
+      "Казахстан дебютировал на International Olympiad in Artificial Intelligence (IOAI) и занял 4-е место в командном зачёте. Лучшим в сборной стал 9-классник Абу Канабек — золото и 9-е место в личном зачёте. Поговорили с ним о его пути к награде, подготовке и планах на будущее",
     imageUrl:
       "https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/articles/abu_kanabek.jpg",
     slug: "abu-kanabek-interview",

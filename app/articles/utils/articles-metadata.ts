@@ -13,6 +13,18 @@ export interface ArticleMetadata {
 
 export const articlesMetadata: ArticleMetadata[] = [
   {
+    id: "12",
+    title: "Абу Канабек - интервью с золотым медалистом IOAI",
+    preview:
+      "Казахстан дебютировал на International Olympiad in Artificial Intelligence (IOAI) и занял 4-е место в командном зачёте. Лучшим в сборной стал Абу Канабек — золото и 9-е место в личном зачёте. Поговорили с ним о пути к награде, подготовке и планах",
+    imageUrl:
+      "https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/articles/ai_olymp/ai_qualifications.jpg",
+    slug: "abu-kanabek-interview",
+    language: "ru",
+    isMarkdownBased: true,
+    date: "13 августа 2025",
+  },
+  {
     id: "11",
     title: "Республиканская AI-Олимпиада для школьников - Победители и Решения Отборочного этапа",
     preview:

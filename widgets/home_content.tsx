@@ -9,6 +9,7 @@ import Image from "next/image"
 import { useTranslation } from "@/hooks/use-translation"
 import { useEffect, useState } from "react"
 import { CollaborationCard } from "@/widgets/collaboration_card"
+import { HERO_IMAGES } from "@/lib/constants/images"
 
 export function HomeContent() {
   const { t } = useTranslation()
@@ -62,32 +63,32 @@ export function HomeContent() {
       {/* Hero Section with transparent background and gradient text */}
       <section className="relative overflow-hidden py-16 px-4 bg-transparent">
         <div className="relative max-w-7xl mx-auto text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 tracking-tight font-pixel bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent px-4">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-6 sm:mb-8 tracking-tight bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] bg-clip-text text-transparent px-4 leading-tight">
             {t("home.title")}
           </h1>
 
-          <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-6 sm:mb-8 px-4">
+          <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8 sm:mb-12 px-4">
             {t("home.subtitle")}
           </p>
 
           {/* Buttons in hero section */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4">
-            <Link href="/signup" className="w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4 mb-16">
+            <Link href="/auth/signup" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="w-full sm:w-auto bg-gradient-to-r from-white to-white/90 text-black hover:from-white/90 hover:to-white/80 font-semibold px-6 sm:px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-sm sm:text-base"
+                className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base"
               >
                 {t("home.joinButton")}
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
             <Link href="/events" className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-6 sm:px-8 py-3 rounded-full transition-all duration-300 group bg-transparent text-sm sm:text-base"
+                className="w-full sm:w-auto border-2 border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7]/10 backdrop-blur-sm px-8 py-4 rounded-full transition-all duration-300 group bg-transparent text-base"
               >
-                <Play className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
                 Watch Events
               </Button>
             </Link>
@@ -96,34 +97,40 @@ export function HomeContent() {
       </section>
 
       {/* Hero Image Section with responsive images */}
-      <section className="relative w-full overflow-hidden">
+      <section className="relative w-full overflow-hidden mb-16">
         <div className="relative w-full">
-          {/* Desktop image */}
-          <Image
-            src="https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/general/moon_hero_transparent.png"
-            alt="DSML Kazakhstan Community"
-            width={1920}
-            height={800}
-            className="hidden md:block w-full h-[80vh] object-cover"
-            priority
-          />
-          {/* Mobile image */}
-          <Image
-            src="https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/general/moon_hero_transparent_wide.png"
-            alt="DSML Kazakhstan Community"
-            width={800}
-            height={1200}
-            className="block md:hidden w-full h-[60vh] object-cover"
-            priority
-          />
+          {/* Desktop image with fallback */}
+          <div className="hidden md:block w-full h-[80vh] bg-gradient-to-br from-[#00AEC7]/20 via-slate-800/50 to-[#FFF32A]/20 relative overflow-hidden rounded-2xl mx-4">
+            <Image
+              src={HERO_IMAGES.desktop || "/placeholder.svg"}
+              alt="DSML Kazakhstan Community"
+              width={1920}
+              height={800}
+              className="w-full h-full object-cover opacity-80"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+          </div>
+          {/* Mobile image with fallback */}
+          <div className="block md:hidden w-full h-[60vh] bg-gradient-to-br from-[#00AEC7]/20 via-slate-800/50 to-[#FFF32A]/20 relative overflow-hidden rounded-2xl mx-4">
+            <Image
+              src={HERO_IMAGES.mobile || "/placeholder.svg"}
+              alt="DSML Kazakhstan Community"
+              width={800}
+              height={1200}
+              className="w-full h-full object-cover opacity-80"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+          </div>
         </div>
       </section>
 
       {/* Stats Section - Updated with new stats */}
-      <section className="py-16 relative">
+      <section className="py-20 relative">
         <div className="absolute inset-0 bg-gradient-to-r from-[#00AEC7]/5 to-[#FFF32A]/5"></div>
         <div className="container px-4 md:px-6 relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
             {communityStats.map((stat, index) => (
               <div key={index} className="text-center group hover:scale-105 transition-transform duration-300">
                 <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-colors">
@@ -140,22 +147,22 @@ export function HomeContent() {
       </section>
 
       {/* Community Description - Enhanced typography */}
-      <section className="py-16 bg-gradient-to-r from-slate-800/50 to-slate-900/50 backdrop-blur-sm">
+      <section className="py-20 bg-gradient-to-r from-slate-800/50 to-slate-900/50 backdrop-blur-sm">
         <div className="container px-4 md:px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 font-pixel">
-              <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 leading-tight">
+              <span className="bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] bg-clip-text text-transparent">
                 {t("home.channelsTitle")}
               </span>
             </h2>
-            <p className="text-gray-300 text-lg leading-relaxed mb-12">{t("home.communityDescription")}</p>
+            <p className="text-gray-300 text-lg leading-relaxed mb-16">{t("home.communityDescription")}</p>
           </div>
         </div>
       </section>
 
       {/* Telegram Channels Section - Simplified cards without growth indicators */}
-      <section className="py-16 container px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <section className="py-20 container px-4 md:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {/* Discussion Hub */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
             <CardHeader className="pb-4">
@@ -354,18 +361,18 @@ export function HomeContent() {
       </section>
 
       {/* Collaboration Section - Enhanced with modern design */}
-      <section className="py-20 bg-gradient-to-r from-slate-800/30 to-slate-900/30 backdrop-blur-sm">
+      <section className="py-24 bg-gradient-to-r from-slate-800/30 to-slate-900/30 backdrop-blur-sm">
         <div className="container px-4 md:px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 font-pixel">
-              <span className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
+          <div className="text-center mb-20">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 leading-tight">
+              <span className="bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] bg-clip-text text-transparent">
                 {t("home.collaborationTitle")}
               </span>
             </h2>
             <p className="text-gray-300 text-lg max-w-3xl mx-auto leading-relaxed">{t("home.collaborationSubtitle")}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
             <CollaborationCard
               title={t("home.mediaSupport.title")}
               description={t("home.mediaSupport.description")}
@@ -405,11 +412,11 @@ export function HomeContent() {
             >
               <Button
                 size="lg"
-                className="w-full sm:w-auto bg-gradient-to-r from-[#00AEC7] to-[#00AEC7]/80 text-white hover:from-[#00AEC7]/90 hover:to-[#00AEC7]/70 font-pixel text-sm sm:text-lg px-6 sm:px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+                className="w-full sm:w-auto bg-gradient-to-r from-[#00AEC7] to-[#00AEC7]/80 text-white hover:from-[#00AEC7]/90 hover:to-[#00AEC7]/70 font-pixel text-lg px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
               >
-                <MessageCircle className="mr-2 sm:mr-3 h-4 sm:h-5 w-4 sm:w-5 group-hover:scale-110 transition-transform" />
+                <MessageCircle className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" />
                 <span className="truncate">{t("home.collaborationContact")}</span>
-                <ArrowRight className="ml-2 sm:ml-3 h-4 sm:h-5 w-4 sm:w-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
           </div>
@@ -417,29 +424,29 @@ export function HomeContent() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-[#00AEC7]/10 via-transparent to-[#FFF32A]/10">
+      <section className="py-24 bg-gradient-to-r from-[#00AEC7]/10 via-transparent to-[#FFF32A]/10">
         <div className="container px-4 md:px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 font-pixel text-white">
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-white leading-tight">
             Ready to Join the Future of AI in Central Asia?
           </h2>
-          <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+          <p className="text-gray-300 text-lg mb-12 max-w-2xl mx-auto leading-relaxed">
             Connect with like-minded professionals, access exclusive resources, and accelerate your career in AI/ML.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
-            <Link href="/signup" className="w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-4">
+            <Link href="/auth/signup" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-semibold px-6 sm:px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-sm sm:text-base"
+                className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base"
               >
                 Get Started Today
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
             <Link href="/events" className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-6 sm:px-8 py-3 rounded-full transition-all duration-300 bg-transparent text-sm sm:text-base"
+                className="w-full sm:w-auto border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-4 rounded-full transition-all duration-300 bg-transparent text-base"
               >
                 Explore Events
               </Button>

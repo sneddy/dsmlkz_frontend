@@ -7,14 +7,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ArrowLeft, AlertTriangle } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useTranslation } from "@/hooks/use-translation"
-import { toast } from "@/components/ui/use-toast"
-import { AuthGuard } from "@/components/auth-guard"
-import { ErrorBoundaryWrapper } from "@/components/error-boundary-wrapper"
-import { ProfileForm } from "@/components/profile-form"
-
-// Constants
-const FETCH_RETRY_DELAY = 2000 // 2 seconds
-const MAX_FETCH_RETRIES = 3
+import { toast } from "@/shared/lib/hooks/use-toast"
+import { AuthGuard } from "@/features/auth/auth_guard"
+import { ErrorBoundaryWrapper } from "@/shared/ui/error_boundary_wrapper"
+import { ProfileForm } from "@/features/profile/profile_form"
 
 export default function ProfilePage() {
   return (
@@ -61,6 +57,12 @@ function ProfileContainer() {
       window.removeEventListener("offline", handleOffline)
     }
   }, [refreshProfile])
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/auth/signin")
+    }
+  }, [user, loading, router])
 
   useEffect(() => {
     if (!loading && !user) {

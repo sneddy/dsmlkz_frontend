@@ -20,7 +20,7 @@ export async function middleware(req: NextRequest) {
 
   // If accessing a protected route without a session, redirect to sign in
   if (isProtectedRoute && !session) {
-    return NextResponse.redirect(new URL("/signin", req.url))
+    return NextResponse.redirect(new URL("/auth/signin", req.url))
   }
 
   // For admin routes, we'll let the client-side handle the access control

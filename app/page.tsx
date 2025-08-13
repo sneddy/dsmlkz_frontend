@@ -1,4 +1,4 @@
-import { HomeContent } from "@/components/home-content"
+import { HomeContent } from "@/widgets/home_content"
 
 export default function Home() {
   return <HomeContent />

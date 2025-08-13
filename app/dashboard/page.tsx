@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/auth-context"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ProfileCard } from "@/components/profile-card"
-import { MemberSearch } from "@/components/member-search"
+import { MemberSearch } from "@/features/search/member_search"
 import { useTranslation } from "@/hooks/use-translation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
@@ -23,9 +23,9 @@ import {
   Home,
   Check,
 } from "lucide-react"
-import { AuthGuard } from "@/components/auth-guard"
-import { ErrorBoundaryWrapper } from "@/components/error-boundary-wrapper"
-import { toast } from "@/components/ui/use-toast"
+import { AuthGuard } from "@/features/auth/auth_guard"
+import { ErrorBoundaryWrapper } from "@/shared/ui/error_boundary_wrapper"
+import { toast } from "@/shared/lib/hooks/use-toast"
 import { useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 
@@ -465,7 +465,7 @@ function Dashboard() {
       <div className="container py-8">
         <div className="flex justify-center items-center min-h-[60vh]">
           <div className="relative">
-            <div className="w-16 h-16 border-4 border-[#00AEC7]/20 border-t-[#00AEC7] rounded-full animate-spin" />
+            <div className="w-16 h-16 border-4 border-[#00AEC7]/20 border-t-[#00AEC7] rounded-full animate-spin mx-auto" />
             <div className="absolute inset-0 w-16 h-16 border-4 border-[#FFF32A]/20 border-b-[#FFF32A] rounded-full animate-spin animate-reverse" />
           </div>
         </div>
@@ -474,7 +474,7 @@ function Dashboard() {
   }
 
   if (!user) {
-    router.push("/signin")
+    router.push("/auth/signin")
     return null
   }
 

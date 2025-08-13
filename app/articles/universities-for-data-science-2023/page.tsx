@@ -1,7 +1,7 @@
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
-import { BlobImage } from "@/components/ui/blob-image"
-import { MarkdownContent } from "@/components/markdown-content"
+import { BlobImage } from "@/shared/ui/blob_image"
+import { MarkdownContent } from "@/shared/ui/markdown_content"
 import { loadMarkdownFile } from "../utils/markdown-loader"
 
 export default async function UniversitiesArticlePage() {

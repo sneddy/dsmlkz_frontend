@@ -41,7 +41,7 @@ export default function MemberSearch() {
 
   useEffect(() => {
     if (!user) {
-      router.push("/signin")
+      router.push("/auth/signin")
       return
     }
 

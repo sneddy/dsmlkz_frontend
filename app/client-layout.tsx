@@ -6,10 +6,10 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { Menu, User, X } from 'lucide-react'
+import { Menu, User, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/auth-context"
-import LanguageSelector from "@/components/language-selector"
+import LanguageSelector from "@/features/i18n/language_selector"
 import { useTranslation } from "@/hooks/use-translation"
 
 export default function ClientLayout({
@@ -143,7 +143,7 @@ export default function ClientLayout({
               </div>
             ) : (
               <div className="hidden md:flex items-center gap-4">
-                <Link href="/signin">
+                <Link href="/auth/signin">
                   <Button variant="outline" size="sm">
                     {t("home.signIn")}
                   </Button>
@@ -254,8 +254,8 @@ export default function ClientLayout({
                 </>
               ) : (
                 <div className="flex flex-col gap-2">
-                  <Link href="/signin">
-                    <Button variant="outline" size="sm" className="w-full">
+                  <Link href="/auth/signin">
+                    <Button variant="outline" size="sm" className="w-full bg-transparent">
                       {t("home.signIn")}
                     </Button>
                   </Link>

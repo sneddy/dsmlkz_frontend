@@ -31,11 +31,11 @@ Disallow: /admin/
 Disallow: /api/
 Disallow: /dashboard/
 Disallow: /profile/
-Disallow: /signin/
-Disallow: /signup/
-Disallow: /reset-password/
-Disallow: /email-verification/
-Disallow: /post-signup/
+Disallow: /auth/signin/
+Disallow: /auth/signup/
+Disallow: /auth/reset-password/
+Disallow: /auth/email-verification/
+Disallow: /auth/post-signup/
 
 # Allow access to public assets
 Allow: /images/

@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { SupabaseProvider } from "@/contexts/supabase-context"
 import { AuthProvider } from "@/contexts/auth-context"
 import { LanguageProvider } from "@/contexts/language-context"
-import { GoogleAnalytics } from "@/components/google-analytics"
+import { GoogleAnalytics } from "@/shared/providers/analytics"
 import "@/app/globals.css"
 import { Inter } from "next/font/google"
 import { Press_Start_2P } from "next/font/google"
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     icon: "/images/dsml-logo.png",
     apple: "/images/dsml-logo.png",
   },
-    generator: 'v0.dev'
+    generator: 'v0.app'
 }
 
 export default function RootLayout({

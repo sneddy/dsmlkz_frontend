@@ -2,7 +2,7 @@
 import { ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ImageCarousel } from "@/components/image-carousel"
+import { ImageCarousel } from "@/widgets/image_carousel"
 
 export default function AlibeksInterviewPage() {
   const router = useRouter()

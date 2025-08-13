@@ -5,11 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { BlobImage } from "@/components/ui/blob-image"
+import { BlobImage } from "@/shared/ui/blob_image"
 import { Calendar, Clock, MapPin, Users, ExternalLink, Ticket, ChevronDown, ChevronUp, Coffee } from "lucide-react"
 import Link from "next/link"
 import { useTranslation } from "@/hooks/use-translation"
-import { SectionHero } from "@/components/section-hero"
+import { SectionHero } from "@/widgets/section_hero"
 
 const speakerProfiles = [
   {

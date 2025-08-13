@@ -1,9 +1,9 @@
 "use client"
 
 import { useTranslation } from "@/hooks/use-translation"
-import { ArticleCard } from "@/components/article-card"
+import { ArticleCard } from "@/widgets/article_card"
 import { articlesMetadata } from "./utils/articles-metadata"
-import { SectionHero } from "@/components/section-hero"
+import { SectionHero } from "@/widgets/section_hero"
 
 export default function ArticlesPage() {
   const { t } = useTranslation()

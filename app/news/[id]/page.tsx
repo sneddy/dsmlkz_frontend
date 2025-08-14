@@ -3,8 +3,9 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { BlobImage } from "@/shared/ui/blob_image"
+import { absoluteUrl, trimExcerpt } from "@/lib/seo"
 
 export const revalidate = 1800 // ISR 30 minutes
 
@@ -13,21 +14,31 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 
   if (!item) {
     return {
-      title: "Новость не найдена - DSML Kazakhstan",
-      description: "Запрашиваемая новость не найдена",
+      title: "News Not Found — DSML Kazakhstan",
+      description: "The requested news article was not found",
     }
   }
 
+  const description = trimExcerpt(item.excerpt || item.content)
+
   return {
-    title: `${item.title} - DSML Kazakhstan`,
-    description: item.excerpt || "Читайте последние новости от DSML Kazakhstan",
+    title: `${item.title} — DSML Kazakhstan`,
+    description,
     openGraph: {
-      title: `${item.title} - DSML Kazakhstan`,
-      description: item.excerpt || "Читайте последние новости от DSML Kazakhstan",
-      images: [{ url: item.image || "/images/dsml-kazakhstan-hero.png" }],
+      title: `${item.title} — DSML Kazakhstan`,
+      description,
+      type: "article",
+      url: absoluteUrl(`/news/${params.id}`),
+      images: [{ url: absoluteUrl(item.image || "/images/dsml-logo.png") }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${item.title} — DSML Kazakhstan`,
+      description,
+      images: [absoluteUrl(item.image || "/images/dsml-logo.png")],
     },
     alternates: {
-      canonical: `/news/${params.id}`,
+      canonical: absoluteUrl(`/news/${params.id}`),
     },
   }
 }
@@ -54,26 +65,32 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
     return html.replace(/\n/g, "<br />").replace(/<br \/><br \/>/g, "</p><p>")
   }
 
-  // JSON-LD structured data
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
     headline: item.title,
-    description: item.excerpt,
-    image: item.image || "/images/dsml-kazakhstan-hero.png",
-    datePublished: item.date,
+    description: trimExcerpt(item.excerpt || item.content),
+    image: [absoluteUrl(item.image || "/images/dsml-logo.png")],
+    url: absoluteUrl(`/news/${params.id}`),
+    datePublished: new Date(item.date).toISOString(),
+    dateModified: new Date(item.date).toISOString(),
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": absoluteUrl(`/news/${params.id}`),
+    },
     author: {
       "@type": "Organization",
-      name: item.channel_name || "DSML Kazakhstan",
+      name: "DSML KZ Новости",
     },
     publisher: {
       "@type": "Organization",
       name: "DSML Kazakhstan",
       logo: {
         "@type": "ImageObject",
-        url: "/images/dsml-logo.png",
+        url: absoluteUrl("/images/dsml-logo.png"),
       },
     },
+    articleSection: "News",
   }
 
   return (
@@ -101,9 +118,8 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
           <CardHeader className="bg-gradient-to-r from-gray-700/20 to-gray-600/10 backdrop-blur-sm">
             <div className="flex justify-between items-start">
               <div>
-                <CardTitle className="text-2xl text-[#FFF32A] mb-2 font-pixel">
-                  {item.channel_name || "DSML Kazakhstan"}
-                </CardTitle>
+                <h1 className="text-2xl text-[#FFF32A] mb-2 font-pixel">{item.title}</h1>
+                {item.channel_name && <p className="text-[#00AEC7] font-medium">{item.channel_name}</p>}
                 {item.date && (
                   <p className="text-[#00AEC7] font-medium">
                     {formatDate(item.date)}

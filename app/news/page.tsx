@@ -2,21 +2,32 @@ import { getNewsList } from "@/entities/news/api"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BlobImage } from "@/shared/ui/blob_image"
+import { absoluteUrl } from "@/lib/seo"
 
 export const revalidate = 1800 // ISR 30 minutes
 
 export async function generateMetadata() {
   return {
-    title: "Новости - DSML Kazakhstan",
+    title: "News — DSML Kazakhstan",
     description:
-      "Последние новости и обновления от сообщества DSML Kazakhstan. Следите за событиями в мире машинного обучения и искусственного интеллекта.",
+      "Latest news and updates from DSML Kazakhstan community. Stay informed about machine learning and AI developments in Central Asia.",
     openGraph: {
-      title: "Новости - DSML Kazakhstan",
-      description: "Последние новости и обновления от сообщества DSML Kazakhstan",
-      images: [{ url: "/images/dsml-kazakhstan-hero.png" }],
+      title: "News — DSML Kazakhstan",
+      description:
+        "Latest news and updates from DSML Kazakhstan community. Stay informed about machine learning and AI developments in Central Asia.",
+      type: "website",
+      url: absoluteUrl("/news"),
+      images: [{ url: absoluteUrl("/images/dsml-logo.png") }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "News — DSML Kazakhstan",
+      description:
+        "Latest news and updates from DSML Kazakhstan community. Stay informed about machine learning and AI developments in Central Asia.",
+      images: [absoluteUrl("/images/dsml-logo.png")],
     },
     alternates: {
-      canonical: "/news",
+      canonical: absoluteUrl("/news"),
     },
   }
 }
@@ -39,19 +50,19 @@ export default async function NewsPage() {
       <div className="relative overflow-hidden bg-gradient-to-r from-[#00AEC7] to-[#FFF32A] py-16 px-4">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight font-pixel">Новости</h1>
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight font-pixel">News</h1>
           <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-            Последние новости и обновления <br />
-            <span className="font-semibold">от сообщества DSML Kazakhstan</span>
+            Latest news and updates <br />
+            <span className="font-semibold">from DSML Kazakhstan community</span>
           </p>
 
           {/* Feature badges */}
           <div className="flex flex-wrap justify-center gap-4 mt-8">
             <span className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full text-white font-medium border border-white/30">
-              Ежедневные обновления
+              Daily updates
             </span>
             <span className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full text-white font-medium border border-white/30">
-              Актуальные новости
+              Latest news
             </span>
           </div>
         </div>
@@ -92,7 +103,7 @@ export default async function NewsPage() {
 
         {newsList.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-400 text-lg">Новости не найдены</p>
+            <p className="text-gray-400 text-lg">News not found</p>
           </div>
         )}
       </div>

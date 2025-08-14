@@ -522,20 +522,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       prevSessionRef.current = null
       currentUserEmailRef.current = null
 
-      // Добавляем таймаут безопасности для принудительного перенаправления
-      const logoutTimeout = setTimeout(() => {
-        console.warn("Forced redirect fallback after logout timeout")
-        if (typeof window !== "undefined") {
-          window.location.replace("/")
-        }
-      }, 2000)
-
       // Выполняем выход из Supabase
       if (DEBUG) console.log("Signing out from Supabase")
       const { error } = await supabase.auth.signOut()
-
-      // Очищаем таймаут, так как выход выполнен успешно
-      clearTimeout(logoutTimeout)
 
       if (error) {
         console.error("Error signing out from Supabase:", error)
@@ -590,12 +579,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error("Error resetting Supabase client:", e)
       }
 
-      if (DEBUG) console.log("Redirecting to home page with replace")
-
-      // Используем replace вместо href для полной очистки истории
-      if (typeof window !== "undefined") {
-        window.location.replace("/")
-      }
+      if (DEBUG) console.log("Sign out completed successfully")
     } catch (error) {
       console.error("Error during sign out process:", error)
       // Сбрасываем состояние загрузки в случае ошибки
@@ -612,14 +596,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           sessionStorage.clear()
         }
 
-        // Принудительное перенаправление
-        if (typeof window !== "undefined") {
-          window.location.replace("/")
-        }
+        if (DEBUG) console.log("Fallback sign out completed")
       } catch (fallbackError) {
         console.error("Fallback sign out also failed:", fallbackError)
         isSigningOutRef.current = false
       }
+    } finally {
+      isSigningOutRef.current = false
+      setLoading(false)
     }
   }, [supabase])
 

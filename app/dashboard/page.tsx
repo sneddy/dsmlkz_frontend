@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
+import { useProfile } from "@/features/profile/client/useProfile"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ProfileCard } from "@/components/profile-card"
@@ -408,7 +409,8 @@ function SearchTab() {
 }
 
 function Dashboard() {
-  const { user, profile, loading, profileError, signOut, initialized } = useAuth()
+  const { user, signOut, initialized } = useAuth()
+  const { profile, loadingProfile, profileError } = useProfile()
   const router = useRouter()
   const { t } = useTranslation()
   const [isClient, setIsClient] = useState(false)
@@ -531,7 +533,12 @@ function Dashboard() {
         </TabsContent>
 
         <TabsContent value="profile" className="mt-0">
-          <ProfileTab profile={profile} loading={loading} error={profileError} onEditProfile={handleEditProfile} />
+          <ProfileTab
+            profile={profile}
+            loading={loadingProfile}
+            error={profileError}
+            onEditProfile={handleEditProfile}
+          />
         </TabsContent>
 
         <TabsContent value="search" className="mt-0">

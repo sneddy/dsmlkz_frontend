@@ -18,15 +18,10 @@ export type Profile = {
 
 export type AuthContextType = {
   user: User | null
-  profile: Profile | null
-  profileError: Error | null
   session: Session | null
   loading: boolean
-  loadingProfile: boolean
   initialized: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
   signUp: (email: string, password: string) => Promise<{ error: any; data: any }>
   signOut: () => Promise<void>
-  updateProfile: (profile: Partial<Profile>) => Promise<{ error: any }>
-  refreshProfile: () => Promise<void>
 }

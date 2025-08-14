@@ -30,11 +30,6 @@ This file tracks which app pages import widgets and their new import paths.
 | `/articles/universities-for-data-science-2023` | `BlobImage` | `@/shared/ui/blob_image` | ✅ Updated |
 | `/articles/universities-for-data-science-2023` | `MarkdownContent` | `@/shared/ui/markdown_content` | ✅ Updated |
 
-### ✅ Admin Pages
-| App Route | Component Import | New Path | Status |
-|-----------|------------------|----------|---------|
-| `/admin` | `toast` | `@/shared/lib/hooks/use-toast` | ✅ Updated |
-
 ### ✅ Component Files
 | Component | Import | New Path | Status |
 |-----------|--------|----------|---------|

@@ -12,19 +12,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  trailingSlash: false,
-  async redirects() {
-    return [
-      { source: '/index.html', destination: '/', permanent: true },
-      { source: '/index.php', destination: '/', permanent: true },
-      { source: '/signup', destination: '/auth/signup', permanent: true },
-      {
-        source: '/:path*/',
-        destination: '/:path*',
-        permanent: true,
-      },
-    ];
-  },
 };
 
 export default nextConfig;

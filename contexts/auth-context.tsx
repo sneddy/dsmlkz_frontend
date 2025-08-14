@@ -1,72 +1,26 @@
 "use client"
 
 import type React from "react"
-
 import { createContext, useContext, useEffect, useState, useCallback, useRef, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import type { User, Session } from "@supabase/supabase-js"
 import { getSupabaseClient } from "@/lib/supabase-client"
 import isEqual from "lodash/isEqual"
 
-// Define the Profile type
-type Profile = {
-  id: string
-  nickname: string
-  first_name: string
-  last_name: string
-  current_city?: string
-  university?: string
-  relevant_company?: string
-  relevant_position?: string
-  about_you?: string
-  motivation?: string
-  linkedin?: string
-  other_links?: string
-  avatar_url?: string
-}
+// Import types from separate module
+import type { Profile, AuthContextType } from "@/features/auth/types"
 
-// Define the AuthContext type
-type AuthContextType = {
-  user: User | null
-  profile: Profile | null
-  profileError: Error | null
-  session: Session | null
-  loading: boolean
-  loadingProfile: boolean
-  initialized: boolean
-  signIn: (email: string, password: string) => Promise<{ error: any }>
-  signUp: (email: string, password: string) => Promise<{ error: any; data: any }>
-  signOut: () => Promise<void>
-  updateProfile: (profile: Partial<Profile>) => Promise<{ error: any }>
-  refreshProfile: () => Promise<void>
-}
+// Import constants from separate module
+import { MAX_RETRIES, RETRY_DELAY, PROFILE_UPDATE_DELAY, DEBUG } from "@/features/auth/constants"
+
+// Import utility for creating fallback profile
+import { createFallbackProfile } from "@/features/auth/utils/createFallbackProfile"
+
+// Import functions for working with localStorage
+import { readProfileCache, writeProfileCache, clearProfileCache } from "@/features/profile/client/profileStorage"
 
 // Create the context
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
-
-export { AuthContext }
-
-// Maximum number of retries for fetch operations
-const MAX_RETRIES = 3
-// Delay between retries in milliseconds
-const RETRY_DELAY = 1000
-// Delay after profile update before fetching again
-const PROFILE_UPDATE_DELAY = 1000
-// Debug mode flag
-const DEBUG = typeof window !== "undefined" && window.location.hostname === "localhost"
-
-// Создаем резервный профиль на основе данных пользователя - вынесено за пределы компонента
-const createFallbackProfile = (userId: string, email?: string): Profile => {
-  const emailToUse = email || `${userId}@fallback.com`
-  const nameParts = emailToUse.split("@")[0].split(".") || ["User"]
-  return {
-    id: userId,
-    nickname: emailToUse.split("@")[0] || "user",
-    first_name: nameParts[0] || "User",
-    last_name: nameParts.length > 1 ? nameParts[1] : "",
-    avatar_url: `https://api.dicebear.com/7.x/initials/svg?seed=${nameParts.join(" ")}`,
-  }
-}
 
 // Create the AuthProvider component
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -80,7 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [initialized, setInitialized] = useState(false)
 
-  // Используем useMemo для создания стабильного клиента Supabase
+  // Use useMemo for creating a stable Supabase client
   const supabase = useMemo(() => getSupabaseClient(), [])
 
   // Use refs to track fetch operations
@@ -92,23 +46,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const prevSessionRef = useRef<Session | null>(null)
   const currentUserEmailRef = useRef<string | null>(null)
 
-  // Функция для получения профиля с обработкой ошибок и резервным механизмом
-  // Стабильно мемоизирована с минимальными зависимостями
+  // Function for fetching profile with error handling and fallback mechanism
+  // Stably memoized with minimal dependencies
   const fetchProfile = useCallback(
     async (userId: string, userEmail?: string, retryCount = 0) => {
-      // Если выполняется выход из системы, не выполняем запрос профиля
+      // If sign out is in progress, skip fetching profile
       if (isSigningOutRef.current) {
         if (DEBUG) console.log("Skipping fetchProfile: signing out in progress")
         return
       }
 
-      // Проверяем наличие userId
+      // Check for presence of userId
       if (!userId) {
         if (DEBUG) console.log("Skipping fetchProfile: no user ID provided")
         return
       }
 
-      // Если уже выполняется запрос для этого пользователя, добавим в очередь
+      // If a fetch for this user is already in progress, add to queue
       if (fetchingProfileRef.current && userId !== lastFetchedUserIdRef.current) {
         if (!profileFetchQueueRef.current.includes(userId)) {
           profileFetchQueueRef.current.push(userId)
@@ -117,43 +71,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return
       }
 
-      // Если это тот же пользователь, для которого мы уже получили профиль, пропускаем
+      // If it's the same user for whom we already fetched the profile, skip
       if (userId === lastFetchedUserIdRef.current && profile) {
         if (DEBUG) console.log("Profile already fetched for user:", userId)
         return
       }
 
       try {
-        // Сбрасываем ошибку при новом запросе
+        // Reset error on new request
         setProfileError(null)
         setLoadingProfile(true)
 
-        // Устанавливаем флаг выполнения запроса
+        // Set flag for fetch operation in progress
         fetchingProfileRef.current = true
         lastFetchedUserIdRef.current = userId
 
-        // Сохраняем email пользователя, если он предоставлен
+        // Save user email if provided
         if (userEmail) {
           currentUserEmailRef.current = userEmail
         }
 
         if (DEBUG) console.log("Fetching profile for user:", userId)
 
-        // Попытка получить профиль из локального хранилища
-        let localProfile: Profile | null = null
-        try {
-          if (typeof window !== "undefined") {
-            const storedProfile = localStorage.getItem(`profile_${userId}`)
-            if (storedProfile) {
-              localProfile = JSON.parse(storedProfile)
-              if (DEBUG) console.log("Found profile in local storage:", localProfile)
-            }
-          }
-        } catch (e) {
-          console.error("Error reading from localStorage:", e)
+        // Use readProfileCache function instead of direct localStorage access
+        const localProfile = readProfileCache(userId)
+        if (localProfile && DEBUG) {
+          console.log("Found profile in local storage:", localProfile)
         }
 
-        // Попытка получить профиль из Supabase
+        // Attempt to fetch profile from Supabase
         let supabaseProfile: Profile | null = null
         try {
           const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle()
@@ -164,7 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
 
           if (data) {
-            // Получаем аватар отдельно
+            // Fetch avatar separately
             let avatarUrl = null
             try {
               const { data: avatarData } = await supabase
@@ -184,19 +130,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               avatar_url: avatarUrl,
             } as Profile
 
-            // Сохраняем в локальное хранилище
-            try {
-              if (typeof window !== "undefined") {
-                localStorage.setItem(`profile_${userId}`, JSON.stringify(supabaseProfile))
-              }
-            } catch (e) {
-              console.error("Error saving to localStorage:", e)
-            }
+            // Use writeProfileCache function instead of direct localStorage access
+            writeProfileCache(userId, supabaseProfile)
           }
         } catch (supabaseError) {
           console.error("Error fetching from Supabase:", supabaseError)
 
-          // Если это не последняя попытка, пробуем снова
+          // If it's not the last retry, try again
           if (retryCount < MAX_RETRIES) {
             if (DEBUG) console.log(`Retrying fetch (${retryCount + 1}/${MAX_RETRIES})...`)
             setTimeout(() => {
@@ -207,7 +147,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         }
 
-        // Определяем, какой профиль использовать
+        // Determine which profile to use
         let finalProfile: Profile | null = null
 
         if (supabaseProfile) {
@@ -217,10 +157,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (DEBUG) console.log("Using profile from local storage")
           finalProfile = localProfile
         } else {
-          // Создаем резервный профиль на основе данных пользователя
+          // Use imported createFallbackProfile function
           if (DEBUG) console.log("Creating fallback profile from user ID")
 
-          // Используем email из аргумента, из ref или создаем фиктивный
+          // Use email from argument, ref, or create a dummy one
           const emailForFallback = userEmail || currentUserEmailRef.current || `${userId}@fallback.com`
           finalProfile = createFallbackProfile(userId, emailForFallback)
         }
@@ -236,10 +176,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch (error) {
         console.error("Error in fetchProfile:", error)
 
-        // Если у нас нет профиля, создаем резервный профиль
+        // If we don't have a profile, create a fallback profile
         if (!profile) {
           try {
-            // Используем email из аргумента, из ref или создаем фиктивный
+            // Use imported createFallbackProfile function
             const emailForFallback = userEmail || currentUserEmailRef.current || `${userId}@fallback.com`
             const fallbackProfile = createFallbackProfile(userId, emailForFallback)
             if (DEBUG) console.log("Setting fallback profile:", fallbackProfile)
@@ -252,15 +192,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setProfileError(error instanceof Error ? error : new Error(String(error)))
         }
       } finally {
-        // Сбрасываем флаг выполнения запроса и загрузки профиля
+        // Reset fetch operation flag and profile loading flag
         fetchingProfileRef.current = false
         setLoadingProfile(false)
 
-        // Проверяем, есть ли запросы в очереди
+        // Check if there are any fetch requests in the queue
         if (profileFetchQueueRef.current.length > 0) {
           const nextUserId = profileFetchQueueRef.current.shift()
           if (nextUserId) {
-            // Небольшая задержка перед следующим запросом
+            // Small delay before the next fetch request
             setTimeout(() => {
               fetchProfile(nextUserId)
             }, 100)
@@ -268,24 +208,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
     },
-    // Минимальные зависимости для стабильности - убираем user
+    // Minimal dependencies for stability - remove user
     [supabase],
   )
-
-  // Function to refresh the profile - стабильно мемоизирована
-  const refreshProfile = useCallback(async () => {
-    if (user) {
-      // Reset the lastFetchedUserIdRef to allow a new fetch
-      lastFetchedUserIdRef.current = null
-      await fetchProfile(user.id, user.email)
-    }
-  }, [user, fetchProfile])
 
   // Initialize auth state
   useEffect(() => {
     let isMounted = true
 
-    // Очистим существующую подписку, если она есть
+    // Clean up existing subscription if it exists
     if (authSubscriptionRef.current) {
       if (DEBUG) console.log("Cleaning up previous auth subscription")
       authSubscriptionRef.current.unsubscribe()
@@ -307,29 +238,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.error("Error getting session:", error)
           if (isMounted) {
             setLoading(false)
-            setInitialized(true) // Важно: отметить как инициализированное даже при ошибке
+            setInitialized(true) // Important: mark as initialized even on error
           }
           return
         }
 
         if (session && isMounted) {
-          // Устанавливаем сессию и сохраняем в prevSessionRef
+          // Set session and save to prevSessionRef
           prevSessionRef.current = session
           setSession(session)
           setUser(session.user)
 
-          // Сохраняем email пользователя для использования в fallback
+          // Save user email for use in fallback
           if (session.user?.email) {
             currentUserEmailRef.current = session.user.email
           }
 
-          // НЕ вызываем fetchProfile здесь, так как onAuthStateChange сделает это
+          // Do not call fetchProfile here, as onAuthStateChange will do it
 
-          // Отмечаем как инициализированное после установки пользователя
+          // Mark as initialized after setting user
           setInitialized(true)
           setLoading(false)
         } else {
-          // Если нет сессии, отмечаем как инициализированное
+          // If no session, mark as initialized
           if (isMounted) {
             setInitialized(true)
             setLoading(false)
@@ -353,28 +284,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (DEBUG) console.log("Auth state changed:", event, session?.user?.id)
 
-      // Пропускаем обработку изменений состояния аутентификации во время выхода
+      // Skip processing auth state changes during sign out
       if (isSigningOutRef.current) {
         if (DEBUG) console.log("Skipping auth state change during sign out")
         return
       }
 
-      // Дедупликация onAuthStateChange - проверяем токен и полное равенство сессий
+      // Deduplicate onAuthStateChange - check token and deep equality of sessions
       if (session?.access_token === prevSessionRef.current?.access_token) {
         if (DEBUG) console.log("Session token unchanged, checking deep equality")
 
-        // Дополнительная проверка на полное равенство объектов сессии
+        // Additional check for deep equality of session objects
         if (isEqual(session, prevSessionRef.current)) {
           if (DEBUG) console.log("Session objects are deeply equal, skipping update")
           return
         }
       }
 
-      // Обновляем prevSessionRef
+      // Update prevSessionRef
       prevSessionRef.current = session
 
       if (isMounted) {
-        // Проверяем, изменилась ли сессия, чтобы избежать ненужных обновлений
+        // Check if session has changed to avoid unnecessary updates
         const sessionChanged =
           (!session && !!user) || (session && !user) || (session && user && session.user.id !== user.id)
 
@@ -384,12 +315,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(session?.user || null)
 
           if (session?.user) {
-            // Сохраняем email пользователя для использования в fallback
+            // Save user email for use in fallback
             if (session.user.email) {
               currentUserEmailRef.current = session.user.email
             }
 
-            // Вызываем fetchProfile с email пользователя
+            // Call fetchProfile with user email
             fetchProfile(session.user.id, session.user.email)
           } else {
             setProfile(null)
@@ -399,13 +330,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (DEBUG) console.log("Session unchanged, skipping update")
         }
 
-        // Важно: устанавливаем initialized и loading после обработки изменения состояния
+        // Important: set initialized and loading after processing state change
         setInitialized(true)
         setLoading(false)
       }
     })
 
-    // Сохраняем подписку в ref
+    // Save subscription to ref
     authSubscriptionRef.current = subscription
 
     // Clean up subscription on unmount
@@ -416,24 +347,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         authSubscriptionRef.current = null
       }
     }
-  }, [supabase, fetchProfile]) // Убираем user из зависимостей
+  }, [supabase, fetchProfile]) // Remove user from dependencies
 
-  // Отладочный эффект для логирования изменений состояния
-  useEffect(() => {
-    if (DEBUG) {
-      console.log("Auth state updated:", {
-        user: user?.id,
-        profile: profile?.id,
-        loading,
-        loadingProfile,
-        initialized,
-        session: session?.user?.id,
-        profileError: profileError?.message,
-      })
+  // Function to refresh the profile - stably memoized
+  const refreshProfile = useCallback(async () => {
+    if (user) {
+      // Reset lastFetchedUserIdRef to allow a new fetch
+      lastFetchedUserIdRef.current = null
+      await fetchProfile(user.id, user.email)
     }
-  }, [user, profile, loading, loadingProfile, initialized, session, profileError])
+  }, [user, fetchProfile])
 
-  // Sign in function - стабильно мемоизирована
+  // Sign in function - stably memoized
   const signIn = useCallback(
     async (email: string, password: string) => {
       try {
@@ -453,11 +378,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (DEBUG) console.log("Sign in successful")
 
-        // Сохраняем email пользователя для использования в fallback
+        // Save user email for use in fallback
         currentUserEmailRef.current = email
 
-        // Не вызываем fetchProfile здесь, так как onAuthStateChange сделает это
-        // Не делаем редирект здесь, а ждем пока onAuthStateChange обновит состояние
+        // Do not call fetchProfile here, as onAuthStateChange will do it
+        // Do not redirect here, wait for onAuthStateChange to update state
 
         return { error: null }
       } catch (error) {
@@ -469,7 +394,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [supabase],
   )
 
-  // Sign up function - стабильно мемоизирована
+  // Sign up function - stably memoized
   const signUp = useCallback(
     async (email: string, password: string) => {
       try {
@@ -479,7 +404,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           password,
         })
 
-        // Сохраняем email пользователя для использования в fallback
+        // Save user email for use in fallback
         if (!error) {
           currentUserEmailRef.current = email
         }
@@ -495,7 +420,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [supabase],
   )
 
-  // Sign out function - стабильно мемоизирована
+  // Sign out function - stably memoized
   const signOut = useCallback(async () => {
     try {
       if (isSigningOutRef.current) {
@@ -508,23 +433,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (DEBUG) console.log("Starting sign out process")
 
-      // Отписываемся от onAuthStateChange перед очисткой состояния
+      // Unsubscribe from onAuthStateChange before clearing state
       if (authSubscriptionRef.current) {
         if (DEBUG) console.log("Unsubscribing from auth state changes")
         authSubscriptionRef.current.unsubscribe()
         authSubscriptionRef.current = null
       }
 
-      // Очищаем локальное состояние рано
+      // Clear local state early
       setUser(null)
       setProfile(null)
       setSession(null)
       prevSessionRef.current = null
       currentUserEmailRef.current = null
 
-      // Выполняем выход из Supabase
+      // Add safety timeout for forced redirect fallback
+      const logoutTimeout = setTimeout(() => {
+        console.warn("Forced redirect fallback after logout timeout")
+        if (typeof window !== "undefined") {
+          window.location.replace("/")
+        }
+      }, 2000)
+
+      // Sign out from Supabase
       if (DEBUG) console.log("Signing out from Supabase")
       const { error } = await supabase.auth.signOut()
+
+      // Clear timeout as sign out was successful
+      clearTimeout(logoutTimeout)
 
       if (error) {
         console.error("Error signing out from Supabase:", error)
@@ -533,12 +469,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (DEBUG) console.log("Successfully signed out from Supabase")
 
-      // Полная очистка localStorage и sessionStorage
+      // Use clearProfileCache function for clearing profile cache
+      if (user?.id) {
+        clearProfileCache(user.id)
+      }
+
+      // Full clear of localStorage and sessionStorage
       if (typeof window !== "undefined") {
         try {
           if (DEBUG) console.log("Clearing all storage")
 
-          // Сначала удаляем конкретные ключи Supabase и профиля
+          // First remove specific Supabase and profile keys
           const allKeys = Object.keys(localStorage)
           const keysToRemove = allKeys.filter(
             (key) =>
@@ -550,7 +491,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (DEBUG) console.log(`Removed localStorage key: ${key}`)
           }
 
-          // Затем очищаем все остальное
+          // Then clear everything else
           localStorage.clear()
           sessionStorage.clear()
 
@@ -560,10 +501,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      // Сбрасываем клиент Supabase
+      // Reset Supabase client
       try {
         if (typeof window !== "undefined") {
-          // Импортируем функцию динамически в браузере
+          // Import resetSupabaseClient function dynamically in the browser
           import("@/lib/supabase-client")
             .then(({ resetSupabaseClient }) => {
               if (typeof resetSupabaseClient === "function") {
@@ -579,35 +520,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error("Error resetting Supabase client:", e)
       }
 
-      if (DEBUG) console.log("Sign out completed successfully")
+      if (DEBUG) console.log("Redirecting to home page with replace")
+
+      // Use replace instead of href for full history cleanup
+      if (typeof window !== "undefined") {
+        window.location.replace("/")
+      }
     } catch (error) {
       console.error("Error during sign out process:", error)
-      // Сбрасываем состояние загрузки в случае ошибки
+      // Reset loading state in case of error
       setLoading(false)
       isSigningOutRef.current = false
 
-      // Пытаемся использовать запасной метод выхода, если основной метод не сработал
+      // Try fallback sign out method if primary method fails
       try {
         if (DEBUG) console.log("Attempting fallback sign out")
 
-        // Полная очистка localStorage и sessionStorage в любом случае
+        // Full clear of localStorage and sessionStorage in any case
         if (typeof window !== "undefined") {
           localStorage.clear()
           sessionStorage.clear()
         }
 
-        if (DEBUG) console.log("Fallback sign out completed")
+        // Forced redirect
+        if (typeof window !== "undefined") {
+          window.location.replace("/")
+        }
       } catch (fallbackError) {
         console.error("Fallback sign out also failed:", fallbackError)
         isSigningOutRef.current = false
       }
-    } finally {
-      isSigningOutRef.current = false
-      setLoading(false)
     }
-  }, [supabase])
+  }, [supabase, user])
 
-  // Update profile function - стабильно мемоизирована
+  // Update profile function - stably memoized
   const updateProfile = useCallback(
     async (profileData: Partial<Profile>) => {
       if (!user) {
@@ -617,7 +563,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         if (DEBUG) console.log("Updating profile with data:", profileData)
 
-        // Add timestamp to the profile data
+        // Add timestamp to profile data
         const dataWithTimestamp = {
           ...profileData,
           updated_at: new Date().toISOString(),
@@ -630,7 +576,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           dataToUpdate.secret_number = secret_number
         }
 
-        // ВСЕГДА используем API-роут для обновления профиля
+        // Always use API route for updating profile
         try {
           const response = await fetch("/api/profile/update", {
             method: "POST",
@@ -657,36 +603,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return { error: apiError }
         }
 
-        // Обновляем локальное хранилище
-        try {
-          if (typeof window !== "undefined") {
-            // Получаем текущий профиль из локального хранилища
-            const storedProfileStr = localStorage.getItem(`profile_${user.id}`)
-            if (storedProfileStr) {
-              const storedProfile = JSON.parse(storedProfileStr)
-              // Обновляем профиль
-              const updatedProfile = {
-                ...storedProfile,
-                ...dataToUpdate,
-                updated_at: new Date().toISOString(),
-              }
-              // Сохраняем обновленный профиль
-              localStorage.setItem(`profile_${user.id}`, JSON.stringify(updatedProfile))
-              if (DEBUG) console.log("Updated profile in localStorage")
-            }
+        // Use profileStorage functions for updating cache
+        const currentProfile = readProfileCache(user.id)
+        if (currentProfile) {
+          const updatedProfile = {
+            ...currentProfile,
+            ...dataToUpdate,
+            updated_at: new Date().toISOString(),
           }
-        } catch (e) {
-          console.error("Error updating localStorage:", e)
+          writeProfileCache(user.id, updatedProfile)
+          if (DEBUG) console.log("Updated profile in localStorage")
         }
 
-        // Reset the lastFetchedUserIdRef to allow a new fetch
+        // Reset lastFetchedUserIdRef to allow a new fetch
         lastFetchedUserIdRef.current = null
 
-        // Увеличиваем задержку перед обновлением профиля
+        // Increase delay before refreshing profile
         if (DEBUG) console.log(`Waiting ${PROFILE_UPDATE_DELAY}ms before refreshing profile`)
         await new Promise((resolve) => setTimeout(resolve, PROFILE_UPDATE_DELAY))
 
-        // Refresh the profile data after update
+        // Refresh profile data after update
         await fetchProfile(user.id, user.email)
 
         return { error: null }
@@ -698,7 +634,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [fetchProfile, user],
   )
 
-  // Обновим возвращаемый контекст
+  // Debug effect for logging state changes
+  useEffect(() => {
+    if (DEBUG) {
+      console.log("Auth state updated:", {
+        user: user?.id,
+        profile: profile?.id,
+        loading,
+        loadingProfile,
+        initialized,
+        session: session?.user?.id,
+        profileError: profileError?.message,
+      })
+    }
+  }, [user, profile, loading, loadingProfile, initialized, session, profileError])
+
+  // Update returned context
   const contextValue = useMemo(
     () => ({
       user,

@@ -13,8 +13,6 @@ type SupabaseContextType = {
 
 const SupabaseContext = createContext<SupabaseContextType | undefined>(undefined)
 
-const isDevelopment = typeof window !== "undefined" && window.location.hostname === "localhost"
-
 export function SupabaseProvider({ children }: { children: React.ReactNode }) {
   // Get the Supabase client (this will use the singleton)
   const supabase = getSupabaseClient()
@@ -32,7 +30,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <SupabaseContext.Provider value={{ supabase }}>
-      {error && isDevelopment && (
+      {error && process.env.NODE_ENV === "development" && (
         <div
           style={{
             padding: "10px",

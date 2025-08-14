@@ -5,8 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft, AlertTriangle } from "lucide-react"
-import { useSafeAuth } from "@/hooks/use-safe-auth"
-import { useSafeTranslation } from "@/hooks/use-safe-translation"
+import { useAuth } from "@/contexts/auth-context"
+import { useTranslation } from "@/hooks/use-translation"
 import { toast } from "@/shared/lib/hooks/use-toast"
 import { AuthGuard } from "@/features/auth/auth_guard"
 import { ErrorBoundaryWrapper } from "@/shared/ui/error_boundary_wrapper"
@@ -23,10 +23,10 @@ export default function ProfilePage() {
 }
 
 function ProfileContainer() {
-  const { user, profile, loading, profileError, refreshProfile } = useSafeAuth()
+  const { user, profile, loading, profileError, refreshProfile } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { t } = useSafeTranslation()
+  const { t } = useTranslation()
   const [isOffline, setIsOffline] = useState(false)
   const [loadingProfile, setLoadingProfile] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
@@ -41,9 +41,7 @@ function ProfileContainer() {
     const handleOnline = () => {
       setIsOffline(false)
       // Try to refresh data when coming back online
-      if (refreshProfile) {
-        refreshProfile().catch(console.error)
-      }
+      refreshProfile().catch(console.error)
     }
     const handleOffline = () => setIsOffline(true)
 
@@ -66,10 +64,16 @@ function ProfileContainer() {
     }
   }, [user, loading, router])
 
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/signin")
+    }
+  }, [user, loading, router])
+
   // Load profile only once when component mounts
   useEffect(() => {
     // If profile is already loaded or loading is in progress, do nothing
-    if (profileLoaded || loadingProfile || !refreshProfile) {
+    if (profileLoaded || loadingProfile) {
       return
     }
 
@@ -160,7 +164,7 @@ function ProfileContainer() {
 
   // Create an empty profile template for create mode
   const emptyProfile = {
-    id: user?.id || "",
+    id: user.id,
     nickname: "",
     first_name: "",
     last_name: "",

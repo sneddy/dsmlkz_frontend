@@ -60,7 +60,6 @@ This file tracks all file moves and renames during the component refactoring.
 - ✅ `app/auth/forgot-password/page.tsx` → Changed to `@/shared/lib/hooks/use-toast`
 - ✅ `app/auth/reset-password/page.tsx` → Changed to `@/shared/lib/hooks/use-toast`
 - ✅ `app/profile/page.tsx` → Changed to `@/shared/lib/hooks/use-toast`
-- ✅ `app/admin/page.tsx` → Changed to `@/shared/lib/hooks/use-toast`
 
 ## ✅ New Architecture Structure
 

@@ -1,12 +1,8 @@
-"use client"
-
-import { Suspense } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 
-// This component will use useSearchParams() safely inside Suspense
-function NotFoundContent() {
+export default function NotFound() {
   return (
     <div className="container flex flex-col items-center justify-center min-h-[80vh] py-8">
       <div className="text-center space-y-4">
@@ -25,19 +21,5 @@ function NotFoundContent() {
         </div>
       </div>
     </div>
-  )
-}
-
-export default function NotFound() {
-  return (
-    <Suspense
-      fallback={
-        <div className="container flex items-center justify-center min-h-[80vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00AEC7]"></div>
-        </div>
-      }
-    >
-      <NotFoundContent />
-    </Suspense>
   )
 }

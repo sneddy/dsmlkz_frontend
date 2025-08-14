@@ -6,12 +6,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { CheckCircle } from "lucide-react"
 import { useTranslation } from "@/hooks/use-translation"
-import { useAuth } from "@/contexts/auth-context"
+import { useSafeAuth } from "@/hooks/use-safe-auth"
 
 export default function PostSignupPage() {
   const { t } = useTranslation()
   const router = useRouter()
-  const { user } = useAuth()
+  const { user } = useSafeAuth()
 
   const gradientBorderStyle = {
     borderWidth: "4px",
@@ -40,7 +40,7 @@ export default function PostSignupPage() {
             <p className="text-sm text-center">{t("auth.verificationNote")}</p>
           </div>
           <Button
-            onClick={() => router.push("/auth/new-signin")}
+            onClick={() => router.push("/auth/signin")}
             className="w-full bg-[#00AEC7] hover:bg-[#00AEC7]/90 text-white"
           >
             {t("auth.backToSignIn")}

@@ -44,6 +44,8 @@ type AuthContextType = {
 // Create the context
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+export { AuthContext }
+
 // Maximum number of retries for fetch operations
 const MAX_RETRIES = 3
 // Delay between retries in milliseconds

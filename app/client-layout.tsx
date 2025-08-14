@@ -8,9 +8,18 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { Menu, User, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useAuth } from "@/contexts/auth-context"
-import LanguageSelector from "@/features/i18n/language_selector"
-import { useTranslation } from "@/hooks/use-translation"
+import { useSafeAuth } from "@/hooks/use-safe-auth"
+import { useSafeTranslation } from "@/hooks/use-safe-translation"
+
+// Safe LanguageSelector that handles missing provider
+function SafeLanguageSelector() {
+  try {
+    const LanguageSelector = require("@/features/i18n/language_selector").default
+    return <LanguageSelector />
+  } catch {
+    return null
+  }
+}
 
 export default function ClientLayout({
   children,
@@ -19,8 +28,8 @@ export default function ClientLayout({
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
-  const { user, signOut, profile } = useAuth()
-  const { t } = useTranslation()
+  const { user, signOut, profile } = useSafeAuth()
+  const { t } = useSafeTranslation()
 
   // Close mobile menu when path changes
   useEffect(() => {
@@ -57,7 +66,7 @@ export default function ClientLayout({
                   pathname === "/" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {t("nav.home")}
+                {t("nav.home") || "Home"}
               </Link>
               <Link
                 href="/news"
@@ -65,7 +74,7 @@ export default function ClientLayout({
                   pathname === "/news" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {t("nav.newsFeed")}
+                {t("nav.newsFeed") || "News"}
               </Link>
               <Link
                 href="/jobs"
@@ -73,7 +82,7 @@ export default function ClientLayout({
                   pathname === "/jobs" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {t("nav.jobsFeed")}
+                {t("nav.jobsFeed") || "Jobs"}
               </Link>
               <Link
                 href="/research"
@@ -81,7 +90,7 @@ export default function ClientLayout({
                   pathname === "/research" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {t("nav.research")}
+                {t("nav.research") || "Research"}
               </Link>
               <Link
                 href="/articles"
@@ -89,7 +98,7 @@ export default function ClientLayout({
                   pathname === "/articles" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {t("nav.articles") || "Статьи"}
+                {t("nav.articles") || "Articles"}
               </Link>
               <Link
                 href="/events"
@@ -97,7 +106,7 @@ export default function ClientLayout({
                   pathname === "/events" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {t("nav.events") || "Ивенты"}
+                {t("nav.events") || "Events"}
               </Link>
               <Link
                 href="/faces"
@@ -105,7 +114,7 @@ export default function ClientLayout({
                   pathname === "/faces" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {t("nav.faces")}
+                {t("nav.faces") || "Faces"}
               </Link>
               <Link
                 href="/rules"
@@ -113,14 +122,14 @@ export default function ClientLayout({
                   pathname === "/rules" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {t("nav.rules")}
+                {t("nav.rules") || "Rules"}
               </Link>
             </nav>
           </div>
 
           {/* --------- Right section (language, auth, burger) --------- */}
           <div className="flex items-center gap-4">
-            <LanguageSelector />
+            <SafeLanguageSelector />
 
             {user ? (
               <div className="hidden md:flex items-center gap-4">
@@ -128,7 +137,7 @@ export default function ClientLayout({
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                     <User className="h-4 w-4 text-primary" />
                   </div>
-                  <span className="text-sm font-medium">{profile?.nickname || user.email.split("@")[0]}</span>
+                  <span className="text-sm font-medium">{profile?.nickname || user.email?.split("@")[0]}</span>
                 </Link>
                 <Button
                   size="sm"
@@ -138,18 +147,18 @@ export default function ClientLayout({
                     signOut()
                   }}
                 >
-                  {t("auth.signOut")}
+                  {t("auth.signOut") || "Sign Out"}
                 </Button>
               </div>
             ) : (
               <div className="hidden md:flex items-center gap-4">
                 <Link href="/auth/signin">
                   <Button variant="outline" size="sm">
-                    {t("home.signIn")}
+                    {t("home.signIn") || "Sign In"}
                   </Button>
                 </Link>
-                <Link href="/signup">
-                  <Button size="sm">{t("home.signUp")}</Button>
+                <Link href="/auth/signup">
+                  <Button size="sm">{t("home.signUp") || "Sign Up"}</Button>
                 </Link>
               </div>
             )}
@@ -165,13 +174,14 @@ export default function ClientLayout({
         {isMenuOpen && (
           <div className="container md:hidden fixed inset-x-0 top-16 z-50 bg-background border-b shadow-lg py-4 pb-6">
             <nav className="flex flex-col gap-4">
+              {/* ... existing mobile nav links ... */}
               <Link
                 href="/"
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
-                {t("nav.home")}
+                {t("nav.home") || "Home"}
               </Link>
               <Link
                 href="/news"
@@ -179,7 +189,7 @@ export default function ClientLayout({
                   pathname === "/news" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
-                {t("nav.newsFeed")}
+                {t("nav.newsFeed") || "News"}
               </Link>
               <Link
                 href="/jobs"
@@ -187,7 +197,7 @@ export default function ClientLayout({
                   pathname === "/jobs" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
-                {t("nav.jobsFeed")}
+                {t("nav.jobsFeed") || "Jobs"}
               </Link>
               <Link
                 href="/research"
@@ -195,7 +205,7 @@ export default function ClientLayout({
                   pathname === "/research" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
-                {t("nav.research")}
+                {t("nav.research") || "Research"}
               </Link>
               <Link
                 href="/articles"
@@ -203,7 +213,7 @@ export default function ClientLayout({
                   pathname === "/articles" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
-                {t("nav.articles") || "Статьи"}
+                {t("nav.articles") || "Articles"}
               </Link>
               <Link
                 href="/events"
@@ -211,7 +221,7 @@ export default function ClientLayout({
                   pathname === "/events" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
-                {t("nav.events") || "Ивенты"}
+                {t("nav.events") || "Events"}
               </Link>
               <Link
                 href="/faces"
@@ -219,7 +229,7 @@ export default function ClientLayout({
                   pathname === "/faces" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
-                {t("nav.faces")}
+                {t("nav.faces") || "Faces"}
               </Link>
               <Link
                 href="/rules"
@@ -227,7 +237,7 @@ export default function ClientLayout({
                   pathname === "/rules" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
-                {t("nav.rules")}
+                {t("nav.rules") || "Rules"}
               </Link>
 
               {/* Auth buttons mobile */}
@@ -237,7 +247,7 @@ export default function ClientLayout({
                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
                       <User className="h-3 w-3 text-primary" />
                     </div>
-                    <span>{profile?.nickname || user.email.split("@")[0]}</span>
+                    <span>{profile?.nickname || user.email?.split("@")[0]}</span>
                   </Link>
                   <Button
                     variant="outline"
@@ -249,19 +259,19 @@ export default function ClientLayout({
                       signOut()
                     }}
                   >
-                    {t("auth.signOut")}
+                    {t("auth.signOut") || "Sign Out"}
                   </Button>
                 </>
               ) : (
                 <div className="flex flex-col gap-2">
                   <Link href="/auth/signin">
                     <Button variant="outline" size="sm" className="w-full bg-transparent">
-                      {t("home.signIn")}
+                      {t("home.signIn") || "Sign In"}
                     </Button>
                   </Link>
-                  <Link href="/signup">
+                  <Link href="/auth/signup">
                     <Button size="sm" className="w-full">
-                      {t("home.signUp")}
+                      {t("home.signUp") || "Sign Up"}
                     </Button>
                   </Link>
                 </div>

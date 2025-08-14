@@ -44,8 +44,6 @@ type AuthContextType = {
 // Create the context
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export { AuthContext }
-
 // Maximum number of retries for fetch operations
 const MAX_RETRIES = 3
 // Delay between retries in milliseconds
@@ -53,7 +51,7 @@ const RETRY_DELAY = 1000
 // Delay after profile update before fetching again
 const PROFILE_UPDATE_DELAY = 1000
 // Debug mode flag
-const DEBUG = typeof window !== "undefined" && window.location.hostname === "localhost"
+const DEBUG = process.env.NODE_ENV === "development"
 
 // Создаем резервный профиль на основе данных пользователя - вынесено за пределы компонента
 const createFallbackProfile = (userId: string, email?: string): Profile => {

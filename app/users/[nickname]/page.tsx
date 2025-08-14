@@ -15,8 +15,6 @@ const isGeneratedAvatar = (url: string | null | undefined): boolean => {
   return url.includes("dicebear.com") || url.includes("api.dicebear")
 }
 
-const isDevelopment = typeof window !== "undefined" && window.location.hostname === "localhost"
-
 export default function UserProfile() {
   const params = useParams()
   const router = useRouter()
@@ -227,7 +225,7 @@ export default function UserProfile() {
           <p className="text-muted-foreground mb-6">{error || "The requested user profile could not be found."}</p>
 
           {/* Debug info for development */}
-          {isDevelopment && (
+          {process.env.NODE_ENV !== "production" && (
             <div className="w-full max-w-lg bg-gray-100 p-4 rounded-md mb-6 overflow-auto max-h-[400px]">
               <h3 className="font-bold mb-2">Debug Info:</h3>
               <ul className="text-xs mb-4">

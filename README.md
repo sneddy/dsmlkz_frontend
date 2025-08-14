@@ -1,6 +1,6 @@
 # 🚀 DSML Kazakhstan Community Platform
 
-A modern, multilingual community platform for Data Science and Machine Learning specialists in Kazakhstan. Built with Next.js 14, TypeScript, and Supabase using Feature-Sliced Design architecture.
+A modern, multilingual community platform for Data Science and Machine Learning specialists in Kazakhstan. Built with Next.js 14, TypeScript, and Supabase.
 
 ## ✨ Features
 
@@ -20,7 +20,6 @@ A modern, multilingual community platform for Data Science and Machine Learning 
 
 - **Framework:** Next.js 14 (App Router)
 - **Language:** TypeScript
-- **Architecture:** Feature-Sliced Design (FSD)
 - **Styling:** Tailwind CSS
 - **UI Components:** shadcn/ui
 - **Database:** Supabase (PostgreSQL)
@@ -70,259 +69,232 @@ A modern, multilingual community platform for Data Science and Machine Learning 
 5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
-## 🏗️ Architecture
-
-This project follows **Feature-Sliced Design (FSD)** methodology for better maintainability and scalability:
-
-\`\`\`
-📁 shared/           # Reusable resources
-├── 📁 ui/           # UI primitives & components
-├── 📁 lib/          # Utilities & helpers  
-├── 📁 providers/    # Global providers
-└── 📁 hooks/        # Shared hooks
-
-📁 widgets/          # Large UI blocks
-├── 📄 home_content.tsx
-├── 📄 news_feed.tsx
-└── 📄 jobs_feed.tsx
-
-📁 features/         # Business logic by domain
-├── 📁 auth/         # Authentication features
-├── 📁 profile/      # Profile management
-├── 📁 search/       # Search functionality
-└── 📁 cities/       # Location features
-
-📁 app/              # Next.js App Router
-└── 📁 pages/        # Route pages
-
-📁 _deprecated/      # Legacy components
-\`\`\`
-
 ## 📁 Project Structure
 
 \`\`\`
 dsml-kazakhstan/
 ├── 📁 app/                                    # Next.js App Router
-│   ├── 📄 layout.tsx                         # Root layout with providers
-│   ├── 📄 page.tsx                           # Homepage (/)
-│   ├── 📄 globals.css                        # Global Tailwind CSS styles
-│   ├── 📄 not-found.tsx                      # 404 page
-│   ├── 📄 client-layout.tsx                  # Client layout with navigation
+│   ├── 📄 layout.tsx                         # Корневой layout с провайдерами
+│   ├── 📄 page.tsx                           # Главная страница (/)
+│   ├── 📄 globals.css                        # Глобальные стили Tailwind CSS
+│   ├── 📄 not-found.tsx                      # Страница 404
+│   ├── 📄 client-layout.tsx                  # Клиентский layout с навигацией
 │   │
-│   ├── 📁 auth/                              # Authentication routes
-│   │   ├── 📁 signin/                        # Sign in page
-│   │   ├── 📁 signup/                        # Sign up page
-│   │   ├── 📁 forgot-password/               # Password recovery
-│   │   ├── 📁 reset-password/                # Password reset
-│   │   ├── 📁 email-verification/            # Email verification
-│   │   └── 📁 post-signup/                   # Post-registration flow
+│   ├── 📁 articles/                          # Статьи и интервью
+│   │   ├── 📄 page.tsx                       # Список всех статей
+│   │   ├── 📄 loading.tsx                    # Загрузка для статей
+│   │   ├── 📄 [slug]/                        # Динамические страницы статей
+│   │   │   ├── 📄 page.tsx                   # Отдельная статья
+│   │   │   └── 📄 loading.tsx                # Загрузка статьи
+│   │   ├── 📁 content/                       # Markdown файлы статей
+│   │   │   ├── 📄 *.md                       # Контент статей
+│   │   │   └── 📄 *.md                       # Интервью и обзоры
+│   │   └── 📁 utils/                         # Утилиты для статей
+│   │       ├── 📄 markdown-loader.ts         # Загрузчик Markdown
+│   │       └── 📄 articles-metadata.ts       # Метаданные статей
 │   │
-│   ├── 📁 articles/                          # Articles & interviews
-│   │   ├── 📄 page.tsx                       # Articles listing
-│   │   ├── 📄 loading.tsx                    # Loading state
-│   │   ├── 📁 [slug]/                        # Dynamic article pages
-│   │   ├── 📁 content/                       # Markdown content files
-│   │   └── 📁 utils/                         # Article utilities
+│   ├── 📁 news/                              # Новостная лента
+│   │   ├── 📄 page.tsx                       # Страница новостей
+│   │   └── 📄 [id]/                          # Отдельная новость
+│   │       ├── 📄 page.tsx                   # Детальная страница новости
+│   │       ├── 📄 loading.tsx                # Загрузка новости
+│   │       └── 📄 not-found.tsx              # 404 для новости
 │   │
-│   ├── 📁 news/                              # News feed
-│   │   ├── 📄 page.tsx                       # News listing
-│   │   └── 📁 [id]/                          # Individual news pages
+│   ├── 📁 jobs/                              # Вакансии
+│   │   ├── 📄 page.tsx                       # Список вакансий
+│   │   └── 📄 [id]/                          # Отдельная вакансия
+│   │       ├── 📄 page.tsx                   # Детальная страница вакансии
+│   │       ├── 📄 loading.tsx                # Загрузка вакансии
+│   │       └── 📄 not-found.tsx              # 404 для вакансии
 │   │
-│   ├── 📁 jobs/                              # Job board
-│   │   ├── 📄 page.tsx                       # Jobs listing
-│   │   └── 📁 [id]/                          # Individual job pages
+│   ├── 📁 events/                            # События и мероприятия
+│   │   ├── 📄 page.tsx                       # Страница событий
+│   │   └── 📄 loading.tsx                    # Загрузка событий
 │   │
-│   ├── 📁 events/                            # Community events
-│   ├── 📁 faces/                             # Community members
-│   ├── 📁 research/                          # Research content
-│   ├── 📁 values/                            # Community values
-│   ├── 📁 rules/                             # Community rules
+│   ├── 📁 faces/                             # Лица сообщества
+│   │   └── 📄 page.tsx                       # Участники сообщества
 │   │
-│   ├── 📁 dashboard/                         # User dashboard
-│   │   ├── 📄 page.tsx                       # Dashboard home
-│   │   └── 📁 search/                        # Member search
+│   ├── 📁 research/                          # Исследования
+│   │   ├── 📄 page.tsx                       # Страница исследований
+│   │   └── 📄 loading.tsx                    # Загрузка исследований
 │   │
-│   ├── 📁 profile/                           # User profile
-│   ├── 📁 users/[nickname]/                  # Public profiles
-│   ├── 📁 admin/                             # Admin panel
+│   ├── 📁 values/                            # Ценности сообщества
+│   │   └── 📄 page.tsx                       # Страница ценностей
 │   │
-│   └── 📁 api/                               # API routes
-│       ├── 📁 profile/update/                # Profile updates
-│       └── 📁 search/members/                # Member search API
+│   ├── 📁 rules/                             # Правила сообщества
+│   │   └── 📄 page.tsx                       # Страница правил
+│   │
+│   ├── 📁 dashboard/                         # Личный кабинет
+│   │   ├── 📄 page.tsx                       # Главная дашборда
+│   │   ├── 📄 loading.tsx                    # Загрузка дашборда
+│   │   └── 📁 search/                        # Поиск участников
+│   │       ├── 📄 page.tsx                   # Страница поиска
+│   │       └── 📄 loading.tsx                # Загрузка поиска
+│   │
+│   ├── 📁 profile/                           # Профиль пользователя
+│   │   ├── 📄 page.tsx                       # Страница профиля
+│   │   └── 📄 loading.tsx                    # Загрузка профиля
+│   │
+│   ├── 📁 users/[nickname]/                  # Публичные профили
+│   │   └── 📄 page.tsx                       # Профиль пользователя
+│   │
+│   ├── 📁 admin/                             # Админ панель
+│   │   └── 📄 page.tsx                       # Админ интерфейс
+│   │
+│   ├── 📁 auth/                              # Аутентификация
+│   │   ├── 📄 signin/page.tsx                # Вход
+│   │   ├── 📄 signup/page.tsx                # Регистрация
+│   │   ├── 📄 forgot-password/page.tsx       # Восстановление пароля
+│   │   ├── 📄 reset-password/page.tsx        # Сброс пароля
+│   │   ├── 📄 email-verification/page.tsx    # Подтверждение email
+│   │   └── 📄 post-signup/page.tsx           # После регистрации
+│   │
+│   └── 📁 api/                               # API маршруты
+│       ├── 📁 profile/update/                # Обновление профиля
+│       │   └── 📄 route.ts                   # API обновления
+│       └── 📁 search/members/                # Поиск участников
+│           └── 📄 route.ts                   # API поиска
 │
-├── 📁 widgets/                               # 🆕 Large UI blocks (FSD Layer)
-│   ├── 📄 home_content.tsx                   # Homepage content
-│   ├── 📄 news_feed.tsx                      # News feed widget
-│   ├── 📄 jobs_feed.tsx                      # Jobs feed widget
-│   ├── 📄 events_content.tsx                 # Events content
-│   ├── 📄 faces_content.tsx                  # Community faces
-│   ├── 📄 research_content.tsx               # Research content
-│   ├── 📄 values_content.tsx                 # Values content
-│   ├── 📄 rules_content.tsx                  # Rules content
-│   ├── 📄 article_card.tsx                   # Article cards
-│   ├── 📄 interview_card.tsx                 # Interview cards
-│   ├── 📄 collaboration_card.tsx             # Collaboration cards
-│   ├── 📄 community_face_card.tsx            # Member cards
-│   ├── 📄 member_mini_card.tsx               # Mini member cards
-│   ├── 📄 profile_card.tsx                   # Profile cards
-│   ├── 📄 section_hero.tsx                   # Hero sections
-│   └── 📄 image_carousel.tsx                 # Image carousels
+├── 📁 components/                            # React компоненты
+│   ├── 📁 ui/                                # UI компоненты (shadcn/ui)
+│   │   ├── 📄 button.tsx                     # Кнопки
+│   │   ├── 📄 card.tsx                       # Карточки
+│   │   ├── 📄 badge.tsx                      # Бейджи
+│   │   ├── 📄 tabs.tsx                       # Вкладки
+│   │   ├── 📄 toast.tsx                      # Уведомления
+│   │   ├── 📄 progress.tsx                   # Прогресс бар
+│   │   ├── 📄 blob-image.tsx                 # Компонент изображений
+│   │   └── 📄 use-toast.ts                   # Хук для toast
+│   │
+│   ├── 📄 home-content.tsx                   # Контент главной страницы
+│   ├── 📄 news-feed.tsx                      # Лента новостей
+│   ├── 📄 news-feed-page.tsx                 # Страница новостей
+│   ├── 📄 jobs-feed.tsx                      # Лента вакансий
+│   ├── 📄 jobs-feed-page.tsx                 # Страница вакансий
+│   ├── 📄 jobs-content.tsx                   # Контент вакансий
+│   ├── 📄 events-content.tsx                 # Контент событий
+│   ├── 📄 faces-content.tsx                  # Контент участников
+│   ├── 📄 values-content.tsx                 # Контент ценностей
+│   ├── 📄 rules-content.tsx                  # Контент правил
+│   ├── 📄 research-content.tsx               # Контент исследований
+│   ├── 📄 article-card.tsx                   # Карточка статьи
+│   ├── 📄 interview-card.tsx                 # Карточка интервью
+│   ├── 📄 collaboration-card.tsx             # Карточка сотрудничества
+│   ├── 📄 community-face-card.tsx            # Карточка участника
+│   ├── 📄 member-mini-card.tsx               # Мини карточка участника
+│   ├── 📄 profile-card.tsx                   # Карточка профиля
+│   ├── 📄 profile-form.tsx                   # Форма профиля
+│   ├── 📄 profile-image-upload.tsx           # Загрузка аватара
+│   ├── 📄 visit-card-form.tsx                # Форма визитки
+│   ├── 📄 member-search.tsx                  # Поиск участников
+│   ├── 📄 member-search-dropdown.tsx         # Выпадающий поиск
+│   ├── 📄 city-autocomplete.tsx              # Автокомплит городов
+│   ├── 📄 nickname-checker.tsx               # Проверка никнейма
+│   ├── 📄 word-counter.tsx                   # Счетчик слов
+│   ├── 📄 language-selector.tsx              # Переключатель языка
+│   ├── 📄 section-hero.tsx                   # Героическая секция
+│   ├── 📄 image-carousel.tsx                 # Карусель изображений
+│   ├── 📄 markdown-content.tsx               # Рендер Markdown
+│   ├── 📄 google-analytics.tsx               # Google Analytics
+│   ├── 📄 email-verification-dialog.tsx      # Диалог подтверждения email
+│   ├── 📄 auth-guard.tsx                     # Защита маршрутов
+│   ├── 📄 error-boundary.tsx                 # Обработка ошибок
+│   ├── 📄 error-boundary-wrapper.tsx         # Обертка для ошибок
+│   └── 📄 seo-head.tsx                       # SEO метатеги
 │
-├── 📁 features/                              # 🆕 Business logic by domain (FSD Layer)
-│   ├── 📁 auth/                              # Authentication features
-│   │   ├── 📄 auth_guard.tsx                 # Route protection
-│   │   └── 📄 email_verification_dialog.tsx  # Email verification
-│   ├── 📁 profile/                           # Profile management
-│   │   ├── 📄 profile_form.tsx               # Profile editing form
-│   │   ├── 📄 profile_image_upload.tsx       # Avatar upload
-│   │   ├── 📄 visit_card_form.tsx            # Visit card form
-│   │   └── 📄 nickname_checker.tsx           # Username validation
-│   ├── 📁 search/                            # Search functionality
-│   │   ├── 📄 member_search.tsx              # Member search
-│   │   └── 📄 member_search_dropdown.tsx     # Search dropdown
-│   ├── 📁 cities/                            # Location features
-│   │   └── 📄 city_autocomplete.tsx          # City selection
-│   ├── 📁 i18n/                              # Internationalization
-│   │   └── 📄 language_selector.tsx          # Language switcher
-│   └── 📁 editor/                            # Content editing
-│       └── 📄 word_counter.tsx               # Word counter utility
+├── 📁 contexts/                              # React контексты
+│   ├── 📄 language-context.tsx               # Контекст языка
+│   ├── 📄 supabase-context.tsx               # Контекст Supabase
+│   └── 📄 auth-context.tsx                   # Контекст аутентификации
 │
-├── 📁 shared/                                # 🆕 Shared resources (FSD Layer)
-│   ├── 📁 ui/                                # UI primitives
-│   │   ├── 📄 index.ts                       # UI exports
-│   │   ├── 📄 error_boundary.tsx             # Error handling
-│   │   ├── 📄 error_boundary_wrapper.tsx     # Error wrapper
-│   │   ├── 📄 markdown_content.tsx           # Markdown renderer
-│   │   ├── 📄 blob_image.tsx                 # Image component
-│   │   └── 📄 toast.ts                       # Toast utilities
-│   ├── 📁 lib/                               # Utilities & helpers
-│   │   └── 📁 hooks/                         # Shared hooks
-│   │       ├── 📄 index.ts                   # Hook exports
-│   │       ├── 📄 use_toast.ts               # Toast hook
-│   │       └── 📄 use_mobile.ts              # Mobile detection
-│   └── 📁 providers/                         # Global providers
-│       ├── 📄 index.ts                       # Provider exports
-│       ├── 📄 theme_provider.tsx             # Theme provider
-│       └── 📄 analytics.tsx                  # Google Analytics
+├── 📁 hooks/                                 # Кастомные хуки
+│   ├── 📄 use-translation.tsx                # Хук переводов
+│   ├── 📄 use-member-search.ts               # Хук поиска участников
+│   └── 📄 use-click-outside.ts               # Хук клика вне элемента
 │
-├── 📁 components/                            # Legacy UI components
-│   └── 📁 ui/                                # shadcn/ui components (47 files)
-│       ├── 📄 button.tsx, card.tsx, badge.tsx
-│       ├── 📄 tabs.tsx, toast.tsx, progress.tsx
-│       └── 📄 ... (40+ more UI primitives)
+├── 📁 lib/                                   # Утилиты и библиотеки
+│   ├── 📄 supabase-client.ts                 # Клиент Supabase
+│   ├── 📄 supabase-server.ts                 # Серверный Supabase
+│   ├── 📄 analytics.ts                       # Аналитика
+│   ├── 📄 markdown-loader.ts                 # Загрузчик Markdown
+│   ├── 📄 server-translations.ts             # Серверные переводы
+│   ├── 📄 check-connection.ts                # Проверка соединения
+│   ├── 📄 debounce.ts                        # Функция debounce
+│   └── 📄 radix-deps.ts                      # Зависимости Radix UI
 │
-├── 📁 _deprecated/                           # 🆕 Deprecated components
-│   ├── 📄 seo_head.tsx                       # Legacy SEO (use generateMetadata)
-│   └── 📄 README.md                          # Deprecation notes
+├── 📁 translations/                          # Переводы
+│   ├── 📄 index.ts                           # Экспорт переводов
+│   ├── 📁 en/                                # Английские переводы
+│   │   ├── 📄 common.json                    # Общие переводы
+│   │   ├── 📄 nav.json                       # Навигация
+│   │   ├── 📄 home.json                      # Главная страница
+│   │   ├── 📄 news.json                      # Новости
+│   │   ├── 📄 jobs.json                      # Вакансии
+│   │   ├── 📄 events.json                    # События
+│   │   ├── 📄 articles.json                  # Статьи
+│   │   ├── 📄 auth.json                      # Аутентификация
+│   │   ├── 📄 profile.json                   # Профиль
+│   │   ├── 📄 dashboard.json                 # Дашборд
+│   │   ├── 📄 search.json                    # Поиск
+│   │   ├── 📄 faces.json                     # Участники
+│   │   ├── 📄 values.json                    # Ценности
+│   │   ├── 📄 rules.json                     # Правила
+│   │   ├── 📄 research.json                  # Исследования
+│   │   └── 📄 register_card.json             # Регистрация карточки
+│   ├── 📁 ru/                                # Русские переводы (аналогично)
+│   └── 📁 kk/                                # Казахские переводы (аналогично)
 │
-├── 📁 contexts/                              # React contexts
-│   ├── 📄 language-context.tsx               # Language context
-│   ├── 📄 supabase-context.tsx               # Supabase context
-│   └── 📄 auth-context.tsx                   # Authentication context
+├── 📁 types/                                 # TypeScript типы
+│   └── 📄 supabase.ts                        # Типы Supabase
 │
-├── 📁 hooks/                                 # Custom hooks
-│   ├── 📄 use-translation.tsx                # Translation hook
-│   ├── 📄 use-member-search.ts               # Member search hook
-│   └── 📄 use-click-outside.ts               # Click outside hook
-│
-├── 📁 lib/                                   # Utilities & libraries
-│   ├── 📄 supabase-client.ts                 # Supabase client
-│   ├── 📄 supabase-server.ts                 # Server Supabase
-│   ├── 📄 analytics.ts                       # Analytics utilities
-│   ├── 📄 markdown-loader.ts                 # Markdown loader
-│   ├── 📄 server-translations.ts             # Server translations
-│   ├── 📄 constants/                         # Constants
-│   │   └── 📄 images.ts                      # Image paths
-│   └── 📄 utils.ts                           # General utilities
-│
-├── 📁 translations/                          # Internationalization
-│   ├── 📄 index.ts                           # Translation exports
-│   ├── 📁 en/, 📁 ru/, 📁 kk/                # Language files
-│   │   ├── 📄 common.json, nav.json, home.json
-│   │   ├── 📄 auth.json, profile.json, dashboard.json
-│   │   └── 📄 ... (12+ translation files per language)
-│
-├── 📁 types/                                 # TypeScript types
-│   └── 📄 supabase.ts                        # Supabase types
-│
-├── 📁 public/                                # Static assets
-│   ├── 📁 images/                            # Local images
-│   │   ├── 📄 moon-hero-desktop.png          # Desktop hero
-│   │   ├── 📄 moon-hero-mobile.png           # Mobile hero
-│   │   ├── 📄 dsml-kazakhstan-hero.png       # Main hero
-│   │   └── 📄 ... (more images)
-│   ├── 📄 sitemap.xml                        # SEO sitemap
-│   ├── 📄 robots.txt                         # Search engine rules
-│   └── 📄 llms.txt                           # AI system info
+├── 📁 public/                                # Статические файлы
+│   ├── 📁 images/                            # Изображения
+│   │   ├── 📄 dsml-logo.png                  # Логотип DSML
+│   │   ├── 📄 hero-banner.png                # Баннер героя
+│   │   ├── 📄 moon-hero.png                  # Героическое изображение
+│   │   ├── 📄 moon-hero-transparent-wide.png # Широкое героическое изображение
+│   │   ├── 📄 moon-hero-mobile.png           # Мобильное героическое изображение
+│   │   ├── 📄 announce_horizontal.png        # Горизонтальный анонс
+│   │   └── 📄 card_background.png            # Фон карточки
+│   ├── 📄 sitemap.xml                        # Карта сайта для SEO
+│   ├── 📄 robots.txt                         # Инструкции для поисковых роботов
+│   └── 📄 llms.txt                           # Информация для AI-систем
 │
 ├── 📄 middleware.ts                          # Next.js middleware
-├── 📄 next.config.mjs                        # Next.js config
-├── 📄 tailwind.config.ts                     # 🆕 Updated Tailwind config
-├── 📄 tsconfig.json                          # TypeScript config
-├── 📄 MIGRATION_LOG.md                       # 🆕 Architecture migration log
-├── 📄 DEPRECATIONS.md                        # 🆕 Deprecation tracking
-├── 📄 ROUTES_USAGE.md                        # 🆕 Route usage documentation
-└── 📄 package.json                           # Dependencies
+├── 📄 next.config.mjs                        # Конфигурация Next.js
+├── 📄 tailwind.config.ts                     # Конфигурация Tailwind CSS
+├── 📄 tsconfig.json                          # Конфигурация TypeScript
+└── 📄 package.json                           # Зависимости проекта
 \`\`\`
 
-## 🔧 Key Architecture Changes
+## 📝 Key File Explanations
 
-### 🆕 Feature-Sliced Design Implementation
-
-- **`widgets/`** - Large, reusable UI blocks (cards, feeds, content sections)
-- **`features/`** - Domain-specific business logic organized by feature area
-- **`shared/`** - Reusable utilities, UI primitives, and global providers
-- **`_deprecated/`** - Legacy components marked for removal
-
-### 🔄 Import Path Aliases
-
-\`\`\`typescript
-// New FSD-based imports
-import { HomeContent } from "@/widgets/home_content"
-import { AuthGuard } from "@/features/auth/auth_guard"
-import { useToast } from "@/shared/lib/hooks/use_toast"
-import { BlobImage } from "@/shared/ui/blob_image"
-
-// Legacy imports (still supported)
-import { Button } from "@/components/ui/button"
-\`\`\`
-
-### 📝 Key File Explanations
-
-#### 🏗️ **Architecture Files**
-- **`app/layout.tsx`** - Root layout with providers (Supabase, Auth, Language, Analytics)
+### 🏗️ **Architecture Files**
+- **`app/layout.tsx`** - Root layout with providers (Supabase, Auth, Language)
 - **`app/client-layout.tsx`** - Client layout with navigation and footer
 - **`middleware.ts`** - Request handling, redirects, authentication
-- **`tailwind.config.ts`** - Updated to include FSD directories for CSS purging
 
-#### 🎨 **UI & Components**
-- **`shared/ui/`** - Reusable UI primitives and utilities
-- **`widgets/home_content.tsx`** - Homepage with hero, stats, and community channels
-- **`widgets/news_feed.tsx`** - News feed with search and pagination
-- **`widgets/jobs_feed.tsx`** - Job feed with filtering and search
-- **`components/ui/`** - shadcn/ui component library (47 components)
+### 🎨 **UI & Components**
+- **`components/ui/`** - Reusable UI components (shadcn/ui)
+- **`components/home-content.tsx`** - Homepage with channels and statistics
+- **`components/news-feed.tsx`** - News feed with search and pagination
+- **`components/jobs-feed.tsx`** - Job feed with filtering
 
-#### 🔧 **Features**
-- **`features/auth/`** - Authentication guards and verification dialogs
-- **`features/profile/`** - Profile management, forms, and image upload
-- **`features/search/`** - Member search functionality with autocomplete
-- **`features/cities/`** - Location-based features and city selection
+### 🌐 **Internationalization**
+- **`translations/`** - Translations for 3 languages (EN, RU, KK)
+- **`hooks/use-translation.tsx`** - Hook for working with translations
+- **`contexts/language-context.tsx`** - Language selection context
 
-#### 🌐 **Internationalization**
-- **`translations/`** - 3 languages (EN, RU, KK) with 12+ files each
-- **`hooks/use-translation.tsx`** - Translation hook with type safety
-- **`contexts/language-context.tsx`** - Language selection and persistence
-
-#### 🔐 **Authentication & Data**
+### 🔐 **Authentication & Data**
 - **`lib/supabase-client.ts`** - Client-side Supabase for browser
 - **`lib/supabase-server.ts`** - Server-side Supabase for SSR
-- **`contexts/auth-context.tsx`** - Authentication state management
+- **`contexts/auth-context.tsx`** - Authentication context
 
-#### 📊 **SEO & Analytics**
-- **`shared/providers/analytics.tsx`** - Google Analytics integration
-- **`public/sitemap.xml`** - SEO sitemap for search engines
-- **`public/robots.txt`** - Search engine indexing rules
+### 📊 **SEO & Analytics**
+- **`public/sitemap.xml`** - Site map for search engines
+- **`public/robots.txt`** - Indexing rules
 - **`public/llms.txt`** - Information for AI systems
+- **`components/seo-head.tsx`** - SEO meta tags and structured data
 
 ## 🔧 Available Scripts
 
@@ -371,7 +343,6 @@ The project is optimized for deployment on Vercel:
 - [ ] Domain configured (if custom)
 - [ ] Analytics setup
 - [ ] SEO verification
-- [ ] Tailwind CSS purging configured for FSD directories
 
 ## 🤝 Contributing
 
@@ -379,21 +350,18 @@ We welcome contributions! Please follow these steps:
 
 1. **Fork the repository**
 2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
-3. **Follow FSD architecture** - Place components in appropriate layers
-4. **Commit your changes** (`git commit -m 'Add amazing feature'`)
-5. **Push to the branch** (`git push origin feature/amazing-feature`)
-6. **Open a Pull Request**
+3. **Commit your changes** (`git commit -m 'Add amazing feature'`)
+4. **Push to the branch** (`git push origin feature/amazing-feature`)
+5. **Open a Pull Request**
 
 ### Development Guidelines
 
-- Follow Feature-Sliced Design methodology
-- Use TypeScript best practices
-- Follow conventional commit messages
+- Follow TypeScript best practices
+- Use conventional commit messages
 - Add tests for new features
 - Update documentation as needed
 - Ensure responsive design
 - Test across different browsers
-- Use proper import aliases (@/widgets/, @/features/, @/shared/)
 
 ## 📄 License
 
@@ -402,7 +370,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - [DSML Kazakhstan Community](https://dsml.kz) for inspiration and support
-- [Feature-Sliced Design](https://feature-sliced.design/) for architecture methodology
 - [Next.js](https://nextjs.org/) for the amazing framework
 - [Supabase](https://supabase.com/) for backend services
 - [Tailwind CSS](https://tailwindcss.com/) for styling
@@ -416,4 +383,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Made with ❤️ by the DSML Kazakhstan community using Feature-Sliced Design
+Made with ❤️ by the DSML Kazakhstan community

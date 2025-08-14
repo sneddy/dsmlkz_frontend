@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { useSafeAuth } from "@/hooks/use-safe-auth"
+import { useAuth } from "@/contexts/auth-context"
 import { Spinner } from "@/components/ui/spinner"
 
 interface AuthGuardProps {
@@ -14,12 +14,12 @@ interface AuthGuardProps {
 }
 
 export function AuthGuard({ children, fallback, requireAuth = true }: AuthGuardProps) {
-  const { user, loading, initialized } = useSafeAuth()
+  const { user, loading, initialized } = useAuth()
   const router = useRouter()
   const [isRedirecting, setIsRedirecting] = useState(false)
 
   useEffect(() => {
-    if (initialized !== null && !isRedirecting && !loading) {
+    if (initialized && !isRedirecting && !loading) {
       if (requireAuth && !user) {
         setIsRedirecting(true)
         router.push("/auth/signin")
@@ -30,7 +30,7 @@ export function AuthGuard({ children, fallback, requireAuth = true }: AuthGuardP
     }
   }, [user, initialized, requireAuth, router, isRedirecting, loading])
 
-  if (loading || initialized === null || isRedirecting) {
+  if (loading || !initialized || isRedirecting) {
     return (
       fallback || (
         <div className="flex justify-center items-center min-h-[60vh]">

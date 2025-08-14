@@ -1,12 +1,12 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useSafeAuth } from "@/hooks/use-safe-auth"
+import { useAuth } from "@/contexts/auth-context"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ProfileCard } from "@/widgets/profile_card"
+import { ProfileCard } from "@/components/profile-card"
 import { MemberSearch } from "@/features/search/member_search"
-import { useSafeTranslation } from "@/hooks/use-safe-translation"
+import { useTranslation } from "@/hooks/use-translation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
 import {
@@ -81,7 +81,7 @@ function OverviewTab({
   onSignOut: () => void
   isSigningOut: boolean
 }) {
-  const { t } = useSafeTranslation()
+  const { t } = useTranslation()
 
   const getStepStatus = (stepId: number) => {
     switch (stepId) {
@@ -359,7 +359,7 @@ function ProfileTab({
   error: any
   onEditProfile: () => void
 }) {
-  const { t } = useSafeTranslation()
+  const { t } = useTranslation()
 
   return (
     <div className="space-y-6">
@@ -373,7 +373,7 @@ function ProfileTab({
 }
 
 function SearchTab() {
-  const { t } = useSafeTranslation()
+  const { t } = useTranslation()
 
   return (
     <div className="space-y-6">
@@ -408,9 +408,9 @@ function SearchTab() {
 }
 
 function Dashboard() {
-  const { user, profile, loading, profileError, signOut, initialized } = useSafeAuth()
+  const { user, profile, loading, profileError, signOut, initialized } = useAuth()
   const router = useRouter()
-  const { t } = useSafeTranslation()
+  const { t } = useTranslation()
   const [isClient, setIsClient] = useState(false)
   const [isSigningOut, setIsSigningOut] = useState(false)
   const [activeTab, setActiveTab] = useState("overview")

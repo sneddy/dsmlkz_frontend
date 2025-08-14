@@ -33,3 +33,21 @@ export const clearProfileCache = (userId: string): void => {
     console.error("Error clearing profile cache:", error)
   }
 }
+
+export const mergeProfileCache = (userId: string, patch: Partial<Profile>): void => {
+  try {
+    if (typeof window === "undefined") return
+
+    const currentProfile = readProfileCache(userId)
+    if (currentProfile) {
+      const updatedProfile = {
+        ...currentProfile,
+        ...patch,
+        updated_at: new Date().toISOString(),
+      }
+      writeProfileCache(userId, updatedProfile)
+    }
+  } catch (error) {
+    console.error("Error merging profile cache:", error)
+  }
+}

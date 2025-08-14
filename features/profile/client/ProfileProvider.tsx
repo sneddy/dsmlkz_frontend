@@ -39,93 +39,113 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const [profileError, setProfileError] = useState<Error | null>(null)
   const [loadingProfile, setLoadingProfile] = useState(false)
 
+  const isMountedRef = useRef(true)
   const fetchingProfileRef = useRef<Map<string, Promise<void>>>(new Map())
   const currentUserEmailRef = useRef<string | null>(null)
 
-  const fetchProfile = useCallback(
-    async (userId: string, userEmail?: string) => {
-      if (!userId) {
-        if (DEBUG) console.log("Skipping fetchProfile: no user ID provided")
-        return
-      }
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false
+    }
+  }, [])
 
-      if (fetchingProfileRef.current.has(userId)) {
-        if (DEBUG) console.log("Profile fetch already in progress for user:", userId)
-        return fetchingProfileRef.current.get(userId)
-      }
+  const fetchProfile = useCallback(async (userId: string, userEmail?: string) => {
+    if (!userId) {
+      if (DEBUG) console.log("Skipping fetchProfile: no user ID provided")
+      return
+    }
 
-      const fetchPromise = (async () => {
-        try {
-          setProfileError(null)
-          setLoadingProfile(true)
+    if (fetchingProfileRef.current.has(userId)) {
+      if (DEBUG) console.log("Profile fetch already in progress for user:", userId)
+      return fetchingProfileRef.current.get(userId)
+    }
 
-          if (userEmail) {
-            currentUserEmailRef.current = userEmail
-          }
+    const fetchPromise = (async () => {
+      try {
+        if (!isMountedRef.current) return
 
-          if (DEBUG) console.log("Fetching profile for user:", userId)
+        setProfileError(null)
+        setLoadingProfile(true)
 
-          // Check cache first
-          const cachedProfile = readProfileCache(userId)
-          if (cachedProfile && DEBUG) {
-            console.log("Found profile in cache:", cachedProfile)
-          }
-
-          const fetchedProfile = await fetchProfileOnce(userId)
-
-          // Determine final profile
-          let finalProfile: Profile | null = null
-
-          if (fetchedProfile) {
-            if (DEBUG) console.log("Using fetched profile")
-            finalProfile = fetchedProfile
-            writeProfileCache(userId, fetchedProfile)
-          } else if (cachedProfile) {
-            if (DEBUG) console.log("Using cached profile")
-            finalProfile = cachedProfile
-          } else {
-            if (DEBUG) console.log("Creating fallback profile")
-            const emailForFallback = userEmail || currentUserEmailRef.current || `${userId}@fallback.com`
-            finalProfile = createFallbackProfile(userId, emailForFallback)
-          }
-
-          if (DEBUG) console.log("Final profile:", finalProfile)
-          setProfile(finalProfile)
-
-          if (!finalProfile) {
-            throw new Error("Could not retrieve or create profile")
-          }
-        } catch (error) {
-          console.error("Error in fetchProfile:", error)
-
-          setProfile((currentProfile) => {
-            if (!currentProfile) {
-              try {
-                const emailForFallback = userEmail || currentUserEmailRef.current || `${userId}@fallback.com`
-                const fallbackProfile = createFallbackProfile(userId, emailForFallback)
-                if (DEBUG) console.log("Setting fallback profile:", fallbackProfile)
-                return fallbackProfile
-              } catch (fallbackError) {
-                console.error("Error creating fallback profile:", fallbackError)
-                setProfileError(error instanceof Error ? error : new Error(String(error)))
-                return null
-              }
-            } else {
-              setProfileError(error instanceof Error ? error : new Error(String(error)))
-              return currentProfile
-            }
-          })
-        } finally {
-          setLoadingProfile(false)
-          fetchingProfileRef.current.delete(userId)
+        if (userEmail) {
+          currentUserEmailRef.current = userEmail
         }
-      })()
 
-      fetchingProfileRef.current.set(userId, fetchPromise)
-      return fetchPromise
-    },
-    [], // Removed profile dependency to prevent infinite loop
-  )
+        if (DEBUG) console.log("Fetching profile for user:", userId)
+
+        // Check cache first
+        const cachedProfile = readProfileCache(userId)
+        if (cachedProfile && DEBUG) {
+          console.log("Found profile in cache:", cachedProfile)
+        }
+
+        const fetchedProfile = await fetchProfileOnce(userId)
+
+        if (!isMountedRef.current) return
+
+        // Determine final profile
+        let finalProfile: Profile | null = null
+
+        if (fetchedProfile) {
+          if (DEBUG) console.log("Using fetched profile")
+          finalProfile = fetchedProfile
+          writeProfileCache(userId, fetchedProfile)
+        } else if (cachedProfile) {
+          if (DEBUG) console.log("Using cached profile")
+          finalProfile = cachedProfile
+        } else {
+          if (DEBUG) console.log("Creating fallback profile")
+          const emailForFallback = userEmail || currentUserEmailRef.current || `${userId}@fallback.com`
+          finalProfile = createFallbackProfile(userId, emailForFallback)
+        }
+
+        if (DEBUG) console.log("Final profile:", finalProfile)
+        if (isMountedRef.current) {
+          setProfile(finalProfile)
+        }
+
+        if (!finalProfile) {
+          throw new Error("Could not retrieve or create profile")
+        }
+      } catch (error) {
+        console.error("Error in fetchProfile:", error)
+
+        if (!isMountedRef.current) return
+
+        setProfile((currentProfile) => {
+          if (!currentProfile) {
+            try {
+              const emailForFallback = userEmail || currentUserEmailRef.current || `${userId}@fallback.com`
+              const fallbackProfile = createFallbackProfile(userId, emailForFallback)
+              if (DEBUG) console.log("Setting fallback profile:", fallbackProfile)
+              return fallbackProfile
+            } catch (fallbackError) {
+              console.error("Error creating fallback profile:", fallbackError)
+              const normalizedError = error instanceof Error ? error : new Error(String(error))
+              if (isMountedRef.current) {
+                setProfileError(normalizedError)
+              }
+              return null
+            }
+          } else {
+            const normalizedError = error instanceof Error ? error : new Error(String(error))
+            if (isMountedRef.current) {
+              setProfileError(normalizedError)
+            }
+            return currentProfile
+          }
+        })
+      } finally {
+        if (isMountedRef.current) {
+          setLoadingProfile(false)
+        }
+        fetchingProfileRef.current.delete(userId)
+      }
+    })()
+
+    fetchingProfileRef.current.set(userId, fetchPromise)
+    return fetchPromise
+  }, [])
 
   useEffect(() => {
     if (user) {
@@ -148,7 +168,8 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user, fetchProfile])
 
-  // Update profile function
+  // Current: optimistic merge in cache → POST /api/profile/update → refreshProfile
+  // Future: Server Action with Zod validation to simplify client and offload provider
   const updateProfile = useCallback(
     async (profileData: Partial<Profile>) => {
       if (!user) {

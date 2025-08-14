@@ -89,10 +89,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (DEBUG) console.log("Successfully signed out from Supabase")
 
-      // Clear storage
       if (typeof window !== "undefined") {
         try {
-          if (DEBUG) console.log("Clearing all storage")
+          if (DEBUG) console.log("Clearing auth-related storage")
 
           const allKeys = Object.keys(localStorage)
           const keysToRemove = allKeys.filter(
@@ -105,10 +104,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (DEBUG) console.log(`Removed localStorage key: ${key}`)
           }
 
-          localStorage.clear()
-          sessionStorage.clear()
+          // Only clear specific auth-related keys to avoid side effects
 
-          if (DEBUG) console.log("All storage cleared")
+          if (DEBUG) console.log("Auth-related storage cleared")
         } catch (e) {
           console.error("Error clearing storage:", e)
         }
@@ -141,8 +139,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error("Error during sign out process:", error)
 
       if (typeof window !== "undefined") {
-        localStorage.clear()
-        sessionStorage.clear()
+        const allKeys = Object.keys(localStorage)
+        const keysToRemove = allKeys.filter(
+          (key) =>
+            key.startsWith("sb-") || key.includes("supabase") || key.includes("auth") || key.startsWith("profile_"),
+        )
+
+        for (const key of keysToRemove) {
+          localStorage.removeItem(key)
+        }
+
         window.location.replace("/")
       }
     }

@@ -23,12 +23,6 @@ const nextConfig = {
         destination: '/:path*',
         permanent: true,
       },
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'www.dsml.kz' }],
-        destination: 'https://www.dsml.kz/:path*',
-        permanent: true,
-      },
     ];
   },
 };

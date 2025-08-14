@@ -53,7 +53,7 @@ const RETRY_DELAY = 1000
 // Delay after profile update before fetching again
 const PROFILE_UPDATE_DELAY = 1000
 // Debug mode flag
-const DEBUG = process.env.NODE_ENV === "development"
+const DEBUG = typeof window !== "undefined" && window.location.hostname === "localhost"
 
 // Создаем резервный профиль на основе данных пользователя - вынесено за пределы компонента
 const createFallbackProfile = (userId: string, email?: string): Profile => {

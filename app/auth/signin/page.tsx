@@ -15,6 +15,8 @@ import { AuthGuard } from "@/features/auth/auth_guard"
 import { Spinner } from "@/components/ui/spinner"
 import { EmailVerificationDialog } from "@/features/auth/email_verification_dialog"
 
+export const dynamic = "force-dynamic"
+
 export default function SignInPage() {
   return (
     <AuthGuard requireAuth={false}>

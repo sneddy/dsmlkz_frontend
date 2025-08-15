@@ -1,17 +1,19 @@
 "use client"
 
+export const dynamic = "force-dynamic"
+
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { CheckCircle } from "lucide-react"
 import { useTranslation } from "@/hooks/use-translation"
-import { useSafeAuth } from "@/hooks/use-safe-auth"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function PostSignupPage() {
   const { t } = useTranslation()
   const router = useRouter()
-  const { user } = useSafeAuth()
+  const { user } = useAuth()
 
   const gradientBorderStyle = {
     borderWidth: "4px",
@@ -40,7 +42,7 @@ export default function PostSignupPage() {
             <p className="text-sm text-center">{t("auth.verificationNote")}</p>
           </div>
           <Button
-            onClick={() => router.push("/auth/new-signin")}
+            onClick={() => router.push("/auth/signin")}
             className="w-full bg-[#00AEC7] hover:bg-[#00AEC7]/90 text-white"
           >
             {t("auth.backToSignIn")}

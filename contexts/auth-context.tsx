@@ -15,6 +15,8 @@ import { useSupabaseSession } from "@/features/auth/client/useSupabaseSession"
 // Create the context
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+export { AuthContext }
+
 // Create the AuthProvider component
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { session, user: sessionUser, initialized, loading: sessionLoading } = useSupabaseSession()

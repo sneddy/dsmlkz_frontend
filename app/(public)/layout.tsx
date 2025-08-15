@@ -1,10 +1,9 @@
 import type React from "react"
-import { ProfileProvider } from "@/features/profile/client/ProfileProvider"
 import { SupabaseProvider } from "@/contexts/supabase-context"
 import { AuthProvider } from "@/contexts/auth-context"
 import { LanguageProvider } from "@/contexts/language-context"
 
-export default function ProtectedLayout({
+export default function PublicLayout({
   children,
 }: {
   children: React.ReactNode
@@ -12,9 +11,7 @@ export default function ProtectedLayout({
   return (
     <SupabaseProvider>
       <AuthProvider>
-        <LanguageProvider>
-          <ProfileProvider>{children}</ProfileProvider>
-        </LanguageProvider>
+        <LanguageProvider>{children}</LanguageProvider>
       </AuthProvider>
     </SupabaseProvider>
   )

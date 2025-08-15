@@ -8,9 +8,9 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { Menu, User, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useAuth } from "@/contexts/auth-context"
+import { useSafeAuth } from "@/hooks/use-safe-auth"
 import LanguageSelector from "@/features/i18n/language_selector"
-import { useTranslation } from "@/hooks/use-translation"
+import { useSafeTranslation } from "@/hooks/use-safe-translation"
 
 export default function ClientLayout({
   children,
@@ -19,8 +19,8 @@ export default function ClientLayout({
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
-  const { user, signOut, profile } = useAuth()
-  const { t } = useTranslation()
+  const { user, signOut, profile } = useSafeAuth()
+  const { t } = useSafeTranslation()
 
   // Close mobile menu when path changes
   useEffect(() => {

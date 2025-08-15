@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { createServerClient } from "@/lib/supabase-server"
-import { formatJobDate, truncateJobText } from "@/lib/utils/jobs-utils"
+import { formatJobDate, truncateJobText, processJobHtml } from "@/lib/utils/jobs-utils"
 import { ServerImage } from "@/components/ui/server-image"
 import { ExternalLink, MapPin, Calendar, Building, Brain, Code } from "lucide-react"
 import Link from "next/link"
@@ -137,6 +137,8 @@ export default async function JobPage({
   const isRemote = job.location?.toLowerCase().includes("remote")
   const { text } = truncateJobText(job.html_text || "", 800)
   const companyName = job.sender_name || job.channel_name
+
+  const processedHtmlContent = processJobHtml(job.html_text || "")
 
   const jobPostingSchema = {
     "@context": "https://schema.org",
@@ -277,7 +279,10 @@ export default async function JobPage({
 
           <div className="p-8">
             <div className="prose prose-invert max-w-none">
-              <div className="text-gray-300 leading-relaxed whitespace-pre-wrap">{job.html_text}</div>
+              <div
+                className="text-gray-300 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: processedHtmlContent }}
+              />
             </div>
 
             {job.post_link && (

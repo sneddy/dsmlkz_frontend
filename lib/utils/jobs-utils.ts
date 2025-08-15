@@ -58,3 +58,32 @@ export function truncateJobText(html: string, maxLength = 575): { text: string; 
     isTruncated: true,
   }
 }
+
+export function processJobHtml(html: string): string {
+  if (!html) return ""
+
+  // Decode HTML entities
+  let processed = html
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, " ")
+
+  // Convert line breaks to proper HTML
+  processed = processed.replace(/\n/g, "<br>")
+
+  // Basic sanitization - allow only safe HTML tags
+  const allowedTags = ["b", "i", "strong", "em", "br", "p", "ul", "ol", "li"]
+  const tagRegex = /<\/?([a-zA-Z][a-zA-Z0-9]*)\b[^<>]*>/gi
+
+  processed = processed.replace(tagRegex, (match, tagName) => {
+    if (allowedTags.includes(tagName.toLowerCase())) {
+      return match
+    }
+    return "" // Remove disallowed tags
+  })
+
+  return processed
+}

@@ -58,10 +58,11 @@ export async function generateMetadata({
 
   const { text } = truncateJobText(job.html_text || "", 160)
   const channelType = job.channel_id === -1001120572276 ? "ML" : "IT"
-  const isRemote = job.location?.toLowerCase().startsWith("remote")
+  const isRemote = job.location?.toLowerCase().includes("remote")
+  const companyName = job.sender_name || job.channel_name
 
-  const title = `${channelType} вакансия${isRemote ? " (Remote)" : ""} | DSML Kazakhstan`
-  const description = text || `Актуальная ${channelType} вакансия от ${job.sender_name || job.channel_name}`
+  const title = `${channelType} вакансия${job.location ? ` в ${job.location}` : ""}${companyName ? ` - ${companyName}` : ""} | DSML Kazakhstan`
+  const description = text || `Актуальная ${channelType} вакансия от ${companyName}`
 
   return {
     title,
@@ -76,7 +77,9 @@ export async function generateMetadata({
       "Казахстан",
       isRemote ? "remote" : "",
       job.location || "",
+      companyName || "",
     ].filter(Boolean),
+    robots: "index,follow",
     openGraph: {
       title,
       description,
@@ -89,7 +92,8 @@ export async function generateMetadata({
               url: job.image_url,
               width: 1200,
               height: 630,
-              alt: `${channelType} вакансия`,
+              alt: `${channelType} вакансия - ${companyName}`,
+              type: "image/jpeg",
             },
           ]
         : [
@@ -98,15 +102,19 @@ export async function generateMetadata({
               width: 1200,
               height: 630,
               alt: "DSML Kazakhstan",
+              type: "image/png",
             },
           ],
       publishedTime: job.created_at,
+      authors: [companyName || "DSML Kazakhstan"],
+      section: `${channelType} Вакансии`,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
       images: job.image_url ? [job.image_url] : ["https://www.dsml.kz/images/dsml-logo.png"],
+      creator: "@dsmlkz",
     },
     alternates: {
       canonical: `https://www.dsml.kz/jobs/${params.id}`,
@@ -126,19 +134,21 @@ export default async function JobPage({
   }
 
   const channelType = job.channel_id === -1001120572276 ? "ML" : "IT"
-  const isRemote = job.location?.toLowerCase().startsWith("remote")
+  const isRemote = job.location?.toLowerCase().includes("remote")
   const { text } = truncateJobText(job.html_text || "", 800)
+  const companyName = job.sender_name || job.channel_name
 
-  // JSON-LD structured data
-  const jsonLd = {
+  const jobPostingSchema = {
     "@context": "https://schema.org",
     "@type": "JobPosting",
     title: `${channelType} вакансия`,
-    description: text,
+    description: job.html_text || text,
     datePosted: job.created_at,
+    validThrough: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     hiringOrganization: {
       "@type": "Organization",
-      name: job.sender_name || job.channel_name,
+      name: companyName,
+      url: job.post_link || undefined,
     },
     jobLocation: job.location
       ? {
@@ -146,21 +156,61 @@ export default async function JobPage({
           address: {
             "@type": "PostalAddress",
             addressLocality: job.location,
+            addressCountry: "KZ",
           },
         }
-      : undefined,
-    employmentType: isRemote ? "CONTRACTOR" : "FULL_TIME",
+      : {
+          "@type": "Place",
+          address: {
+            "@type": "PostalAddress",
+            addressCountry: "KZ",
+          },
+        },
+    employmentType: isRemote ? ["CONTRACTOR", "FULL_TIME"] : ["FULL_TIME"],
+    workHours: "40 hours per week",
+    jobLocationType: isRemote ? "TELECOMMUTE" : undefined,
     url: `https://www.dsml.kz/jobs/${params.id}`,
     image: job.image_url || "https://www.dsml.kz/images/dsml-logo.png",
+    industry: channelType === "ML" ? "Machine Learning" : "Information Technology",
+    occupationalCategory: channelType === "ML" ? "15-1299.08" : "15-1299.00",
+    qualifications: `${channelType} experience required`,
+    skills:
+      channelType === "ML" ? ["Machine Learning", "Python", "Data Science"] : ["Programming", "Software Development"],
+  }
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Главная",
+        item: "https://www.dsml.kz",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Вакансии",
+        item: "https://www.dsml.kz/jobs",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: `${channelType} вакансия`,
+        item: `https://www.dsml.kz/jobs/${params.id}`,
+      },
+    ],
   }
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
       <article className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-6">
-          <nav className="flex items-center space-x-2 text-sm text-gray-400 mb-4">
+          <nav className="flex items-center space-x-2 text-sm text-gray-400 mb-4" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-[#00AEC7]">
               Главная
             </Link>
@@ -180,10 +230,10 @@ export default async function JobPage({
               </time>
             </div>
 
-            {job.sender_name && (
+            {companyName && (
               <div className="flex items-center gap-2">
                 <Building className="h-4 w-4 text-[#00AEC7]" />
-                <span className="text-sm text-gray-400">{job.sender_name}</span>
+                <span className="text-sm text-gray-400">{companyName}</span>
               </div>
             )}
 

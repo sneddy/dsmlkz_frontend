@@ -19,13 +19,24 @@ export async function generateMetadata({
   const channels = searchParams.channels || "all"
   const remote = searchParams.remote === "true"
 
-  const title = query
-    ? `Поиск вакансий: "${query}" | DSML Kazakhstan`
-    : `Вакансии ${channels === "ml" ? "ML" : channels === "it" ? "IT" : "ML/IT"}${remote ? " (Remote)" : ""} | DSML Kazakhstan`
+  let title = "Вакансии ML/IT | DSML Kazakhstan"
+  if (page > 1) {
+    title = `Вакансии ML/IT - Страница ${page} | DSML Kazakhstan`
+  }
+  if (query) {
+    title = `Поиск вакансий: "${query}"${page > 1 ? ` - Страница ${page}` : ""} | DSML Kazakhstan`
+  }
 
   const description = query
     ? `Результаты поиска вакансий по запросу "${query}" в сообществе DSML Kazakhstan`
     : `Актуальные вакансии ${channels === "ml" ? "Machine Learning" : channels === "it" ? "IT" : "ML и IT"} в Казахстане${remote ? " с возможностью удаленной работы" : ""}. Найдите работу мечты в области Data Science и Machine Learning.`
+
+  const hasFilters = query || channels !== "all" || remote
+  const canonicalUrl = hasFilters
+    ? "https://www.dsml.kz/jobs"
+    : `https://www.dsml.kz/jobs${page > 1 ? `?page=${page}` : ""}`
+
+  const robots = hasFilters ? "noindex,follow" : "index,follow"
 
   return {
     title,
@@ -41,11 +52,12 @@ export async function generateMetadata({
       "удаленная работа",
       query,
     ].filter(Boolean),
+    robots,
     openGraph: {
       title,
       description,
       type: "website",
-      url: `https://www.dsml.kz/jobs${page > 1 ? `?page=${page}` : ""}${query ? `${page > 1 ? "&" : "?"}q=${encodeURIComponent(query)}` : ""}`,
+      url: canonicalUrl,
       siteName: "DSML Kazakhstan",
       images: [
         {
@@ -63,8 +75,21 @@ export async function generateMetadata({
       images: ["https://www.dsml.kz/images/dsml-logo.png"],
     },
     alternates: {
-      canonical: `https://www.dsml.kz/jobs${page > 1 ? `?page=${page}` : ""}${query ? `${page > 1 ? "&" : "?"}q=${encodeURIComponent(query)}` : ""}`,
+      canonical: canonicalUrl,
     },
+    ...(page > 1 &&
+      !hasFilters && {
+        other: {
+          prev: `https://www.dsml.kz/jobs${page > 2 ? `?page=${page - 1}` : ""}`,
+        },
+      }),
+    ...(page >= 1 &&
+      !hasFilters && {
+        other: {
+          ...(page > 1 && { prev: `https://www.dsml.kz/jobs${page > 2 ? `?page=${page - 1}` : ""}` }),
+          next: `https://www.dsml.kz/jobs?page=${page + 1}`,
+        },
+      }),
   }
 }
 
@@ -78,24 +103,17 @@ export default async function JobsPage({
   const channels = searchParams.channels || "all"
   const remote = searchParams.remote === "true"
 
-  // JSON-LD structured data
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: "Вакансии DSML Kazakhstan",
     description: "Актуальные вакансии в области Machine Learning и Data Science в Казахстане",
-    url: `https://www.dsml.kz/jobs`,
+    url: "https://www.dsml.kz/jobs",
     mainEntity: {
       "@type": "ItemList",
       name: "Список вакансий",
       numberOfItems: "500+",
-      itemListElement: {
-        "@type": "JobPosting",
-        hiringOrganization: {
-          "@type": "Organization",
-          name: "DSML Kazakhstan Community",
-        },
-      },
+      itemListElement: [], // Will be populated by server component
     },
     breadcrumb: {
       "@type": "BreadcrumbList",
@@ -119,6 +137,11 @@ export default async function JobsPage({
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
+      {page > 1 && !query && !channels && !remote && (
+        <link rel="prev" href={`https://www.dsml.kz/jobs${page > 2 ? `?page=${page - 1}` : ""}`} />
+      )}
+      {!query && !channels && !remote && <link rel="next" href={`https://www.dsml.kz/jobs?page=${page + 1}`} />}
 
       <SectionHeroServer
         title="Вакансии ML/IT"

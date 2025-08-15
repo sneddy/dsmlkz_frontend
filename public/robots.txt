@@ -1,6 +1,23 @@
 User-agent: *
 Allow: /
 
+Allow: /jobs/
+Allow: /jobs/*
+
+Disallow: /api/
+Disallow: /_next/
+Disallow: /_vercel/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /profile/
+Disallow: /auth/
+
+# Allow access to public assets
+Allow: /images/
+Allow: /icons/
+Allow: /favicon.ico
+Allow: /llms.txt
+
 # Sitemap
 Sitemap: https://dsml.kz/sitemap.xml
 
@@ -25,20 +42,3 @@ Allow: /
 
 User-agent: YandexBot
 Allow: /
-
-# Block access to admin and private areas
-Disallow: /admin/
-Disallow: /api/
-Disallow: /dashboard/
-Disallow: /profile/
-Disallow: /auth/signin/
-Disallow: /auth/signup/
-Disallow: /auth/reset-password/
-Disallow: /auth/email-verification/
-Disallow: /auth/post-signup/
-
-# Allow access to public assets
-Allow: /images/
-Allow: /icons/
-Allow: /favicon.ico
-Allow: /llms.txt

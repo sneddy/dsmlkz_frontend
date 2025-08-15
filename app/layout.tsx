@@ -35,6 +35,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`dark ${pixelFont.variable}`} suppressHydrationWarning>
+      <head>
+        <link rel="alternate" type="application/rss+xml" title="DSML Kazakhstan News" href="/news.xml" />
+      </head>
       <body className={inter.className}>
         {/* Add Google Analytics with Suspense boundary */}
         <Suspense fallback={null}>

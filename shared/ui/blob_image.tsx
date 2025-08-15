@@ -17,13 +17,15 @@ export function BlobImage({ src, alt, width, height, className, fallbackSrc = "/
   const [error, setError] = useState(false)
 
   return (
-    <Image
-      src={error ? fallbackSrc : src}
-      alt={alt}
-      width={width}
-      height={height}
-      className={cn("object-cover", className)}
-      onError={() => setError(true)}
-    />
+    <div className="bg-gray-800/30 rounded-lg overflow-hidden">
+      <Image
+        src={error ? fallbackSrc : src}
+        alt={alt}
+        width={width}
+        height={height}
+        className={cn("object-contain", className)}
+        onError={() => setError(true)}
+      />
+    </div>
   )
 }

@@ -6,6 +6,17 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Added font-display: swap for better performance */
+@font-face {
+  font-family: "Inter";
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Press Start 2P";
+  font-display: swap;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

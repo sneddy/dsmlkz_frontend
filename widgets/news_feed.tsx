@@ -118,7 +118,7 @@ export default async function NewsFeed({ page = 1, query = "" }: { page?: number
           return (
             <Card
               key={post.post_id}
-              className="h-[53rem] bg-gray-800/50 border-gray-700 backdrop-blur-sm shadow-lg rounded-xl overflow-hidden hover:shadow-2xl hover:scale-[1.02] hover:bg-gray-800/70 transition-all duration-300 ease-out flex flex-col group"
+              className="h-[56rem] bg-gray-800/50 border-gray-700 backdrop-blur-sm shadow-lg rounded-xl overflow-hidden hover:shadow-2xl hover:scale-[1.02] hover:bg-gray-800/70 transition-all duration-300 ease-out flex flex-col group"
             >
               <div className="h-1 bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
 
@@ -131,12 +131,12 @@ export default async function NewsFeed({ page = 1, query = "" }: { page?: number
 
               <CardContent className="pt-4 pb-6 flex-1 flex flex-col space-y-4">
                 {post.image_url && (
-                  <div className="w-full h-[26rem] flex-shrink-0 relative group/image cursor-pointer overflow-hidden rounded-xl shadow-md">
+                  <div className="w-full aspect-square flex-shrink-0 relative group/image cursor-pointer overflow-hidden rounded-xl shadow-md">
                     <ServerImage
                       src={post.image_url}
                       alt="Post image"
                       width={400}
-                      height={416}
+                      height={400}
                       priority={isFirstPost}
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="w-full h-full object-cover transition-all duration-500 ease-out group-hover/image:scale-110 group-hover/image:brightness-110"
@@ -145,10 +145,13 @@ export default async function NewsFeed({ page = 1, query = "" }: { page?: number
                   </div>
                 )}
 
-                <div className="flex-1 flex flex-col justify-between space-y-4">
-                  <p className="text-gray-300 font-medium text-sm leading-relaxed line-clamp-8 tracking-wide">{text}</p>
+                <div className="flex-1 flex flex-col justify-between space-y-2">
+                  {/* увеличели количество строк с line-clamp-10 до line-clamp-12 */}
+                  <p className="text-gray-300 font-medium text-sm leading-relaxed line-clamp-12 tracking-wide">
+                    {text}
+                  </p>
 
-                  <div className="flex justify-between items-center pt-4 border-t border-gray-600/30">
+                  <div className="flex justify-between items-center pt-2 border-t border-gray-600/30">
                     <Link
                       href={`/news/${post.post_id}`}
                       className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] text-white text-sm font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 ease-out focus:ring-2 focus:ring-[#00AEC7]/50 focus:outline-none"

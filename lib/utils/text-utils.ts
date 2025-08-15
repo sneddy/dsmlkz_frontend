@@ -1,4 +1,4 @@
-export function truncateText(html: string, maxLength = 400) {
+export function truncateText(html: string, maxLength = 575) {
   let text = html.replace(/<br\s*\/?>/gi, " ")
   text = text.replace(/<[^>]*>?/gm, "")
   text = text.replace(/\s+/g, " ").trim()
@@ -26,6 +26,7 @@ export function formatDate(dateString: string) {
   const day = date.getDate()
   const months = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"]
   const monthName = months[date.getMonth()]
+  const year = date.getFullYear()
 
-  return `${day} ${monthName}`
+  return `${day} ${monthName} ${year}`
 }

@@ -25,15 +25,17 @@ export function ServerImage({
   quality = 75,
 }: ServerImageProps) {
   return (
-    <Image
-      src={src || fallbackSrc}
-      alt={alt}
-      width={width}
-      height={height}
-      priority={priority}
-      sizes={sizes}
-      quality={quality}
-      className={cn("object-cover", className)}
-    />
+    <div className="bg-gray-800/30 rounded-lg overflow-hidden">
+      <Image
+        src={src || fallbackSrc}
+        alt={alt}
+        width={width}
+        height={height}
+        priority={priority}
+        sizes={sizes}
+        quality={quality}
+        className={cn("object-contain", className)}
+      />
+    </div>
   )
 }

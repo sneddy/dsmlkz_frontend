@@ -84,7 +84,8 @@ This project follows **Feature-Sliced Design (FSD)** methodology for better main
 📁 widgets/          # Large UI blocks
 ├── 📄 home_content.tsx
 ├── 📄 news_feed.tsx
-└── 📄 jobs_feed.tsx
+├── 📄 jobs_feed_server.tsx  # Updated to server-side jobs feed
+└── 📄 events_content.tsx
 
 📁 features/         # Business logic by domain
 ├── 📁 auth/         # Authentication features
@@ -153,7 +154,7 @@ dsml-kazakhstan/
 ├── 📁 widgets/                               # 🆕 Large UI blocks (FSD Layer)
 │   ├── 📄 home_content.tsx                   # Homepage content
 │   ├── 📄 news_feed.tsx                      # News feed widget
-│   ├── 📄 jobs_feed.tsx                      # Jobs feed widget
+│   ├── 📄 jobs_feed_server.tsx               # Server-side job feed widget
 │   ├── 📄 events_content.tsx                 # Events content
 │   ├── 📄 faces_content.tsx                  # Community faces
 │   ├── 📄 research_content.tsx               # Research content
@@ -299,7 +300,7 @@ import { Button } from "@/components/ui/button"
 - **`shared/ui/`** - Reusable UI primitives and utilities
 - **`widgets/home_content.tsx`** - Homepage with hero, stats, and community channels
 - **`widgets/news_feed.tsx`** - News feed with search and pagination
-- **`widgets/jobs_feed.tsx`** - Job feed with filtering and search
+- **`widgets/jobs_feed_server.tsx`** - Server-side job feed with filtering and search
 - **`components/ui/`** - shadcn/ui component library (47 components)
 
 #### 🔧 **Features**

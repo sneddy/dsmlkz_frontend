@@ -1,14 +1,14 @@
 import NewsFeed from "@/widgets/news_feed"
 import { SectionHeroSSR } from "@/widgets/section_hero_ssr"
 import type { Metadata } from "next"
-import { getServerTranslations } from "@/lib/utils/server-translations"
+import { tServer } from "@/lib/server-translations"
 
 interface NewsPageProps {
   searchParams: { page?: string; q?: string }
 }
 
 export async function generateMetadata({ searchParams }: NewsPageProps): Promise<Metadata> {
-  const { t } = getServerTranslations()
+  const { t } = tServer()
   const page = Number.parseInt(searchParams.page || "1")
   const query = searchParams.q || ""
 
@@ -53,7 +53,7 @@ export async function generateMetadata({ searchParams }: NewsPageProps): Promise
 }
 
 export default function NewsPage({ searchParams }: NewsPageProps) {
-  const { t } = getServerTranslations()
+  const { t } = tServer()
   const page = Number.parseInt(searchParams.page || "1")
   const query = searchParams.q || ""
 
@@ -102,12 +102,10 @@ export default function NewsPage({ searchParams }: NewsPageProps) {
 
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
         <SectionHeroSSR
-          title={t("news.main_title")}
-          subtitleLine1={t("news.subtitle_line1")}
-          subtitleLine2={t("news.subtitle_line2")}
-          badges={[t("news.daily_updates"), t("news.current_news")]}
-          gradientFrom="#00AEC7"
-          gradientTo="#FFF32A"
+          titleKey="news.main_title"
+          subtitleLine1Key="news.subtitle_line1"
+          subtitleLine2Key="news.subtitle_line2"
+          badgeKeys={["news.daily_updates", "news.current_news"]}
         />
 
         {/* News Feed */}

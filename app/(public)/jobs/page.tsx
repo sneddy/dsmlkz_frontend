@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import JobsFeedServer from "@/widgets/jobs_feed_server"
 import { SectionHeroSSR } from "@/widgets/section_hero_ssr"
-import { getServerTranslations } from "@/lib/utils/server-translations"
+import { tServer } from "@/lib/server-translations"
 
 type SearchParams = {
   page?: string
@@ -15,7 +15,8 @@ export async function generateMetadata({
 }: {
   searchParams: SearchParams
 }): Promise<Metadata> {
-  const { t } = getServerTranslations()
+  const { t } = tServer()
+
   const page = Number.parseInt(searchParams.page || "1")
   const query = searchParams.q || ""
   const channels = searchParams.channels || "all"
@@ -99,7 +100,8 @@ export default async function JobsPage({
 }: {
   searchParams: SearchParams
 }) {
-  const { t } = getServerTranslations()
+  const { t } = tServer()
+
   const page = Number.parseInt(searchParams.page || "1")
   const query = searchParams.q || ""
   const channels = searchParams.channels || "all"
@@ -147,9 +149,9 @@ export default async function JobsPage({
 
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
         <SectionHeroSSR
-          title={t("jobs.main_title")}
-          subtitleLine1={t("jobs.subtitle_line1")}
-          subtitleLine2={t("jobs.subtitle_line2")}
+          titleKey="jobs.main_title"
+          subtitleLine1Key="jobs.subtitle_line1"
+          subtitleLine2Key="jobs.subtitle_line2"
         />
 
         <div className="container mx-auto px-4 py-8">

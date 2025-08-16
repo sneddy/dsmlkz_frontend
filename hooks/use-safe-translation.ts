@@ -14,9 +14,24 @@ export function useSafeTranslation() {
     "nav.events": "Ивенты",
     "nav.faces": "Лица",
     "nav.rules": "Правила",
-    "home.signIn": "Войти",
-    "home.signUp": "Регистрация",
-    "auth.signOut": "Выйти",
+    "nav.signin": "Войти",
+    "nav.signup": "Регистрация",
+    "nav.signout": "Выйти",
+  }
+
+  const getNestedTranslation = (translations: any, key: string): string | undefined => {
+    const keys = key.split(".")
+    let result = translations
+
+    for (const k of keys) {
+      if (result && typeof result === "object" && k in result) {
+        result = result[k]
+      } else {
+        return undefined
+      }
+    }
+
+    return typeof result === "string" ? result : undefined
   }
 
   if (!context) {
@@ -30,6 +45,9 @@ export function useSafeTranslation() {
 
   return {
     ...context,
-    t: (key: string) => context.translations[key] || fallbacks[key] || key,
+    t: (key: string) => {
+      const translation = getNestedTranslation(context.translations, key)
+      return translation || fallbacks[key] || key
+    },
   }
 }

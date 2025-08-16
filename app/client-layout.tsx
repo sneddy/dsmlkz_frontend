@@ -89,7 +89,7 @@ export default function ClientLayout({
                   pathname === "/articles" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {t("nav.articles") || "Статьи"}
+                {t("nav.articles")}
               </Link>
               <Link
                 href="/events"
@@ -97,7 +97,7 @@ export default function ClientLayout({
                   pathname === "/events" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {t("nav.events") || "Ивенты"}
+                {t("nav.events")}
               </Link>
               <Link
                 href="/faces"
@@ -138,18 +138,18 @@ export default function ClientLayout({
                     signOut()
                   }}
                 >
-                  {t("auth.signOut")}
+                  {t("nav.signout")}
                 </Button>
               </div>
             ) : (
               <div className="hidden md:flex items-center gap-4">
                 <Link href="/auth/signin">
                   <Button variant="outline" size="sm">
-                    {t("home.signIn")}
+                    {t("nav.signin")}
                   </Button>
                 </Link>
                 <Link href="/signup">
-                  <Button size="sm">{t("home.signUp")}</Button>
+                  <Button size="sm">{t("nav.signup")}</Button>
                 </Link>
               </div>
             )}
@@ -203,7 +203,7 @@ export default function ClientLayout({
                   pathname === "/articles" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
-                {t("nav.articles") || "Статьи"}
+                {t("nav.articles")}
               </Link>
               <Link
                 href="/events"
@@ -211,7 +211,7 @@ export default function ClientLayout({
                   pathname === "/events" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
-                {t("nav.events") || "Ивенты"}
+                {t("nav.events")}
               </Link>
               <Link
                 href="/faces"
@@ -249,19 +249,19 @@ export default function ClientLayout({
                       signOut()
                     }}
                   >
-                    {t("auth.signOut")}
+                    {t("nav.signout")}
                   </Button>
                 </>
               ) : (
                 <div className="flex flex-col gap-2">
                   <Link href="/auth/signin">
                     <Button variant="outline" size="sm" className="w-full bg-transparent">
-                      {t("home.signIn")}
+                      {t("nav.signin")}
                     </Button>
                   </Link>
                   <Link href="/signup">
                     <Button size="sm" className="w-full">
-                      {t("home.signUp")}
+                      {t("nav.signup")}
                     </Button>
                   </Link>
                 </div>

@@ -1,7 +1,7 @@
 import type React from "react"
 import { SupabaseProvider } from "@/contexts/supabase-context"
 import { AuthProvider } from "@/contexts/auth-context"
-import { LanguageProvider } from "@/contexts/language-context"
+// import { LanguageProvider } from "@/contexts/language-context"
 
 export default function PublicLayout({
   children,
@@ -10,9 +10,7 @@ export default function PublicLayout({
 }) {
   return (
     <SupabaseProvider>
-      <AuthProvider>
-        <LanguageProvider>{children}</LanguageProvider>
-      </AuthProvider>
+      <AuthProvider>{children}</AuthProvider>
     </SupabaseProvider>
   )
 }

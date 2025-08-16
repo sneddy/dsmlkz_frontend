@@ -1,23 +1,26 @@
 import NewsFeed from "@/widgets/news_feed"
+import { SectionHeroSSR } from "@/widgets/section_hero_ssr"
 import type { Metadata } from "next"
+import { getServerTranslations } from "@/lib/utils/server-translations"
 
 interface NewsPageProps {
   searchParams: { page?: string; q?: string }
 }
 
 export async function generateMetadata({ searchParams }: NewsPageProps): Promise<Metadata> {
+  const { t } = getServerTranslations()
   const page = Number.parseInt(searchParams.page || "1")
   const query = searchParams.q || ""
 
   const title = query
-    ? `Поиск: "${query}" | Новости DSML Kazakhstan`
+    ? `${t("news.searchTitle")}: "${query}" | ${t("news.siteTitle")}`
     : page > 1
-      ? `Новости DSML Kazakhstan - Страница ${page}`
-      : "Новости | DSML Kazakhstan"
+      ? `${t("news.siteTitle")} - ${t("news.pageTitle")} ${page}`
+      : `${t("news.title")} | DSML Kazakhstan`
 
   const description = query
-    ? `Результаты поиска по запросу "${query}" в новостях DSML Kazakhstan`
-    : "Актуальные новости и события в сфере Data Science и Machine Learning в Казахстане"
+    ? `${t("news.searchDescription")} "${query}" ${t("news.searchInNews")}`
+    : t("news.description")
 
   return {
     title,
@@ -33,7 +36,7 @@ export async function generateMetadata({ searchParams }: NewsPageProps): Promise
           url: "https://www.dsml.kz/images/dsml-logo.png",
           width: 1200,
           height: 630,
-          alt: "DSML Kazakhstan News",
+          alt: t("news.ogImageAlt"),
         },
       ],
     },
@@ -50,19 +53,20 @@ export async function generateMetadata({ searchParams }: NewsPageProps): Promise
 }
 
 export default function NewsPage({ searchParams }: NewsPageProps) {
+  const { t } = getServerTranslations()
   const page = Number.parseInt(searchParams.page || "1")
   const query = searchParams.q || ""
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: query ? `Поиск: "${query}"` : "Новости DSML Kazakhstan",
-    description: "Актуальные новости и события в сфере Data Science и Machine Learning в Казахстане",
+    name: query ? `${t("news.searchTitle")}: "${query}"` : t("news.siteTitle"),
+    description: t("news.description"),
     url: `https://www.dsml.kz/news${page > 1 ? `?page=${page}` : ""}${query ? `${page > 1 ? "&" : "?"}q=${query}` : ""}`,
     mainEntity: {
       "@type": "ItemList",
-      name: "Новости DSML Kazakhstan",
-      description: "Лента новостей сообщества Data Science и Machine Learning в Казахстане",
+      name: t("news.siteTitle"),
+      description: t("news.feedDescription"),
     },
     breadcrumb: {
       "@type": "BreadcrumbList",
@@ -70,13 +74,13 @@ export default function NewsPage({ searchParams }: NewsPageProps) {
         {
           "@type": "ListItem",
           position: 1,
-          name: "Главная",
+          name: t("nav.home"),
           item: "https://www.dsml.kz",
         },
         {
           "@type": "ListItem",
           position: 2,
-          name: "Новости",
+          name: t("nav.newsFeed"),
           item: "https://www.dsml.kz/news",
         },
       ],
@@ -96,28 +100,15 @@ export default function NewsPage({ searchParams }: NewsPageProps) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-        {/* Hero Section */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-[#00AEC7] to-[#FFF32A] py-16 px-4">
-          <div className="absolute inset-0 bg-black/20"></div>
-          <div className="relative max-w-7xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight font-pixel">Новости DSML</h1>
-            <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-              Актуальные новости и события <br />
-              <span className="font-semibold">в мире Data Science и ML</span>
-            </p>
-
-            {/* Feature badges */}
-            <div className="flex flex-wrap justify-center gap-4 mt-8">
-              <span className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full text-white font-medium border border-white/30">
-                Ежедневные обновления
-              </span>
-              <span className="px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full text-white font-medium border border-white/30">
-                Актуальные новости
-              </span>
-            </div>
-          </div>
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
+        <SectionHeroSSR
+          title={t("news.main_title")}
+          subtitleLine1={t("news.subtitle_line1")}
+          subtitleLine2={t("news.subtitle_line2")}
+          badges={[t("news.daily_updates"), t("news.current_news")]}
+          gradientFrom="#00AEC7"
+          gradientTo="#FFF32A"
+        />
 
         {/* News Feed */}
         <div className="max-w-7xl mx-auto px-4 py-12">

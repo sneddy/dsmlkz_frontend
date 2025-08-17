@@ -51,14 +51,5 @@
     "oct": "Окт",
     "nov": "Ноя",
     "dec": "Дек"
-  },
-  "search_button": "Найти",
-  "temporarily_unavailable": "Новости временно недоступны",
-  "previous_page": "Предыдущая",
-  "next_page": "Следующая",
-  "page_info": "Страница",
-  "of": "из",
-  "page": "Страница",
-  "previous": "Предыдущая",
-  "next": "Следующая"
+  }
 }

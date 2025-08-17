@@ -22,18 +22,6 @@ export default function ClientLayout({
   const { user, signOut, profile } = useSafeAuth()
   const { t } = useSafeTranslation()
 
-  const getCurrentLang = () => {
-    const segments = pathname.split("/").filter(Boolean)
-    const firstSegment = segments[0]
-    if (["en", "eng", "ru", "kk"].includes(firstSegment)) {
-      return firstSegment === "eng" ? "en" : firstSegment
-    }
-    return "en" // default to English
-  }
-
-  const currentLang = getCurrentLang()
-  const langPrefix = `/${currentLang}`
-
   // Close mobile menu when path changes
   useEffect(() => {
     setIsMenuOpen(false)
@@ -72,17 +60,17 @@ export default function ClientLayout({
                 {t("nav.home")}
               </Link>
               <Link
-                href={`${langPrefix}/news`}
+                href="/news"
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/news") ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  pathname === "/news" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {t("nav.newsFeed")}
               </Link>
               <Link
-                href={`${langPrefix}/jobs`}
+                href="/jobs"
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/jobs") ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  pathname === "/jobs" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {t("nav.jobsFeed")}
@@ -186,17 +174,17 @@ export default function ClientLayout({
                 {t("nav.home")}
               </Link>
               <Link
-                href={`${langPrefix}/news`}
+                href="/news"
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/news") ? "text-primary" : "text-muted-foreground"
+                  pathname === "/news" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.newsFeed")}
               </Link>
               <Link
-                href={`${langPrefix}/jobs`}
+                href="/jobs"
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/jobs") ? "text-primary" : "text-muted-foreground"
+                  pathname === "/jobs" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.jobsFeed")}
@@ -204,7 +192,7 @@ export default function ClientLayout({
               <Link
                 href="/research"
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/research") ? "text-primary" : "text-muted-foreground"
+                  pathname === "/research" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.research")}
@@ -212,7 +200,7 @@ export default function ClientLayout({
               <Link
                 href="/articles"
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/articles") ? "text-primary" : "text-muted-foreground"
+                  pathname === "/articles" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.articles")}
@@ -220,7 +208,7 @@ export default function ClientLayout({
               <Link
                 href="/events"
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/events") ? "text-primary" : "text-muted-foreground"
+                  pathname === "/events" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.events")}
@@ -228,7 +216,7 @@ export default function ClientLayout({
               <Link
                 href="/faces"
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/faces") ? "text-primary" : "text-muted-foreground"
+                  pathname === "/faces" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.faces")}
@@ -236,7 +224,7 @@ export default function ClientLayout({
               <Link
                 href="/rules"
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/rules") ? "text-primary" : "text-muted-foreground"
+                  pathname === "/rules" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.rules")}

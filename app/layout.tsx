@@ -7,6 +7,7 @@ import { Inter } from "next/font/google"
 import { Press_Start_2P } from "next/font/google"
 import type { Metadata } from "next"
 import ClientLayout from "./client-layout"
+import { LanguageProvider } from "@/contexts/language-context"
 
 // Make sure Radix UI deps are referenced so they're bundled
 import "@/lib/radix-deps"
@@ -43,8 +44,9 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <GoogleAnalytics />
         </Suspense>
-        {/* Now locale is managed only through URL */}
-        <ClientLayout>{children}</ClientLayout>
+        <LanguageProvider>
+          <ClientLayout>{children}</ClientLayout>
+        </LanguageProvider>
         <Toaster />
       </body>
     </html>

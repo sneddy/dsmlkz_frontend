@@ -86,16 +86,19 @@ async function fetchJobs(
 }
 
 export default async function JobsFeedServer({
-  page = 1,
-  query = "",
-  channels = "all",
-  remote = false,
+  searchParams,
+  locale,
+  translations,
 }: {
-  page?: number
-  query?: string
-  channels?: string
-  remote?: boolean
+  searchParams?: { page?: string; search?: string; location?: string; type?: string }
+  locale: string
+  translations: any
 }) {
+  const page = Number.parseInt(searchParams?.page || "1", 10)
+  const query = searchParams?.search || ""
+  const channels = "all" // Default to all channels
+  const remote = false // Default to all jobs
+
   // Parse channel filter
   const channelIds =
     channels === "ml" ? [-1001120572276] : channels === "it" ? [-1001944996511] : [-1001120572276, -1001944996511]
@@ -110,6 +113,7 @@ export default async function JobsFeedServer({
       initialQuery={query}
       initialChannels={channels}
       initialRemote={remote}
+      translations={translations}
     />
   )
 }

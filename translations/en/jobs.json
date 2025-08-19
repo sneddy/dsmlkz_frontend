@@ -72,5 +72,9 @@
   "benefits": "Benefits",
   "apply_now": "Apply Now",
   "contact_employer": "Contact Employer",
-  "no_application_method": "No application method available"
+  "no_application_method": "No application method available",
+  "page": "Page",
+  "of": "of",
+  "previous": "Previous",
+  "next": "Next"
 }

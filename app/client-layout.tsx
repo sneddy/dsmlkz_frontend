@@ -19,8 +19,30 @@ export default function ClientLayout({
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
-  const { user, signOut, profile } = useSafeAuth()
+  const { user, signOut } = useSafeAuth() // removed profile since it's not available in AuthContext
   const { t } = useSafeTranslation()
+
+  useEffect(() => {
+    console.log("[v0] Navigation auth state:", {
+      user: user ? { id: user.id, email: user.email } : null,
+      hasUser: !!user,
+      pathname,
+    })
+  }, [user, pathname])
+
+  const getCurrentLang = () => {
+    const segments = pathname.split("/").filter(Boolean)
+    const firstSegment = segments[0]
+    if (["en", "eng", "ru", "kk"].includes(firstSegment)) {
+      return firstSegment === "eng" ? "en" : firstSegment
+    }
+    return "en" // default to English
+  }
+
+  const currentLang = getCurrentLang()
+  const langPrefix = `/${currentLang}`
+
+  const displayName = user?.email ? user.email.split("@")[0] : ""
 
   // Close mobile menu when path changes
   useEffect(() => {
@@ -60,17 +82,17 @@ export default function ClientLayout({
                 {t("nav.home")}
               </Link>
               <Link
-                href="/news"
+                href={`${langPrefix}/news`}
                 className={`text-sm font-medium font-pixel ${
-                  pathname === "/news" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  pathname.includes("/news") ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {t("nav.newsFeed")}
               </Link>
               <Link
-                href="/jobs"
+                href={`${langPrefix}/jobs`}
                 className={`text-sm font-medium font-pixel ${
-                  pathname === "/jobs" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  pathname.includes("/jobs") ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {t("nav.jobsFeed")}
@@ -128,7 +150,8 @@ export default function ClientLayout({
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                     <User className="h-4 w-4 text-primary" />
                   </div>
-                  <span className="text-sm font-medium">{profile?.nickname || user.email.split("@")[0]}</span>
+                  <span className="text-sm font-medium">{displayName}</span>{" "}
+                  {/* use displayName instead of profile?.nickname */}
                 </Link>
                 <Button
                   size="sm"
@@ -148,7 +171,7 @@ export default function ClientLayout({
                     {t("nav.signin")}
                   </Button>
                 </Link>
-                <Link href="/signup">
+                <Link href="/auth/signup">
                   <Button size="sm">{t("nav.signup")}</Button>
                 </Link>
               </div>
@@ -174,17 +197,17 @@ export default function ClientLayout({
                 {t("nav.home")}
               </Link>
               <Link
-                href="/news"
+                href={`${langPrefix}/news`}
                 className={`text-sm font-medium font-pixel ${
-                  pathname === "/news" ? "text-primary" : "text-muted-foreground"
+                  pathname.includes("/news") ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.newsFeed")}
               </Link>
               <Link
-                href="/jobs"
+                href={`${langPrefix}/jobs`}
                 className={`text-sm font-medium font-pixel ${
-                  pathname === "/jobs" ? "text-primary" : "text-muted-foreground"
+                  pathname.includes("/jobs") ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.jobsFeed")}
@@ -192,7 +215,7 @@ export default function ClientLayout({
               <Link
                 href="/research"
                 className={`text-sm font-medium font-pixel ${
-                  pathname === "/research" ? "text-primary" : "text-muted-foreground"
+                  pathname.includes("/research") ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.research")}
@@ -200,7 +223,7 @@ export default function ClientLayout({
               <Link
                 href="/articles"
                 className={`text-sm font-medium font-pixel ${
-                  pathname === "/articles" ? "text-primary" : "text-muted-foreground"
+                  pathname.includes("/articles") ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.articles")}
@@ -208,7 +231,7 @@ export default function ClientLayout({
               <Link
                 href="/events"
                 className={`text-sm font-medium font-pixel ${
-                  pathname === "/events" ? "text-primary" : "text-muted-foreground"
+                  pathname.includes("/events") ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.events")}
@@ -216,7 +239,7 @@ export default function ClientLayout({
               <Link
                 href="/faces"
                 className={`text-sm font-medium font-pixel ${
-                  pathname === "/faces" ? "text-primary" : "text-muted-foreground"
+                  pathname.includes("/faces") ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.faces")}
@@ -224,7 +247,7 @@ export default function ClientLayout({
               <Link
                 href="/rules"
                 className={`text-sm font-medium font-pixel ${
-                  pathname === "/rules" ? "text-primary" : "text-muted-foreground"
+                  pathname.includes("/rules") ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.rules")}
@@ -237,7 +260,7 @@ export default function ClientLayout({
                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
                       <User className="h-3 w-3 text-primary" />
                     </div>
-                    <span>{profile?.nickname || user.email.split("@")[0]}</span>
+                    <span>{displayName}</span> {/* use displayName instead of profile?.nickname */}
                   </Link>
                   <Button
                     variant="outline"
@@ -259,7 +282,7 @@ export default function ClientLayout({
                       {t("nav.signin")}
                     </Button>
                   </Link>
-                  <Link href="/signup">
+                  <Link href="/auth/signup">
                     <Button size="sm" className="w-full">
                       {t("nav.signup")}
                     </Button>

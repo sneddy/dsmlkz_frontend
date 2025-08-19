@@ -1,14 +1,14 @@
 "use client"
 
 import { useState } from "react"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Globe } from "lucide-react"
-import { useLanguage } from "@/contexts/language-context"
 
 export default function LanguageSelector() {
-  const { language, setLanguage } = useLanguage()
   const [open, setOpen] = useState(false)
+  const pathname = usePathname()
 
   const languages = [
     { code: "en", name: "English" },
@@ -16,10 +16,23 @@ export default function LanguageSelector() {
     { code: "kk", name: "Қазақша" },
   ]
 
+  const getCurrentLocale = () => {
+    const segments = pathname.split("/").filter(Boolean)
+    const firstSegment = segments[0]
+    return ["en", "ru", "kk"].includes(firstSegment) ? firstSegment : "en"
+  }
+
   const handleSelect = (code: string) => {
-    setLanguage(code as "en" | "ru" | "kk")
+    const currentLocale = getCurrentLocale()
+    const pathWithoutLocale = pathname.replace(`/${currentLocale}`, "") || "/"
+    const newUrl = `/${code}${pathWithoutLocale}`
+
+    console.log("[v0] Language switch:", { from: currentLocale, to: code, newUrl })
+    window.location.href = newUrl
     setOpen(false)
   }
+
+  const currentLanguage = getCurrentLocale()
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -34,7 +47,7 @@ export default function LanguageSelector() {
           <DropdownMenuItem
             key={lang.code}
             onClick={() => handleSelect(lang.code)}
-            className={language === lang.code ? "bg-muted" : ""}
+            className={currentLanguage === lang.code ? "bg-muted" : ""}
           >
             {lang.name}
           </DropdownMenuItem>

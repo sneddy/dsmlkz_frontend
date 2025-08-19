@@ -51,5 +51,14 @@
     "oct": "Oct",
     "nov": "Nov",
     "dec": "Dec"
-  }
+  },
+  "search_button": "Search",
+  "temporarily_unavailable": "News temporarily unavailable",
+  "previous_page": "Previous",
+  "next_page": "Next",
+  "page_info": "Page",
+  "of": "of",
+  "page": "Page",
+  "previous": "Previous",
+  "next": "Next"
 }

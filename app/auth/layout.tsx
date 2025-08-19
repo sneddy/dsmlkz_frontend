@@ -4,7 +4,7 @@ import type React from "react"
 
 import { SupabaseProvider } from "@/contexts/supabase-context"
 import { AuthProvider } from "@/contexts/auth-context"
-import { LanguageProvider } from "@/contexts/language-context"
+import { ClientLanguageProvider } from "@/contexts/client-language-provider"
 
 export default function AuthLayout({
   children,
@@ -14,7 +14,7 @@ export default function AuthLayout({
   return (
     <SupabaseProvider>
       <AuthProvider>
-        <LanguageProvider>{children}</LanguageProvider>
+        <ClientLanguageProvider>{children}</ClientLanguageProvider>
       </AuthProvider>
     </SupabaseProvider>
   )

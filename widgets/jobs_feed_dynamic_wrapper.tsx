@@ -7,7 +7,7 @@ const JobsFeedClientWrapper = dynamic(() => import("@/widgets/jobs_feed_client_w
   loading: () => (
     <div className="text-center py-8">
       <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#00AEC7]"></div>
-      <p className="mt-2 text-gray-400">Загрузка интерактивных элементов...</p>
+      <p className="mt-2 text-gray-400">Loading...</p>
     </div>
   ),
 })
@@ -32,6 +32,7 @@ interface JobsFeedDynamicWrapperProps {
   initialQuery: string
   initialChannels: string
   initialRemote: boolean
+  translations: any
 }
 
 export default function JobsFeedDynamicWrapper(props: JobsFeedDynamicWrapperProps) {

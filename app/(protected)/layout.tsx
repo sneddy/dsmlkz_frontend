@@ -2,7 +2,7 @@ import type React from "react"
 import { ProfileProvider } from "@/features/profile/client/ProfileProvider"
 import { SupabaseProvider } from "@/contexts/supabase-context"
 import { AuthProvider } from "@/contexts/auth-context"
-import { LanguageProvider } from "@/contexts/language-context"
+import { ClientLanguageProvider } from "@/contexts/client-language-provider"
 
 export default function ProtectedLayout({
   children,
@@ -12,9 +12,9 @@ export default function ProtectedLayout({
   return (
     <SupabaseProvider>
       <AuthProvider>
-        <LanguageProvider>
+        <ClientLanguageProvider>
           <ProfileProvider>{children}</ProfileProvider>
-        </LanguageProvider>
+        </ClientLanguageProvider>
       </AuthProvider>
     </SupabaseProvider>
   )

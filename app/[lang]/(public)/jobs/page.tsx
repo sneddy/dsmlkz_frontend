@@ -78,5 +78,3 @@ export async function generateStaticParams() {
     lang,
   }))
 }
-
-export const dynamic = "force-dynamic"

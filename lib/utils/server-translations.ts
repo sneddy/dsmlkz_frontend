@@ -1,30 +1,8 @@
-import { getTranslations } from "@/translations/index"
-import { cookies } from "next/headers"
+// Эта функция не используется в SSR страницах, но может вызывать проблемы с кешированием
+// SSR страницы должны использовать только tServer(locale) с языком из URL
 
-export function getServerTranslations() {
-  // Get language from cookies, fallback to 'ru'
-  const cookieStore = cookies()
-  const language = cookieStore.get("language")?.value || "ru"
+// REMOVED: getServerTranslations function that reads from cookies
+// This was causing potential caching conflicts with SSR pages
+// SSR pages should only use tServer(locale) with language from URL params
 
-  const validLanguages = ["en", "ru", "kk"]
-  const selectedLanguage = validLanguages.includes(language) ? language : "ru"
-
-  const translations = getTranslations(selectedLanguage)
-
-  const t = (key: string): string => {
-    const keys = key.split(".")
-    let result = translations
-
-    for (const k of keys) {
-      if (result && typeof result === "object" && k in result) {
-        result = result[k]
-      } else {
-        return key // Return key if translation not found
-      }
-    }
-
-    return typeof result === "string" ? result : key
-  }
-
-  return { t, language: selectedLanguage }
-}
+export {}

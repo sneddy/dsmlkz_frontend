@@ -33,18 +33,24 @@ export default function LanguageSelector() {
   const handleSelect = (code: string) => {
     const currentLocale = getCurrentLocale()
 
+    localStorage.setItem("preferred-language", code)
+
     if (isSSRPath(pathname)) {
       // SSR страницы: полная перезагрузка с языковым префиксом
       const pathWithoutLocale = pathname.replace(`/${currentLocale}`, "") || "/"
       const newUrl = `/${code}${pathWithoutLocale}`
       console.log("[v0] Language switch (SSR):", { from: currentLocale, to: code, newUrl })
+
+      window.dispatchEvent(
+        new CustomEvent("languageChange", {
+          detail: { language: code },
+        }),
+      )
+
       window.location.href = newUrl
     } else {
       // CSR страницы: только обновление языка в контексте
       console.log("[v0] Language switch (CSR):", { from: currentLocale, to: code, pathname })
-
-      // Сохраняем выбранный язык в localStorage для CSR страниц
-      localStorage.setItem("preferred-language", code)
 
       // Отправляем custom event для обновления языка в контексте
       window.dispatchEvent(

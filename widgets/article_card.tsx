@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { BlobImage } from "@/shared/ui/blob_image"
 import { ArrowRight, Calendar } from "lucide-react"
 import Link from "next/link"
-import { useLanguage } from "@/contexts/language-context"
 
 interface ArticleCardProps {
   id: string
@@ -26,18 +25,16 @@ export function ArticleCard({
   preview,
   imageUrl,
   slug,
-  language = "ru",
+  language = "en", // Changed default from "ru" to "en" and removed useLanguage dependency
   hasCustomPage = false,
   isMarkdownBased = false,
   date,
 }: ArticleCardProps) {
   const [imageError, setImageError] = useState(false)
-  const { currentLanguage } = useLanguage()
 
   const isArticleAvailable = hasCustomPage || isMarkdownBased
 
-  const effectiveLanguage = currentLanguage || language || "en"
-  const articleUrl = `/${effectiveLanguage}/articles/${slug}`
+  const articleUrl = `/${language}/articles/${slug}`
 
   return (
     <div className="relative group">

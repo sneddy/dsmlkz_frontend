@@ -26,11 +26,11 @@ export async function generateMetadata({ params }: NewsPageProps): Promise<Metad
   }
 
   const locale = normalizeLocale(lang)
-  const t = await tServer(locale)
+  const { translations } = await tServer(locale)
 
   return {
-    title: t.news?.title || "News - DSML Kazakhstan",
-    description: t.news?.description || "Latest news and updates from DSML Kazakhstan community",
+    title: translations.news?.title || "News - DSML Kazakhstan",
+    description: translations.news?.description || "Latest news and updates from DSML Kazakhstan community",
     alternates: {
       canonical: `/${lang}/news`,
       languages: {
@@ -50,25 +50,25 @@ export default async function NewsPage({ params, searchParams }: NewsPageProps) 
   }
 
   const locale = normalizeLocale(lang)
-  const t = await tServer(locale)
+  const { translations } = await tServer(locale)
   const page = Number.parseInt(searchParams.page || "1", 10)
 
   return (
     <div className="min-h-screen bg-background">
       <HeroSection
-        title={t.news?.main_title || "News"}
-        subtitle={t.news?.subtitle_line1 || "Latest news and updates from DSML Kazakhstan community"}
-        description={t.news?.subtitle_line2 || "Stay up to date with the latest events"}
+        title={translations.news?.main_title || "News"}
+        subtitle={translations.news?.subtitle_line1 || "Latest news and updates from DSML Kazakhstan community"}
+        description={translations.news?.subtitle_line2 || "Stay up to date with the latest events"}
         primaryButton={{
-          text: t.news?.daily_updates || "Daily Updates",
+          text: translations.news?.daily_updates || "Daily Updates",
         }}
         secondaryButton={{
-          text: t.news?.current_news || "Current News",
+          text: translations.news?.current_news || "Current News",
         }}
       />
 
       <div className="container mx-auto px-4 py-8">
-        <NewsFeed initialPage={page} locale={locale} translations={t} />
+        <NewsFeed initialPage={page} locale={locale} translations={translations} />
       </div>
     </div>
   )

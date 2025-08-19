@@ -26,11 +26,12 @@ export async function generateMetadata({ params }: JobsPageProps): Promise<Metad
   }
 
   const locale = normalizeLocale(lang)
-  const t = await tServer(locale)
+  const { translations } = await tServer(locale)
 
   return {
-    title: t.jobs?.title || "Jobs - DSML Kazakhstan",
-    description: t.jobs?.description || "Find your next career opportunity in data science and machine learning",
+    title: translations.jobs?.title || "Jobs - DSML Kazakhstan",
+    description:
+      translations.jobs?.description || "Find your next career opportunity in data science and machine learning",
     alternates: {
       canonical: `/${lang}/jobs`,
       languages: {
@@ -50,24 +51,24 @@ export default async function JobsPage({ params, searchParams }: JobsPageProps) 
   }
 
   const locale = normalizeLocale(lang)
-  const t = await tServer(locale)
+  const { translations } = await tServer(locale)
 
   return (
     <div className="min-h-screen bg-background">
       <HeroSection
-        title={t.jobs?.main_title || "Jobs"}
-        subtitle={t.jobs?.subtitle_line1 || "Find your dream job in Data Science, Machine Learning and IT"}
-        description={t.jobs?.subtitle_line2 || "Join leading tech companies in Kazakhstan"}
+        title={translations.jobs?.main_title || "Jobs"}
+        subtitle={translations.jobs?.subtitle_line1 || "Find your dream job in Data Science, Machine Learning and IT"}
+        description={translations.jobs?.subtitle_line2 || "Join leading tech companies in Kazakhstan"}
         primaryButton={{
-          text: t.jobs?.search_job || "Search Jobs",
+          text: translations.jobs?.search_job || "Search Jobs",
         }}
         secondaryButton={{
-          text: t.jobs?.postJob || "Post a Job",
+          text: translations.jobs?.postJob || "Post a Job",
         }}
       />
 
       <div className="container mx-auto px-4 py-8">
-        <JobsFeedServer searchParams={searchParams} locale={locale} translations={t} />
+        <JobsFeedServer searchParams={searchParams} locale={locale} translations={translations} />
       </div>
     </div>
   )

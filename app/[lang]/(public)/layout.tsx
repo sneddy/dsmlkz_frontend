@@ -29,8 +29,7 @@ export default async function LocalizedPublicLayout({
     notFound()
   }
 
-  // Get translations from server based on URL parameter
-  const translations = await tServer(params.lang as "en" | "ru" | "kk")
+  const { translations } = await tServer(params.lang as "en" | "ru" | "kk")
 
   return (
     <LocaleProvider locale={params.lang}>

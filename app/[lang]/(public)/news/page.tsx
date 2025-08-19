@@ -21,9 +21,7 @@ interface NewsPageProps {
 
 export async function generateMetadata({ params }: NewsPageProps): Promise<Metadata> {
   const lang = params.lang as SupportedLang
-  if (!SUPPORTED_LANGS.includes(lang as SupportedLang)) {
-    return {}
-  }
+  if (!SUPPORTED_LANGS.includes(lang)) return {}
 
   const locale = normalizeLocale(lang)
   const { translations } = await tServer(locale)
@@ -32,7 +30,7 @@ export async function generateMetadata({ params }: NewsPageProps): Promise<Metad
     title: translations.news?.title || "News - DSML Kazakhstan",
     description: translations.news?.description || "Latest news and updates from DSML Kazakhstan community",
     alternates: {
-      canonical: `/${lang}/news`,
+      canonical: `/${lang}/news`,            // ← fix: make it a string
       languages: {
         en: "/en/news",
         ru: "/ru/news",
@@ -44,10 +42,7 @@ export async function generateMetadata({ params }: NewsPageProps): Promise<Metad
 
 export default async function NewsPage({ params, searchParams }: NewsPageProps) {
   const lang = params.lang as SupportedLang
-
-  if (!SUPPORTED_LANGS.includes(lang)) {
-    notFound()
-  }
+  if (!SUPPORTED_LANGS.includes(lang)) notFound()
 
   const locale = normalizeLocale(lang)
   const { translations } = await tServer(locale)
@@ -59,12 +54,8 @@ export default async function NewsPage({ params, searchParams }: NewsPageProps) 
         title={translations.news?.main_title || "News"}
         subtitle={translations.news?.subtitle_line1 || "Latest news and updates from DSML Kazakhstan community"}
         description={translations.news?.subtitle_line2 || "Stay up to date with the latest events"}
-        primaryButton={{
-          text: translations.news?.daily_updates || "Daily Updates",
-        }}
-        secondaryButton={{
-          text: translations.news?.current_news || "Current News",
-        }}
+        primaryButton={{ text: translations.news?.daily_updates || "Daily Updates" }}
+        secondaryButton={{ text: translations.news?.current_news || "Current News" }}
       />
 
       <div className="container mx-auto px-4 py-8">
@@ -75,7 +66,5 @@ export default async function NewsPage({ params, searchParams }: NewsPageProps) 
 }
 
 export async function generateStaticParams() {
-  return SUPPORTED_LANGS.map((lang) => ({
-    lang,
-  }))
+  return SUPPORTED_LANGS.map((lang) => ({ lang }))
 }

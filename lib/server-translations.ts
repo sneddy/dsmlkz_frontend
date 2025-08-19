@@ -6,7 +6,23 @@ import { getTranslations } from "@/translations"
  */
 export async function tServer(language: string) {
   const translations = getTranslations(language)
-  return translations
+
+  const t = (key: string, fallback?: string): string => {
+    const keys = key.split(".")
+    let value = translations
+
+    for (const k of keys) {
+      if (value && typeof value === "object" && k in value) {
+        value = value[k]
+      } else {
+        return fallback || key
+      }
+    }
+
+    return typeof value === "string" ? value : fallback || key
+  }
+
+  return { t, translations }
 }
 
 // export function tServerNews() {

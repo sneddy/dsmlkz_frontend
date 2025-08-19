@@ -436,10 +436,10 @@ export function HomeContent() {
       <section className="py-24 bg-gradient-to-r from-[#00AEC7]/10 via-transparent to-[#FFF32A]/10">
         <div className="container px-4 md:px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-pixel font-bold mb-8 text-white leading-tight">
-            Ready to Join the Future of AI in Central Asia?
+            {t("home.cta.title")}
           </h2>
           <p className="text-gray-300 text-lg mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
-            Connect with like-minded professionals, access exclusive resources, and accelerate your career in AI/ML.
+            {t("home.cta.description")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-4">
             <Link href="/auth/signup" className="w-full sm:w-auto">
@@ -447,7 +447,7 @@ export function HomeContent() {
                 size="lg"
                 className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-pixel font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base"
               >
-                Get Started Today
+                {t("home.cta.getStartedButton")}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -457,7 +457,7 @@ export function HomeContent() {
                 size="lg"
                 className="w-full sm:w-auto border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-4 rounded-full transition-all duration-300 bg-transparent text-base font-pixel"
               >
-                Explore Events
+                {t("home.cta.exploreEventsButton")}
               </Button>
             </Link>
           </div>

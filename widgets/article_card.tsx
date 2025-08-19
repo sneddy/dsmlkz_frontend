@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { BlobImage } from "@/shared/ui/blob_image"
 import { ArrowRight, Calendar } from "lucide-react"
 import Link from "next/link"
+import { useLanguage } from "@/contexts/language-context"
 
 interface ArticleCardProps {
   id: string
@@ -31,8 +32,12 @@ export function ArticleCard({
   date,
 }: ArticleCardProps) {
   const [imageError, setImageError] = useState(false)
+  const { currentLanguage } = useLanguage()
 
   const isArticleAvailable = hasCustomPage || isMarkdownBased
+
+  const effectiveLanguage = currentLanguage || language || "en"
+  const articleUrl = `/${effectiveLanguage}/articles/${slug}`
 
   return (
     <div className="relative group">
@@ -76,7 +81,7 @@ export function ArticleCard({
 
           <CardFooter className="p-6 pt-0">
             {isArticleAvailable ? (
-              <Link href={`/articles/${slug}`} className="w-full md:w-auto">
+              <Link href={articleUrl} className="w-full md:w-auto">
                 <Button className="w-full md:w-auto bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-black font-medium transition-all duration-300 transform hover:scale-105">
                   Читать полностью
                   <ArrowRight className="ml-2 h-4 w-4" />

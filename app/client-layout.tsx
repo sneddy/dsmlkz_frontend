@@ -13,7 +13,7 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation"
 import { useRouter } from "next/navigation"
 
 const isSSRPath = (path: string): boolean => {
-  const ssrPaths = ["/news", "/jobs"]
+  const ssrPaths = ["/news", "/jobs", "/articles"] // добавлен /articles в список SSR путей
   return ssrPaths.some((ssrPath) => path === ssrPath || path.startsWith(`${ssrPath}/`))
 }
 

@@ -8,6 +8,40 @@ import { getArticleMetadata } from "../../utils/articles-metadata"
 import { tServer } from "@/lib/server-translations"
 import type { Metadata } from "next"
 
+function parseRussianDate(dateString: string): Date | null {
+  if (!dateString) return null
+
+  // Russian month names mapping
+  const russianMonths: { [key: string]: number } = {
+    января: 0,
+    февраля: 1,
+    марта: 2,
+    апреля: 3,
+    мая: 4,
+    июня: 5,
+    июля: 6,
+    августа: 7,
+    сентября: 8,
+    октября: 9,
+    ноября: 10,
+    декабря: 11,
+  }
+
+  // Try to parse Russian date format "13 августа 2025"
+  const russianDateMatch = dateString.match(/(\d{1,2})\s+(\w+)\s+(\d{4})/)
+  if (russianDateMatch) {
+    const [, day, monthName, year] = russianDateMatch
+    const monthIndex = russianMonths[monthName.toLowerCase()]
+    if (monthIndex !== undefined) {
+      return new Date(Number.parseInt(year), monthIndex, Number.parseInt(day))
+    }
+  }
+
+  // Try standard date parsing as fallback
+  const standardDate = new Date(dateString)
+  return isNaN(standardDate.getTime()) ? null : standardDate
+}
+
 // Gradient border style
 const gradientBorderStyle = {
   borderWidth: "4px",
@@ -27,7 +61,8 @@ export async function generateMetadata({ params }: { params: { slug: string; lan
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dsmlkz.org"
   const canonicalUrl = `${baseUrl}/${lang}/articles/${slug}`
-  const publishDate = metadata.date ? new Date(metadata.date).toISOString() : new Date().toISOString()
+  const parsedDate = metadata.date ? parseRussianDate(metadata.date) : null
+  const publishDate = parsedDate ? parsedDate.toISOString() : new Date().toISOString()
 
   return {
     title: metadata.title,
@@ -88,7 +123,16 @@ export async function generateMetadata({ params }: { params: { slug: string; lan
 
 export default async function ArticlePage({ params }: { params: { slug: string; lang: string } }) {
   const { slug, lang } = params
-  const { t } = await tServer(lang)
+
+  let t: any
+  try {
+    const serverTranslations = await tServer(lang)
+    t = serverTranslations.t
+  } catch (error) {
+    console.error("[v0] Error loading server translations:", error)
+    // Fallback function for translations
+    t = (key: string) => key
+  }
 
   // Get article metadata
   const metadata = getArticleMetadata(slug)
@@ -103,14 +147,15 @@ export default async function ArticlePage({ params }: { params: { slug: string; 
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dsmlkz.org"
-  const publishDate = metadata.date ? new Date(metadata.date).toISOString() : new Date().toISOString()
-  const formattedDate = metadata.date
-    ? new Date(metadata.date).toLocaleDateString(lang === "ru" ? "ru-RU" : lang === "kk" ? "kk-KZ" : "en-US", {
+  const parsedDate = metadata.date ? parseRussianDate(metadata.date) : null
+  const publishDate = parsedDate ? parsedDate.toISOString() : new Date().toISOString()
+  const formattedDate = parsedDate
+    ? parsedDate.toLocaleDateString(lang === "ru" ? "ru-RU" : lang === "kk" ? "kk-KZ" : "en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
       })
-    : ""
+    : metadata.date || "" // Fallback to original date string if parsing fails
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -187,8 +232,13 @@ export default async function ArticlePage({ params }: { params: { slug: string; 
     )
   }
 
-  // Load markdown content
-  const content = await loadMarkdownFile(slug)
+  let content: string | null = null
+  try {
+    content = await loadMarkdownFile(slug)
+  } catch (error) {
+    console.error("[v0] Error loading markdown file:", error)
+    return notFound()
+  }
 
   if (!content) {
     return notFound()

@@ -1,8 +1,7 @@
 "use client"
 
 import type React from "react"
-
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
@@ -11,6 +10,12 @@ import { Button } from "@/components/ui/button"
 import { useSafeAuth } from "@/hooks/use-safe-auth"
 import LanguageSelector from "@/features/i18n/language_selector"
 import { useSafeTranslation } from "@/hooks/use-safe-translation"
+import { useRouter } from "next/navigation"
+
+const isSSRPath = (path: string): boolean => {
+  const ssrPaths = ["/news", "/jobs"]
+  return ssrPaths.some((ssrPath) => path === ssrPath || path.startsWith(`${ssrPath}/`))
+}
 
 export default function ClientLayout({
   children,
@@ -19,30 +24,63 @@ export default function ClientLayout({
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
-  const { user, signOut } = useSafeAuth() // removed profile since it's not available in AuthContext
+  const router = useRouter()
+  const { user, signOut, loading } = useSafeAuth()
   const { t } = useSafeTranslation()
 
   useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "supabase.auth.token" && e.newValue) {
+        console.log("[v0] Auth token detected, refreshing...")
+        router.refresh()
+      }
+    }
+
+    window.addEventListener("storage", handleStorageChange)
+    return () => window.removeEventListener("storage", handleStorageChange)
+  }, [router])
+
+  useEffect(() => {
     console.log("[v0] Navigation auth state:", {
-      user: user ? { id: user.id, email: user.email } : null,
+      user: user ? { id: user.id, email: (user as any).email } : null,
       hasUser: !!user,
+      loading,
       pathname,
     })
-  }, [user, pathname])
+  }, [user, pathname, loading])
 
-  const getCurrentLang = () => {
+  const getCurrentLang = useCallback(() => {
     const segments = pathname.split("/").filter(Boolean)
     const firstSegment = segments[0]
     if (["en", "eng", "ru", "kk"].includes(firstSegment)) {
       return firstSegment === "eng" ? "en" : firstSegment
     }
-    return "en" // default to English
-  }
+
+    if (typeof window !== "undefined") {
+      const storedLang = localStorage.getItem("preferred-language")
+      if (storedLang && ["en", "ru", "kk"].includes(storedLang)) {
+        return storedLang
+      }
+    }
+
+    return "en"
+  }, [pathname])
 
   const currentLang = getCurrentLang()
   const langPrefix = `/${currentLang}`
 
-  const displayName = user?.email ? user.email.split("@")[0] : ""
+  const buildHref = (path: string) => {
+    if (path === "/" || path === "") {
+      return "/"
+    }
+
+    if (isSSRPath(path)) {
+      return `${langPrefix}${path}`
+    }
+    return path
+  }
+
+  const displayName = (user as any)?.email ? (user as any).email.split("@")[0] : ""
 
   // Close mobile menu when path changes
   useEffect(() => {
@@ -54,13 +92,40 @@ export default function ClientLayout({
     document.documentElement.classList.add("dark")
   }, [])
 
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/" || pathname === langPrefix
+    }
+    if (href === `${langPrefix}`) {
+      return pathname === "/" || pathname === langPrefix
+    }
+    return pathname.startsWith(href)
+  }
+
+  const NavLink = ({
+    href,
+    children,
+  }: {
+    href: string
+    children: React.ReactNode
+  }) => (
+    <Link
+      href={href}
+      className={`text-sm font-medium font-pixel ${
+        isActive(href) ? "text-primary" : "text-muted-foreground hover:text-foreground"
+      }`}
+    >
+      {children}
+    </Link>
+  )
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 border-b bg-background">
         <div className="container flex h-16 items-center justify-between py-4">
           {/* ------------- Logo & desktop nav ------------- */}
           <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2 -ml-12">
+            <Link href={langPrefix} className="flex items-center gap-2 -ml-12">
               <Image
                 src="/images/dsml-logo.png"
                 alt="DSML Kazakhstan Logo"
@@ -73,70 +138,14 @@ export default function ClientLayout({
 
             {/* -------- Desktop navigation -------- */}
             <nav className="hidden md:flex items-center gap-6">
-              <Link
-                href="/"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {t("nav.home")}
-              </Link>
-              <Link
-                href={`${langPrefix}/news`}
-                className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/news") ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {t("nav.newsFeed")}
-              </Link>
-              <Link
-                href={`${langPrefix}/jobs`}
-                className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/jobs") ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {t("nav.jobsFeed")}
-              </Link>
-              <Link
-                href="/research"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/research" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {t("nav.research")}
-              </Link>
-              <Link
-                href="/articles"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/articles" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {t("nav.articles")}
-              </Link>
-              <Link
-                href="/events"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/events" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {t("nav.events")}
-              </Link>
-              <Link
-                href="/faces"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/faces" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {t("nav.faces")}
-              </Link>
-              <Link
-                href="/rules"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/rules" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {t("nav.rules")}
-              </Link>
+              <NavLink href="/">{t("nav.home")}</NavLink>
+              <NavLink href={buildHref("/news")}>{t("nav.newsFeed")}</NavLink>
+              <NavLink href={buildHref("/jobs")}>{t("nav.jobsFeed")}</NavLink>
+              <NavLink href={buildHref("/research")}>{t("nav.research")}</NavLink>
+              <NavLink href={buildHref("/articles")}>{t("nav.articles")}</NavLink>
+              <NavLink href={buildHref("/events")}>{t("nav.events")}</NavLink>
+              <NavLink href={buildHref("/faces")}>{t("nav.faces")}</NavLink>
+              <NavLink href={buildHref("/rules")}>{t("nav.rules")}</NavLink>
             </nav>
           </div>
 
@@ -144,38 +153,42 @@ export default function ClientLayout({
           <div className="flex items-center gap-4">
             <LanguageSelector />
 
-            {user ? (
-              <div className="hidden md:flex items-center gap-4">
-                <Link href="/dashboard" className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
-                    <User className="h-4 w-4 text-primary" />
-                  </div>
-                  <span className="text-sm font-medium">{displayName}</span>{" "}
-                  {/* use displayName instead of profile?.nickname */}
-                </Link>
-                <Button
-                  size="sm"
-                  onClick={() => {
-                    const btn = document.activeElement as HTMLButtonElement
-                    if (btn) btn.disabled = true
-                    signOut()
-                  }}
-                >
-                  {t("nav.signout")}
-                </Button>
-              </div>
-            ) : (
-              <div className="hidden md:flex items-center gap-4">
-                <Link href="/auth/signin">
-                  <Button variant="outline" size="sm">
-                    {t("nav.signin")}
+            {/* Desktop auth area */}
+            <div className="hidden md:flex items-center gap-4">
+              {loading ? null : user ? (
+                <>
+                  <Link href={buildHref("/dashboard")} className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+                      <User className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="text-sm font-medium">{displayName}</span>
+                  </Link>
+                  <Button
+                    size="sm"
+                    onClick={(e) => {
+                      const btn = e.currentTarget
+                      btn.disabled = true
+                      Promise.resolve(signOut()).finally(() => {
+                        btn.disabled = false
+                      })
+                    }}
+                  >
+                    {t("nav.signout")}
                   </Button>
-                </Link>
-                <Link href="/auth/signup">
-                  <Button size="sm">{t("nav.signup")}</Button>
-                </Link>
-              </div>
-            )}
+                </>
+              ) : (
+                <>
+                  <Link href="/auth/signin" onClick={() => console.log("[v0] Clicking signin link:", "/auth/signin")}>
+                    <Button variant="outline" size="sm">
+                      {t("nav.signin")}
+                    </Button>
+                  </Link>
+                  <Link href="/auth/signup" onClick={() => console.log("[v0] Clicking signup link:", "/auth/signup")}>
+                    <Button size="sm">{t("nav.signup")}</Button>
+                  </Link>
+                </>
+              )}
+            </div>
 
             {/* Mobile burger */}
             <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMenuOpen((prev) => !prev)}>
@@ -187,89 +200,92 @@ export default function ClientLayout({
         {/* ---------- Mobile menu ---------- */}
         {isMenuOpen && (
           <div className="container md:hidden fixed inset-x-0 top-16 z-50 bg-background border-b shadow-lg py-4 pb-6">
-            <nav className="flex flex-col gap-4">
+            <nav className="flex flex-col gap-4" onClick={() => setIsMenuOpen(false)}>
               <Link
                 href="/"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/" ? "text-primary" : "text-muted-foreground"
-                }`}
+                className={`text-sm font-medium font-pixel ${isActive("/") ? "text-primary" : "text-muted-foreground"}`}
               >
                 {t("nav.home")}
               </Link>
               <Link
-                href={`${langPrefix}/news`}
+                href={buildHref("/news")}
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/news") ? "text-primary" : "text-muted-foreground"
+                  isActive(buildHref("/news")) ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.newsFeed")}
               </Link>
               <Link
-                href={`${langPrefix}/jobs`}
+                href={buildHref("/jobs")}
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/jobs") ? "text-primary" : "text-muted-foreground"
+                  isActive(buildHref("/jobs")) ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.jobsFeed")}
               </Link>
               <Link
-                href="/research"
+                href={buildHref("/research")}
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/research") ? "text-primary" : "text-muted-foreground"
+                  isActive(buildHref("/research")) ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.research")}
               </Link>
               <Link
-                href="/articles"
+                href={buildHref("/articles")}
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/articles") ? "text-primary" : "text-muted-foreground"
+                  isActive(buildHref("/articles")) ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.articles")}
               </Link>
               <Link
-                href="/events"
+                href={buildHref("/events")}
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/events") ? "text-primary" : "text-muted-foreground"
+                  isActive(buildHref("/events")) ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.events")}
               </Link>
               <Link
-                href="/faces"
+                href={buildHref("/faces")}
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/faces") ? "text-primary" : "text-muted-foreground"
+                  isActive(buildHref("/faces")) ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.faces")}
               </Link>
               <Link
-                href="/rules"
+                href={buildHref("/rules")}
                 className={`text-sm font-medium font-pixel ${
-                  pathname.includes("/rules") ? "text-primary" : "text-muted-foreground"
+                  isActive(buildHref("/rules")) ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 {t("nav.rules")}
               </Link>
 
               {/* Auth buttons mobile */}
-              {user ? (
+              {loading ? null : user ? (
                 <>
-                  <Link href="/dashboard" className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                  <Link
+                    href={buildHref("/dashboard")}
+                    className="flex items-center gap-2 text-sm font-medium text-muted-foreground"
+                  >
                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
                       <User className="h-3 w-3 text-primary" />
                     </div>
-                    <span>{displayName}</span> {/* use displayName instead of profile?.nickname */}
+                    <span>{displayName}</span>
                   </Link>
                   <Button
                     variant="outline"
                     size="sm"
                     className="w-full bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90 border-[#FFF32A]"
-                    onClick={() => {
-                      const btn = document.activeElement as HTMLButtonElement
-                      if (btn) btn.disabled = true
-                      signOut()
+                    onClick={(e) => {
+                      const btn = e.currentTarget
+                      btn.disabled = true
+                      Promise.resolve(signOut()).finally(() => {
+                        btn.disabled = false
+                      })
                     }}
                   >
                     {t("nav.signout")}
@@ -277,12 +293,18 @@ export default function ClientLayout({
                 </>
               ) : (
                 <div className="flex flex-col gap-2">
-                  <Link href="/auth/signin">
+                  <Link
+                    href="/auth/signin"
+                    onClick={() => console.log("[v0] Clicking mobile signin link:", "/auth/signin")}
+                  >
                     <Button variant="outline" size="sm" className="w-full bg-transparent">
                       {t("nav.signin")}
                     </Button>
                   </Link>
-                  <Link href="/auth/signup">
+                  <Link
+                    href="/auth/signup"
+                    onClick={() => console.log("[v0] Clicking mobile signup link:", "/auth/signup")}
+                  >
                     <Button size="sm" className="w-full">
                       {t("nav.signup")}
                     </Button>

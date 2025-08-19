@@ -23,10 +23,15 @@ export function ClientLanguageProvider({ children }: { children: React.ReactNode
     } else if (pathname.startsWith("/en/")) {
       detectedLanguage = "en"
     } else {
-      // For non-localized routes like /auth/*, /dashboard/*, detect from browser or default to en
-      const browserLang = typeof window !== "undefined" ? navigator.language.split("-")[0] : "en"
-      if (browserLang === "ru" || browserLang === "kk") {
-        detectedLanguage = browserLang as Language
+      // For non-localized routes like /auth/*, /dashboard/*, detect from localStorage or browser
+      const savedLang = typeof window !== "undefined" ? localStorage.getItem("preferred-language") : null
+      if (savedLang && ["en", "ru", "kk"].includes(savedLang)) {
+        detectedLanguage = savedLang as Language
+      } else {
+        const browserLang = typeof window !== "undefined" ? navigator.language.split("-")[0] : "en"
+        if (browserLang === "ru" || browserLang === "kk") {
+          detectedLanguage = browserLang as Language
+        }
       }
     }
 
@@ -35,6 +40,29 @@ export function ClientLanguageProvider({ children }: { children: React.ReactNode
       setTranslations(getTranslations(detectedLanguage))
     }
   }, [pathname, language])
+
+  useEffect(() => {
+    const handleLanguageChange = (event: CustomEvent) => {
+      const newLanguage = event.detail.language as Language
+      console.log("[v0] ClientLanguageProvider: language change event received:", newLanguage)
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("preferred-language", newLanguage)
+      }
+
+      if (newLanguage !== language) {
+        setLanguage(newLanguage)
+        setTranslations(getTranslations(newLanguage))
+        console.log("[v0] ClientLanguageProvider: language updated to:", newLanguage)
+      }
+    }
+
+    window.addEventListener("languageChange", handleLanguageChange as EventListener)
+
+    return () => {
+      window.removeEventListener("languageChange", handleLanguageChange as EventListener)
+    }
+  }, [language])
 
   return (
     <LanguageProvider language={language} translations={translations}>

@@ -3,33 +3,16 @@
 import { usePathname, useSearchParams } from "next/navigation"
 import { useMemo } from "react"
 import { Button } from "@/components/ui/button"
+import { useLanguageSwitcher } from "@/hooks/use-language-switcher"
 
 type Locale = "ru" | "en" | "kk"
 
-const CANONICAL_PREFIX: Record<Locale, string> = {
-  ru: "ru",
-  en: "en",
-  kk: "kk",
-}
-
 const LOCALE_RE = /^\/(ru|en|kk|eng)(?=\/|$)/
-
-function buildHref(pathname: string, search: string, hash: string, target: Locale): string {
-  const rest = pathname.replace(LOCALE_RE, "") || "/"
-  const base = `/${CANONICAL_PREFIX[target]}${rest}`
-  const withQuery = search ? `${base}?${search}` : base
-  return hash ? `${withQuery}${hash}` : withQuery
-}
-
-function getCurrentSection(pathname: string): string {
-  const withoutLocale = pathname.replace(LOCALE_RE, "")
-  const segments = withoutLocale.split("/").filter(Boolean)
-  return segments[0] || ""
-}
 
 export function LanguageSwitcher({ currentLocale }: { currentLocale?: string }) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const switchLanguage = useLanguageSwitcher()
 
   const normalizedCurrent = useMemo<Locale>(() => {
     // Extract locale from pathname first
@@ -48,21 +31,7 @@ export function LanguageSwitcher({ currentLocale }: { currentLocale?: string }) 
 
   const go = (next: Locale) => {
     if (next === normalizedCurrent) return
-
-    const hash = typeof window !== "undefined" ? window.location.hash : ""
-    const href = buildHref(pathname, searchParams.toString(), hash, next)
-
-    console.log("[v0] Language switch (full redirect):", {
-      from: pathname,
-      to: href,
-      locale: next,
-      section: getCurrentSection(pathname),
-    })
-
-    // Полный редирект для SSR перерендеринга
-    if (typeof window !== "undefined") {
-      window.location.href = href
-    }
+    switchLanguage(next)
   }
 
   const Btn = ({ code, label }: { code: Locale; label: string }) => (

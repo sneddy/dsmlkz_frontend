@@ -37,6 +37,15 @@ export async function middleware(req: NextRequest) {
 
   const pathname = req.nextUrl.pathname
 
+  if (
+    pathname.startsWith("/auth/") ||
+    pathname.startsWith("/en/auth/") ||
+    pathname.startsWith("/ru/auth/") ||
+    pathname.startsWith("/kk/auth/")
+  ) {
+    return NextResponse.next()
+  }
+
   if (pathname.startsWith("/eng/")) {
     const newPath = pathname.replace("/eng/", "/en/")
     return NextResponse.redirect(new URL(newPath + req.nextUrl.search, req.url))

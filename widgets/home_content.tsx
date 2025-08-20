@@ -106,7 +106,7 @@ export function HomeContent() {
         <div className="container px-4">
           <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl">
             {/* Desktop image */}
-            <div className="hidden md:block w-full h-[70vh] relative">
+            <div className="hidden md:block w-full h-[50vh] relative">
               <Image
                 src="/images/moon-hero-desktop.png"
                 alt="DSML Kazakhstan Community - Desktop Hero"
@@ -118,7 +118,7 @@ export function HomeContent() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
             </div>
             {/* Mobile image */}
-            <div className="block md:hidden w-full h-[50vh] relative">
+            <div className="block md:hidden w-full h-[40vh] relative">
               <Image
                 src="/images/moon-hero-mobile.png"
                 alt="DSML Kazakhstan Community - Mobile Hero"

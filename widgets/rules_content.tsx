@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useTranslation } from "@/hooks/use-translation"
-import { SectionHero } from "@/widgets/section_hero"
+import HeroSection from "@/components/hero-section"
 import { Users, MessageSquare, Shield, Heart, BookOpen, Lightbulb, Target, Globe, Award, UserCheck } from "lucide-react"
 
 export function RulesContent() {
@@ -47,12 +47,18 @@ export function RulesContent() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <SectionHero
+    <div className="min-h-screen">
+      <HeroSection
         title={t("rules.title")}
-        subtitleLine1={t("rules.description")}
-        gradientFrom="#00AEC7"
-        gradientTo="#FFF32A"
+        subtitle={t("rules.description")}
+        primaryButton={{
+          text: t("rules.cta.button"),
+          href: "/dashboard",
+        }}
+        secondaryButton={{
+          text: "Learn More",
+          href: "#content",
+        }}
       />
 
       <div className="container py-8">

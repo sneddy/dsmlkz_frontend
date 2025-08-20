@@ -11,6 +11,7 @@ import { useSafeAuth } from "@/hooks/use-safe-auth"
 import LanguageSelector from "@/features/i18n/language_selector"
 import { useSafeTranslation } from "@/hooks/use-safe-translation"
 import { useRouter } from "next/navigation"
+import { useSafeProfile } from "@/hooks/use-safe-profile"
 
 const isSSRPath = (path: string): boolean => {
   const ssrPaths = ["/news", "/jobs", "/articles"] // добавлен /articles в список SSR путей
@@ -27,6 +28,7 @@ export default function ClientLayout({
   const router = useRouter()
   const { user, signOut, loading } = useSafeAuth()
   const { t } = useSafeTranslation()
+  const { profile } = useSafeProfile()
 
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
@@ -48,6 +50,13 @@ export default function ClientLayout({
       pathname,
     })
   }, [user, pathname, loading])
+
+  useEffect(() => {
+    console.log("[v0] Profile state in navigation:", {
+      profile: profile ? { nickname: profile.nickname, id: profile.id } : null,
+      user: user ? { id: user.id, email: (user as any).email } : null,
+    })
+  }, [profile, user])
 
   const getCurrentLang = useCallback(() => {
     const segments = pathname.split("/").filter(Boolean)
@@ -80,17 +89,19 @@ export default function ClientLayout({
     return path
   }
 
-  const displayName = (user as any)?.email ? (user as any).email.split("@")[0] : ""
-
-  // Close mobile menu when path changes
-  useEffect(() => {
-    setIsMenuOpen(false)
-  }, [pathname])
-
-  // Enforce dark mode
-  useEffect(() => {
-    document.documentElement.classList.add("dark")
-  }, [])
+  const displayName = (() => {
+    if (profile?.nickname) {
+      console.log("[v0] Using nickname from profile:", profile.nickname)
+      return profile.nickname
+    }
+    if (user && (user as any).email) {
+      const emailPrefix = (user as any).email.split("@")[0]
+      console.log("[v0] Using email prefix as fallback:", emailPrefix)
+      return emailPrefix
+    }
+    console.log("[v0] Using Anon User as fallback")
+    return "Anon User"
+  })()
 
   const isActive = (href: string) => {
     if (href === "/") {

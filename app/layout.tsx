@@ -9,6 +9,7 @@ import type { Metadata } from "next"
 import ClientLayout from "./client-layout"
 import { AuthProvider } from "@/contexts/auth-context"
 import { LanguageProvider } from "@/contexts/language-context"
+import { ProfileProvider } from "@/features/profile/client/ProfileProvider"
 import { getTranslations } from "@/translations/index"
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] })
@@ -48,7 +49,9 @@ export default function RootLayout({
         {/* Now locale is managed only through URL */}
         <LanguageProvider language="en" translations={defaultTranslations}>
           <AuthProvider>
-            <ClientLayout>{children}</ClientLayout>
+            <ProfileProvider>
+              <ClientLayout>{children}</ClientLayout>
+            </ProfileProvider>
           </AuthProvider>
         </LanguageProvider>
         <Toaster />

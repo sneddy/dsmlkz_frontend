@@ -1,7 +1,7 @@
 import { tServer } from "@/lib/server-translations"
 import { ArticleCard } from "@/widgets/article_card"
 import { articlesMetadata } from "../utils/articles-metadata"
-import { SectionHero } from "@/widgets/section_hero"
+import HeroSection from "@/components/hero-section"
 import type { Metadata } from "next"
 
 interface ArticlesPageProps {
@@ -44,17 +44,23 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       {/* Hero Section */}
-      <SectionHero
+      <HeroSection
         title={translations.title}
-        subtitleLine1={translations.description}
-        gradientFrom="#FFF32A"
-        gradientTo="#00AEC7"
-        className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
+        subtitle={translations.description}
+        description="Читайте экспертные материалы, интервью и исследования от ведущих специалистов в области Data Science и Machine Learning"
+        primaryButton={{
+          text: translations.ctaButton,
+          href: "#cta",
+        }}
+        secondaryButton={{
+          text: "Все статьи",
+          href: "#articles",
+        }}
       />
 
       <div className="container py-8">
         {/* Articles Grid */}
-        <div className="space-y-8">
+        <div className="space-y-8" id="articles">
           {visibleArticles.map((article) => (
             <ArticleCard
               key={article.id}
@@ -72,7 +78,7 @@ export default async function ArticlesPage({ params }: ArticlesPageProps) {
         </div>
 
         {/* Call to Action */}
-        <div className="mt-16">
+        <div className="mt-16" id="cta">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-[#FFF32A]/5 to-[#00AEC7]/5 rounded-2xl blur-2xl"></div>
             <div className="relative bg-gray-800/30 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 text-center">

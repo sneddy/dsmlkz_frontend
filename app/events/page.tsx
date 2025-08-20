@@ -9,7 +9,7 @@ import { BlobImage } from "@/shared/ui/blob_image"
 import { Calendar, Clock, MapPin, Users, ExternalLink, Ticket, ChevronDown, ChevronUp, Coffee } from "lucide-react"
 import Link from "next/link"
 import { useTranslation } from "@/hooks/use-translation"
-import { SectionHero } from "@/widgets/section_hero"
+import HeroSection from "@/components/hero-section"
 
 const speakerProfiles = [
   {
@@ -57,12 +57,7 @@ export default function EventsPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <SectionHero
-        title={t("nav.events")}
-        subtitleLine1={t("events.description")}
-        gradientFrom="#00AEC7"
-        gradientTo="#FFF32A"
-      />
+      <HeroSection title={t("nav.events")} subtitle={t("events.description")} />
 
       <div className="container py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

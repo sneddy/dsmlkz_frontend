@@ -5,12 +5,12 @@ import { ArrowRight, Play } from "lucide-react"
 interface HeroSectionProps {
   title: string
   subtitle: string
-  description: string
-  primaryButton: {
+  description?: string
+  primaryButton?: {
     text: string
     href?: string
   }
-  secondaryButton: {
+  secondaryButton?: {
     text: string
     href?: string
   }
@@ -37,54 +37,62 @@ export default function HeroSection({
           {subtitle}
         </p>
 
-        <p className="text-base sm:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed mb-8 sm:mb-12 px-4">
-          {description}
-        </p>
+        {description && (
+          <p className="text-base sm:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed mb-8 sm:mb-12 px-4">
+            {description}
+          </p>
+        )}
 
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4">
-          {primaryButton.href ? (
-            <Link href={primaryButton.href} className="w-full sm:w-auto">
-              <Button
-                size="lg"
-                className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base font-pixel"
-              >
-                {primaryButton.text}
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-          ) : (
-            <Button
-              size="lg"
-              className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base font-pixel"
-            >
-              {primaryButton.text}
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          )}
+        {(primaryButton || secondaryButton) && (
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4">
+            {primaryButton &&
+              (primaryButton.href ? (
+                <Link href={primaryButton.href} className="w-full sm:w-auto">
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base font-pixel"
+                  >
+                    {primaryButton.text}
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base font-pixel"
+                >
+                  {primaryButton.text}
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              ))}
 
-          {secondaryButton.href ? (
-            <Link href={secondaryButton.href} className="w-full sm:w-auto">
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto border-2 border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7]/10 backdrop-blur-sm px-8 py-4 rounded-full transition-all duration-300 group bg-transparent text-base font-pixel"
-              >
-                <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
-                {secondaryButton.text}
-              </Button>
-            </Link>
-          ) : (
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full sm:w-auto border-2 border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7]/10 backdrop-blur-sm px-8 py-4 rounded-full transition-all duration-300 group bg-transparent text-base font-pixel"
-            >
-              <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
-              {secondaryButton.text}
-            </Button>
-          )}
-        </div>
+            {secondaryButton &&
+              (secondaryButton.href ? (
+                <Link href={secondaryButton.href} className="w-full sm:w-auto">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full sm:w-auto border-2 border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7]/10 backdrop-blur-sm px-8 py-4 rounded-full transition-all duration-300 group bg-transparent text-base font-pixel"
+                  >
+                    <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+                    {secondaryButton.text}
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto border-2 border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7]/10 backdrop-blur-sm px-8 py-4 rounded-full transition-all duration-300 group bg-transparent text-base font-pixel"
+                >
+                  <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+                  {secondaryButton.text}
+                </Button>
+              ))}
+          </div>
+        )}
       </div>
     </section>
   )
 }
+
+export { HeroSection }

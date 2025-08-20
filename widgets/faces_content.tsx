@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { useTranslation } from "@/hooks/use-translation"
 import { getSupabaseClient } from "@/lib/supabase-client"
 import { CommunityFaceCard } from "@/widgets/community_face_card"
-import { SectionHero } from "@/widgets/section_hero"
+import { HeroSection } from "@/components/hero-section"
 
 export function FacesContent() {
   const [faces, setFaces] = useState<any[]>([])
@@ -61,12 +61,18 @@ export function FacesContent() {
   const hasMore = visibleCount < faces.length
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <SectionHero
+    <div className="min-h-screen">
+      <HeroSection
         title={t("faces.title")}
-        subtitleLine1={t("faces.description")}
-        gradientFrom="#00AEC7"
-        gradientTo="#FFF32A"
+        subtitle={t("faces.description")}
+        primaryButton={{
+          text: "Explore Community",
+          href: "/dashboard",
+        }}
+        secondaryButton={{
+          text: "Join Us",
+          href: "/auth/signup",
+        }}
       />
 
       <div className="container py-8">

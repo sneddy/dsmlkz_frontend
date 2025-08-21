@@ -39,34 +39,34 @@ A modern, multilingual community platform for Data Science and Machine Learning 
 ### Installation
 
 1. **Clone the repository**
-   \`\`\`bash
+   ```bash
    git clone https://github.com/your-org/dsml-kazakhstan.git
    cd dsml-kazakhstan
-   \`\`\`
+   ```
 
 2. **Install dependencies**
-   \`\`\`bash
+   ```bash
    npm install
-   \`\`\`
+   ```
 
 3. **Set up environment variables**
-   \`\`\`bash
+   ```bash
    cp .env.example .env.local
-   \`\`\`
+   ```
    
    Fill in your environment variables:
-   \`\`\`env
+   ```env
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
    NEXT_PUBLIC_GA_MEASUREMENT_ID=your_ga_id
    NEXT_PUBLIC_APP_URL=http://localhost:3000
-   \`\`\`
+   ```
 
 4. **Run the development server**
-   \`\`\`bash
+   ```bash
    npm run dev
-   \`\`\`
+   ```
 
 5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
@@ -75,7 +75,7 @@ A modern, multilingual community platform for Data Science and Machine Learning 
 
 This project follows **Feature-Sliced Design (FSD)** methodology for better maintainability and scalability:
 
-\`\`\`
+```
 📁 shared/           # Reusable resources
 ├── 📁 ui/           # UI primitives & components
 ├── 📁 lib/          # Utilities & helpers  
@@ -99,11 +99,11 @@ This project follows **Feature-Sliced Design (FSD)** methodology for better main
 └── 📁 pages/        # Route pages
 
 📁 _deprecated/      # Legacy components
-\`\`\`
+```
 
 ## 📁 Project Structure
 
-\`\`\`
+```
 dsml-kazakhstan/
 ├── 📁 app/                                    # Next.js App Router
 │   ├── 📄 layout.tsx                         # Root layout with providers
@@ -298,7 +298,7 @@ dsml-kazakhstan/
 ├── 📄 DEPRECATIONS.md                        # Deprecation tracking
 ├── 📄 ROUTES_USAGE.md                        # Route usage documentation
 └── 📄 package.json                           # Dependencies & scripts
-\`\`\`
+```
 
 ## 🔧 Key Architecture Changes
 
@@ -358,7 +358,7 @@ dsml-kazakhstan/
 
 ### 🔄 Import Path Aliases
 
-\`\`\`typescript
+```typescript
 // New FSD-based imports
 import { HomeContent } from "@/widgets/home_content"
 import { AuthGuard } from "@/features/auth/auth_guard"
@@ -367,11 +367,11 @@ import { BlobImage } from "@/shared/ui/blob_image"
 
 // Legacy imports (still supported)
 import { Button } from "@/components/ui/button"
-\`\`\`
+```
 
 ## 🔧 Available Scripts
 
-\`\`\`bash
+```bash
 # Development
 npm run dev          # Start development server
 npm run build        # Build for production
@@ -382,13 +382,13 @@ npm run type-check   # Run TypeScript checks
 # Database
 npm run db:generate  # Generate Supabase types
 npm run db:push      # Push database changes
-\`\`\`
+```
 
 ## 🌍 Environment Variables
 
 Create a `.env.local` file with the following variables:
 
-\`\`\`env
+```env
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -399,7 +399,7 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID=your_google_analytics_id
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-\`\`\`
+```
 
 ## 🚀 Deployment
 

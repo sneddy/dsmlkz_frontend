@@ -1,51 +1,24 @@
-"use client"
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ExternalLink, MessageCircle, Users, Calendar, Briefcase, ArrowRight, Play } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-import { useTranslation } from "@/hooks/use-translation"
-import { useEffect, useState } from "react"
 import { CollaborationCard } from "@/widgets/collaboration_card"
 
-export function HomeContent() {
-  const { t } = useTranslation()
-  const [isClient, setIsClient] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
+interface HomeContentSSRProps {
+  translations: any
+  lang: string
+}
 
-  // Устанавливаем флаг isClient после монтирования компонента
-  useEffect(() => {
-    setIsClient(true)
-    // Добавляем небольшую задержку для плавной анимации появления
-    const timer = setTimeout(() => setIsVisible(true), 100)
-    return () => clearTimeout(timer)
-  }, [])
-
-  const gradientBorderStyle = {
-    borderWidth: "2px",
-    borderStyle: "solid",
-    borderImage: "linear-gradient(135deg, #FFF32A, #00AEC7, #FFF32A) 1",
-  }
-
-  // Если компонент еще не смонтирован на клиенте, показываем улучшенный скелетон
-  if (!isClient) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
-        <div className="container py-8 space-y-8">
-          <div className="h-96 bg-gradient-to-r from-slate-800 to-slate-700 animate-pulse rounded-2xl mb-8 shadow-2xl"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div
-                key={i}
-                className="h-64 bg-gradient-to-br from-slate-800 to-slate-700 animate-pulse rounded-xl shadow-lg"
-              ></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    )
+export function HomeContentSSR({ translations, lang }: HomeContentSSRProps) {
+  const t = (key: string) => {
+    const keys = key.split(".")
+    let value = translations
+    for (const k of keys) {
+      value = value?.[k]
+    }
+    return value || key
   }
 
   const communityStats = [
@@ -55,11 +28,15 @@ export function HomeContent() {
     { icon: Briefcase, label: "Job Placements", value: "500+", color: "text-green-400" },
   ]
 
+  const gradientBorderStyle = {
+    borderWidth: "2px",
+    borderStyle: "solid",
+    borderImage: "linear-gradient(135deg, #FFF32A, #00AEC7, #FFF32A) 1",
+  }
+
   return (
-    <div
-      className={`min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800 transition-opacity duration-1000 ${isVisible ? "opacity-100" : "opacity-0"}`}
-    >
-      {/* Hero Section with enhanced gradient background and better text styling */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
+      {/* Hero Section */}
       <section className="relative overflow-hidden py-16 px-4">
         <div className="absolute inset-0 bg-gradient-to-br from-[#00AEC7]/20 via-slate-900/80 to-[#FFF32A]/20"></div>
         <div className="relative max-w-7xl mx-auto text-center z-10">
@@ -78,7 +55,7 @@ export function HomeContent() {
 
           {/* Buttons in hero section */}
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4 mb-16">
-            <Link href="/auth/signup" className="w-full sm:w-auto">
+            <Link href={`/${lang}/auth/signup`} className="w-full sm:w-auto">
               <Button
                 size="lg"
                 className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base font-pixel"
@@ -87,7 +64,7 @@ export function HomeContent() {
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Link href="/events" className="w-full sm:w-auto">
+            <Link href={`/${lang}/events`} className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="lg"
@@ -101,7 +78,7 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Hero Image Section with proper responsive images */}
+      {/* Hero Image Section */}
       <section className="relative w-full overflow-hidden mb-16">
         <div className="container px-4">
           <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl">
@@ -133,7 +110,7 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Stats Section - Enhanced with glassmorphism effects */}
+      {/* Stats Section */}
       <section className="py-20 relative">
         <div className="absolute inset-0 bg-gradient-to-r from-[#00AEC7]/5 to-[#FFF32A]/5"></div>
         <div className="container px-4 md:px-6 relative z-10">
@@ -153,7 +130,7 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Community Description - Enhanced typography */}
+      {/* Community Description */}
       <section className="py-20 bg-gradient-to-r from-slate-800/50 to-slate-900/50 backdrop-blur-sm">
         <div className="container px-4 md:px-6">
           <div className="max-w-4xl mx-auto text-center">
@@ -167,7 +144,7 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Telegram Channels Section - Enhanced cards */}
+      {/* Telegram Channels Section */}
       <section className="py-20 container px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {/* Discussion Hub */}
@@ -193,7 +170,7 @@ export function HomeContent() {
                 </Badge>
               </div>
               <Link
-                href="/auth/signup"
+                href={`/${lang}/auth/signup`}
                 className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link font-medium"
               >
                 Register to join
@@ -367,7 +344,7 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Collaboration Section - Enhanced with modern design */}
+      {/* Collaboration Section */}
       <section className="py-24 bg-gradient-to-r from-slate-800/30 to-slate-900/30 backdrop-blur-sm">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-20">
@@ -442,7 +419,7 @@ export function HomeContent() {
             {t("home.cta.description")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-4">
-            <Link href="/auth/signup" className="w-full sm:w-auto">
+            <Link href={`/${lang}/auth/signup`} className="w-full sm:w-auto">
               <Button
                 size="lg"
                 className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-pixel font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base"
@@ -451,7 +428,7 @@ export function HomeContent() {
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Link href="/events" className="w-full sm:w-auto">
+            <Link href={`/${lang}/events`} className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="lg"

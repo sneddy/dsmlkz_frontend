@@ -121,8 +121,8 @@ export async function generateMetadata({ params }: { params: { slug: string; lan
   }
 }
 
-export default async function ArticlePage({ params }: { params: { slug: string; lang: string } }) {
-  const { slug, lang } = params
+export default async function ArticlePage({ params }: { params: Promise<{ lang: string; slug: string }> }) {
+  const { lang, slug } = await params
 
   let t: any
   try {

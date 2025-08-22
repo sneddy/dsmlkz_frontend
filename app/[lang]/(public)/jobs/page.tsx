@@ -15,17 +15,19 @@ function normalizeLocale(lang: string): "en" | "ru" | "kk" {
 }
 
 interface JobsPageProps {
-  params: { lang: string }
-  searchParams: { page?: string; search?: string; location?: string; type?: string }
+  params: Promise<{ lang: string }>
+  searchParams: Promise<{ page?: string; search?: string }>
 }
 
 export async function generateMetadata({ params }: JobsPageProps): Promise<Metadata> {
-  const lang = params.lang as SupportedLang
-  if (!SUPPORTED_LANGS.includes(lang as SupportedLang)) {
+  const { lang } = await params
+  const supportedLang = lang as SupportedLang
+  
+  if (!SUPPORTED_LANGS.includes(supportedLang)) {
     return {}
   }
 
-  const locale = normalizeLocale(lang)
+  const locale = normalizeLocale(supportedLang)
   const { translations } = await tServer(locale)
 
   return {
@@ -33,7 +35,7 @@ export async function generateMetadata({ params }: JobsPageProps): Promise<Metad
     description:
       translations.jobs?.description || "Find your next career opportunity in data science and machine learning",
     alternates: {
-      canonical: `/${lang}/jobs`,
+      canonical: `/${supportedLang}/jobs`,
       languages: {
         en: "/en/jobs",
         ru: "/ru/jobs",
@@ -44,13 +46,16 @@ export async function generateMetadata({ params }: JobsPageProps): Promise<Metad
 }
 
 export default async function JobsPage({ params, searchParams }: JobsPageProps) {
-  const lang = params.lang as SupportedLang
+  const { lang } = await params
+  const { page: pageParam, search: searchParam } = await searchParams
+  
+  const supportedLang = lang as SupportedLang
 
-  if (!SUPPORTED_LANGS.includes(lang)) {
+  if (!SUPPORTED_LANGS.includes(supportedLang)) {
     notFound()
   }
 
-  const locale = normalizeLocale(lang)
+  const locale = normalizeLocale(supportedLang)
   const { translations } = await tServer(locale)
 
   return (
@@ -68,7 +73,7 @@ export default async function JobsPage({ params, searchParams }: JobsPageProps) 
       />
 
       <div className="container mx-auto px-4 py-8">
-        <JobsFeedServer searchParams={searchParams} locale={locale} translations={translations} />
+        <JobsFeedServer searchParams={{ page: pageParam, search: searchParam }} locale={locale} translations={translations} />
       </div>
     </div>
   )

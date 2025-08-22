@@ -23,7 +23,11 @@ export default function PostSignupPage() {
 
   useEffect(() => {
     if (user) {
-      router.push("/dashboard")
+      // Добавляем refresh для корректной инициализации ProfileProvider
+      if (typeof window !== "undefined") {
+        console.log("User verified, refreshing page before dashboard redirect")
+        window.location.href = "/dashboard"
+      }
     }
   }, [user, router])
 

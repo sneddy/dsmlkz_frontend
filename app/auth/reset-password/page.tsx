@@ -10,7 +10,8 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useTranslation } from "@/hooks/use-translation"
 import { getSupabaseClient } from "@/lib/supabase-client"
-import { toast } from "@/shared/lib/hooks/use-toast"
+import { toast } from "@/hooks/use-toast"
+import { DEBUG } from "@/features/auth/constants"
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("")
@@ -68,9 +69,11 @@ export default function ResetPasswordPage() {
           description: t("auth.passwordUpdatedDescription"),
         })
 
+        // Добавляем refresh для корректной инициализации auth состояния
         setTimeout(() => {
-          router.push("/auth/signin")
-        }, 2000)
+          if (DEBUG) console.log("Refreshing page after successful password reset")
+          window.location.reload()
+        }, 1000) // 1 секунда задержка для показа toast
       }
     } catch (error: any) {
       setError(error.message || t("auth.genericError"))

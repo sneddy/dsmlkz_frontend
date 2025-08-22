@@ -1,0 +1,4 @@
+/* Экспортируем все стили */
+@import './globals.css';
+@import './components.css';
+@import './utilities.css';

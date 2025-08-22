@@ -55,7 +55,7 @@ export function HomeContentSSR({ translations, lang }: HomeContentSSRProps) {
 
           {/* Buttons in hero section */}
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4 mb-16">
-            <Link href={`/${lang}/auth/signup`} className="w-full sm:w-auto">
+            <Link href="/auth/signup" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base font-pixel"
@@ -419,7 +419,7 @@ export function HomeContentSSR({ translations, lang }: HomeContentSSRProps) {
             {t("home.cta.description")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-4">
-            <Link href={`/${lang}/auth/signup`} className="w-full sm:w-auto">
+            <Link href="/auth/signup" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-pixel font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base"

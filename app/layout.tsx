@@ -10,6 +10,8 @@ import ClientLayout from "./client-layout"
 import { AuthProvider } from "@/contexts/auth-context"
 import { LanguageProvider } from "@/contexts/language-context"
 import { ProfileProvider } from "@/features/profile/client/ProfileProvider"
+import { LanguageSyncProvider } from "@/components/language-sync-provider"
+import { LanguageDebug } from "@/components/language-debug"
 import { getTranslations } from "@/translations/index"
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] })
@@ -26,7 +28,7 @@ export const metadata: Metadata = {
     icon: "/images/dsml-logo.png",
     apple: "/images/dsml-logo.png",
   },
-    generator: 'v0.app'
+  generator: 'v0.app'
 }
 
 export default function RootLayout({
@@ -34,10 +36,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const defaultTranslations = getTranslations("en")
+  const defaultTranslations = getTranslations("ru")
 
   return (
-    <html lang="en" className={`dark ${pixelFont.variable}`} suppressHydrationWarning>
+    <html lang="ru" className={`dark ${pixelFont.variable}`} suppressHydrationWarning>
       <head>
         <link rel="alternate" type="application/rss+xml" title="DSML Kazakhstan News" href="/news.xml" />
       </head>
@@ -46,13 +48,16 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <GoogleAnalytics />
         </Suspense>
-        {/* Now locale is managed only through URL */}
-        <LanguageProvider language="en" translations={defaultTranslations}>
+        {/* Language provider with Russian as default */}
+        <LanguageProvider language="ru" translations={defaultTranslations}>
+          <LanguageSyncProvider />
           <AuthProvider>
             <ProfileProvider>
               <ClientLayout>{children}</ClientLayout>
             </ProfileProvider>
           </AuthProvider>
+          {/* Debug component for testing language sync */}
+          <LanguageDebug />
         </LanguageProvider>
         <Toaster />
       </body>

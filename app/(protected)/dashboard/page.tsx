@@ -26,7 +26,7 @@ import {
 } from "lucide-react"
 import { AuthGuard } from "@/features/auth/auth_guard"
 import { ErrorBoundaryWrapper } from "@/shared/ui/error_boundary_wrapper"
-import { toast } from "@/shared/lib/hooks/use-toast"
+import { toast } from "@/hooks/use-toast"
 import { useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 

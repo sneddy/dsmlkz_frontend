@@ -1,89 +1,235 @@
-export function formatJobDate(dateString: string): string {
-  const date = new Date(dateString)
-  const now = new Date()
-  const diffTime = Math.abs(now.getTime() - date.getTime())
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+// Утилиты для jobs - создаем новый файл с реальными утилитами
 
-  if (diffDays === 1) return "вчера"
-  if (diffDays < 7) return `${diffDays} дн. назад`
-
-  // For dates older than a week, show day, month and year
-  const day = date.getDate()
-  const month = date.getMonth()
-  const year = date.getFullYear()
-
-  const monthNames = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"]
-
-  return `${day} ${monthNames[month]} ${year}`
+// Типы для возвращаемых значений
+export interface TruncatedText {
+  text: string
+  truncated: boolean
 }
 
-export function getChannelInfo(channelId: number) {
+export interface ChannelInfo {
+  type: string
+  bgColor: string
+  color: string
+  borderColor: string
+}
+
+export interface JobValidationResult {
+  isValid: boolean
+  errors: string[]
+}
+
+export const formatJobDate = (date: string) => {
+  return new Date(date).toLocaleDateString('ru-RU', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
+
+export const formatJobSalary = (salary: string) => {
+  return salary || 'По договоренности'
+}
+
+export const getJobExperience = (experience: string) => {
+  const experienceMap: Record<string, string> = {
+    'entry': 'Начинающий',
+    'junior': 'Junior',
+    'middle': 'Middle',
+    'senior': 'Senior',
+    'lead': 'Lead',
+    'architect': 'Архитектор'
+  }
+  return experienceMap[experience] || experience
+}
+
+export const validateJobData = (jobData: any): JobValidationResult => {
+  const errors: string[] = []
+  
+  if (!jobData.title) errors.push('Название вакансии обязательно')
+  if (!jobData.company) errors.push('Название компании обязательно')
+  if (!jobData.description) errors.push('Описание обязательно')
+  
+  return {
+    isValid: errors.length === 0,
+    errors
+  }
+}
+
+// Функция обрезки текста вакансии
+export const truncateJobText = (htmlText: string, maxLength: number = 200): TruncatedText => {
+  if (!htmlText) return { text: '', truncated: false }
+  
+  // Убираем HTML теги
+  const plainText = htmlText.replace(/<[^>]*>/g, '')
+  
+  if (plainText.length <= maxLength) {
+    return { text: plainText, truncated: false }
+  }
+  
+  // Обрезаем текст до максимальной длины
+  const truncatedText = plainText.substring(0, maxLength).trim()
+  
+  // Ищем последний пробел, чтобы не обрезать слово посередине
+  const lastSpaceIndex = truncatedText.lastIndexOf(' ')
+  const finalText = lastSpaceIndex > 0 ? truncatedText.substring(0, lastSpaceIndex) : truncatedText
+  
+  return { 
+    text: finalText + '...', 
+    truncated: true 
+  }
+}
+
+// Функция получения информации о канале
+export const getChannelInfo = (channelId: number): ChannelInfo => {
+  // ML канал
   if (channelId === -1001120572276) {
     return {
-      type: "ML Jobs",
-      color: "text-purple-400",
-      bgColor: "bg-purple-900/50",
-      borderColor: "border-purple-700",
+      type: 'ML',
+      bgColor: 'bg-purple-900/50',
+      color: 'text-purple-400',
+      borderColor: 'border-purple-700'
     }
-  } else if (channelId === -1001944996511) {
+  }
+  
+  // IT канал
+  if (channelId === -1001944996511) {
     return {
-      type: "IT Jobs",
-      color: "text-blue-400",
-      bgColor: "bg-blue-900/50",
-      borderColor: "border-blue-700",
+      type: 'IT',
+      bgColor: 'bg-blue-900/50',
+      color: 'text-blue-400',
+      borderColor: 'border-blue-700'
     }
   }
+  
+  // По умолчанию
   return {
-    type: "General",
-    color: "text-gray-400",
-    bgColor: "bg-gray-800",
-    borderColor: "border-gray-600",
+    type: 'Other',
+    bgColor: 'bg-gray-900/50',
+    color: 'text-gray-400',
+    borderColor: 'border-gray-700'
   }
 }
 
-export function truncateJobText(html: string, maxLength = 575): { text: string; isTruncated: boolean } {
-  // Remove HTML tags
-  let text = html.replace(/<br\s*\/?>/gi, " ")
-  text = text.replace(/<[^>]*>?/gm, "")
-  text = text.replace(/\s+/g, " ").trim()
-
-  if (text.length <= maxLength) return { text, isTruncated: false }
-
-  // Find good break point
-  let breakPoint = text.lastIndexOf(" ", maxLength - 3)
-  if (breakPoint === -1) breakPoint = maxLength - 3
-
-  return {
-    text: text.substring(0, breakPoint) + "...",
-    isTruncated: true,
-  }
+// Функция обработки HTML текста вакансии
+export const processJobHtml = (htmlText: string): string => {
+  if (!htmlText) return ''
+  
+  // Убираем лишние пробелы и переносы строк
+  let processedText = htmlText
+    .replace(/\s+/g, ' ')
+    .replace(/\n+/g, ' ')
+    .trim()
+  
+  // Убираем HTML теги, но сохраняем переносы строк
+  processedText = processedText
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/p>/gi, '\n')
+    .replace(/<[^>]*>/g, '')
+  
+  return processedText
 }
 
-export function processJobHtml(html: string): string {
-  if (!html) return ""
+// Функция извлечения заголовка вакансии
+export const extractJobTitle = (htmlText: string): string => {
+  if (!htmlText) return ''
+  
+  // Ищем заголовок в тексте (обычно первая строка или строка с большими буквами)
+  const lines = htmlText.split('\n').filter(line => line.trim())
+  const firstLine = lines[0]?.trim()
+  
+  if (firstLine && firstLine.length > 0) {
+    // Убираем HTML теги
+    return firstLine.replace(/<[^>]*>/g, '').trim()
+  }
+  
+  return ''
+}
 
-  // Decode HTML entities
-  let processed = html
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, " ")
-
-  // Convert line breaks to proper HTML
-  processed = processed.replace(/\n/g, "<br>")
-
-  // Basic sanitization - allow only safe HTML tags
-  const allowedTags = ["b", "i", "strong", "em", "br", "p", "ul", "ol", "li"]
-  const tagRegex = /<\/?([a-zA-Z][a-zA-Z0-9]*)\b[^<>]*>/gi
-
-  processed = processed.replace(tagRegex, (match, tagName) => {
-    if (allowedTags.includes(tagName.toLowerCase())) {
-      return match
+// Функция извлечения названия компании
+export const extractJobCompany = (htmlText: string): string => {
+  if (!htmlText) return ''
+  
+  // Ищем название компании (обычно после "в" или "at")
+  const companyPatterns = [
+    /в\s+([А-ЯЁ][А-ЯЁ\s&]+)/i,
+    /at\s+([A-Z][A-Z\s&]+)/i,
+    /компания\s+([А-ЯЁ][А-ЯЁ\s&]+)/i,
+    /company\s+([A-Z][A-Z\s&]+)/i
+  ]
+  
+  for (const pattern of companyPatterns) {
+    const match = htmlText.match(pattern)
+    if (match) {
+      return match[1].trim()
     }
-    return "" // Remove disallowed tags
-  })
+  }
+  
+  return ''
+}
 
-  return processed
+// Функция извлечения локации
+export const extractJobLocation = (htmlText: string): string => {
+  if (!htmlText) return ''
+  
+  // Ищем локацию (обычно после "в" или "")
+  const locationPatterns = [
+    /\s*([^,\n]+)/i,
+    /в\s+([А-ЯЁ][А-ЯЁ\s]+)/i,
+    /location:\s*([^,\n]+)/i,
+    /локация:\s*([^,\n]+)/i
+  ]
+  
+  for (const pattern of locationPatterns) {
+    const match = htmlText.match(pattern)
+    if (match) {
+      return match[1].trim()
+    }
+  }
+  
+  return ''
+}
+
+// Функция извлечения зарплаты
+export const extractJobSalary = (htmlText: string): string => {
+  if (!htmlText) return ''
+  
+  // Ищем зарплату (обычно в формате "от X до Y" или "$X-$Y")
+  const salaryPatterns = [
+    /от\s+(\d+[\s\w]+)\s+до\s+(\d+[\s\w]+)/i,
+    /(\d+[\s\w]+)\s*-\s*(\d+[\s\w]+)/i,
+    /\$(\d+[Kk]?)\s*-\s*\$(\d+[Kk]?)/i,
+    /(\d+)\s*т\.р\.\s*-\s*(\d+)\s*т\.р\./i
+  ]
+  
+  for (const pattern of salaryPatterns) {
+    const match = htmlText.match(pattern)
+    if (match) {
+      return `${match[1]} - ${match[2]}`
+    }
+  }
+  
+  return ''
+}
+
+// Функция проверки удаленной работы
+export const isRemoteJob = (htmlText: string, location?: string): boolean => {
+  if (location) {
+    return location.toLowerCase().includes('remote') || 
+           location.toLowerCase().includes('удаленно') ||
+           location.toLowerCase().includes('удаленка')
+  }
+  
+  if (htmlText) {
+    const remotePatterns = [
+      /remote/i,
+      /удаленно/i,
+      /удаленка/i,
+      /из дома/i,
+      /home office/i
+    ]
+    
+    return remotePatterns.some(pattern => pattern.test(htmlText))
+  }
+  
+  return false
 }

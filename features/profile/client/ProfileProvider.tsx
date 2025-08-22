@@ -7,10 +7,7 @@ import { createContext, useContext, useEffect, useState, useCallback, useRef, us
 import type { Profile } from "@/features/auth/types"
 
 // Import constants from separate module
-import { PROFILE_UPDATE_DELAY, DEBUG } from "@/features/auth/constants"
-
-// Import utility for creating fallback profile
-import { createFallbackProfile } from "@/features/auth/utils/createFallbackProfile"
+import { AUTH_CONSTANTS } from "@/features/auth/constants"
 
 // Import functions for working with localStorage
 import { readProfileCache, writeProfileCache, mergeProfileCache } from "@/features/profile/client/profileStorage"
@@ -42,6 +39,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const isMountedRef = useRef(true)
   const fetchingProfileRef = useRef<Map<string, Promise<void>>>(new Map())
   const currentUserEmailRef = useRef<string | null>(null)
+  const lastUserIdRef = useRef<string | null>(null)
 
   useEffect(() => {
     return () => {
@@ -49,14 +47,30 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
+  // Отслеживаем изменения пользователя
+  useEffect(() => {
+    const currentUserId = user?.id
+    const lastUserId = lastUserIdRef.current
+    
+    if (AUTH_CONSTANTS.DEBUG) {
+      console.log("ProfileProvider: user ID changed:", { lastUserId, currentUserId })
+    }
+    
+    // Если пользователь изменился, обновляем ref
+    if (currentUserId !== lastUserId) {
+      if (AUTH_CONSTANTS.DEBUG) console.log("ProfileProvider: user ID changed, updating ref")
+      lastUserIdRef.current = currentUserId || null
+    }
+  }, [user?.id])
+
   const fetchProfile = useCallback(async (userId: string, userEmail?: string) => {
     if (!userId) {
-      if (DEBUG) console.log("Skipping fetchProfile: no user ID provided")
+      if (AUTH_CONSTANTS.DEBUG) console.log("Skipping fetchProfile: no user ID provided")
       return
     }
 
     if (fetchingProfileRef.current.has(userId)) {
-      if (DEBUG) console.log("Profile fetch already in progress for user:", userId)
+      if (AUTH_CONSTANTS.DEBUG) console.log("Profile fetch already in progress for user:", userId)
       return fetchingProfileRef.current.get(userId)
     }
 
@@ -71,74 +85,55 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
           currentUserEmailRef.current = userEmail
         }
 
-        if (DEBUG) console.log("Fetching profile for user:", userId)
+        if (AUTH_CONSTANTS.DEBUG) console.log("Fetching profile for user:", userId)
 
-        // Check cache first
+        // Сначала показываем кэшированный профиль для мгновенного отображения
         const cachedProfile = readProfileCache(userId)
-        if (cachedProfile && DEBUG) {
-          console.log("Found profile in cache:", cachedProfile)
+        if (cachedProfile) {
+          if (AUTH_CONSTANTS.DEBUG) console.log("Showing cached profile immediately:", cachedProfile)
+          setProfile(cachedProfile)
+          setLoadingProfile(false)
         }
 
+        // Затем загружаем свежий профиль
         const fetchedProfile = await fetchProfileOnce(userId)
 
         if (!isMountedRef.current) return
 
-        // Determine final profile
+        // Определяем финальный профиль
         let finalProfile: Profile | null = null
 
         if (fetchedProfile) {
-          if (DEBUG) console.log("Using fetched profile")
+          if (AUTH_CONSTANTS.DEBUG) console.log("Using fetched profile")
           finalProfile = fetchedProfile
           writeProfileCache(userId, fetchedProfile)
         } else if (cachedProfile) {
-          if (DEBUG) console.log("Using cached profile")
+          if (AUTH_CONSTANTS.DEBUG) console.log("Using cached profile")
           finalProfile = cachedProfile
         } else {
-          if (DEBUG) console.log("Creating fallback profile")
-          const emailForFallback = userEmail || currentUserEmailRef.current || `${userId}@fallback.com`
-          finalProfile = createFallbackProfile(userId, emailForFallback)
+          if (AUTH_CONSTANTS.DEBUG) console.log("No profile found, setting to null")
+          finalProfile = null
         }
 
-        if (DEBUG) console.log("Final profile:", finalProfile)
+        if (AUTH_CONSTANTS.DEBUG) console.log("Final profile:", finalProfile)
         if (isMountedRef.current) {
           setProfile(finalProfile)
-        }
-
-        if (!finalProfile) {
-          throw new Error("Could not retrieve or create profile")
-        }
-      } catch (error) {
-        console.error("Error in fetchProfile:", error)
-
-        if (!isMountedRef.current) return
-
-        setProfile((currentProfile) => {
-          if (!currentProfile) {
-            try {
-              const emailForFallback = userEmail || currentUserEmailRef.current || `${userId}@fallback.com`
-              const fallbackProfile = createFallbackProfile(userId, emailForFallback)
-              if (DEBUG) console.log("Setting fallback profile:", fallbackProfile)
-              return fallbackProfile
-            } catch (fallbackError) {
-              console.error("Error creating fallback profile:", fallbackError)
-              const normalizedError = error instanceof Error ? error : new Error(String(error))
-              if (isMountedRef.current) {
-                setProfileError(normalizedError)
-              }
-              return null
-            }
-          } else {
-            const normalizedError = error instanceof Error ? error : new Error(String(error))
-            if (isMountedRef.current) {
-              setProfileError(normalizedError)
-            }
-            return currentProfile
-          }
-        })
-      } finally {
-        if (isMountedRef.current) {
           setLoadingProfile(false)
         }
+      } catch (error) {
+        console.error("Error fetching profile:", error)
+        if (isMountedRef.current) {
+          setProfileError(error as Error)
+          setLoadingProfile(false)
+          
+          // В случае ошибки показываем кэшированный профиль если есть
+          const cachedProfile = readProfileCache(userId)
+          if (cachedProfile) {
+            if (AUTH_CONSTANTS.DEBUG) console.log("Error occurred, falling back to cached profile")
+            setProfile(cachedProfile)
+          }
+        }
+      } finally {
         fetchingProfileRef.current.delete(userId)
       }
     })()
@@ -147,17 +142,44 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     return fetchPromise
   }, [])
 
+  // Инициализация профиля при изменении пользователя
   useEffect(() => {
+    if (AUTH_CONSTANTS.DEBUG) console.log("ProfileProvider: user changed:", user?.id, user?.email)
+    
     if (user) {
       if (user.email) {
         currentUserEmailRef.current = user.email
       }
+      
+      // Сразу показываем кэшированный профиль если есть
+      const cachedProfile = readProfileCache(user.id)
+      if (cachedProfile) {
+        if (AUTH_CONSTANTS.DEBUG) console.log("Initializing with cached profile:", cachedProfile)
+        setProfile(cachedProfile)
+        setLoadingProfile(false)
+      } else {
+        setLoadingProfile(true)
+        setProfile(null)
+      }
+      
+      // Загружаем профиль сразу
       fetchProfile(user.id, user.email)
     } else {
+      if (AUTH_CONSTANTS.DEBUG) console.log("ProfileProvider: user is null, clearing profile")
       setProfile(null)
+      setLoadingProfile(false)
       currentUserEmailRef.current = null
     }
-  }, [user, fetchProfile])
+  }, [user?.id, user?.email])
+
+  // Дополнительная проверка для случаев когда auth контекст обновляется
+  useEffect(() => {
+    if (user && !profile && !loadingProfile) {
+      if (AUTH_CONSTANTS.DEBUG) console.log("ProfileProvider: user exists but no profile, triggering fetch")
+      setLoadingProfile(true)
+      fetchProfile(user.id, user.email)
+    }
+  }, [user?.id, profile, loadingProfile])
 
   // Function to refresh the profile
   const refreshProfile = useCallback(async () => {
@@ -166,7 +188,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       fetchingProfileRef.current.delete(user.id)
       await fetchProfile(user.id, user.email)
     }
-  }, [user, fetchProfile])
+  }, [user?.id, user?.email]) // Убираем fetchProfile из зависимостей
 
   // Current: optimistic merge in cache → POST /api/profile/update → refreshProfile
   // Future: Server Action with Zod validation to simplify client and offload provider
@@ -177,7 +199,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       }
 
       try {
-        if (DEBUG) console.log("Updating profile with data:", profileData)
+        if (AUTH_CONSTANTS.DEBUG) console.log("Updating profile with data:", profileData)
 
         const dataWithTimestamp = {
           ...profileData,
@@ -210,18 +232,16 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
             return { error: new Error(errorData.error || "Failed to update profile") }
           }
 
-          if (DEBUG) console.log("Profile updated successfully via API route")
+          if (AUTH_CONSTANTS.DEBUG) console.log("Profile updated successfully via API route")
         } catch (apiError) {
           console.error("Error calling profile update API:", apiError)
           return { error: apiError }
         }
 
         mergeProfileCache(user.id, dataToUpdate)
-        if (DEBUG) console.log("Updated profile in localStorage")
+        if (AUTH_CONSTANTS.DEBUG) console.log("Updated profile in localStorage")
 
-        if (DEBUG) console.log(`Waiting ${PROFILE_UPDATE_DELAY}ms before refreshing profile`)
-        await new Promise((resolve) => setTimeout(resolve, PROFILE_UPDATE_DELAY))
-
+        // Немедленно обновляем профиль без задержки
         await fetchProfile(user.id, user.email)
 
         return { error: null }
@@ -230,7 +250,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         return { error }
       }
     },
-    [fetchProfile, user],
+    [user?.id, user?.email], // Убираем fetchProfile из зависимостей
   )
 
   const contextValue = useMemo(

@@ -9,7 +9,7 @@ import { Upload, X, Loader2, Camera } from "lucide-react"
 import { useTranslation } from "@/hooks/use-translation"
 import { useSupabase } from "@/contexts/supabase-context"
 import { useAuth } from "@/contexts/auth-context"
-import { toast } from "@/shared/lib/hooks/use-toast"
+import { toast } from "@/hooks/use-toast"
 import imageCompression from "browser-image-compression"
 
 // Обновим интерфейс компонента, чтобы добавить новые параметры

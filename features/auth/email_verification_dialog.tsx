@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button"
 import { Mail, RefreshCw, AlertCircle } from "lucide-react"
 import { useTranslation } from "@/hooks/use-translation"
 import { getSupabaseClient } from "@/lib/supabase-client"
-import { toast } from "@/shared/lib/hooks/use-toast"
+import { toast } from "@/hooks/use-toast"
 
 interface EmailVerificationDialogProps {
   email: string

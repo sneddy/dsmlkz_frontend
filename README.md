@@ -1,6 +1,6 @@
 # 🚀 DSML Kazakhstan Community Platform
 
-A modern, multilingual community platform for Data Science and Machine Learning specialists in Kazakhstan. Built with Next.js 14, TypeScript, and Supabase using Feature-Sliced Design architecture.
+A modern, multilingual community platform for Data Science and Machine Learning specialists in Kazakhstan. Built with Next.js 15, TypeScript, and Supabase using Feature-Sliced Design architecture.
 
 ## ✨ Features
 
@@ -18,13 +18,15 @@ A modern, multilingual community platform for Data Science and Machine Learning 
 
 ## 🛠️ Tech Stack
 
-- **Framework:** Next.js 14 (App Router)
-- **Language:** TypeScript
+- **Framework:** Next.js 15.2.4 (App Router)
+- **Language:** TypeScript 5
+- **Runtime:** React 19
 - **Architecture:** Feature-Sliced Design (FSD)
-- **Styling:** Tailwind CSS
-- **UI Components:** shadcn/ui
+- **Styling:** Tailwind CSS 3.3.3
+- **UI Components:** shadcn/ui + Radix UI
 - **Database:** Supabase (PostgreSQL)
 - **Authentication:** Supabase Auth
+- **Package Manager:** pnpm
 - **Deployment:** Vercel
 - **Analytics:** Google Analytics
 
@@ -33,7 +35,7 @@ A modern, multilingual community platform for Data Science and Machine Learning 
 ### Prerequisites
 
 - Node.js 18+ 
-- npm or yarn
+- pnpm (recommended) or npm
 - Supabase account
 
 ### Installation
@@ -46,6 +48,8 @@ A modern, multilingual community platform for Data Science and Machine Learning 
 
 2. **Install dependencies**
    ```bash
+   pnpm install
+   # или
    npm install
    ```
 
@@ -65,6 +69,8 @@ A modern, multilingual community platform for Data Science and Machine Learning 
 
 4. **Run the development server**
    ```bash
+   pnpm dev
+   # или
    npm run dev
    ```
 

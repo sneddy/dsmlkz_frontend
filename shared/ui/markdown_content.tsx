@@ -21,7 +21,7 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
   }, [content])
 
   return (
-    <div className="markdown-content">
+    <div className={cn("markdown-content prose prose-invert max-w-none", className)}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkMath]}
         rehypePlugins={[
@@ -42,7 +42,6 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
             },
           ],
         ]}
-        className={cn("prose prose-invert max-w-none", className)}
         components={{
           h1: (props) => <h1 className="text-3xl font-bold mb-6 text-[#00AEC7]" {...props} />,
           h2: (props) => (

@@ -1,6 +1,7 @@
 "use client"
 import { usePathname, useSearchParams, useRouter } from "next/navigation"
 import { isSSRPath } from "@/lib/i18n-ssr-routes"
+import { setClientLanguage } from "@/lib/language-sync"
 
 export function useLanguageSwitcher() {
   const router = useRouter()
@@ -25,17 +26,14 @@ export function useLanguageSwitcher() {
     const basePath = stripLocalePrefix(pathname || "/")
 
     if (!isSSRPath(basePath)) {
-      console.log("[v0] CSR page detected, updating language context only")
+      console.log("[v0] CSR page detected, updating language context and URL")
 
-      // Сохраняем выбор языка в cookie для будущих сессий
-      document.cookie = `locale=${nextLocale};path=/;max-age=31536000`
+      // Обновляем язык через новую систему синхронизации
+      setClientLanguage(nextLocale)
 
-      // Обновляем языковой контекст через событие
-      window.dispatchEvent(
-        new CustomEvent("languageChange", {
-          detail: { locale: nextLocale },
-        }),
-      )
+      // Для CSR страниц обновляем URL без перезагрузки
+      const targetUrl = `/${nextLocale}${basePath}${searchStr}`
+      router.push(targetUrl)
 
       return
     }

@@ -1,9 +1,8 @@
 import { redirect } from "next/navigation"
-import { cookies } from "next/headers"
+import { getServerLanguage } from "@/lib/server-language"
 
-export default function RootPage() {
-  const cookieStore = cookies()
-  const preferredLang = cookieStore.get("preferred-language")?.value || "ru"
+export default async function RootPage() {
+  const preferredLang = await getServerLanguage()
 
   redirect(`/${preferredLang}`)
 }

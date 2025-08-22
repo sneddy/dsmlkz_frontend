@@ -41,6 +41,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (DEBUG) console.log("Sign in successful")
 
+        // Добавляем небольшую задержку и refresh для корректной инициализации ProfileProvider
+        if (typeof window !== "undefined") {
+          setTimeout(() => {
+            if (DEBUG) console.log("Refreshing page after successful sign in")
+            window.location.reload()
+          }, 500) // 500ms задержка для стабилизации auth состояния
+        }
+
         return { error: null }
       } catch (error) {
         console.error("Exception during sign in:", error)
@@ -59,7 +67,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           password,
         })
 
-        return { data, error }
+        if (error) {
+          return { data, error }
+        }
+
+        if (DEBUG) console.log("Sign up successful")
+
+        // Добавляем небольшую задержку и refresh для корректной инициализации ProfileProvider
+        if (typeof window !== "undefined") {
+          setTimeout(() => {
+            if (DEBUG) console.log("Refreshing page after successful sign up")
+            window.location.reload()
+          }, 500) // 500ms задержка для стабилизации auth состояния
+        }
+
+        return { data, error: null }
       } catch (error) {
         console.error("Error signing up:", error)
         return { error, data: null }

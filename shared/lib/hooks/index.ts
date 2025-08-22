@@ -1,2 +1,4 @@
-export { useToast, toast } from "./use-toast"
-export { useMobile } from "./use-mobile"
+// Экспортируем все хуки
+export { default as useToast } from './use-toast'
+export { default as useMobile } from './use-mobile'
+export { default as useClickOutside } from './use-click-outside'

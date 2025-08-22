@@ -15,22 +15,26 @@ function normalizeLocale(lang: string): "en" | "ru" | "kk" {
 }
 
 interface NewsPageProps {
-  params: { lang: string }
+  params: Promise<{ lang: string }>
   searchParams: { page?: string }
 }
 
 export async function generateMetadata({ params }: NewsPageProps): Promise<Metadata> {
-  const lang = params.lang as SupportedLang
-  if (!SUPPORTED_LANGS.includes(lang)) return {}
+  const { lang } = await params
+  const supportedLang = lang as SupportedLang
+  
+  if (!SUPPORTED_LANGS.includes(supportedLang)) {
+    return {}
+  }
 
-  const locale = normalizeLocale(lang)
+  const locale = normalizeLocale(supportedLang)
   const { translations } = await tServer(locale)
 
   return {
     title: translations.news?.title || "News - DSML Kazakhstan",
     description: translations.news?.description || "Latest news and updates from DSML Kazakhstan community",
     alternates: {
-      canonical: `/${lang}/news`,            // ← fix: make it a string
+      canonical: `/${supportedLang}/news`,            // ← fix: make it a string
       languages: {
         en: "/en/news",
         ru: "/ru/news",
@@ -41,10 +45,14 @@ export async function generateMetadata({ params }: NewsPageProps): Promise<Metad
 }
 
 export default async function NewsPage({ params, searchParams }: NewsPageProps) {
-  const lang = params.lang as SupportedLang
-  if (!SUPPORTED_LANGS.includes(lang)) notFound()
+  const { lang } = await params
+  const supportedLang = lang as SupportedLang
 
-  const locale = normalizeLocale(lang)
+  if (!SUPPORTED_LANGS.includes(supportedLang)) {
+    notFound()
+  }
+
+  const locale = normalizeLocale(supportedLang)
   const { translations } = await tServer(locale)
   const page = Number.parseInt(searchParams.page || "1", 10)
 

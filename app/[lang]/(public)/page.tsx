@@ -31,8 +31,9 @@ export async function generateMetadata({ params }: HomePageProps): Promise<Metad
   }
 }
 
-export default async function HomePage({ params }: HomePageProps) {
-  const { translations } = await tServer(params.lang)
+export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params
+  const { translations } = await tServer(lang)
 
-  return <HomeContentSSR translations={translations} lang={params.lang} />
+  return <HomeContentSSR translations={translations} lang={lang} />
 }

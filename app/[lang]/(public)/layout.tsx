@@ -22,19 +22,20 @@ export default async function LocalizedPublicLayout({
   params,
 }: {
   children: React.ReactNode
-  params: { lang: string }
+  params: Promise<{ lang: string }>
 }) {
   // Validate locale
-  if (!localeMapping[params.lang as keyof typeof localeMapping]) {
+  const { lang } = await params
+  if (!localeMapping[lang as keyof typeof localeMapping]) {
     notFound()
   }
 
-  const { translations } = await tServer(params.lang as "en" | "ru" | "kk")
+  const { translations } = await tServer(lang as "en" | "ru" | "kk")
 
   return (
-    <LocaleProvider locale={params.lang}>
+    <LocaleProvider locale={lang}>
       {/* Pass locale and translations from URL to LanguageProvider */}
-      <LanguageProvider language={params.lang as "en" | "ru" | "kk"} translations={translations}>
+      <LanguageProvider language={lang as "en" | "ru" | "kk"} translations={translations}>
         {children}
       </LanguageProvider>
     </LocaleProvider>

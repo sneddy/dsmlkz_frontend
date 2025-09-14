@@ -4,6 +4,10 @@ const nextConfig = {
   // output: 'export',
   images: {
     unoptimized: true,
+    domains: [
+      'swfxusemimczhhhfzjhc.supabase.co',
+      'api.dicebear.com'
+    ],
   },
   reactStrictMode: true,
   eslint: {

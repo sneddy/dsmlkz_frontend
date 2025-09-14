@@ -8,12 +8,11 @@ import { useAuth } from "@/contexts/auth-context"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { BlobImage } from "@/components/ui/blob-image"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ExternalLink, Search, ArrowLeft } from "lucide-react"
-import Link from "next/link"
+import { Search, ArrowLeft } from "lucide-react"
 import { useTranslation } from "@/hooks/use-translation"
 import { getSupabaseClient } from "@/lib/supabase-client"
+import { ProfileDisplayCard } from "@/shared/ui/profile_display_card"
 
 type CommunityMember = {
   id: string
@@ -25,6 +24,9 @@ type CommunityMember = {
   relevant_company?: string
   relevant_position?: string
   linkedin?: string
+  about_you?: string
+  avatar_url?: string
+  other_links?: string
 }
 
 export default function MemberSearch() {
@@ -59,7 +61,7 @@ export default function MemberSearch() {
       const { data, error } = await supabase
         .from("profiles")
         .select(
-          "id, nickname, first_name, last_name, current_city, university, relevant_company, relevant_position, linkedin",
+          "id, nickname, first_name, last_name, current_city, university, relevant_company, relevant_position, linkedin, about_you, avatar_url, other_links",
         )
         .not("id", "eq", user?.id || "")
         .order("first_name", { ascending: true })
@@ -90,7 +92,7 @@ export default function MemberSearch() {
       const { data, error } = await supabase
         .from("profiles")
         .select(
-          "id, nickname, first_name, last_name, current_city, university, relevant_company, relevant_position, linkedin",
+          "id, nickname, first_name, last_name, current_city, university, relevant_company, relevant_position, linkedin, about_you, avatar_url, other_links",
         )
         .not("id", "eq", user?.id || "")
         .or(`nickname.ilike.%${query}%,first_name.ilike.%${query}%,last_name.ilike.%${query}%`)
@@ -171,32 +173,13 @@ export default function MemberSearch() {
           ) : (
             <div className="space-y-4">
               {members.map((member) => (
-                <div key={member.id} className="flex items-center gap-4 p-4 border rounded-md">
-                  <BlobImage
-                    src={`https://api.dicebear.com/7.x/initials/svg?seed=${member.first_name} ${member.last_name}`}
-                    alt={`${member.first_name} ${member.last_name}`}
-                    width={48}
-                    height={48}
-                    className="rounded-full h-12 w-12"
-                  />
-                  <div className="flex-1">
-                    <h3 className="font-medium">
-                      {member.first_name} {member.last_name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">@{member.nickname}</p>
-                    {member.relevant_position && (
-                      <p className="text-sm">
-                        {member.relevant_position} {member.relevant_company ? `@ ${member.relevant_company}` : ""}
-                      </p>
-                    )}
-                  </div>
-                  <Link href={`/users/${member.nickname}`}>
-                    <Button variant="outline" size="sm">
-                      {t("view")}
-                      <ExternalLink className="ml-1 h-3 w-3" />
-                    </Button>
-                  </Link>
-                </div>
+                <ProfileDisplayCard
+                  key={member.id}
+                  profile={member}
+                  variant="search"
+                  compact={true}
+                  showViewButton={true}
+                />
               ))}
             </div>
           )}

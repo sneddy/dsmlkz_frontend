@@ -255,7 +255,7 @@ export function ProfileImageUpload({
           alt="Profile"
           width={isGenerated ? 64 : 128}
           height={isGenerated ? 64 : 128}
-          className={`rounded-full ${avatarSize} object-cover border-2 border-primary bg-white`}
+          className={`rounded-full ${avatarSize} border-2 border-primary bg-white`}
         />
 
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30 rounded-full">

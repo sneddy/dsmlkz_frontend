@@ -202,3 +202,5 @@ export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tool
 export { ErrorBoundary } from "./error_boundary"
 export { ErrorBoundaryWrapper } from "./error_boundary_wrapper"
 export { MarkdownContent } from "./markdown_content"
+export { ProfileCard } from "./profile_card"
+export { ProfileDisplayCard } from "./profile_display_card"

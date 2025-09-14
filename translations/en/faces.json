@@ -6,5 +6,10 @@
   "viewProfile": "View Profile",
   "communityRole": "Community Role",
   "location": "Location",
-  "connect": "Connect"
+  "connect": "Connect",
+  "verifiedMembers": "Verified Community Members",
+  "refresh": "Refresh",
+  "noVerifiedProfiles": "No verified profiles found",
+  "showingRandom": "Showing 6 random verified community members",
+  "showDifferent": "Show Different Members"
 }

@@ -18,8 +18,9 @@ export async function POST(request: Request) {
   try {
     console.log("Profile update API route called")
 
-    // Create a regular client to check authentication
-    const supabase = createRouteHandlerClient({ cookies })
+    // Fix: await the cookies() call
+    const cookieStore = await cookies()
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
 
     // Get the current user
     const {

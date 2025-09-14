@@ -64,6 +64,8 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   }, [user?.id])
 
   const fetchProfile = useCallback(async (userId: string, userEmail?: string) => {
+    console.log("ProfileProvider: fetchProfile called with userId:", userId, "userEmail:", userEmail)
+    
     if (!userId) {
       if (AUTH_CONSTANTS.DEBUG) console.log("Skipping fetchProfile: no user ID provided")
       return
@@ -103,15 +105,21 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         // Определяем финальный профиль
         let finalProfile: Profile | null = null
 
-        if (fetchedProfile) {
+        // Проверяем, является ли профиль пустым (только что созданным)
+        const isEmptyProfile = (profile: Profile | null) => {
+          if (!profile) return true
+          return !profile.nickname && !profile.first_name && !profile.last_name
+        }
+
+        if (fetchedProfile && !isEmptyProfile(fetchedProfile)) {
           if (AUTH_CONSTANTS.DEBUG) console.log("Using fetched profile")
           finalProfile = fetchedProfile
           writeProfileCache(userId, fetchedProfile)
-        } else if (cachedProfile) {
+        } else if (cachedProfile && !isEmptyProfile(cachedProfile)) {
           if (AUTH_CONSTANTS.DEBUG) console.log("Using cached profile")
           finalProfile = cachedProfile
         } else {
-          if (AUTH_CONSTANTS.DEBUG) console.log("No profile found, setting to null")
+          if (AUTH_CONSTANTS.DEBUG) console.log("No valid profile found, setting to null")
           finalProfile = null
         }
 
@@ -153,7 +161,14 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       
       // Сразу показываем кэшированный профиль если есть
       const cachedProfile = readProfileCache(user.id)
-      if (cachedProfile) {
+      
+      // Проверяем, является ли кэшированный профиль пустым
+      const isEmptyProfile = (profile: any) => {
+        if (!profile) return true
+        return !profile.nickname && !profile.first_name && !profile.last_name
+      }
+      
+      if (cachedProfile && !isEmptyProfile(cachedProfile)) {
         if (AUTH_CONSTANTS.DEBUG) console.log("Initializing with cached profile:", cachedProfile)
         setProfile(cachedProfile)
         setLoadingProfile(false)
@@ -163,6 +178,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       }
       
       // Загружаем профиль сразу
+      console.log("ProfileProvider: calling fetchProfile for user:", user.id)
       fetchProfile(user.id, user.email)
     } else {
       if (AUTH_CONSTANTS.DEBUG) console.log("ProfileProvider: user is null, clearing profile")
@@ -188,7 +204,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       fetchingProfileRef.current.delete(user.id)
       await fetchProfile(user.id, user.email)
     }
-  }, [user?.id, user?.email]) // Убираем fetchProfile из зависимостей
+  }, [user?.id, user?.email, fetchProfile]) // Add fetchProfile to dependencies
 
   // Current: optimistic merge in cache → POST /api/profile/update → refreshProfile
   // Future: Server Action with Zod validation to simplify client and offload provider
@@ -242,7 +258,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         if (AUTH_CONSTANTS.DEBUG) console.log("Updated profile in localStorage")
 
         // Немедленно обновляем профиль без задержки
-        await fetchProfile(user.id, user.email)
+        await refreshProfile() // Use refreshProfile instead of fetchProfile
 
         return { error: null }
       } catch (error) {
@@ -250,7 +266,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         return { error }
       }
     },
-    [user?.id, user?.email], // Убираем fetchProfile из зависимостей
+    [user?.id, user?.email, refreshProfile], // Add refreshProfile to dependencies
   )
 
   const contextValue = useMemo(

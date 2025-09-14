@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/auth-context"
 import { useProfile } from "@/features/profile/client/useProfile"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ProfileCard } from "@/components/profile-card"
+import { ProfileDisplayCard } from "@/shared/ui/profile_display_card"
 import { MemberSearch } from "@/features/search/member_search"
 import { useTranslation } from "@/hooks/use-translation"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -368,7 +368,14 @@ function ProfileTab({
         <h2 className="text-2xl font-bold text-[#00AEC7] mb-2">{t("dashboard.yourProfile")}</h2>
         <p className="text-gray-400">{t("dashboard.manageProfileSettings")}</p>
       </div>
-      <ProfileCard profile={profile} loading={loading} error={error} onEditProfile={onEditProfile} />
+      <ProfileDisplayCard 
+        profile={profile} 
+        variant="dashboard"
+        loading={loading} 
+        error={error} 
+        showEditButton={true}
+        onEditProfile={onEditProfile} 
+      />
     </div>
   )
 }
@@ -434,8 +441,8 @@ function Dashboard() {
     setIsSigningOut(true)
 
     toast({
-      title: t("dashboard.signingOut"),
-      description: t("dashboard.signingOutMessage"),
+      title: Array.isArray(t("dashboard.signingOut")) ? t("dashboard.signingOut")[0] : t("dashboard.signingOut"),
+      description: Array.isArray(t("dashboard.signingOutMessage")) ? t("dashboard.signingOutMessage")[0] : t("dashboard.signingOutMessage"),
     })
 
     try {
@@ -451,8 +458,8 @@ function Dashboard() {
       setIsSigningOut(false)
 
       toast({
-        title: t("dashboard.error"),
-        description: t("dashboard.signOutErrorMessage"),
+        title: Array.isArray(t("dashboard.error")) ? t("dashboard.error")[0] : t("dashboard.error"),
+        description: Array.isArray(t("dashboard.signOutErrorMessage")) ? t("dashboard.signOutErrorMessage")[0] : t("dashboard.signOutErrorMessage"),
         variant: "destructive",
       })
 
@@ -502,21 +509,21 @@ function Dashboard() {
               className="data-[state=active]:bg-[#00AEC7] data-[state=active]:text-white text-gray-400"
             >
               <Home className="mr-2 h-4 w-4" />
-              <span className="hidden sm:inline">{t("dashboard.overview")}</span>
+              <span className="hidden sm:inline">{Array.isArray(t("dashboard.overview")) ? t("dashboard.overview")[0] : t("dashboard.overview")}</span>
             </TabsTrigger>
             <TabsTrigger
               value="profile"
               className="data-[state=active]:bg-[#00AEC7] data-[state=active]:text-white text-gray-400"
             >
               <User className="mr-2 h-4 w-4" />
-              <span className="hidden sm:inline">{t("dashboard.profile")}</span>
+              <span className="hidden sm:inline">{Array.isArray(t("dashboard.profile")) ? t("dashboard.profile")[0] : t("dashboard.profile")}</span>
             </TabsTrigger>
             <TabsTrigger
               value="search"
               className="data-[state=active]:bg-[#00AEC7] data-[state=active]:text-white text-gray-400"
             >
               <Search className="mr-2 h-4 w-4" />
-              <span className="hidden sm:inline">{t("dashboard.search")}</span>
+              <span className="hidden sm:inline">{Array.isArray(t("dashboard.search")) ? t("dashboard.search")[0] : t("dashboard.search")}</span>
             </TabsTrigger>
           </TabsList>
         </div>

@@ -67,7 +67,7 @@ export default function ForgotPasswordPage() {
             <CardDescription>{t("auth.checkEmail")}</CardDescription>
           </CardHeader>
           <CardFooter>
-            <Link href="/auth/new-signin" className="w-full">
+            <Link href="/auth/signin" className="w-full">
               <Button className="w-full bg-[#00AEC7] hover:bg-[#00AEC7]/90 text-white">{t("auth.backToSignIn")}</Button>
             </Link>
           </CardFooter>
@@ -102,7 +102,7 @@ export default function ForgotPasswordPage() {
             <Button type="submit" className="w-full bg-[#00AEC7] hover:bg-[#00AEC7]/90 text-white" disabled={loading}>
               {loading ? t("auth.sending") : t("auth.sendResetLink")}
             </Button>
-            <Link href="/auth/new-signin" className="text-sm text-[#00AEC7] hover:underline">
+            <Link href="/auth/signin" className="text-sm text-[#00AEC7] hover:underline">
               {t("auth.backToSignIn")}
             </Link>
           </CardFooter>

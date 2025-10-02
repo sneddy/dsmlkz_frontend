@@ -162,7 +162,7 @@ export default function SignUp() {
             </Button>
             <div className="text-center text-sm">
               {t("auth.haveAccount")}{" "}
-              <Link href="/auth/new-signin" className="text-[#00AEC7] hover:underline">
+              <Link href="/auth/signin" className="text-[#00AEC7] hover:underline">
                 {t("auth.signInLink")}
               </Link>
             </div>

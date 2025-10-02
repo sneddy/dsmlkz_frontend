@@ -148,7 +148,7 @@ export default function ClientLayout({
                     {t("nav.signin")}
                   </Button>
                 </Link>
-                <Link href="/signup">
+                <Link href="/auth/signup">
                   <Button size="sm">{t("nav.signup")}</Button>
                 </Link>
               </div>
@@ -259,7 +259,7 @@ export default function ClientLayout({
                       {t("nav.signin")}
                     </Button>
                   </Link>
-                  <Link href="/signup">
+                  <Link href="/auth/signup">
                     <Button size="sm" className="w-full">
                       {t("nav.signup")}
                     </Button>

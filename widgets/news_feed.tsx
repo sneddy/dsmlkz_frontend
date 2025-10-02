@@ -2,8 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/
 import { ExternalLink, Search } from "lucide-react"
 import Link from "next/link"
 import { ServerImage } from "@/components/ui/server-image"
-import { createServerPublicClient } from "@/lib/supabase-public"
-import { truncateText } from "@/lib/utils/text-utils"
+import { createServerClient } from "@/lib/supabase-server"
+import { truncateText, formatDate } from "@/lib/utils/text-utils"
 
 export const revalidate = 60
 
@@ -18,60 +18,43 @@ type TelegramPost = {
   sender_name: string | null
 }
 
-function formatDate(dateString: string, locale: string, tNews: any): string {
-  const date = new Date(dateString)
-  const now = new Date()
-  const diffTime = Math.abs(now.getTime() - date.getTime())
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-  if (diffDays === 1) return tNews?.yesterday || "Yesterday"
-  if (diffDays <= 7) return `${diffDays} ${tNews?.days_ago || "days ago"}`
-  const month = date.getMonth()
-  const monthNames = tNews?.months || {}
-  const monthKeys = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"]
-  const monthName = monthNames[monthKeys[month]] || monthKeys[month]
-  return `${date.getDate()} ${monthName} ${date.getFullYear()}`
-}
-
 async function fetchPosts(page = 1, query = ""): Promise<{ posts: TelegramPost[]; totalCount: number }> {
-  const supabase = createServerPublicClient() // ← force anon (cookie-proof)
-  const pageSize = 9
-  const from = (page - 1) * pageSize
-  const to = from + pageSize - 1
+  try {
+    const supabase = createServerClient()
+    const pageSize = 9
+    const from = (page - 1) * pageSize
+    const to = from + pageSize - 1
 
-  let qb = supabase
-    .from("channels_content")
-    .select("*", { count: "exact" })
-    .eq("channel_id", -1001055767503)
-    .order("created_at", { ascending: false })
+    let queryBuilder = supabase
+      .from("channels_content")
+      .select("*", { count: "exact" })
+      .eq("channel_id", -1001055767503)
+      .order("created_at", { ascending: false })
 
-  if (query) qb = qb.ilike("html_text", `%${query}%`)
+    if (query) {
+      queryBuilder = queryBuilder.ilike("html_text", `%${query}%`)
+    }
 
-  const { data, error, count } = await qb.range(from, to)
-  if (error || !data) {
-    console.error("Error fetching news:", error)
+    const { data, error, count } = await queryBuilder.range(from, to)
+
+    if (error) {
+      console.error("Error fetching news:", error)
+      return { posts: [], totalCount: 0 }
+    }
+
+    return { posts: data as TelegramPost[], totalCount: count || 0 }
+  } catch (err) {
+    console.error("Error fetching news:", err)
     return { posts: [], totalCount: 0 }
   }
-  return { posts: data as TelegramPost[], totalCount: count ?? 0 }
 }
 
-export default async function NewsFeed({
-  initialPage = 1,
-  locale,
-  translations,
-  searchQuery = "",
-}: {
-  initialPage?: number
-  locale: string
-  translations?: any
-  searchQuery?: string
-}) {
-  const tn = translations?.news ?? {}
-  const { posts, totalCount } = await fetchPosts(initialPage, searchQuery)
-
+export default async function NewsFeed({ page = 1, query = "" }: { page?: number; query?: string }) {
+  const { posts, totalCount } = await fetchPosts(page, query)
   const pageSize = 9
   const totalPages = Math.ceil(totalCount / pageSize)
-  const hasNextPage = initialPage < totalPages
-  const hasPrevPage = initialPage > 1
+  const hasNextPage = page < totalPages
+  const hasPrevPage = page > 1
 
   if (posts.length === 0) {
     return (
@@ -81,16 +64,16 @@ export default async function NewsFeed({
             <input
               type="text"
               name="q"
-              placeholder={tn.search_placeholder || "Search news..."}
-              defaultValue={searchQuery}
+              defaultValue={query}
+              placeholder="Поиск новостей..."
               className="w-full px-4 py-3 pl-12 bg-gray-800/50 border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00AEC7] focus:border-transparent"
             />
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
             <button
               type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 bg-[#00AEC7] text-white text-sm font-medium rounded-lg hover:bg-[#00AEC7]/80 transition-colors"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-1.5 bg-[#00AEC7] text-white text-sm font-medium rounded-lg hover:bg-[#00AEC7]/80 transition-colors"
             >
-              {tn.search_button || "Search"}
+              Найти
             </button>
           </form>
         </div>
@@ -98,7 +81,7 @@ export default async function NewsFeed({
         <Card className="mb-4 bg-gray-800/50 border-gray-700">
           <CardContent className="p-4">
             <div className="text-center text-[#00AEC7] font-medium">
-              <p>{tn.temporarily_unavailable || "News temporarily unavailable"}</p>
+              <p>{query ? `Ничего не найдено по запросу "${query}"` : "Новости временно недоступны"}</p>
             </div>
           </CardContent>
         </Card>
@@ -113,16 +96,16 @@ export default async function NewsFeed({
           <input
             type="text"
             name="q"
-            placeholder={tn.search_placeholder || "Search news..."}
-            defaultValue={searchQuery}
-            className="w-full px-4 py-3 pl-12 bg-gray-800/50 border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00AEC7] focus:border-transparent"
+            defaultValue={query}
+            placeholder="Поиск новостей..."
+            className="w-full px-4 py-3 pl-12 bg-gray-800/50 border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00AEC7] focus:border-transparent"
           />
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
           <button
             type="submit"
-            className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 bg-[#00AEC7] text-white text-sm font-medium rounded-lg hover:bg-[#00AEC7]/80 transition-colors"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-1.5 bg-[#00AEC7] text-white text-sm font-medium rounded-lg hover:bg-[#00AEC7]/80 transition-colors"
           >
-            {tn.search_button || "Search"}
+            Найти
           </button>
         </form>
       </div>
@@ -137,18 +120,18 @@ export default async function NewsFeed({
               key={post.post_id}
               className="h-[56rem] bg-gray-800/50 border-gray-700 backdrop-blur-sm shadow-lg rounded-xl overflow-hidden hover:shadow-2xl hover:scale-[1.02] hover:bg-gray-800/70 transition-all duration-300 ease-out flex flex-col group"
             >
-              <div className="h-1 bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="h-1 bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
 
               <CardHeader className="bg-gradient-to-r from-gray-700/20 to-gray-600/10 backdrop-blur-sm pb-3 flex-shrink-0 border-b border-gray-600/20">
                 <CardDescription className="text-[#00AEC7] font-semibold text-sm tracking-wide">
-                  {formatDate(post.created_at, locale, tn)}
+                  {formatDate(post.created_at)}
                   {post.sender_name && <span className="text-gray-400 font-normal ml-2">• {post.sender_name}</span>}
                 </CardDescription>
               </CardHeader>
 
               <CardContent className="pt-4 pb-6 flex-1 flex flex-col space-y-4">
                 {post.image_url && (
-                  <div className="w-full aspect-square flex-shrink-0 relative group/image overflow-hidden rounded-xl shadow-md">
+                  <div className="w-full aspect-square flex-shrink-0 relative group/image cursor-pointer overflow-hidden rounded-xl shadow-md">
                     <ServerImage
                       src={post.image_url}
                       alt="Post image"
@@ -158,22 +141,28 @@ export default async function NewsFeed({
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="w-full h-full object-cover transition-all duration-500 ease-out group-hover/image:scale-110 group-hover/image:brightness-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-300"></div>
                   </div>
                 )}
 
                 <div className="flex-1 flex flex-col justify-between space-y-2">
+                  {/* увеличели количество строк с line-clamp-10 до line-clamp-12 */}
                   <p className="text-gray-300 font-medium text-sm leading-relaxed line-clamp-12 tracking-wide">
                     {text}
                   </p>
 
                   <div className="flex justify-between items-center pt-2 border-t border-gray-600/30">
                     <Link
-                      href={`/${locale}/news/${post.post_id}`}
+                      href={`/news/${post.post_id}`}
                       className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] text-white text-sm font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 ease-out focus:ring-2 focus:ring-[#00AEC7]/50 focus:outline-none"
                     >
-                      {tn.read_more || "Read More"}
-                      <svg className="ml-2 w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      Читать далее
+                      <svg
+                        className="ml-2 w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </Link>
@@ -202,23 +191,23 @@ export default async function NewsFeed({
         <div className="flex justify-center items-center space-x-4 mt-8">
           {hasPrevPage && (
             <Link
-              href={`/${locale}/news${initialPage === 2 ? "" : `?page=${initialPage - 1}`}${searchQuery ? `&q=${encodeURIComponent(searchQuery)}` : ""}`}
+              href={`/news${page === 2 ? "" : `?page=${page - 1}`}${query ? `${page === 2 ? "?" : "&"}q=${encodeURIComponent(query)}` : ""}`}
               className="px-6 py-3 bg-gray-800/50 border border-gray-700 text-white rounded-xl hover:bg-gray-700/50 transition-colors"
             >
-              ← {tn.previous_page || "Previous"}
+              ← Предыдущая
             </Link>
           )}
 
           <span className="px-4 py-2 text-gray-300">
-            {(tn.page_info || "Page")} {initialPage} {(tn.of || "of")} {totalPages}
+            Страница {page} из {totalPages}
           </span>
 
           {hasNextPage && (
             <Link
-              href={`/${locale}/news?page=${initialPage + 1}${searchQuery ? `&q=${encodeURIComponent(searchQuery)}` : ""}`}
+              href={`/news?page=${page + 1}${query ? `&q=${encodeURIComponent(query)}` : ""}`}
               className="px-6 py-3 bg-[#00AEC7] text-white rounded-xl hover:bg-[#00AEC7]/80 transition-colors"
             >
-              {tn.next_page || "Next"} →
+              Следующая →
             </Link>
           )}
         </div>
@@ -227,13 +216,13 @@ export default async function NewsFeed({
       {hasPrevPage && (
         <link
           rel="prev"
-          href={`https://www.dsml.kz/${locale}/news${initialPage === 2 ? "" : `?page=${initialPage - 1}`}${searchQuery ? `&q=${encodeURIComponent(searchQuery)}` : ""}`}
+          href={`https://www.dsml.kz/news${page === 2 ? "" : `?page=${page - 1}`}${query ? `${page === 2 ? "?" : "&"}q=${encodeURIComponent(query)}` : ""}`}
         />
       )}
       {hasNextPage && (
         <link
           rel="next"
-          href={`https://www.dsml.kz/${locale}/news?page=${initialPage + 1}${searchQuery ? `&q=${encodeURIComponent(searchQuery)}` : ""}`}
+          href={`https://www.dsml.kz/news?page=${page + 1}${query ? `&q=${encodeURIComponent(query)}` : ""}`}
         />
       )}
     </div>

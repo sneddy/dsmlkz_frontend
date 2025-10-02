@@ -1,6 +1,6 @@
 "use client"
 
-import { HeroSection } from "@/components/hero-section"
+import { SectionHero } from "@/widgets/section_hero"
 import { useTranslation } from "@/hooks/use-translation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -77,8 +77,12 @@ export default function ResearchContent() {
   ]
 
   return (
-    <div className="min-h-screen">
-      <HeroSection title={t("research.title")} subtitle={t("research.subtitle")} />
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
+      <SectionHero
+        title={t("research.title")}
+        subtitle={t("research.subtitle")}
+        description={t("research.description")}
+      />
 
       <div className="container mx-auto px-4 py-16 space-y-20">
         {/* Our Mission Section */}

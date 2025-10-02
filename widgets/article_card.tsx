@@ -25,7 +25,7 @@ export function ArticleCard({
   preview,
   imageUrl,
   slug,
-  language = "en", // Changed default from "ru" to "en" and removed useLanguage dependency
+  language = "ru",
   hasCustomPage = false,
   isMarkdownBased = false,
   date,
@@ -33,8 +33,6 @@ export function ArticleCard({
   const [imageError, setImageError] = useState(false)
 
   const isArticleAvailable = hasCustomPage || isMarkdownBased
-
-  const articleUrl = `/${language}/articles/${slug}`
 
   return (
     <div className="relative group">
@@ -78,7 +76,7 @@ export function ArticleCard({
 
           <CardFooter className="p-6 pt-0">
             {isArticleAvailable ? (
-              <Link href={articleUrl} className="w-full md:w-auto">
+              <Link href={`/articles/${slug}`} className="w-full md:w-auto">
                 <Button className="w-full md:w-auto bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-black font-medium transition-all duration-300 transform hover:scale-105">
                   Читать полностью
                   <ArrowRight className="ml-2 h-4 w-4" />

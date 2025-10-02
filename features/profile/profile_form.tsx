@@ -5,7 +5,6 @@ import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
-import { useProfile } from "@/features/profile/client/ProfileProvider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -49,8 +48,7 @@ export function ProfileForm({ initialProfile, isCreateMode, isOffline }: Profile
   const [isAboutYouValid, setIsAboutYouValid] = useState(!!initialProfile?.about_you)
   const [isMotivationValid, setIsMotivationValid] = useState(!!initialProfile?.motivation)
 
-  const { user } = useAuth()
-  const { updateProfile } = useProfile()
+  const { user, updateProfile } = useAuth()
   const router = useRouter()
   const { t } = useTranslation()
 

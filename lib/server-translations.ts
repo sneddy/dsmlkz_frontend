@@ -1,40 +1,38 @@
 import { getTranslations } from "@/translations"
+import { cookies } from "next/headers"
 
 /**
  * Server-side translation function for RSC/metadata/JSON-LD
- * Now takes language as required parameter instead of reading from cookies
+ * Reads language from cookies and returns translation function
  */
-export async function tServer(language: string) {
+export function tServer() {
+  const cookieStore = cookies()
+  const language = cookieStore.get("language")?.value || "ru"
+
   const translations = getTranslations(language)
 
-  const t = (key: string, fallback?: string): string => {
-    const keys = key.split(".")
-    let value = translations
+  return {
+    t: (key: string, fallback?: string): string => {
+      const keys = key.split(".")
+      let value = translations
 
-    for (const k of keys) {
-      if (value && typeof value === "object" && k in value) {
-        value = value[k]
-      } else {
-        return fallback || key
+      for (const k of keys) {
+        if (value && typeof value === "object" && k in value) {
+          value = value[k]
+        } else {
+          return fallback || key
+        }
       }
-    }
 
-    return typeof value === "string" ? value : fallback || key
+      return typeof value === "string" ? value : fallback || key
+    },
+    language,
+    translations,
   }
-
-  return { t, translations }
 }
 
-// export function tServerNews() {
-//   return tServer("ru")
-// }
-
-// export function tServerJobs() {
-//   return tServer("en")
-// }
-
-export const getServerTranslations = (language: string) => {
-  return getTranslations(language)
+export const getServerTranslations = () => {
+  return tServer()
 }
 
 export const getServerTranslation = (language: string, key: string, fallback?: string): string => {

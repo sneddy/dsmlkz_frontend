@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from "react"
 import type { User, Session } from "@supabase/supabase-js"
 import { getSupabaseClient } from "@/lib/supabase-client"
+import { DEBUG } from "@/features/auth/constants"
 
 interface UseSupabaseSessionReturn {
   session: Session | null
@@ -27,7 +28,7 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
 
     // Clean up existing subscription
     if (authSubscriptionRef.current) {
-      console.log("[v0] useSupabaseSession: cleaning up previous subscription")
+      if (DEBUG) console.log("useSupabaseSession: cleaning up previous subscription")
       authSubscriptionRef.current.unsubscribe()
       authSubscriptionRef.current = null
     }
@@ -35,7 +36,6 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
     const initializeSession = async () => {
       try {
         setLoading(true)
-        console.log("[v0] useSupabaseSession: initializing session...")
 
         // Get initial session
         const {
@@ -43,10 +43,8 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
           error,
         } = await supabase.auth.getSession()
 
-        console.log("[v0] useSupabaseSession: initial session:", session?.user?.id || "null")
-
         if (error) {
-          console.error("[v0] useSupabaseSession: error getting session:", error)
+          console.error("useSupabaseSession: error getting session:", error)
           if (isMounted) {
             setLoading(false)
             setInitialized(true)
@@ -59,14 +57,12 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
           setSession(session)
           setInitialized(true)
           setLoading(false)
-          console.log("[v0] useSupabaseSession: session set successfully")
         } else if (isMounted) {
           setInitialized(true)
           setLoading(false)
-          console.log("[v0] useSupabaseSession: no session found")
         }
       } catch (error) {
-        console.error("[v0] useSupabaseSession: error initializing:", error)
+        console.error("useSupabaseSession: error initializing:", error)
         if (isMounted) {
           setLoading(false)
           setInitialized(true)
@@ -81,10 +77,10 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("[v0] useSupabaseSession: auth state changed:", event, "user:", session?.user?.id || "null")
+      if (DEBUG) console.log("useSupabaseSession: auth state changed:", event, session?.user?.id)
 
       if (session?.access_token === prevSessionTokenRef.current) {
-        console.log("[v0] useSupabaseSession: session token unchanged, skipping update")
+        if (DEBUG) console.log("useSupabaseSession: session token unchanged, skipping update")
         return
       }
 
@@ -95,17 +91,14 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
         setSession(session)
         setInitialized(true)
         setLoading(false)
-        console.log("[v0] useSupabaseSession: session updated in state")
       }
     })
 
     authSubscriptionRef.current = subscription
-    console.log("[v0] useSupabaseSession: auth listener set up")
 
     return () => {
       isMounted = false
       if (authSubscriptionRef.current) {
-        console.log("[v0] useSupabaseSession: cleaning up subscription")
         authSubscriptionRef.current.unsubscribe()
         authSubscriptionRef.current = null
       }
@@ -113,10 +106,6 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
   }, [supabase])
 
   const user = session?.user || null
-
-  useEffect(() => {
-    console.log("[v0] useSupabaseSession: user state changed:", user?.id || "null")
-  }, [user])
 
   return {
     session,

@@ -1,24 +1,51 @@
+"use client"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ExternalLink, MessageCircle, Users, Calendar, Briefcase, ArrowRight, Play } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { useTranslation } from "@/hooks/use-translation"
+import { useEffect, useState } from "react"
 import { CollaborationCard } from "@/widgets/collaboration_card"
 
-interface HomeContentSSRProps {
-  translations: any
-  lang: string
-}
+export function HomeContent() {
+  const { t } = useTranslation()
+  const [isClient, setIsClient] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
 
-export function HomeContentSSR({ translations, lang }: HomeContentSSRProps) {
-  const t = (key: string) => {
-    const keys = key.split(".")
-    let value = translations
-    for (const k of keys) {
-      value = value?.[k]
-    }
-    return value || key
+  // Устанавливаем флаг isClient после монтирования компонента
+  useEffect(() => {
+    setIsClient(true)
+    // Добавляем небольшую задержку для плавной анимации появления
+    const timer = setTimeout(() => setIsVisible(true), 100)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const gradientBorderStyle = {
+    borderWidth: "2px",
+    borderStyle: "solid",
+    borderImage: "linear-gradient(135deg, #FFF32A, #00AEC7, #FFF32A) 1",
+  }
+
+  // Если компонент еще не смонтирован на клиенте, показываем улучшенный скелетон
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
+        <div className="container py-8 space-y-8">
+          <div className="h-96 bg-gradient-to-r from-slate-800 to-slate-700 animate-pulse rounded-2xl mb-8 shadow-2xl"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div
+                key={i}
+                className="h-64 bg-gradient-to-br from-slate-800 to-slate-700 animate-pulse rounded-xl shadow-lg"
+              ></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
   }
 
   const communityStats = [
@@ -28,15 +55,11 @@ export function HomeContentSSR({ translations, lang }: HomeContentSSRProps) {
     { icon: Briefcase, label: "Job Placements", value: "500+", color: "text-green-400" },
   ]
 
-  const gradientBorderStyle = {
-    borderWidth: "2px",
-    borderStyle: "solid",
-    borderImage: "linear-gradient(135deg, #FFF32A, #00AEC7, #FFF32A) 1",
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
-      {/* Hero Section */}
+    <div
+      className={`min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800 transition-opacity duration-1000 ${isVisible ? "opacity-100" : "opacity-0"}`}
+    >
+      {/* Hero Section with enhanced gradient background and better text styling */}
       <section className="relative overflow-hidden py-16 px-4">
         <div className="absolute inset-0 bg-gradient-to-br from-[#00AEC7]/20 via-slate-900/80 to-[#FFF32A]/20"></div>
         <div className="relative max-w-7xl mx-auto text-center z-10">
@@ -55,7 +78,7 @@ export function HomeContentSSR({ translations, lang }: HomeContentSSRProps) {
 
           {/* Buttons in hero section */}
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4 mb-16">
-            <Link href={`/${lang}/auth/signup`} className="w-full sm:w-auto">
+            <Link href="/auth/signup" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base font-pixel"
@@ -64,7 +87,7 @@ export function HomeContentSSR({ translations, lang }: HomeContentSSRProps) {
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Link href={`/${lang}/events`} className="w-full sm:w-auto">
+            <Link href="/events" className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="lg"
@@ -78,12 +101,12 @@ export function HomeContentSSR({ translations, lang }: HomeContentSSRProps) {
         </div>
       </section>
 
-      {/* Hero Image Section */}
+      {/* Hero Image Section with proper responsive images */}
       <section className="relative w-full overflow-hidden mb-16">
         <div className="container px-4">
           <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl">
             {/* Desktop image */}
-            <div className="hidden md:block w-full h-[50vh] relative">
+            <div className="hidden md:block w-full h-[70vh] relative">
               <Image
                 src="/images/moon-hero-desktop.png"
                 alt="DSML Kazakhstan Community - Desktop Hero"
@@ -95,7 +118,7 @@ export function HomeContentSSR({ translations, lang }: HomeContentSSRProps) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
             </div>
             {/* Mobile image */}
-            <div className="block md:hidden w-full h-[40vh] relative">
+            <div className="block md:hidden w-full h-[50vh] relative">
               <Image
                 src="/images/moon-hero-mobile.png"
                 alt="DSML Kazakhstan Community - Mobile Hero"
@@ -110,7 +133,7 @@ export function HomeContentSSR({ translations, lang }: HomeContentSSRProps) {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats Section - Enhanced with glassmorphism effects */}
       <section className="py-20 relative">
         <div className="absolute inset-0 bg-gradient-to-r from-[#00AEC7]/5 to-[#FFF32A]/5"></div>
         <div className="container px-4 md:px-6 relative z-10">
@@ -130,7 +153,7 @@ export function HomeContentSSR({ translations, lang }: HomeContentSSRProps) {
         </div>
       </section>
 
-      {/* Community Description */}
+      {/* Community Description - Enhanced typography */}
       <section className="py-20 bg-gradient-to-r from-slate-800/50 to-slate-900/50 backdrop-blur-sm">
         <div className="container px-4 md:px-6">
           <div className="max-w-4xl mx-auto text-center">
@@ -144,7 +167,7 @@ export function HomeContentSSR({ translations, lang }: HomeContentSSRProps) {
         </div>
       </section>
 
-      {/* Telegram Channels Section */}
+      {/* Telegram Channels Section - Enhanced cards */}
       <section className="py-20 container px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {/* Discussion Hub */}
@@ -170,7 +193,7 @@ export function HomeContentSSR({ translations, lang }: HomeContentSSRProps) {
                 </Badge>
               </div>
               <Link
-                href={`/${lang}/auth/signup`}
+                href="/auth/signup"
                 className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link font-medium"
               >
                 Register to join
@@ -344,7 +367,7 @@ export function HomeContentSSR({ translations, lang }: HomeContentSSRProps) {
         </div>
       </section>
 
-      {/* Collaboration Section */}
+      {/* Collaboration Section - Enhanced with modern design */}
       <section className="py-24 bg-gradient-to-r from-slate-800/30 to-slate-900/30 backdrop-blur-sm">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-20">
@@ -413,28 +436,28 @@ export function HomeContentSSR({ translations, lang }: HomeContentSSRProps) {
       <section className="py-24 bg-gradient-to-r from-[#00AEC7]/10 via-transparent to-[#FFF32A]/10">
         <div className="container px-4 md:px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-pixel font-bold mb-8 text-white leading-tight">
-            {t("home.cta.title")}
+            Ready to Join the Future of AI in Central Asia?
           </h2>
           <p className="text-gray-300 text-lg mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
-            {t("home.cta.description")}
+            Connect with like-minded professionals, access exclusive resources, and accelerate your career in AI/ML.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-4">
-            <Link href={`/${lang}/auth/signup`} className="w-full sm:w-auto">
+            <Link href="/auth/signup" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-pixel font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base"
               >
-                {t("home.cta.getStartedButton")}
+                Get Started Today
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Link href={`/${lang}/events`} className="w-full sm:w-auto">
+            <Link href="/events" className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="lg"
                 className="w-full sm:w-auto border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-4 rounded-full transition-all duration-300 bg-transparent text-base font-pixel"
               >
-                {t("home.cta.exploreEventsButton")}
+                Explore Events
               </Button>
             </Link>
           </div>

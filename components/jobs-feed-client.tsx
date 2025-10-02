@@ -8,7 +8,7 @@ import { ExternalLink, Search, Brain, Code, MapPin, Filter } from "lucide-react"
 import Link from "next/link"
 import { ServerImage } from "@/components/ui/server-image"
 import { getSupabaseClient } from "@/lib/supabase-client"
-import { getChannelInfo, truncateJobText } from "@/lib/utils/jobs-utils"
+import { formatJobDate, getChannelInfo, truncateJobText } from "@/lib/utils/jobs-utils"
 
 type JobPost = {
   post_id: string
@@ -30,24 +30,6 @@ interface JobsFeedClientProps {
   initialQuery: string
   initialChannels: string
   initialRemote: boolean
-  translations: any
-}
-
-const formatDate = (dateString: string, locale: string, t: any) => {
-  const date = new Date(dateString)
-  const now = new Date()
-  const diffTime = Math.abs(now.getTime() - date.getTime())
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-
-  if (diffDays === 1) {
-    return t.jobs?.yesterday || "Yesterday"
-  } else if (diffDays <= 30) {
-    return `${diffDays} ${t.jobs?.days_ago || "days ago"}`
-  } else {
-    const monthKey = date.toLocaleDateString("en", { month: "short" }).toLowerCase()
-    const month = t.jobs?.months?.[monthKey] || monthKey
-    return `${date.getDate()} ${month}`
-  }
 }
 
 export default function JobsFeedClient({
@@ -57,7 +39,6 @@ export default function JobsFeedClient({
   initialQuery,
   initialChannels,
   initialRemote,
-  translations: t,
 }: JobsFeedClientProps) {
   const [jobs, setJobs] = useState<JobPost[]>(initialJobs)
   const [totalCount, setTotalCount] = useState(initialTotalCount)
@@ -196,25 +177,25 @@ export default function JobsFeedClient({
         <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700">
           <div className="text-center">
             <div className="text-2xl font-bold text-[#FFF32A] mb-1">{stats.total}+</div>
-            <div className="text-sm text-gray-400">{t.jobs?.total_jobs || "Total Jobs"}</div>
+            <div className="text-sm text-gray-400">Всего вакансий</div>
           </div>
         </div>
         <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700">
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-400 mb-1">{stats.ml}+</div>
-            <div className="text-sm text-gray-400">{t.jobs?.ml_jobs || "ML Jobs"}</div>
+            <div className="text-sm text-gray-400">ML вакансии</div>
           </div>
         </div>
         <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700">
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-400 mb-1">{stats.it}+</div>
-            <div className="text-sm text-gray-400">{t.jobs?.it_jobs || "IT Jobs"}</div>
+            <div className="text-sm text-gray-400">IT вакансии</div>
           </div>
         </div>
         <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700">
           <div className="text-center">
             <div className="text-2xl font-bold text-green-400 mb-1">{stats.remote}+</div>
-            <div className="text-sm text-gray-400">{t.jobs?.remote_jobs || "Remote Jobs"}</div>
+            <div className="text-sm text-gray-400">Удаленные</div>
           </div>
         </div>
       </div>
@@ -227,7 +208,7 @@ export default function JobsFeedClient({
               ref={searchInputRef}
               type="text"
               defaultValue={query}
-              placeholder={t.jobs?.search_placeholder || "Search jobs..."}
+              placeholder="Поиск вакансий..."
               className="w-full px-4 py-3 pl-12 bg-gray-800/50 border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00AEC7] focus:border-transparent"
             />
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -236,7 +217,7 @@ export default function JobsFeedClient({
               disabled={loading}
               className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-1.5 bg-[#00AEC7] text-white text-sm font-medium rounded-lg hover:bg-[#00AEC7]/80 transition-colors disabled:opacity-50"
             >
-              {loading ? t.jobs?.loading || "Loading..." : t.jobs?.search_job || "Search"}
+              {loading ? "..." : "Найти"}
             </button>
           </form>
         </div>
@@ -247,21 +228,19 @@ export default function JobsFeedClient({
             className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 border border-gray-700 text-white rounded-lg hover:bg-gray-700/50 transition-colors"
           >
             <Filter className="h-4 w-4" />
-            {t.jobs?.filter_by_channel || "Filter by channel"}
+            Фильтры
           </button>
         </div>
 
         {showFilters && (
           <div className="max-w-2xl mx-auto bg-gray-800/50 border border-gray-700 rounded-xl p-6 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                {t.jobs?.filter_by_channel || "Filter by channel"}
-              </label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Категория</label>
               <div className="flex gap-2 flex-wrap">
                 {[
-                  { value: "all", label: t.jobs?.filter_all || "All" },
-                  { value: "ml", label: t.jobs?.filter_data_ai || "ML & Data Science" },
-                  { value: "it", label: t.jobs?.filter_it_dev || "IT & Development" },
+                  { value: "all", label: "Все" },
+                  { value: "ml", label: "ML/AI" },
+                  { value: "it", label: "IT" },
                 ].map((option) => (
                   <button
                     key={option.value}
@@ -279,7 +258,7 @@ export default function JobsFeedClient({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">{t.jobs?.remote || "Remote"}</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Тип работы</label>
               <div className="flex gap-2">
                 <button
                   onClick={() => handleRemoteFilter(false)}
@@ -287,7 +266,7 @@ export default function JobsFeedClient({
                     !remote ? "bg-[#00AEC7] text-white" : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50"
                   }`}
                 >
-                  {t.jobs?.filter_all || "All"}
+                  Все
                 </button>
                 <button
                   onClick={() => handleRemoteFilter(true)}
@@ -295,7 +274,7 @@ export default function JobsFeedClient({
                     remote ? "bg-[#00AEC7] text-white" : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50"
                   }`}
                 >
-                  {t.jobs?.filter_remote || "Remote only"}
+                  Только удаленные
                 </button>
               </div>
             </div>
@@ -307,7 +286,7 @@ export default function JobsFeedClient({
       {loading && (
         <div className="text-center py-8">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#00AEC7]"></div>
-          <p className="mt-2 text-gray-400">{t.jobs?.loading || "Loading..."}</p>
+          <p className="mt-2 text-gray-400">Загрузка вакансий...</p>
         </div>
       )}
 
@@ -318,18 +297,14 @@ export default function JobsFeedClient({
             <Card className="mb-4 bg-gray-800/50 border-gray-700">
               <CardContent className="p-4">
                 <div className="text-center text-[#00AEC7] font-medium">
-                  <p>
-                    {query
-                      ? t.jobs?.no_search_results?.replace("{{query}}", query) || `No results found for "${query}"`
-                      : t.jobs?.no_results || "No results found"}
-                  </p>
+                  <p>{query ? `Ничего не найдено по запросу "${query}"` : "Вакансии временно недоступны"}</p>
                 </div>
               </CardContent>
             </Card>
           ) : (
             <section aria-labelledby="jobs-heading">
               <h2 id="jobs-heading" className="sr-only">
-                {t.jobs?.title || "Jobs"}
+                Список вакансий
               </h2>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {jobs.map((job, index) => {
@@ -348,7 +323,7 @@ export default function JobsFeedClient({
                       <CardHeader className="bg-gradient-to-r from-gray-700/20 to-gray-600/10 backdrop-blur-sm pb-3 flex-shrink-0 border-b border-gray-600/20">
                         <div className="flex items-center justify-between">
                           <CardDescription className="text-[#00AEC7] font-semibold text-sm tracking-wide">
-                            <time dateTime={job.created_at}>{formatDate(job.created_at, "en", t)}</time>
+                            <time dateTime={job.created_at}>{formatJobDate(job.created_at)}</time>
                             {job.sender_name && (
                               <span className="text-gray-400 font-normal ml-2">• {job.sender_name}</span>
                             )}
@@ -358,7 +333,7 @@ export default function JobsFeedClient({
                             {isRemote && (
                               <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-green-900/50 text-green-400 text-xs font-medium border border-green-700">
                                 <MapPin className="h-3 w-3" />
-                                <span>{t.jobs?.remote || "Remote"}</span>
+                                <span>Remote</span>
                               </div>
                             )}
 
@@ -402,7 +377,7 @@ export default function JobsFeedClient({
                               href={`/jobs/${job.post_id}`}
                               className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] text-white text-sm font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 ease-out focus:ring-2 focus:ring-[#00AEC7]/50 focus:outline-none"
                             >
-                              {t.jobs?.read_more || "Read More"}
+                              Подробнее
                               <svg
                                 className="ml-2 w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
                                 fill="none"
@@ -419,10 +394,10 @@ export default function JobsFeedClient({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center px-4 py-3 border-2 border-[#00AEC7]/30 text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white hover:border-[#00AEC7] text-sm font-medium rounded-xl transition-all duration-200 ease-out focus:ring-2 focus:ring-[#00AEC7]/50 focus:outline-none group/btn"
-                                title={t.jobs?.open_in_telegram || "Open in Telegram"}
+                                title="Откликнуться в Telegram"
                               >
                                 <ExternalLink className="h-4 w-4 mr-2 transition-transform duration-200 group-hover/btn:scale-110" />
-                                {t.jobs?.apply || "Apply"}
+                                Откликнуться
                               </Link>
                             )}
                           </div>
@@ -444,12 +419,12 @@ export default function JobsFeedClient({
                   disabled={loading}
                   className="px-6 py-3 bg-gray-800/50 border border-gray-700 text-white rounded-xl hover:bg-gray-700/50 transition-colors disabled:opacity-50"
                 >
-                  ← {t.jobs?.previous || "Previous"}
+                  ← Предыдущая
                 </button>
               )}
 
               <span className="px-4 py-2 text-gray-300">
-                {t.jobs?.page || "Page"} {page} {t.jobs?.of || "of"} {totalPages}
+                Страница {page} из {totalPages}
               </span>
 
               {hasNextPage && (
@@ -458,7 +433,7 @@ export default function JobsFeedClient({
                   disabled={loading}
                   className="px-6 py-3 bg-[#00AEC7] text-white rounded-xl hover:bg-[#00AEC7]/80 transition-colors disabled:opacity-50"
                 >
-                  {t.jobs?.next || "Next"} →
+                  Следующая →
                 </button>
               )}
             </div>

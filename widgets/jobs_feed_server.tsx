@@ -1,4 +1,4 @@
-import { createServerPublicClient } from "@/lib/supabase-public"
+import { createServerClient } from "@/lib/supabase-server"
 import JobsFeedDynamicWrapper from "@/widgets/jobs_feed_dynamic_wrapper"
 
 export const revalidate = 60
@@ -23,56 +23,62 @@ async function fetchJobs(
   remoteOnly = false,
 ): Promise<{ jobs: JobPost[]; totalCount: number }> {
   try {
-    const supabase = createServerPublicClient()
-    const page_size = 9
-    const from = (page - 1) * page_size
-    const to = from + page_size - 1
+    const supabase = createServerClient()
+    const pageSize = 9
+    const from = (page - 1) * pageSize
+    const to = from + pageSize - 1
 
-    let qb = supabase
+    // Build the query for channels_content
+    let queryBuilder = supabase
       .from("channels_content")
       .select("*", { count: "exact" })
       .in("channel_id", channelIds)
-      .eq("is_public", true)
       .order("created_at", { ascending: false })
 
-    if (query) qb = qb.ilike("html_text", `%${query}%`)
+    if (query) {
+      queryBuilder = queryBuilder.ilike("html_text", `%${query}%`)
+    }
 
-    const { data: channelsData, error: channelsError } = await qb.range(from, to)
-    if (channelsError || !channelsData) {
+    const { data: channelsData, error: channelsError } = await queryBuilder.range(from, to)
+
+    if (channelsError) {
       console.error("Error fetching jobs:", channelsError)
       return { jobs: [], totalCount: 0 }
     }
 
-    const postIds = channelsData.map((p) => p.post_id)
-    const { data: jobDetailsData, error: detailsError } = await supabase
+    // Get job details for location info
+    const postIds = channelsData.map((post) => post.post_id)
+    const { data: jobDetailsData } = await supabase
       .from("job_details")
       .select("post_id, location")
       .in("post_id", postIds)
-    if (detailsError) console.error("job_details error:", detailsError)
 
-    const location_map = new Map<string, string | null>(
-      (jobDetailsData ?? []).map((d: any) => [d.post_id as string, d.location as string | null]),
-    )
-
-    let combined = channelsData.map((post: any) => ({
-      ...post,
-      location: location_map.get(post.post_id) ?? null,
-    })) as JobPost[]
-
-    if (remoteOnly) {
-      combined = combined.filter((p) => p.location?.toLowerCase().startsWith("remote"))
+    // Create location map
+    const locationMap = new Map()
+    if (jobDetailsData) {
+      jobDetailsData.forEach((detail) => {
+        locationMap.set(detail.post_id, detail.location)
+      })
     }
 
-    let countQ = supabase
+    // Combine data
+    let combinedData = channelsData.map((post) => ({
+      ...post,
+      location: locationMap.get(post.post_id) || null,
+    })) as JobPost[]
+
+    // Filter remote jobs if needed
+    if (remoteOnly) {
+      combinedData = combinedData.filter((post) => post.location?.toLowerCase().startsWith("remote"))
+    }
+
+    // Get total count for pagination
+    const { count } = await supabase
       .from("channels_content")
-      .select("post_id", { count: "exact", head: true })
+      .select("*", { count: "exact", head: true })
       .in("channel_id", channelIds)
-      .eq("is_public", true)
 
-    if (query) countQ = countQ.ilike("html_text", `%${query}%`)
-    const { count } = await countQ
-
-    return { jobs: combined, totalCount: count || 0 }
+    return { jobs: combinedData, totalCount: count || 0 }
   } catch (err) {
     console.error("Error fetching jobs:", err)
     return { jobs: [], totalCount: 0 }
@@ -80,19 +86,17 @@ async function fetchJobs(
 }
 
 export default async function JobsFeedServer({
-  searchParams,
-  locale,
-  translations,
+  page = 1,
+  query = "",
+  channels = "all",
+  remote = false,
 }: {
-  searchParams?: { page?: string; search?: string; location?: string; type?: string }
-  locale: string
-  translations: any
+  page?: number
+  query?: string
+  channels?: string
+  remote?: boolean
 }) {
-  const page = Number.parseInt(searchParams?.page || "1", 10)
-  const query = searchParams?.search || ""
-  const channels = "all"
-  const remote = false
-
+  // Parse channel filter
   const channelIds =
     channels === "ml" ? [-1001120572276] : channels === "it" ? [-1001944996511] : [-1001120572276, -1001944996511]
 
@@ -106,7 +110,6 @@ export default async function JobsFeedServer({
       initialQuery={query}
       initialChannels={channels}
       initialRemote={remote}
-      translations={translations}
     />
   )
 }

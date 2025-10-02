@@ -2,18 +2,13 @@ import NewsFeed from "@/widgets/news_feed"
 import { SectionHeroSSR } from "@/widgets/section_hero_ssr"
 import type { Metadata } from "next"
 import { tServer } from "@/lib/server-translations"
-import { cookies } from "next/headers"
-
-export const dynamic = "force-dynamic"
 
 interface NewsPageProps {
   searchParams: { page?: string; q?: string }
 }
 
 export async function generateMetadata({ searchParams }: NewsPageProps): Promise<Metadata> {
-  const locale = cookies().get("locale")?.value ?? "ru"
-  const { t } = tServer(locale)
-
+  const { t } = tServer()
   const page = Number.parseInt(searchParams.page || "1")
   const query = searchParams.q || ""
 
@@ -58,9 +53,7 @@ export async function generateMetadata({ searchParams }: NewsPageProps): Promise
 }
 
 export default function NewsPage({ searchParams }: NewsPageProps) {
-  const locale = cookies().get("locale")?.value ?? "ru"
-  const { t } = tServer(locale)
-
+  const { t } = tServer()
   const page = Number.parseInt(searchParams.page || "1")
   const query = searchParams.q || ""
 

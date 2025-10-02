@@ -1,9 +1,5 @@
-import { redirect } from "next/navigation"
-import { cookies } from "next/headers"
+import { HomeContent } from "@/widgets/home_content"
 
-export default function RootPage() {
-  const cookieStore = cookies()
-  const preferredLang = cookieStore.get("preferred-language")?.value || "ru"
-
-  redirect(`/${preferredLang}`)
+export default function Home() {
+  return <HomeContent />
 }

@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useTranslation } from "@/hooks/use-translation"
-import HeroSection from "@/components/hero-section"
+import { SectionHero } from "@/widgets/section_hero"
 import { Users, MessageSquare, Shield, Heart, BookOpen, Lightbulb, Target, Globe, Award, UserCheck } from "lucide-react"
 
 export function ValuesContent() {
@@ -47,19 +47,12 @@ export function ValuesContent() {
   ]
 
   return (
-    <div className="min-h-screen">
-      <HeroSection
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      <SectionHero
         title={t("values.title")}
-        subtitle={t("values.description")}
-        description={t("values.welcome.intro")}
-        primaryButton={{
-          text: t("values.cta.button"),
-          href: "/dashboard",
-        }}
-        secondaryButton={{
-          text: "Learn More",
-          href: "#content",
-        }}
+        subtitleLine1={t("values.description")}
+        gradientFrom="#00AEC7"
+        gradientTo="#FFF32A"
       />
 
       <div className="container py-8">

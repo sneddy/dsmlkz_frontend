@@ -7,10 +7,10 @@ import { Inter } from "next/font/google"
 import { Press_Start_2P } from "next/font/google"
 import type { Metadata } from "next"
 import ClientLayout from "./client-layout"
-import { AuthProvider } from "@/contexts/auth-context"
 import { LanguageProvider } from "@/contexts/language-context"
-import { ProfileProvider } from "@/features/profile/client/ProfileProvider"
-import { getTranslations } from "@/translations/index"
+
+// Make sure Radix UI deps are referenced so they're bundled
+import "@/lib/radix-deps"
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] })
 const pixelFont = Press_Start_2P({
@@ -34,8 +34,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const defaultTranslations = getTranslations("en")
-
   return (
     <html lang="en" className={`dark ${pixelFont.variable}`} suppressHydrationWarning>
       <head>
@@ -46,13 +44,8 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <GoogleAnalytics />
         </Suspense>
-        {/* Now locale is managed only through URL */}
-        <LanguageProvider language="en" translations={defaultTranslations}>
-          <AuthProvider>
-            <ProfileProvider>
-              <ClientLayout>{children}</ClientLayout>
-            </ProfileProvider>
-          </AuthProvider>
+        <LanguageProvider>
+          <ClientLayout>{children}</ClientLayout>
         </LanguageProvider>
         <Toaster />
       </body>

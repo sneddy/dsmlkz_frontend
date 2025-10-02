@@ -60,7 +60,6 @@ A modern, multilingual community platform for Data Science and Machine Learning 
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
    NEXT_PUBLIC_GA_MEASUREMENT_ID=your_ga_id
-   NEXT_PUBLIC_APP_URL=http://localhost:3000
    \`\`\`
 
 4. **Run the development server**
@@ -86,7 +85,6 @@ This project follows **Feature-Sliced Design (FSD)** methodology for better main
 ├── 📄 home_content.tsx
 ├── 📄 news_feed.tsx
 ├── 📄 jobs_feed_server.tsx  # Updated to server-side jobs feed
-├── 📄 jobs_feed_client_wrapper.tsx  # Client wrapper for jobs
 └── 📄 events_content.tsx
 
 📁 features/         # Business logic by domain
@@ -112,31 +110,6 @@ dsml-kazakhstan/
 │   ├── 📄 not-found.tsx                      # 404 page
 │   ├── 📄 client-layout.tsx                  # Client layout with navigation
 │   │
-│   ├── 📁 [lang]/                            # 🆕 Internationalized routes
-│   │   └── 📁 (public)/                      # Public route group
-│   │       ├── 📄 layout.tsx                 # Localized public layout
-│   │       ├── 📁 articles/                  # SSR articles with language prefixes
-│   │       │   ├── 📄 page.tsx               # Articles listing (/en/articles)
-│   │       │   ├── 📁 [slug]/                # Individual articles (/en/articles/[slug])
-│   │       │   └── 📁 utils/                 # Article utilities & metadata
-│   │       ├── 📁 news/                      # SSR news with language prefixes
-│   │       │   ├── 📄 page.tsx               # News listing (/en/news)
-│   │       │   └── 📁 [id]/                  # Individual news (/en/news/[id])
-│   │       └── 📁 jobs/                      # SSR jobs with language prefixes
-│   │           ├── 📄 page.tsx               # Jobs listing (/en/jobs)
-│   │           └── 📁 [id]/                  # Individual jobs (/en/jobs/[id])
-│   │
-│   ├── 📁 (protected)/                       # Protected route group
-│   │   ├── 📄 layout.tsx                     # Protected layout with auth
-│   │   ├── 📁 dashboard/                     # User dashboard
-│   │   │   ├── 📄 page.tsx                   # Dashboard home
-│   │   │   ├── 📄 loading.tsx                # Dashboard loading state
-│   │   │   └── 📁 search/                    # Member search
-│   │   │       ├── 📄 page.tsx               # Search page
-│   │   │       └── 📄 loading.tsx            # Search loading state
-│   │   └── 📁 profile/                       # User profile management
-│   │       └── 📄 page.tsx                   # Profile editing page
-│   │
 │   ├── 📁 auth/                              # Authentication routes
 │   │   ├── 📁 signin/                        # Sign in page
 │   │   ├── 📁 signup/                        # Sign up page
@@ -145,70 +118,69 @@ dsml-kazakhstan/
 │   │   ├── 📁 email-verification/            # Email verification
 │   │   └── 📁 post-signup/                   # Post-registration flow
 │   │
-│   ├── 📁 events/                            # Community events (CSR)
-│   ├── 📁 faces/                             # Community members (CSR)
-│   ├── 📁 research/                          # Research content (CSR)
-│   ├── 📁 values/                            # Community values (CSR)
-│   ├── 📁 rules/                             # Community rules (CSR)
+│   ├── 📁 articles/                          # Articles & interviews
+│   │   ├── 📄 page.tsx                       # Articles listing
+│   │   ├── 📄 loading.tsx                    # Loading state
+│   │   ├── 📁 [slug]/                        # Dynamic article pages
+│   │   ├── 📁 content/                       # Markdown content files
+│   │   └── 📁 utils/                         # Article utilities
 │   │
-│   ├── 📁 users/[nickname]/                  # Public user profiles
+│   ├── 📁 news/                              # News feed
+│   │   ├── 📄 page.tsx                       # News listing
+│   │   └── 📁 [id]/                          # Individual news pages
+│   │
+│   ├── 📁 jobs/                              # Job board
+│   │   ├── 📄 page.tsx                       # Jobs listing
+│   │   └── 📁 [id]/                          # Individual job pages
+│   │
+│   ├── 📁 events/                            # Community events
+│   ├── 📁 faces/                             # Community members
+│   ├── 📁 research/                          # Research content
+│   ├── 📁 values/                            # Community values
+│   ├── 📁 rules/                             # Community rules
+│   │
+│   ├── 📁 dashboard/                         # User dashboard
+│   │   ├── 📄 page.tsx                       # Dashboard home
+│   │   └── 📁 search/                        # Member search
+│   │
+│   ├── 📁 profile/                           # User profile
+│   ├── 📁 users/[nickname]/                  # Public profiles
 │   ├── 📁 admin/                             # Admin panel
 │   │
 │   └── 📁 api/                               # API routes
 │       ├── 📁 profile/update/                # Profile updates
 │       └── 📁 search/members/                # Member search API
 │
-├── 📁 components/                            # UI Components
-│   ├── 📄 hero-section.tsx                   # 🆕 Unified dark hero section
-│   ├── 📄 language-switcher.tsx              # Language switching component
-│   ├── 📄 member-mini-card.tsx               # Mini member display cards
-│   ├── 📄 profile-card.tsx                   # User profile cards
-│   └── 📁 ui/                                # shadcn/ui components (47 files)
-│       ├── 📄 button.tsx, card.tsx, badge.tsx
-│       ├── 📄 tabs.tsx, toast.tsx, progress.tsx
-│       ├── 📄 accordion.tsx, alert.tsx, avatar.tsx
-│       ├── 📄 calendar.tsx, checkbox.tsx, dialog.tsx
-│       ├── 📄 dropdown-menu.tsx, form.tsx, input.tsx
-│       ├── 📄 navigation-menu.tsx, popover.tsx, select.tsx
-│       ├── 📄 sheet.tsx, table.tsx, textarea.tsx
-│       └── 📄 ... (30+ more UI primitives)
-│
-├── 📁 widgets/                               # Large UI blocks (FSD Layer)
-│   ├── 📄 home_content.tsx                   # Homepage content with hero images
+├── 📁 widgets/                               # 🆕 Large UI blocks (FSD Layer)
+│   ├── 📄 home_content.tsx                   # Homepage content
 │   ├── 📄 news_feed.tsx                      # News feed widget
 │   ├── 📄 jobs_feed_server.tsx               # Server-side job feed widget
-│   ├── 📄 jobs_feed_client_wrapper.tsx       # Client wrapper for jobs
 │   ├── 📄 events_content.tsx                 # Events content
 │   ├── 📄 faces_content.tsx                  # Community faces
 │   ├── 📄 research_content.tsx               # Research content
 │   ├── 📄 values_content.tsx                 # Values content
 │   ├── 📄 rules_content.tsx                  # Rules content
-│   ├── 📄 article_card.tsx                   # Article display cards
+│   ├── 📄 article_card.tsx                   # Article cards
 │   ├── 📄 interview_card.tsx                 # Interview cards
 │   ├── 📄 collaboration_card.tsx             # Collaboration cards
 │   ├── 📄 community_face_card.tsx            # Member cards
+│   ├── 📄 member_mini_card.tsx               # Mini member cards
 │   ├── 📄 profile_card.tsx                   # Profile cards
-│   ├── 📄 section_hero.tsx                   # Legacy hero sections
+│   ├── 📄 section_hero.tsx                   # Hero sections
 │   └── 📄 image_carousel.tsx                 # Image carousels
 │
-├── 📁 features/                              # Business logic by domain (FSD Layer)
+├── 📁 features/                              # 🆕 Business logic by domain (FSD Layer)
 │   ├── 📁 auth/                              # Authentication features
 │   │   ├── 📄 auth_guard.tsx                 # Route protection
-│   │   ├── 📄 email_verification_dialog.tsx  # Email verification
-│   │   ├── 📄 constants.ts                   # Auth constants
-│   │   ├── 📄 types.ts                       # Auth types
-│   │   └── 📁 utils/                         # Auth utilities
-│   │       └── 📄 createFallbackProfile.ts   # Profile creation
+│   │   └── 📄 email_verification_dialog.tsx  # Email verification
 │   ├── 📁 profile/                           # Profile management
-│   │   ├── 📁 client/                        # Client-side profile logic
-│   │   │   ├── 📄 ProfileProvider.tsx        # Profile context provider
-│   │   │   ├── 📄 useProfile.ts              # Profile hook
-│   │   │   ├── 📄 fetchProfile.ts            # Profile fetching
-│   │   │   └── 📄 profileStorage.ts          # Profile storage
 │   │   ├── 📄 profile_form.tsx               # Profile editing form
 │   │   ├── 📄 profile_image_upload.tsx       # Avatar upload
 │   │   ├── 📄 visit_card_form.tsx            # Visit card form
 │   │   └── 📄 nickname_checker.tsx           # Username validation
+│   ├── 📁 search/                            # Search functionality
+│   │   ├── 📄 member_search.tsx              # Member search
+│   │   └── 📄 member_search_dropdown.tsx     # Search dropdown
 │   ├── 📁 cities/                            # Location features
 │   │   └── 📄 city_autocomplete.tsx          # City selection
 │   ├── 📁 i18n/                              # Internationalization
@@ -216,88 +188,82 @@ dsml-kazakhstan/
 │   └── 📁 editor/                            # Content editing
 │       └── 📄 word_counter.tsx               # Word counter utility
 │
-├── 📁 shared/                                # Shared resources (FSD Layer)
+├── 📁 shared/                                # 🆕 Shared resources (FSD Layer)
 │   ├── 📁 ui/                                # UI primitives
-│   │   ├── 📄 markdown_content.tsx           # Markdown renderer with math support
-│   │   ├── 📄 blob_image.tsx                 # Optimized image component
+│   │   ├── 📄 index.ts                       # UI exports
 │   │   ├── 📄 error_boundary.tsx             # Error handling
 │   │   ├── 📄 error_boundary_wrapper.tsx     # Error wrapper
-│   │   ├── 📄 spinner.tsx                    # Loading spinner
+│   │   ├── 📄 markdown_content.tsx           # Markdown renderer
+│   │   ├── 📄 blob_image.tsx                 # Image component
 │   │   └── 📄 toast.ts                       # Toast utilities
+│   ├── 📁 lib/                               # Utilities & helpers
+│   │   └── 📁 hooks/                         # Shared hooks
+│   │       ├── 📄 index.ts                   # Hook exports
+│   │       ├── 📄 use_toast.ts               # Toast hook
+│   │       └── 📄 use_mobile.ts              # Mobile detection
 │   └── 📁 providers/                         # Global providers
+│       ├── 📄 index.ts                       # Provider exports
 │       ├── 📄 theme_provider.tsx             # Theme provider
 │       └── 📄 analytics.tsx                  # Google Analytics
 │
+├── 📁 components/                            # Legacy UI components
+│   └── 📁 ui/                                # shadcn/ui components (47 files)
+│       ├── 📄 button.tsx, card.tsx, badge.tsx
+│       ├── 📄 tabs.tsx, toast.tsx, progress.tsx
+│       └── 📄 ... (40+ more UI primitives)
+│
+├── 📁 _deprecated/                           # 🆕 Deprecated components
+│   ├── 📄 seo_head.tsx                       # Legacy SEO (use generateMetadata)
+│   └── 📄 README.md                          # Deprecation notes
+│
 ├── 📁 contexts/                              # React contexts
-│   ├── 📄 auth-context.tsx                   # Authentication context
 │   ├── 📄 language-context.tsx               # Language context
-│   └── 📄 supabase-context.tsx               # Supabase context
+│   ├── 📄 supabase-context.tsx               # Supabase context
+│   └── 📄 auth-context.tsx                   # Authentication context
 │
 ├── 📁 hooks/                                 # Custom hooks
-│   ├── 📄 use-auth.ts                        # Authentication hook
-│   ├── 📄 use-safe-profile.ts                # 🆕 Safe profile access hook
 │   ├── 📄 use-translation.tsx                # Translation hook
 │   ├── 📄 use-member-search.ts               # Member search hook
-│   ├── 📄 use-click-outside.ts               # Click outside detection
-│   ├── 📄 use-mobile.tsx                     # Mobile device detection
-│   └── 📄 use-toast.ts                       # Toast notifications
+│   └── 📄 use-click-outside.ts               # Click outside hook
 │
 ├── 📁 lib/                                   # Utilities & libraries
-│   ├── 📄 supabase-client.ts                 # Client-side Supabase
-│   ├── 📄 supabase-server.ts                 # Server-side Supabase
-│   ├── 📄 supabase-public.ts                 # Public Supabase client
-│   ├── 📄 server-translations.ts             # 🆕 Server-side translations
-│   ├── 📄 i18n-config.ts                     # Internationalization config
-│   ├── 📄 i18n-ssr-routes.ts                 # 🆕 SSR route configuration
+│   ├── 📄 supabase-client.ts                 # Supabase client
+│   ├── 📄 supabase-server.ts                 # Server Supabase
 │   ├── 📄 analytics.ts                       # Analytics utilities
-│   ├── 📄 check-connection.ts                # Connection testing
-│   ├── 📄 debounce.ts                        # Debounce utility
-│   ├── 📄 jobs-utils.ts                      # Jobs-related utilities
-│   ├── 📄 text-utils.ts                      # Text processing utilities
-│   ├── 📄 locale-actions.ts                  # Locale handling
-│   ├── 📁 constants/                         # Constants
+│   ├── 📄 markdown-loader.ts                 # Markdown loader
+│   ├── 📄 server-translations.ts             # Server translations
+│   ├── 📄 constants/                         # Constants
 │   │   └── 📄 images.ts                      # Image paths
 │   └── 📄 utils.ts                           # General utilities
 │
 ├── 📁 translations/                          # Internationalization
 │   ├── 📄 index.ts                           # Translation exports
 │   ├── 📁 en/, 📁 ru/, 📁 kk/                # Language files
-│   │   ├── 📄 common.json                    # Common translations
-│   │   ├── 📄 nav.json                       # Navigation
-│   │   ├── 📄 home.json                      # Homepage
-│   │   ├── 📄 auth.json                      # Authentication
-│   │   ├── 📄 profile.json                   # Profile pages
-│   │   ├── 📄 dashboard.json                 # Dashboard
-│   │   ├── 📄 articles.json                  # 🆕 Articles translations
-│   │   ├── 📄 news.json                      # News translations
-│   │   ├── 📄 jobs.json                      # Jobs translations
-│   │   ├── 📄 events.json                    # Events translations
-│   │   ├── 📄 faces.json                     # Community faces
-│   │   ├── 📄 research.json                  # Research content
-│   │   ├── 📄 values.json                    # Values content
-│   │   └── 📄 rules.json                     # Rules content
+│   │   ├── 📄 common.json, nav.json, home.json
+│   │   ├── 📄 auth.json, profile.json, dashboard.json
+│   │   └── 📄 ... (12+ translation files per language)
 │
 ├── 📁 types/                                 # TypeScript types
-│   └── 📄 supabase.ts                        # Generated Supabase types
+│   └── 📄 supabase.ts                        # Supabase types
 │
 ├── 📁 public/                                # Static assets
 │   ├── 📁 images/                            # Local images
-│   │   ├── 📄 moon-hero-desktop.png          # 🆕 Desktop hero image
-│   │   ├── 📄 moon-hero-mobile.png           # 🆕 Mobile hero image
-│   │   ├── 📄 dsml-logo.png                  # DSML logo
-│   │   └── 📄 hero-banner.png                # Main hero banner
+│   │   ├── 📄 moon-hero-desktop.png          # Desktop hero
+│   │   ├── 📄 moon-hero-mobile.png           # Mobile hero
+│   │   ├── 📄 dsml-kazakhstan-hero.png       # Main hero
+│   │   └── 📄 ... (more images)
 │   ├── 📄 sitemap.xml                        # SEO sitemap
 │   ├── 📄 robots.txt                         # Search engine rules
 │   └── 📄 llms.txt                           # AI system info
 │
-├── 📄 middleware.ts                          # 🆕 Enhanced Next.js middleware for i18n
-├── 📄 next.config.mjs                        # Next.js configuration
-├── 📄 tailwind.config.ts                     # Tailwind CSS configuration
-├── 📄 tsconfig.json                          # TypeScript configuration
-├── 📄 MIGRATION_LOG.md                       # Architecture migration log
-├── 📄 DEPRECATIONS.md                        # Deprecation tracking
-├── 📄 ROUTES_USAGE.md                        # Route usage documentation
-└── 📄 package.json                           # Dependencies & scripts
+├── 📄 middleware.ts                          # Next.js middleware
+├── 📄 next.config.mjs                        # Next.js config
+├── 📄 tailwind.config.ts                     # 🆕 Updated Tailwind config
+├── 📄 tsconfig.json                          # TypeScript config
+├── 📄 MIGRATION_LOG.md                       # 🆕 Architecture migration log
+├── 📄 DEPRECATIONS.md                        # 🆕 Deprecation tracking
+├── 📄 ROUTES_USAGE.md                        # 🆕 Route usage documentation
+└── 📄 package.json                           # Dependencies
 \`\`\`
 
 ## 🔧 Key Architecture Changes
@@ -308,53 +274,6 @@ dsml-kazakhstan/
 - **`features/`** - Domain-specific business logic organized by feature area
 - **`shared/`** - Reusable utilities, UI primitives, and global providers
 - **`_deprecated/`** - Legacy components marked for removal
-
-### 🆕 Recent Major Updates & Improvements
-
-#### 🌐 Enhanced Internationalization & SEO
-- **SSR Language Routing** - Implemented server-side rendering with language prefixes (`/en/`, `/ru/`, `/kk/`) for articles, news, and jobs pages
-- **Intelligent Language Switching** - Different navigation strategies for SSR pages (full reload) vs CSR pages (client-side switching)
-- **SEO Optimization** - Added comprehensive SEO metadata, canonical URLs, hreflang links, and JSON-LD structured data
-- **Translation System** - Unified server-side (`tServer`) and client-side (`useTranslation`) translation systems with proper context handling
-
-#### 📰 Content Management Improvements
-- **Articles SSR Migration** - Moved `/articles` and `/articles/[slug]` to SSR with language prefixes for better SEO
-- **Enhanced Article Pages** - Added proper date parsing for Russian dates, improved metadata generation, and error handling
-- **News & Jobs SSR** - Implemented server-side rendering for news and jobs pages with language-specific URLs
-- **Content Translation** - Added missing translation keys across all pages and components
-
-#### 👤 Profile System Enhancements
-- **Nickname Management** - Removed automatic nickname generation from email to prevent restricted characters
-- **Profile Context Separation** - Split authentication and profile contexts for better state management
-- **Navigation Display** - Updated navigation to show user nickname instead of email prefix, with "Anon User" fallback
-- **Profile Loading** - Improved profile data loading with proper error handling and timeout mechanisms
-
-#### 🎨 UI/UX Improvements
-- **Unified Hero Sections** - Implemented consistent dark hero sections across all pages using `components/hero-section.tsx`
-- **Hero Image Integration** - Added responsive hero images for desktop and mobile on the homepage
-- **Button Management** - Made hero section buttons optional and configurable per page
-- **Responsive Design** - Improved mobile responsiveness and reduced hero section heights for better space utilization
-
-#### 🔧 Technical Infrastructure
-- **Middleware Enhancement** - Improved language detection and routing logic for SSR/CSR page handling
-- **Error Handling** - Added comprehensive error boundaries and safe context usage patterns
-- **Database Integration** - Enhanced profile data fetching with retry mechanisms and connection testing
-- **Build Optimization** - Fixed deployment issues with function serialization and context provider hierarchies
-
-#### 🔍 Search & Navigation
-- **Member Search** - Enhanced member search functionality with improved filtering and pagination
-- **Language-Aware Routing** - Implemented intelligent routing that respects current language context
-- **Navigation Consistency** - Unified navigation behavior across SSR and CSR pages
-
-#### 📊 Performance & Analytics
-- **Server-Side Optimization** - Improved server-side rendering performance for content-heavy pages
-- **Image Optimization** - Added proper image loading strategies with priority loading for hero images
-- **Analytics Integration** - Enhanced Google Analytics integration with proper event tracking
-
-#### 🛠️ Developer Experience
-- **Type Safety** - Improved TypeScript types for translation functions and profile data
-- **Debug Logging** - Added comprehensive debug logging for troubleshooting profile and translation issues
-- **Error Recovery** - Implemented graceful error recovery for missing translations and profile data
 
 ### 🔄 Import Path Aliases
 
@@ -368,6 +287,43 @@ import { BlobImage } from "@/shared/ui/blob_image"
 // Legacy imports (still supported)
 import { Button } from "@/components/ui/button"
 \`\`\`
+
+### 📝 Key File Explanations
+
+#### 🏗️ **Architecture Files**
+- **`app/layout.tsx`** - Root layout with providers (Supabase, Auth, Language, Analytics)
+- **`app/client-layout.tsx`** - Client layout with navigation and footer
+- **`middleware.ts`** - Request handling, redirects, authentication
+- **`tailwind.config.ts`** - Updated to include FSD directories for CSS purging
+
+#### 🎨 **UI & Components**
+- **`shared/ui/`** - Reusable UI primitives and utilities
+- **`widgets/home_content.tsx`** - Homepage with hero, stats, and community channels
+- **`widgets/news_feed.tsx`** - News feed with search and pagination
+- **`widgets/jobs_feed_server.tsx`** - Server-side job feed with filtering and search
+- **`components/ui/`** - shadcn/ui component library (47 components)
+
+#### 🔧 **Features**
+- **`features/auth/`** - Authentication guards and verification dialogs
+- **`features/profile/`** - Profile management, forms, and image upload
+- **`features/search/`** - Member search functionality with autocomplete
+- **`features/cities/`** - Location-based features and city selection
+
+#### 🌐 **Internationalization**
+- **`translations/`** - 3 languages (EN, RU, KK) with 12+ files each
+- **`hooks/use-translation.tsx`** - Translation hook with type safety
+- **`contexts/language-context.tsx`** - Language selection and persistence
+
+#### 🔐 **Authentication & Data**
+- **`lib/supabase-client.ts`** - Client-side Supabase for browser
+- **`lib/supabase-server.ts`** - Server-side Supabase for SSR
+- **`contexts/auth-context.tsx`** - Authentication state management
+
+#### 📊 **SEO & Analytics**
+- **`shared/providers/analytics.tsx`** - Google Analytics integration
+- **`public/sitemap.xml`** - SEO sitemap for search engines
+- **`public/robots.txt`** - Search engine indexing rules
+- **`public/llms.txt`** - Information for AI systems
 
 ## 🔧 Available Scripts
 

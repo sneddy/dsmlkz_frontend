@@ -2,9 +2,6 @@ import type { Metadata } from "next"
 import JobsFeedServer from "@/widgets/jobs_feed_server"
 import { SectionHeroSSR } from "@/widgets/section_hero_ssr"
 import { tServer } from "@/lib/server-translations"
-import { cookies } from "next/headers"
-
-export const dynamic = "force-dynamic"
 
 type SearchParams = {
   page?: string
@@ -18,8 +15,7 @@ export async function generateMetadata({
 }: {
   searchParams: SearchParams
 }): Promise<Metadata> {
-  const locale = cookies().get("locale")?.value ?? "en"
-  const { t } = tServer(locale)
+  const { t } = tServer()
 
   const page = Number.parseInt(searchParams.page || "1")
   const query = searchParams.q || ""
@@ -104,8 +100,7 @@ export default async function JobsPage({
 }: {
   searchParams: SearchParams
 }) {
-  const locale = cookies().get("locale")?.value ?? "en"
-  const { t } = tServer(locale)
+  const { t } = tServer()
 
   const page = Number.parseInt(searchParams.page || "1")
   const query = searchParams.q || ""

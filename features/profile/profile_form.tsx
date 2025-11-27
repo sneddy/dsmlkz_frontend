@@ -16,6 +16,7 @@ import { NicknameChecker } from "@/features/profile/nickname_checker"
 import { CityAutocomplete } from "@/features/cities/city_autocomplete"
 import { WordCounter } from "@/features/editor/word_counter"
 import { getSupabaseClient } from "@/lib/supabase-client"
+import { useProfile } from "@/features/profile/client/useProfile"
 
 interface ProfileFormProps {
   initialProfile: any
@@ -48,7 +49,8 @@ export function ProfileForm({ initialProfile, isCreateMode, isOffline }: Profile
   const [isAboutYouValid, setIsAboutYouValid] = useState(!!initialProfile?.about_you)
   const [isMotivationValid, setIsMotivationValid] = useState(!!initialProfile?.motivation)
 
-  const { user, updateProfile } = useAuth()
+  const { user } = useAuth()
+  const { updateProfile } = useProfile()
   const router = useRouter()
   const { t } = useTranslation()
 

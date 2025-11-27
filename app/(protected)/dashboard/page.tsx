@@ -238,7 +238,7 @@ function OverviewTab({
                         <Link
                           href={
                             profileComplete
-                              ? `https://t.me/databek_bot?start=verify_${profile.nickname}_${profile.secret_number || 0}`
+                              ? `https://t.me/databek_bot?start=verify_${profile.nickname}_${profile.secret_number ?? ""}`
                               : "#"
                           }
                           target={profileComplete ? "_blank" : undefined}

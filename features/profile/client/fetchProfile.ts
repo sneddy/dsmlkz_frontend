@@ -12,7 +12,7 @@ export async function fetchProfileOnce(userId: string, retryCount = 0): Promise<
     try {
       const response = await fetch("/api/profile/me", { cache: "no-store", credentials: "same-origin" })
       if (response.ok) {
-        const { profile } = (await response.json()) as { profile?: Profile }
+        const { profile } = (await response.json()) as { profile?: Profile & { secret_number?: number } }
         if (profile) {
           console.info("[profile] Loaded profile via server endpoint")
           return profile

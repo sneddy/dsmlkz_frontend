@@ -64,6 +64,8 @@ export async function GET() {
       return NextResponse.json({ profile: null })
     }
 
+    const secretNumber = privateProfile?.secret_number ?? publicProfile?.secret_number ?? null
+
     const { data: avatarData, error: avatarError } = await supabaseAdmin
       .from("avatars")
       .select("url")
@@ -77,6 +79,7 @@ export async function GET() {
 
     const profile = {
       ...baseProfile,
+      secret_number: secretNumber,
       avatar_url: baseProfile.avatar_url || avatarData?.url || null,
     }
 

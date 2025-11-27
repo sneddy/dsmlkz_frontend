@@ -156,8 +156,6 @@ export function ProfileForm({ initialProfile, isCreateMode, isOffline }: Profile
         {} as Record<string, any>,
       )
 
-      console.log("Trimmed form data to submit:", trimmedFormData)
-
       const { error: updateError } = await updateProfile(trimmedFormData)
 
       if (updateError) {

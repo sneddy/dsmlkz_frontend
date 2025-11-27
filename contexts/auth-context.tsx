@@ -3,6 +3,7 @@
 import type React from "react"
 import { createContext, useContext, useCallback, useMemo, useRef } from "react"
 import { getSupabaseClient } from "@/lib/supabase-client"
+import { createLogger } from "@/lib/logger"
 
 // Import types from separate module
 import type { AuthContextType } from "@/features/auth/types"
@@ -21,6 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const supabase = useMemo(() => getSupabaseClient(), [])
   const signOutInFlightRef = useRef(false)
+  const logger = useMemo(() => createLogger("auth"), [])
 
   const clearAuthCookies = useCallback(() => {
     if (typeof document === "undefined") return
@@ -44,15 +46,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         })
 
         if (error) {
-          console.error("[auth] Sign in error", error)
+          logger.error("Sign in error", error)
           return { error }
         }
 
-        console.info("[auth] Sign in successful", { email })
+        logger.info("Sign in successful", { email })
 
         return { error: null }
       } catch (error) {
-        console.error("[auth] Exception during sign in", error)
+        logger.error("Exception during sign in", error)
         return { error }
       }
     },
@@ -70,7 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         return { data, error }
       } catch (error) {
-        console.error("Error signing up:", error)
+        logger.error("Error signing up", error)
         return { error, data: null }
       }
     },
@@ -84,13 +86,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { error } = await supabase.auth.signOut()
 
       if (error) {
-        console.error("[auth] Error signing out from Supabase", error)
+        logger.error("Error signing out from Supabase", error)
         throw error
       }
 
-      console.info("[auth] Successfully signed out from Supabase")
+      logger.info("Successfully signed out from Supabase")
     } catch (error) {
-      console.error("[auth] Error during sign out process", error)
+      logger.error("Error during sign out process", error)
     } finally {
       if (typeof window !== "undefined") {
         const allKeys = Object.keys(localStorage)
@@ -109,11 +111,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           .then(({ resetSupabaseClient }) => {
             if (typeof resetSupabaseClient === "function") {
               resetSupabaseClient()
-              console.info("[auth] Supabase client reset after sign out")
+              logger.info("Supabase client reset after sign out")
             }
           })
           .catch((e) => {
-            console.error("[auth] Error importing resetSupabaseClient", e)
+            logger.error("Error importing resetSupabaseClient", e)
           })
           .finally(() => {
             window.location.replace("/")

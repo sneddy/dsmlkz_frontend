@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { useSupabase } from "@/contexts/supabase-context"
 import { Check, X, Loader2, Info } from "lucide-react"
+import { validateNicknameFormat } from "@/features/profile/utils/nickname"
 
 interface NicknameCheckerProps {
   nickname: string
@@ -19,53 +20,6 @@ export function NicknameChecker({ nickname, currentUserId, initialNickname, onCh
   const { supabase } = useSupabase()
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const lastCheckedNicknameRef = useRef<string | null>(null)
-
-  // Проверка формата nickname (латинские буквы, цифры, дефис, без пробелов)
-  const validateNicknameFormat = (nickname: string): string | null => {
-    if (!nickname || nickname.trim() === "") {
-      return null
-    }
-
-    // Проверка на минимальную длину
-    if (nickname.length < 3) {
-      return "Minimum 3 characters required"
-    }
-
-    // Проверка на максимальную длину
-    if (nickname.length > 20) {
-      return "Maximum 20 characters allowed"
-    }
-
-    // Проверка на латинские символы, цифры и дефис без пробелов
-    const validFormatRegex = /^[a-zA-Z0-9-]+$/
-    if (!validFormatRegex.test(nickname)) {
-      return "Only Latin letters, numbers and hyphens allowed"
-    }
-
-    // Проверка, что nickname не состоит только из цифр
-    const onlyNumbersRegex = /^\d+$/
-    if (onlyNumbersRegex.test(nickname)) {
-      return "Cannot contain only numbers"
-    }
-
-    // Проверка, что nickname не состоит только из дефисов
-    const onlyHyphensRegex = /^-+$/
-    if (onlyHyphensRegex.test(nickname)) {
-      return "Cannot contain only hyphens"
-    }
-
-    // Проверка, что nickname не начинается и не заканчивается дефисом
-    if (nickname.startsWith("-") || nickname.endsWith("-")) {
-      return "Cannot start or end with hyphen"
-    }
-
-    // Проверка на последовательные дефисы
-    if (nickname.includes("--")) {
-      return "Cannot contain consecutive hyphens"
-    }
-
-    return null
-  }
 
   useEffect(() => {
     // Reset state when nickname changes
@@ -127,15 +81,6 @@ export function NicknameChecker({ nickname, currentUserId, initialNickname, onCh
     lastCheckedNicknameRef.current = nicknameToCheck
 
     try {
-      console.log(
-        "Checking nickname:",
-        nicknameToCheck,
-        "Current user ID:",
-        currentUserId,
-        "Initial nickname:",
-        initialNickname,
-      )
-
       // First check profiles table
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
@@ -148,8 +93,6 @@ export function NicknameChecker({ nickname, currentUserId, initialNickname, onCh
         console.error("Error checking nickname in profiles:", profileError)
         throw profileError
       }
-
-      console.log("Profile data for nickname check:", profileData)
 
       // If nickname exists in profiles and doesn't belong to current user
       if (profileData) {
@@ -170,8 +113,6 @@ export function NicknameChecker({ nickname, currentUserId, initialNickname, onCh
         console.error("Error checking nickname in public_profiles:", publicError)
         // Don't throw here, just log the error
       }
-
-      console.log("Public profile data for nickname check:", publicData)
 
       // If nickname exists in public_profiles and doesn't belong to current user
       if (publicData) {

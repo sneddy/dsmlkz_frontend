@@ -9,6 +9,7 @@ import { Upload, X, Loader2, Camera } from "lucide-react"
 import { useTranslation } from "@/hooks/use-translation"
 import { useSupabase } from "@/contexts/supabase-context"
 import { useAuth } from "@/contexts/auth-context"
+import { useProfile } from "@/features/profile/client/useProfile"
 import { toast } from "@/shared/lib/hooks/use-toast"
 import imageCompression from "browser-image-compression"
 
@@ -31,7 +32,8 @@ export function ProfileImageUpload({
   currentImageUrl,
   isRegistration = false,
 }: ProfileImageUploadProps) {
-  const { user, profile } = useAuth()
+  const { user } = useAuth()
+  const { profile } = useProfile()
   const { supabase } = useSupabase()
   const { t } = useTranslation()
   const [uploading, setUploading] = useState(false)
@@ -89,10 +91,6 @@ export function ProfileImageUpload({
 
       // Compress the image
       const compressedFile = await imageCompression(file, options)
-
-      console.log(
-        `Original size: ${(file.size / 1024).toFixed(2)} KB, Compressed size: ${(compressedFile.size / 1024).toFixed(2)} KB`,
-      )
 
       // Если это регистрация, просто сохраняем файл временно и создаем временный URL
       if (isRegistration) {

@@ -14,6 +14,7 @@ export type Profile = {
   linkedin?: string
   other_links?: string
   avatar_url?: string
+  secret_number?: number | null
 }
 
 export type AuthContextType = {

@@ -1,6 +1,9 @@
 import { getSupabaseClient } from "@/lib/supabase-client"
 import type { Profile } from "@/features/auth/types"
 import { MAX_RETRIES, RETRY_DELAY } from "@/features/auth/constants"
+import { createLogger } from "@/lib/logger"
+
+const logger = createLogger("profile")
 
 export async function fetchProfileOnce(userId: string, retryCount = 0): Promise<Profile | null> {
   if (!userId) {
@@ -14,14 +17,14 @@ export async function fetchProfileOnce(userId: string, retryCount = 0): Promise<
       if (response.ok) {
         const { profile } = (await response.json()) as { profile?: Profile & { secret_number?: number } }
         if (profile) {
-          console.info("[profile] Loaded profile via server endpoint")
+          logger.info("Loaded profile via server endpoint")
           return profile
         }
       } else if (response.status !== 401) {
-        console.warn("[profile] Server profile fetch failed", { status: response.status })
+        logger.warn("Server profile fetch failed", { status: response.status })
       }
     } catch (apiError) {
-      console.error("[profile] Error calling /api/profile/me", apiError)
+      logger.error("Error calling /api/profile/me", apiError)
     }
 
     const supabase = getSupabaseClient()
@@ -34,7 +37,7 @@ export async function fetchProfileOnce(userId: string, retryCount = 0): Promise<
       .maybeSingle()
 
     if (profileError) {
-      console.error("fetchProfileOnce: error fetching profile:", profileError)
+      logger.error("Error fetching profile", profileError)
       throw profileError
     }
 
@@ -46,12 +49,12 @@ export async function fetchProfileOnce(userId: string, retryCount = 0): Promise<
         .maybeSingle()
 
       if (publicProfileError) {
-        console.error("[profile] Error fetching public profile", publicProfileError)
+        logger.error("Error fetching public profile", publicProfileError)
         throw publicProfileError
       }
 
       if (!publicProfileData) {
-        console.warn("[profile] No profile found in private or public tables")
+        logger.warn("No profile found in private or public tables")
         return null
       }
 
@@ -74,7 +77,7 @@ export async function fetchProfileOnce(userId: string, retryCount = 0): Promise<
 
       avatarUrl = avatarData?.url
     } catch (avatarError) {
-      console.error("fetchProfileOnce: error fetching avatar:", avatarError)
+      logger.error("Error fetching avatar", avatarError)
     }
 
     const profile: Profile = {
@@ -84,10 +87,10 @@ export async function fetchProfileOnce(userId: string, retryCount = 0): Promise<
 
     return profile
   } catch (error) {
-    console.error("fetchProfileOnce: unexpected error:", error)
+    logger.error("Unexpected error fetching profile", error)
 
     if (retryCount < MAX_RETRIES) {
-      console.warn("fetchProfileOnce: retrying after failure", { userId, attempt: retryCount + 1 })
+      logger.warn("Retrying profile fetch after failure", { userId, attempt: retryCount + 1 })
       await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY * Math.pow(2, retryCount)))
       return fetchProfileOnce(userId, retryCount + 1)
     }

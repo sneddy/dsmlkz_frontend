@@ -17,32 +17,9 @@ import { readProfileCache, writeProfileCache, mergeProfileCache } from "@/featur
 
 import { fetchProfileOnce } from "@/features/profile/client/fetchProfile"
 import { useAuth } from "@/contexts/auth-context"
+import { createLogger } from "@/lib/logger"
 
 const PROFILE_SLOW_FETCH_THRESHOLD = 2000
-
-const logProfileWarning = (message: string, details?: Record<string, unknown>) => {
-  if (details) {
-    console.warn(`[profile] ${message}`, details)
-  } else {
-    console.warn(`[profile] ${message}`)
-  }
-}
-
-const logProfileInfo = (message: string, details?: Record<string, unknown>) => {
-  if (details) {
-    console.info(`[profile] ${message}`, details)
-  } else {
-    console.info(`[profile] ${message}`)
-  }
-}
-
-const logProfileError = (message: string, error: unknown, details?: Record<string, unknown>) => {
-  if (details) {
-    console.error(`[profile] ${message}`, error, details)
-  } else {
-    console.error(`[profile] ${message}`, error)
-  }
-}
 
 // Profile context type
 interface ProfileContextType {
@@ -68,6 +45,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const isMountedRef = useRef(true)
   const fetchingProfileRef = useRef<Map<string, Promise<void>>>(new Map())
   const currentUserEmailRef = useRef<string | null>(null)
+  const logger = useMemo(() => createLogger("profile"), [])
 
   useEffect(() => {
     return () => {
@@ -103,7 +81,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
           setProfile((currentProfile) => currentProfile ?? cachedProfile)
         }
 
-        logProfileInfo("Starting profile fetch", { userId })
+        logger.info("Starting profile fetch", { userId })
         const fetchedProfile = await fetchProfileOnce(userId)
 
         if (!isMountedRef.current) return
@@ -116,11 +94,11 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
           writeProfileCache(userId, fetchedProfile)
         } else if (cachedProfile) {
           finalProfile = cachedProfile
-          logProfileWarning("Using cached profile because fetch returned null", { userId })
+          logger.warn("Using cached profile because fetch returned null", { userId })
         } else {
           const emailForFallback = userEmail || currentUserEmailRef.current || `${userId}@fallback.com`
           finalProfile = createFallbackProfile(userId, emailForFallback)
-          logProfileWarning("Profile not found, created fallback profile", { userId })
+          logger.warn("Profile not found, created fallback profile", { userId })
         }
 
         if (isMountedRef.current) {
@@ -130,10 +108,10 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         if (!finalProfile) {
           throw new Error("Could not retrieve or create profile")
         } else {
-          logProfileInfo("Profile fetched", { userId })
+          logger.info("Profile fetched", { userId })
         }
       } catch (error) {
-        logProfileError("Error in fetchProfile", error, { userId })
+        logger.error("Error in fetchProfile", error, { userId })
 
         if (!isMountedRef.current) return
 
@@ -142,10 +120,10 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
             try {
               const emailForFallback = userEmail || currentUserEmailRef.current || `${userId}@fallback.com`
               const fallbackProfile = createFallbackProfile(userId, emailForFallback)
-              logProfileWarning("Using fallback profile after error", { userId })
+              logger.warn("Using fallback profile after error", { userId })
               return fallbackProfile
             } catch (fallbackError) {
-              logProfileError("Error creating fallback profile", fallbackError, { userId })
+              logger.error("Error creating fallback profile", fallbackError, { userId })
               const normalizedError = error instanceof Error ? error : new Error(String(error))
               if (isMountedRef.current) {
                 setProfileError(normalizedError)
@@ -168,7 +146,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
 
         const duration = Date.now() - fetchStart
         if (duration > PROFILE_SLOW_FETCH_THRESHOLD) {
-          logProfileWarning("Profile fetch took longer than expected", { userId, durationMs: duration })
+          logger.warn("Profile fetch took longer than expected", { userId, durationMs: duration })
         }
       }
     })()
@@ -234,12 +212,12 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
 
           if (!response.ok) {
             const errorData = await response.json().catch(() => ({ error: "Failed to parse error response" }))
-            console.error("Profile update API error:", errorData)
+            logger.error("Profile update API error", errorData)
             return { error: new Error(errorData.error || "Failed to update profile") }
           }
 
         } catch (apiError) {
-          console.error("Error calling profile update API:", apiError)
+          logger.error("Error calling profile update API", apiError)
           return { error: apiError }
         }
 
@@ -251,7 +229,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
 
         return { error: null }
       } catch (error) {
-        console.error("Error updating profile:", error)
+        logger.error("Error updating profile", error)
         return { error }
       }
     },

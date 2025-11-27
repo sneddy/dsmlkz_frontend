@@ -1,11 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft, AlertTriangle } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
+import { useProfile } from "@/features/profile/client/useProfile"
 import { useTranslation } from "@/hooks/use-translation"
 import { toast } from "@/shared/lib/hooks/use-toast"
 import { AuthGuard } from "@/features/auth/auth_guard"
@@ -23,12 +24,13 @@ export default function ProfilePage() {
 }
 
 function ProfileContainer() {
-  const { user, profile, loading, profileError, refreshProfile } = useAuth()
+  const { user, loading } = useAuth()
+  const { profile, loadingProfile, profileError, refreshProfile } = useProfile()
   const router = useRouter()
   const searchParams = useSearchParams()
   const { t } = useTranslation()
+  const hasStartedProfileLoad = useRef(false)
   const [isOffline, setIsOffline] = useState(false)
-  const [loadingProfile, setLoadingProfile] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [profileLoaded, setProfileLoaded] = useState(false)
 
@@ -41,7 +43,10 @@ function ProfileContainer() {
     const handleOnline = () => {
       setIsOffline(false)
       // Try to refresh data when coming back online
-      refreshProfile().catch(console.error)
+      refreshProfile().catch((error) => {
+        console.error("[profile] Failed to refresh after reconnecting", error)
+        setLoadError("Failed to load profile. Please try again.")
+      })
     }
     const handleOffline = () => setIsOffline(true)
 
@@ -59,6 +64,11 @@ function ProfileContainer() {
   }, [refreshProfile])
 
   useEffect(() => {
+    hasStartedProfileLoad.current = false
+    setProfileLoaded(false)
+  }, [user?.id])
+
+  useEffect(() => {
     if (!loading && !user) {
       router.push("/auth/signin")
     }
@@ -70,30 +80,26 @@ function ProfileContainer() {
     }
   }, [user, loading, router])
 
-  // Load profile only once when component mounts
+  // Track when the profile load cycle finishes so we can drive redirects
   useEffect(() => {
-    // If profile is already loaded or loading is in progress, do nothing
-    if (profileLoaded || loadingProfile) {
+    if (loadingProfile) {
+      hasStartedProfileLoad.current = true
       return
     }
 
-    const loadProfile = async () => {
-      if (!user) return
-
-      setLoadingProfile(true)
-      try {
-        await refreshProfile()
-        setProfileLoaded(true)
-      } catch (error) {
-        console.error("Error loading profile:", error)
-        setLoadError("Failed to load profile. Please try again.")
-      } finally {
-        setLoadingProfile(false)
-      }
+    if (!profileLoaded && hasStartedProfileLoad.current) {
+      setProfileLoaded(true)
     }
+  }, [loadingProfile, profileLoaded])
 
-    loadProfile()
-  }, [user, profileLoaded, loadingProfile, refreshProfile])
+  useEffect(() => {
+    if (profileError) {
+      console.error("[profile] Failed to load profile", profileError)
+      setLoadError(profileError.message || "Failed to load profile. Please try again.")
+    } else if (!loadingProfile) {
+      setLoadError(null)
+    }
+  }, [profileError, loadingProfile])
 
   // If we're in create mode but profile exists, redirect to edit mode
   useEffect(() => {
@@ -130,6 +136,17 @@ function ProfileContainer() {
 
   if (!user) {
     return null
+  }
+
+  if (!isCreateMode && !profile && (loadingProfile || !profileLoaded)) {
+    return (
+      <div className="container py-8">
+        <div className="flex flex-col justify-center items-center min-h-[60vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+          <p className="text-muted-foreground">Loading your profile...</p>
+        </div>
+      </div>
+    )
   }
 
   // Show error state if we couldn't load the profile

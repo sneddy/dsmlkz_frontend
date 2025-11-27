@@ -23,7 +23,7 @@ async function fetchJobs(
   remoteOnly = false,
 ): Promise<{ jobs: JobPost[]; totalCount: number }> {
   try {
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
     const pageSize = 9
     const from = (page - 1) * pageSize
     const to = from + pageSize - 1

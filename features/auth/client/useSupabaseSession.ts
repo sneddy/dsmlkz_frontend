@@ -28,7 +28,6 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
 
     // Clean up existing subscription
     if (authSubscriptionRef.current) {
-      if (DEBUG) console.log("useSupabaseSession: cleaning up previous subscription")
       authSubscriptionRef.current.unsubscribe()
       authSubscriptionRef.current = null
     }
@@ -44,7 +43,7 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
         } = await supabase.auth.getSession()
 
         if (error) {
-          console.error("useSupabaseSession: error getting session:", error)
+          console.error("[auth] useSupabaseSession: error getting session", error)
           if (isMounted) {
             setLoading(false)
             setInitialized(true)
@@ -62,7 +61,7 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
           setLoading(false)
         }
       } catch (error) {
-        console.error("useSupabaseSession: error initializing:", error)
+        console.error("[auth] useSupabaseSession: error initializing", error)
         if (isMounted) {
           setLoading(false)
           setInitialized(true)
@@ -77,12 +76,7 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (DEBUG) console.log("useSupabaseSession: auth state changed:", event, session?.user?.id)
-
-      if (session?.access_token === prevSessionTokenRef.current) {
-        if (DEBUG) console.log("useSupabaseSession: session token unchanged, skipping update")
-        return
-      }
+      console.info("[auth] Auth state changed", { event, userId: session?.user?.id })
 
       // Update token ref
       prevSessionTokenRef.current = session?.access_token || null

@@ -18,7 +18,7 @@ interface SectionHeroServerProps {
   showDefaultJobStats?: boolean
 }
 
-export default function SectionHeroServer({
+export default async function SectionHeroServer({
   title,
   subtitle,
   highlight,
@@ -28,7 +28,7 @@ export default function SectionHeroServer({
   gradientTo = "#FFF32A",
   showDefaultJobStats = false,
 }: SectionHeroServerProps) {
-  const { t } = getServerTranslations()
+  const { t } = await getServerTranslations()
 
   const defaultJobStats: StatCard[] = [
     {

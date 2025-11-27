@@ -4,13 +4,14 @@ import type { Metadata } from "next"
 import { tServer } from "@/lib/server-translations"
 
 interface NewsPageProps {
-  searchParams: { page?: string; q?: string }
+  searchParams: Promise<{ page?: string; q?: string }>
 }
 
 export async function generateMetadata({ searchParams }: NewsPageProps): Promise<Metadata> {
-  const { t } = tServer()
-  const page = Number.parseInt(searchParams.page || "1")
-  const query = searchParams.q || ""
+  const { t } = await tServer()
+  const params = await searchParams
+  const page = Number.parseInt(params?.page || "1")
+  const query = params?.q || ""
 
   const title = query
     ? `${t("news.searchTitle")}: "${query}" | ${t("news.siteTitle")}`
@@ -52,10 +53,11 @@ export async function generateMetadata({ searchParams }: NewsPageProps): Promise
   }
 }
 
-export default function NewsPage({ searchParams }: NewsPageProps) {
-  const { t } = tServer()
-  const page = Number.parseInt(searchParams.page || "1")
-  const query = searchParams.q || ""
+export default async function NewsPage({ searchParams }: NewsPageProps) {
+  const { t } = await tServer()
+  const params = await searchParams
+  const page = Number.parseInt(params?.page || "1")
+  const query = params?.q || ""
 
   const jsonLd = {
     "@context": "https://schema.org",

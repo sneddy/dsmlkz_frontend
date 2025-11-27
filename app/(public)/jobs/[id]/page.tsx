@@ -21,7 +21,7 @@ type JobPost = {
 
 async function getJob(id: string): Promise<JobPost | null> {
   try {
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
 
     const { data: jobData, error } = await supabase.from("channels_content").select("*").eq("post_id", id).single()
 

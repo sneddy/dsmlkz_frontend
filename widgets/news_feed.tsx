@@ -20,7 +20,7 @@ type TelegramPost = {
 
 async function fetchPosts(page = 1, query = ""): Promise<{ posts: TelegramPost[]; totalCount: number }> {
   try {
-    const supabase = createServerClient()
+    const supabase = await createServerClient()
     const pageSize = 9
     const from = (page - 1) * pageSize
     const to = from + pageSize - 1

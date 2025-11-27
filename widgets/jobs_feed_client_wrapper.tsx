@@ -1,16 +1,6 @@
 "use client"
 
-import dynamic from "next/dynamic"
-
-const JobsFeedClient = dynamic(() => import("@/components/jobs-feed-client"), {
-  ssr: false,
-  loading: () => (
-    <div className="text-center py-8">
-      <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#00AEC7]"></div>
-      <p className="mt-2 text-gray-400">Загрузка интерактивных элементов...</p>
-    </div>
-  ),
-})
+import JobsFeedClient from "@/components/jobs-feed-client"
 
 type JobPost = {
   post_id: string

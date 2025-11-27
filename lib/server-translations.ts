@@ -5,8 +5,8 @@ import { cookies } from "next/headers"
  * Server-side translation function for RSC/metadata/JSON-LD
  * Reads language from cookies and returns translation function
  */
-export function tServer() {
-  const cookieStore = cookies()
+export async function tServer() {
+  const cookieStore = await cookies()
   const language = cookieStore.get("language")?.value || "ru"
 
   const translations = getTranslations(language)

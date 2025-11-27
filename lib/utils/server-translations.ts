@@ -1,9 +1,9 @@
 import { getTranslations } from "@/translations/index"
 import { cookies } from "next/headers"
 
-export function getServerTranslations() {
+export async function getServerTranslations() {
   // Get language from cookies, fallback to 'ru'
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const language = cookieStore.get("language")?.value || "ru"
 
   const validLanguages = ["en", "ru", "kk"]

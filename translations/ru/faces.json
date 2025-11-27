@@ -6,5 +6,18 @@
   "viewProfile": "Просмотреть профиль",
   "communityRole": "Роль в сообществе",
   "location": "Местоположение",
-  "connect": "Связаться"
+  "connect": "Связаться",
+  "refresh": "Обновить",
+  "nowShowing": "Показываем {{count}} случайных профилей",
+  "searchingNowShowing": "Найдено {{count}} профиль(я/ей)",
+  "highlightedTitle": "Избранные лица",
+  "highlightedDescription": "Подборка участников сообщества",
+  "randomTitle": "Случайные лица",
+  "noHighlighted": "Пока нет избранных профилей.",
+  "highlightedTabLabel": "Избранные",
+  "randomTabLabel": "Случайные",
+  "highlightedShowing": "(показываем {{count}})",
+  "prev": "Назад",
+  "next": "Вперед",
+  "pageOf": "Страница {{page}} из {{total}}"
 }

@@ -6,5 +6,18 @@
   "viewProfile": "Профильді қарау",
   "communityRole": "Қауымдастықтағы рөлі",
   "location": "Орналасқан жері",
-  "connect": "Байланысу"
+  "connect": "Байланысу",
+  "refresh": "Жаңарту",
+  "nowShowing": "Қазір {{count}} кездейсоқ профиль көрсетілуде",
+  "searchingNowShowing": "{{count}} профиль табылды",
+  "highlightedTitle": "Таңдалған тұлғалар",
+  "highlightedDescription": "Қауымдастықтан іріктелген профильдер",
+  "randomTitle": "Кездейсоқ тұлғалар",
+  "noHighlighted": "Әзірге таңдалған профильдер жоқ.",
+  "highlightedTabLabel": "Таңдалған",
+  "randomTabLabel": "Кездейсоқ",
+  "highlightedShowing": "(қазір {{count}} көрсетілуде)",
+  "prev": "Алдыңғы",
+  "next": "Келесі",
+  "pageOf": "Бет {{page}} / {{total}}"
 }

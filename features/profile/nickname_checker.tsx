@@ -72,20 +72,19 @@ export function NicknameChecker({ nickname, currentUserId, initialNickname, onCh
     setError(null)
     setValidationError(null)
 
-    // If the nickname is the same as the initial nickname, it's valid (user is keeping their current nickname)
-    if (initialNickname && nickname === initialNickname) {
-      console.log("Nickname is the same as initial nickname, marking as available")
-      setIsAvailable(true)
-      if (onChange) onChange(true)
-      return
-    }
-
     // Validate nickname format first
     const formatError = validateNicknameFormat(nickname)
     if (formatError) {
       setValidationError(formatError)
       setIsAvailable(false)
       if (onChange) onChange(false)
+      return
+    }
+
+    // If the nickname is the same as the initial nickname and format is valid, it's allowed
+    if (initialNickname && nickname === initialNickname) {
+      setIsAvailable(true)
+      if (onChange) onChange(true)
       return
     }
 

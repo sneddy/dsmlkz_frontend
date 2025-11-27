@@ -1,13 +1,13 @@
 "use client"
 
 import type React from "react"
-import { createContext, useContext, useCallback, useMemo } from "react"
+import { createContext, useContext, useCallback, useMemo, useRef } from "react"
 import { getSupabaseClient } from "@/lib/supabase-client"
 
 // Import types from separate module
 import type { AuthContextType } from "@/features/auth/types"
 
-// Import constants from separate module
+// Import session hook
 import { useSupabaseSession } from "@/features/auth/client/useSupabaseSession"
 
 // Create the context
@@ -20,6 +20,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { session, user: sessionUser, initialized, loading: sessionLoading } = useSupabaseSession()
 
   const supabase = useMemo(() => getSupabaseClient(), [])
+  const signOutInFlightRef = useRef(false)
+
+  const clearAuthCookies = useCallback(() => {
+    if (typeof document === "undefined") return
+    const cookies = document.cookie.split(";")
+    cookies.forEach((cookie) => {
+      const [rawName] = cookie.split("=")
+      const name = rawName?.trim()
+      if (name && (name.startsWith("sb-") || name.includes("supabase") || name.includes("auth"))) {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`
+      }
+    })
+  }, [])
 
   // Sign in function
   const signIn = useCallback(
@@ -65,17 +78,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   )
 
   const signOut = useCallback(async () => {
+    if (signOutInFlightRef.current) return
+    signOutInFlightRef.current = true
     try {
-      const logoutTimeout = setTimeout(() => {
-        console.warn("[auth] Forced redirect fallback after logout timeout")
-        if (typeof window !== "undefined") {
-          window.location.replace("/")
-        }
-      }, 2000)
-
       const { error } = await supabase.auth.signOut()
-
-      clearTimeout(logoutTimeout)
 
       if (error) {
         console.error("[auth] Error signing out from Supabase", error)
@@ -83,53 +89,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.info("[auth] Successfully signed out from Supabase")
-
-      if (typeof window !== "undefined") {
-        try {
-          const allKeys = Object.keys(localStorage)
-          const keysToRemove = allKeys.filter(
-            (key) =>
-              key.startsWith("sb-") || key.includes("supabase") || key.includes("auth") || key.startsWith("profile_"),
-          )
-
-          for (const key of keysToRemove) {
-            localStorage.removeItem(key)
-          }
-
-          // Only clear specific auth-related keys to avoid side effects
-
-          console.info("[auth] Cleared auth-related storage")
-        } catch (e) {
-          console.error("[auth] Error clearing storage", e)
-        }
-      }
-
-      // Reset Supabase client
-      try {
-        if (typeof window !== "undefined") {
-          import("@/lib/supabase-client")
-            .then(({ resetSupabaseClient }) => {
-              if (typeof resetSupabaseClient === "function") {
-                resetSupabaseClient()
-                if (DEBUG) console.log("Supabase client reset successfully")
-              }
-            })
-            .catch((e) => {
-              console.error("Error importing resetSupabaseClient:", e)
-            })
-        }
-      } catch (e) {
-        console.error("Error resetting Supabase client:", e)
-      }
-
-      if (DEBUG) console.log("Redirecting to home page with replace")
-
-      if (typeof window !== "undefined") {
-        window.location.replace("/")
-      }
     } catch (error) {
-      console.error("Error during sign out process:", error)
-
+      console.error("[auth] Error during sign out process", error)
+    } finally {
       if (typeof window !== "undefined") {
         const allKeys = Object.keys(localStorage)
         const keysToRemove = allKeys.filter(
@@ -141,10 +103,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           localStorage.removeItem(key)
         }
 
-        window.location.replace("/")
+        clearAuthCookies()
+
+        import("@/lib/supabase-client")
+          .then(({ resetSupabaseClient }) => {
+            if (typeof resetSupabaseClient === "function") {
+              resetSupabaseClient()
+              console.info("[auth] Supabase client reset after sign out")
+            }
+          })
+          .catch((e) => {
+            console.error("[auth] Error importing resetSupabaseClient", e)
+          })
+          .finally(() => {
+            window.location.replace("/")
+          })
       }
+      signOutInFlightRef.current = false
     }
-  }, [supabase])
+  }, [clearAuthCookies, supabase])
 
   const contextValue = useMemo(
     () => ({

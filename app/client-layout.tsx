@@ -20,7 +20,7 @@ export default function ClientLayout({
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
   const { user, signOut } = useAuth()
-  const displayName = user?.user_metadata?.nickname || user?.email?.split("@")[0] || "Profile"
+  const [displayName, setDisplayName] = useState("anon")
   const { t } = useSafeTranslation()
 
   // Close mobile menu when path changes
@@ -32,6 +32,46 @@ export default function ClientLayout({
   useEffect(() => {
     document.documentElement.classList.add("dark")
   }, [])
+
+  useEffect(() => {
+    let isCancelled = false
+
+    const deriveFallback = () => {
+      if (!user) return "anon"
+      return (user.user_metadata as any)?.nickname || "anon"
+    }
+
+    const loadNickname = async () => {
+      if (!user) {
+        setDisplayName("anon")
+        return
+      }
+
+      try {
+        const response = await fetch("/api/profile/me", { cache: "no-store", credentials: "same-origin" })
+        if (!response.ok) {
+          setDisplayName(deriveFallback())
+          return
+        }
+        const data = await response.json()
+        const nickname = data?.profile?.nickname
+        if (!isCancelled) {
+          setDisplayName(nickname || deriveFallback())
+        }
+      } catch (error) {
+        console.error("[nav] Failed to fetch profile nickname", error)
+        if (!isCancelled) {
+          setDisplayName(deriveFallback())
+        }
+      }
+    }
+
+    loadNickname()
+
+    return () => {
+      isCancelled = true
+    }
+  }, [user])
 
   return (
     <div className="flex min-h-screen flex-col">

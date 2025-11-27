@@ -1,17 +1,30 @@
 import { getSupabaseClient } from "@/lib/supabase-client"
 import type { Profile } from "@/features/auth/types"
-import { DEBUG, MAX_RETRIES, RETRY_DELAY } from "@/features/auth/constants"
+import { MAX_RETRIES, RETRY_DELAY } from "@/features/auth/constants"
 
 export async function fetchProfileOnce(userId: string, retryCount = 0): Promise<Profile | null> {
   if (!userId) {
-    if (DEBUG) console.log("fetchProfileOnce: no user ID provided")
     return null
   }
 
-  const supabase = getSupabaseClient()
-
   try {
-    if (DEBUG) console.log("fetchProfileOnce: fetching profile for user:", userId)
+    // Try server-assisted fetch first to bypass client auth edge cases
+    try {
+      const response = await fetch("/api/profile/me", { cache: "no-store", credentials: "same-origin" })
+      if (response.ok) {
+        const { profile } = (await response.json()) as { profile?: Profile }
+        if (profile) {
+          console.info("[profile] Loaded profile via server endpoint")
+          return profile
+        }
+      } else if (response.status !== 401) {
+        console.warn("[profile] Server profile fetch failed", { status: response.status })
+      }
+    } catch (apiError) {
+      console.error("[profile] Error calling /api/profile/me", apiError)
+    }
+
+    const supabase = getSupabaseClient()
 
     // Fetch profile from Supabase
     const { data: profileData, error: profileError } = await supabase
@@ -26,8 +39,27 @@ export async function fetchProfileOnce(userId: string, retryCount = 0): Promise<
     }
 
     if (!profileData) {
-      if (DEBUG) console.log("fetchProfileOnce: no profile found")
-      return null
+      const { data: publicProfileData, error: publicProfileError } = await supabase
+        .from("public_profiles")
+        .select("*")
+        .eq("id", userId)
+        .maybeSingle()
+
+      if (publicProfileError) {
+        console.error("[profile] Error fetching public profile", publicProfileError)
+        throw publicProfileError
+      }
+
+      if (!publicProfileData) {
+        console.warn("[profile] No profile found in private or public tables")
+        return null
+      }
+
+      const profile: Profile = {
+        ...publicProfileData,
+      } as Profile
+
+      return profile
     }
 
     // Fetch avatar separately
@@ -50,13 +82,12 @@ export async function fetchProfileOnce(userId: string, retryCount = 0): Promise<
       avatar_url: avatarUrl,
     } as Profile
 
-    if (DEBUG) console.log("fetchProfileOnce: profile fetched successfully")
     return profile
   } catch (error) {
     console.error("fetchProfileOnce: unexpected error:", error)
 
     if (retryCount < MAX_RETRIES) {
-      if (DEBUG) console.log(`fetchProfileOnce: retrying (${retryCount + 1}/${MAX_RETRIES})...`)
+      console.warn("fetchProfileOnce: retrying after failure", { userId, attempt: retryCount + 1 })
       await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY * Math.pow(2, retryCount)))
       return fetchProfileOnce(userId, retryCount + 1)
     }

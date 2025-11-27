@@ -8,6 +8,8 @@ import { Press_Start_2P } from "next/font/google"
 import type { Metadata } from "next"
 import ClientLayout from "./client-layout"
 import { LanguageProvider } from "@/contexts/language-context"
+import { SupabaseProvider } from "@/contexts/supabase-context"
+import { AuthProvider } from "@/contexts/auth-context"
 
 // Make sure Radix UI deps are referenced so they're bundled
 import "@/lib/radix-deps"
@@ -39,14 +41,18 @@ export default function RootLayout({
       <head>
         <link rel="alternate" type="application/rss+xml" title="DSML Kazakhstan News" href="/news.xml" />
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         {/* Add Google Analytics with Suspense boundary */}
         <Suspense fallback={null}>
           <GoogleAnalytics />
         </Suspense>
-        <LanguageProvider>
-          <ClientLayout>{children}</ClientLayout>
-        </LanguageProvider>
+        <SupabaseProvider>
+          <AuthProvider>
+            <LanguageProvider>
+              <ClientLayout>{children}</ClientLayout>
+            </LanguageProvider>
+          </AuthProvider>
+        </SupabaseProvider>
         <Toaster />
       </body>
     </html>

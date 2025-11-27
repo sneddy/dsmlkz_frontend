@@ -8,8 +8,6 @@ import { getSupabaseClient } from "@/lib/supabase-client"
 import type { AuthContextType } from "@/features/auth/types"
 
 // Import constants from separate module
-import { DEBUG } from "@/features/auth/constants"
-
 import { useSupabaseSession } from "@/features/auth/client/useSupabaseSession"
 
 // Create the context
@@ -27,23 +25,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signIn = useCallback(
     async (email: string, password: string) => {
       try {
-        if (DEBUG) console.log("Signing in with email:", email)
-
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         })
 
         if (error) {
-          console.error("Sign in error:", error)
+          console.error("[auth] Sign in error", error)
           return { error }
         }
 
-        if (DEBUG) console.log("Sign in successful")
+        console.info("[auth] Sign in successful", { email })
 
         return { error: null }
       } catch (error) {
-        console.error("Exception during sign in:", error)
+        console.error("[auth] Exception during sign in", error)
         return { error }
       }
     },
@@ -70,31 +66,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = useCallback(async () => {
     try {
-      if (DEBUG) console.log("Starting sign out process")
-
       const logoutTimeout = setTimeout(() => {
-        console.warn("Forced redirect fallback after logout timeout")
+        console.warn("[auth] Forced redirect fallback after logout timeout")
         if (typeof window !== "undefined") {
           window.location.replace("/")
         }
       }, 2000)
 
-      if (DEBUG) console.log("Signing out from Supabase")
       const { error } = await supabase.auth.signOut()
 
       clearTimeout(logoutTimeout)
 
       if (error) {
-        console.error("Error signing out from Supabase:", error)
+        console.error("[auth] Error signing out from Supabase", error)
         throw error
       }
 
-      if (DEBUG) console.log("Successfully signed out from Supabase")
+      console.info("[auth] Successfully signed out from Supabase")
 
       if (typeof window !== "undefined") {
         try {
-          if (DEBUG) console.log("Clearing auth-related storage")
-
           const allKeys = Object.keys(localStorage)
           const keysToRemove = allKeys.filter(
             (key) =>
@@ -103,14 +94,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           for (const key of keysToRemove) {
             localStorage.removeItem(key)
-            if (DEBUG) console.log(`Removed localStorage key: ${key}`)
           }
 
           // Only clear specific auth-related keys to avoid side effects
 
-          if (DEBUG) console.log("Auth-related storage cleared")
+          console.info("[auth] Cleared auth-related storage")
         } catch (e) {
-          console.error("Error clearing storage:", e)
+          console.error("[auth] Error clearing storage", e)
         }
       }
 

@@ -29,7 +29,7 @@ export function useTranslation() {
 
     // Replace parameters in the translation
     if (params) {
-      return Object.entries(params).reduce(
+      return Object.entries(params).reduce<string>(
         (acc, [paramKey, paramValue]) => acc.replace(`{{${paramKey}}}`, String(paramValue)),
         value,
       )

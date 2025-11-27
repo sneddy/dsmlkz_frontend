@@ -51,14 +51,14 @@ function isProfileComplete(profile: any): boolean {
   const requiredFields = ["nickname", "first_name", "last_name", "current_city", "about_you", "motivation"]
 
   for (const field of requiredFields) {
-    if (!profile[field] || profile[field].trim() === "") {
+    if (!profile[field] || typeof profile[field] !== "string" || profile[field].trim() === "") {
       return false
     }
   }
 
   // Updated to check for 15 words instead of 10
-  const aboutYouWords = profile.about_you.trim().split(/\s+/).filter(Boolean).length
-  const motivationWords = profile.motivation.trim().split(/\s+/).filter(Boolean).length
+  const aboutYouWords = (profile.about_you || "").trim().split(/\s+/).filter(Boolean).length
+  const motivationWords = (profile.motivation || "").trim().split(/\s+/).filter(Boolean).length
 
   if (aboutYouWords < 15 || motivationWords < 15) {
     return false
@@ -410,12 +410,13 @@ function SearchTab() {
 
 function Dashboard() {
   const { user, signOut, initialized } = useAuth()
-  const { profile, loadingProfile, profileError } = useProfile()
+  const { profile, loadingProfile, profileError, refreshProfile } = useProfile()
   const router = useRouter()
   const { t } = useTranslation()
   const [isClient, setIsClient] = useState(false)
   const [isSigningOut, setIsSigningOut] = useState(false)
   const [activeTab, setActiveTab] = useState("overview")
+  const [profileRequested, setProfileRequested] = useState(false)
 
   const profileComplete = isProfileComplete(profile)
   const realProfile = isRealProfile(profile)
@@ -423,6 +424,27 @@ function Dashboard() {
   useEffect(() => {
     setIsClient(true)
   }, [])
+
+  useEffect(() => {
+    if (user?.id && !profileRequested) {
+      setProfileRequested(true)
+      refreshProfile().catch((error) => {
+        console.error("[dashboard] Failed to refresh profile", error)
+      })
+    }
+  }, [user?.id, profileRequested, refreshProfile])
+
+  useEffect(() => {
+    if (!user?.id) {
+      setProfileRequested(false)
+    }
+  }, [user?.id])
+
+  useEffect(() => {
+    if (initialized && user && !loadingProfile && !profile) {
+      console.warn("[dashboard] Profile missing after refresh", { userId: user.id })
+    }
+  }, [initialized, user, loadingProfile, profile])
 
   const handleEditProfile = () => {
     router.push("/profile")

@@ -8,7 +8,7 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { Menu, User, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useSafeAuth } from "@/hooks/use-safe-auth"
+import { useAuth } from "@/contexts/auth-context"
 import LanguageSelector from "@/features/i18n/language_selector"
 import { useSafeTranslation } from "@/hooks/use-safe-translation"
 
@@ -19,7 +19,8 @@ export default function ClientLayout({
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
-  const { user, signOut, profile } = useSafeAuth()
+  const { user, signOut } = useAuth()
+  const displayName = user?.user_metadata?.nickname || user?.email?.split("@")[0] || "Profile"
   const { t } = useSafeTranslation()
 
   // Close mobile menu when path changes
@@ -128,7 +129,7 @@ export default function ClientLayout({
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                     <User className="h-4 w-4 text-primary" />
                   </div>
-                  <span className="text-sm font-medium">{profile?.nickname || user.email.split("@")[0]}</span>
+                  <span className="text-sm font-medium">{displayName}</span>
                 </Link>
                 <Button
                   size="sm"
@@ -237,7 +238,7 @@ export default function ClientLayout({
                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
                       <User className="h-3 w-3 text-primary" />
                     </div>
-                    <span>{profile?.nickname || user.email.split("@")[0]}</span>
+                    <span>{displayName}</span>
                   </Link>
                   <Button
                     variant="outline"

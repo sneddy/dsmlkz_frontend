@@ -3,24 +3,25 @@ import JobsFeedServer from "@/widgets/jobs_feed_server"
 import { SectionHeroSSR } from "@/widgets/section_hero_ssr"
 import { tServer } from "@/lib/server-translations"
 
-type SearchParams = {
+type SearchParams = Promise<{
   page?: string
   q?: string
   channels?: string
   remote?: string
-}
+}>
 
 export async function generateMetadata({
   searchParams,
 }: {
   searchParams: SearchParams
 }): Promise<Metadata> {
-  const { t } = tServer()
+  const { t } = await tServer()
+  const params = await searchParams
 
-  const page = Number.parseInt(searchParams.page || "1")
-  const query = searchParams.q || ""
-  const channels = searchParams.channels || "all"
-  const remote = searchParams.remote === "true"
+  const page = Number.parseInt(params?.page || "1")
+  const query = params?.q || ""
+  const channels = params?.channels || "all"
+  const remote = params?.remote === "true"
 
   let title = `${t("jobs.title")} | DSML Kazakhstan`
   if (page > 1) {
@@ -100,12 +101,13 @@ export default async function JobsPage({
 }: {
   searchParams: SearchParams
 }) {
-  const { t } = tServer()
+  const { t } = await tServer()
+  const params = await searchParams
 
-  const page = Number.parseInt(searchParams.page || "1")
-  const query = searchParams.q || ""
-  const channels = searchParams.channels || "all"
-  const remote = searchParams.remote === "true"
+  const page = Number.parseInt(params?.page || "1")
+  const query = params?.q || ""
+  const channels = params?.channels || "all"
+  const remote = params?.remote === "true"
 
   const jsonLd = {
     "@context": "https://schema.org",

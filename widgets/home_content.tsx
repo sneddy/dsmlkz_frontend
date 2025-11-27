@@ -7,45 +7,15 @@ import { ExternalLink, MessageCircle, Users, Calendar, Briefcase, ArrowRight, Pl
 import Link from "next/link"
 import Image from "next/image"
 import { useTranslation } from "@/hooks/use-translation"
-import { useEffect, useState } from "react"
 import { CollaborationCard } from "@/widgets/collaboration_card"
 
 export function HomeContent() {
   const { t } = useTranslation()
-  const [isClient, setIsClient] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
-
-  // Устанавливаем флаг isClient после монтирования компонента
-  useEffect(() => {
-    setIsClient(true)
-    // Добавляем небольшую задержку для плавной анимации появления
-    const timer = setTimeout(() => setIsVisible(true), 100)
-    return () => clearTimeout(timer)
-  }, [])
 
   const gradientBorderStyle = {
     borderWidth: "2px",
     borderStyle: "solid",
     borderImage: "linear-gradient(135deg, #FFF32A, #00AEC7, #FFF32A) 1",
-  }
-
-  // Если компонент еще не смонтирован на клиенте, показываем улучшенный скелетон
-  if (!isClient) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
-        <div className="container py-8 space-y-8">
-          <div className="h-96 bg-gradient-to-r from-slate-800 to-slate-700 animate-pulse rounded-2xl mb-8 shadow-2xl"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div
-                key={i}
-                className="h-64 bg-gradient-to-br from-slate-800 to-slate-700 animate-pulse rounded-xl shadow-lg"
-              ></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    )
   }
 
   const communityStats = [
@@ -56,9 +26,7 @@ export function HomeContent() {
   ]
 
   return (
-    <div
-      className={`min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800 transition-opacity duration-1000 ${isVisible ? "opacity-100" : "opacity-0"}`}
-    >
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
       {/* Hero Section with enhanced gradient background and better text styling */}
       <section className="relative overflow-hidden py-16 px-4">
         <div className="absolute inset-0 bg-gradient-to-br from-[#00AEC7]/20 via-slate-900/80 to-[#FFF32A]/20"></div>

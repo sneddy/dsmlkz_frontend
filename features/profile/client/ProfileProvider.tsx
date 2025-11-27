@@ -7,7 +7,7 @@ import { createContext, useContext, useEffect, useState, useCallback, useRef, us
 import type { Profile } from "@/features/auth/types"
 
 // Import constants from separate module
-import { PROFILE_UPDATE_DELAY, DEBUG } from "@/features/auth/constants"
+import { PROFILE_UPDATE_DELAY } from "@/features/auth/constants"
 
 // Import utility for creating fallback profile
 import { createFallbackProfile } from "@/features/auth/utils/createFallbackProfile"
@@ -17,6 +17,32 @@ import { readProfileCache, writeProfileCache, mergeProfileCache } from "@/featur
 
 import { fetchProfileOnce } from "@/features/profile/client/fetchProfile"
 import { useAuth } from "@/contexts/auth-context"
+
+const PROFILE_SLOW_FETCH_THRESHOLD = 2000
+
+const logProfileWarning = (message: string, details?: Record<string, unknown>) => {
+  if (details) {
+    console.warn(`[profile] ${message}`, details)
+  } else {
+    console.warn(`[profile] ${message}`)
+  }
+}
+
+const logProfileInfo = (message: string, details?: Record<string, unknown>) => {
+  if (details) {
+    console.info(`[profile] ${message}`, details)
+  } else {
+    console.info(`[profile] ${message}`)
+  }
+}
+
+const logProfileError = (message: string, error: unknown, details?: Record<string, unknown>) => {
+  if (details) {
+    console.error(`[profile] ${message}`, error, details)
+  } else {
+    console.error(`[profile] ${message}`, error)
+  }
+}
 
 // Profile context type
 interface ProfileContextType {
@@ -51,16 +77,16 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = useCallback(async (userId: string, userEmail?: string) => {
     if (!userId) {
-      if (DEBUG) console.log("Skipping fetchProfile: no user ID provided")
       return
     }
 
     if (fetchingProfileRef.current.has(userId)) {
-      if (DEBUG) console.log("Profile fetch already in progress for user:", userId)
       return fetchingProfileRef.current.get(userId)
     }
 
     const fetchPromise = (async () => {
+      const fetchStart = Date.now()
+
       try {
         if (!isMountedRef.current) return
 
@@ -71,14 +97,13 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
           currentUserEmailRef.current = userEmail
         }
 
-        if (DEBUG) console.log("Fetching profile for user:", userId)
-
         // Check cache first
         const cachedProfile = readProfileCache(userId)
-        if (cachedProfile && DEBUG) {
-          console.log("Found profile in cache:", cachedProfile)
+        if (cachedProfile && isMountedRef.current) {
+          setProfile((currentProfile) => currentProfile ?? cachedProfile)
         }
 
+        logProfileInfo("Starting profile fetch", { userId })
         const fetchedProfile = await fetchProfileOnce(userId)
 
         if (!isMountedRef.current) return
@@ -87,28 +112,28 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         let finalProfile: Profile | null = null
 
         if (fetchedProfile) {
-          if (DEBUG) console.log("Using fetched profile")
           finalProfile = fetchedProfile
           writeProfileCache(userId, fetchedProfile)
         } else if (cachedProfile) {
-          if (DEBUG) console.log("Using cached profile")
           finalProfile = cachedProfile
+          logProfileWarning("Using cached profile because fetch returned null", { userId })
         } else {
-          if (DEBUG) console.log("Creating fallback profile")
           const emailForFallback = userEmail || currentUserEmailRef.current || `${userId}@fallback.com`
           finalProfile = createFallbackProfile(userId, emailForFallback)
+          logProfileWarning("Profile not found, created fallback profile", { userId })
         }
 
-        if (DEBUG) console.log("Final profile:", finalProfile)
         if (isMountedRef.current) {
           setProfile(finalProfile)
         }
 
         if (!finalProfile) {
           throw new Error("Could not retrieve or create profile")
+        } else {
+          logProfileInfo("Profile fetched", { userId })
         }
       } catch (error) {
-        console.error("Error in fetchProfile:", error)
+        logProfileError("Error in fetchProfile", error, { userId })
 
         if (!isMountedRef.current) return
 
@@ -117,10 +142,10 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
             try {
               const emailForFallback = userEmail || currentUserEmailRef.current || `${userId}@fallback.com`
               const fallbackProfile = createFallbackProfile(userId, emailForFallback)
-              if (DEBUG) console.log("Setting fallback profile:", fallbackProfile)
+              logProfileWarning("Using fallback profile after error", { userId })
               return fallbackProfile
             } catch (fallbackError) {
-              console.error("Error creating fallback profile:", fallbackError)
+              logProfileError("Error creating fallback profile", fallbackError, { userId })
               const normalizedError = error instanceof Error ? error : new Error(String(error))
               if (isMountedRef.current) {
                 setProfileError(normalizedError)
@@ -140,6 +165,11 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
           setLoadingProfile(false)
         }
         fetchingProfileRef.current.delete(userId)
+
+        const duration = Date.now() - fetchStart
+        if (duration > PROFILE_SLOW_FETCH_THRESHOLD) {
+          logProfileWarning("Profile fetch took longer than expected", { userId, durationMs: duration })
+        }
       }
     })()
 
@@ -177,8 +207,6 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       }
 
       try {
-        if (DEBUG) console.log("Updating profile with data:", profileData)
-
         const dataWithTimestamp = {
           ...profileData,
           updated_at: new Date().toISOString(),
@@ -210,16 +238,13 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
             return { error: new Error(errorData.error || "Failed to update profile") }
           }
 
-          if (DEBUG) console.log("Profile updated successfully via API route")
         } catch (apiError) {
           console.error("Error calling profile update API:", apiError)
           return { error: apiError }
         }
 
         mergeProfileCache(user.id, dataToUpdate)
-        if (DEBUG) console.log("Updated profile in localStorage")
 
-        if (DEBUG) console.log(`Waiting ${PROFILE_UPDATE_DELAY}ms before refreshing profile`)
         await new Promise((resolve) => setTimeout(resolve, PROFILE_UPDATE_DELAY))
 
         await fetchProfile(user.id, user.email)

@@ -22,9 +22,9 @@ export function HomeContent() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black">
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-10 px-4">
+      <section className="relative overflow-hidden py-8 px-4 sm:py-10">
         <div className="relative max-w-7xl mx-auto text-center z-10">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-pixel font-bold mb-6 sm:mb-7 tracking-tight leading-tight px-4 text-white">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-pixel font-bold mb-5 sm:mb-7 tracking-tight leading-tight px-4 text-white">
             <span className="bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] bg-clip-text text-transparent animate-pulse">
               DSML
             </span>{" "}
@@ -33,7 +33,7 @@ export function HomeContent() {
             </span>
           </h1>
 
-          <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-5 sm:mb-7 px-4 font-medium">
+          <p className="text-base sm:text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-4 sm:mb-6 px-4 font-medium">
             {t("home.subtitle")}
           </p>
 
@@ -63,10 +63,10 @@ export function HomeContent() {
       </section>
 
       {/* Hero Image Section aligned with hero styling */}
-      <section className="relative w-full overflow-hidden mb-6 px-4">
+      <section className="relative w-full overflow-hidden mb-4 sm:mb-6 px-4">
         <div className="max-w-6xl mx-auto rounded-2xl overflow-hidden shadow-2xl bg-transparent">
           {/* Desktop image */}
-          <div className="hidden md:block w-full h-[22vh] relative">
+          <div className="hidden md:block w-full h-[20vh] relative">
             <Image
               src="/images/moon-hero-desktop.png"
               alt="DSML Kazakhstan Community - Desktop Hero"
@@ -78,7 +78,7 @@ export function HomeContent() {
             <div className="absolute inset-0 bg-black/10 pointer-events-none"></div>
           </div>
           {/* Mobile image */}
-          <div className="block md:hidden w-full h-[16vh] relative">
+          <div className="block md:hidden w-full h-[14vh] relative">
             <Image
               src="/images/moon-hero-mobile.png"
               alt="DSML Kazakhstan Community - Mobile Hero"
@@ -93,9 +93,9 @@ export function HomeContent() {
       </section>
 
       {/* Stats Section - compact */}
-      <section className="py-8">
+      <section className="py-6">
         <div className="container px-4 md:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             {communityStats.map((stat, index) => (
               <div key={index} className="text-center group hover:scale-105 transition-transform duration-300">
                 <div className="bg-white/5 backdrop-blur-md rounded-2xl p-4 border border-white/10 hover:border-white/20 transition-all duration-300 hover:bg-white/10 shadow-lg hover:shadow-xl">
@@ -112,7 +112,7 @@ export function HomeContent() {
       </section>
 
       {/* Community Description */}
-      <section className="py-12">
+      <section className="py-10">
         <div className="container px-4 md:px-6">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl md:text-5xl font-pixel font-bold mb-8 leading-tight">
@@ -126,8 +126,8 @@ export function HomeContent() {
       </section>
 
       {/* Telegram Channels Section - Enhanced cards */}
-      <section className="py-14 container px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
+      <section className="py-12 container px-4 md:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
           {/* Discussion Hub */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-md border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
             <CardHeader className="pb-4">
@@ -326,7 +326,7 @@ export function HomeContent() {
       </section>
 
       {/* Collaboration Section */}
-      <section className="py-14">
+      <section className="py-12">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-20">
             <h2 className="text-4xl md:text-5xl font-pixel font-bold mb-8 leading-tight">
@@ -387,7 +387,7 @@ export function HomeContent() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-14">
+      <section className="py-12">
         <div className="container px-4 md:px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-pixel font-bold mb-8 text-white leading-tight">
             Ready to Join the Future of AI in Central Asia?

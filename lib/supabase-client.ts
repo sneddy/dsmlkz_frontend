@@ -1,8 +1,8 @@
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createBrowserClient, createServerClient } from "@supabase/auth-helpers-nextjs"
 import type { Database } from "@/types/supabase"
 
 // Global variable to store the singleton instance
-let supabaseInstance: ReturnType<typeof createClientComponentClient<Database>> | null = null
+let supabaseInstance: ReturnType<typeof createBrowserClient<Database>> | null = null
 
 // Global variable to track if we've already logged the warning
 let warningLogged = false
@@ -46,19 +46,21 @@ export function getSupabaseClient() {
   // For server-side rendering, create a new instance but don't store it globally
   if (typeof window === "undefined") {
     console.log("[SERVER] Creating new Supabase client for server-side rendering")
-    return createClientComponentClient<Database>({
-      supabaseUrl,
-      supabaseKey: supabaseAnonKey,
+    return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
+      cookies: {
+        get() {
+          return undefined
+        },
+        set() {},
+        remove() {},
+      },
     })
   }
 
   // For client-side, use the singleton pattern - ensure we only create one instance
   if (!supabaseInstance) {
     console.log("Creating new Supabase client singleton")
-    supabaseInstance = createClientComponentClient<Database>({
-      supabaseUrl,
-      supabaseKey: supabaseAnonKey,
-    })
+    supabaseInstance = createBrowserClient<Database>(supabaseUrl, supabaseAnonKey)
   } else if (!warningLogged) {
     console.log("Reusing existing Supabase client singleton")
     warningLogged = true

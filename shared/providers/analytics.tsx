@@ -61,14 +61,3 @@ export function GoogleAnalytics() {
 
   return null
 }
-
-// Helper function to track custom events
-export function trackEvent(action: string, category: string, label: string, value?: number) {
-  if (!GA_MEASUREMENT_ID || typeof window.gtag !== "function") return
-
-  window.gtag("event", action, {
-    event_category: category,
-    event_label: label,
-    value: value,
-  })
-}

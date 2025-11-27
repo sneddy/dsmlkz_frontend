@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/auth-context"
 import LanguageSelector from "@/features/i18n/language_selector"
 import { useSafeTranslation } from "@/hooks/use-safe-translation"
+import { getSupabaseClient } from "@/lib/supabase-client"
 
 export default function ClientLayout({
   children,
@@ -22,6 +23,7 @@ export default function ClientLayout({
   const { user, signOut } = useAuth()
   const [displayName, setDisplayName] = useState("anon")
   const { t } = useSafeTranslation()
+  const supabase = useMemo(() => getSupabaseClient(), [])
 
   // Close mobile menu when path changes
   useEffect(() => {
@@ -38,7 +40,9 @@ export default function ClientLayout({
 
     const deriveFallback = () => {
       if (!user) return "anon"
-      return (user.user_metadata as any)?.nickname || "anon"
+      const metaNickname = (user.user_metadata as any)?.nickname
+      if (metaNickname) return metaNickname
+      return "anon"
     }
 
     const loadNickname = async () => {
@@ -47,16 +51,24 @@ export default function ClientLayout({
         return
       }
 
+      // Optimistically set a better fallback to avoid "anon" flash
+      setDisplayName(deriveFallback())
+
       try {
-        const response = await fetch("/api/profile/me", { cache: "no-store", credentials: "same-origin" })
-        if (!response.ok) {
-          setDisplayName(deriveFallback())
-          return
-        }
-        const data = await response.json()
-        const nickname = data?.profile?.nickname
+        const { data, error } = await supabase
+          .from("public_profiles")
+          .select("nickname")
+          .eq("id", user.id)
+          .maybeSingle()
+
         if (!isCancelled) {
-          setDisplayName(nickname || deriveFallback())
+          if (error) {
+            console.warn("[nav] Failed to load profile nickname via Supabase", error)
+            setDisplayName(deriveFallback())
+          } else {
+            const nickname = data?.nickname
+            setDisplayName(nickname || deriveFallback())
+          }
         }
       } catch (error) {
         console.error("[nav] Failed to fetch profile nickname", error)
@@ -71,7 +83,7 @@ export default function ClientLayout({
     return () => {
       isCancelled = true
     }
-  }, [user])
+  }, [user, supabase])
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -93,6 +105,7 @@ export default function ClientLayout({
             {/* -------- Desktop navigation -------- */}
             <nav className="hidden md:flex items-center gap-6">
               <Link
+                prefetch
                 href="/"
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/" ? "text-primary" : "text-muted-foreground hover:text-foreground"
@@ -101,6 +114,7 @@ export default function ClientLayout({
                 {t("nav.home")}
               </Link>
               <Link
+                prefetch
                 href="/news"
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/news" ? "text-primary" : "text-muted-foreground hover:text-foreground"
@@ -109,6 +123,7 @@ export default function ClientLayout({
                 {t("nav.newsFeed")}
               </Link>
               <Link
+                prefetch
                 href="/jobs"
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/jobs" ? "text-primary" : "text-muted-foreground hover:text-foreground"
@@ -117,6 +132,7 @@ export default function ClientLayout({
                 {t("nav.jobsFeed")}
               </Link>
               <Link
+                prefetch
                 href="/research"
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/research" ? "text-primary" : "text-muted-foreground hover:text-foreground"
@@ -125,6 +141,7 @@ export default function ClientLayout({
                 {t("nav.research")}
               </Link>
               <Link
+                prefetch
                 href="/articles"
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/articles" ? "text-primary" : "text-muted-foreground hover:text-foreground"
@@ -133,6 +150,7 @@ export default function ClientLayout({
                 {t("nav.articles")}
               </Link>
               <Link
+                prefetch
                 href="/events"
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/events" ? "text-primary" : "text-muted-foreground hover:text-foreground"
@@ -141,6 +159,7 @@ export default function ClientLayout({
                 {t("nav.events")}
               </Link>
               <Link
+                prefetch
                 href="/faces"
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/faces" ? "text-primary" : "text-muted-foreground hover:text-foreground"
@@ -149,6 +168,7 @@ export default function ClientLayout({
                 {t("nav.faces")}
               </Link>
               <Link
+                prefetch
                 href="/rules"
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/rules" ? "text-primary" : "text-muted-foreground hover:text-foreground"
@@ -196,7 +216,13 @@ export default function ClientLayout({
             )}
 
             {/* Mobile burger */}
-            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMenuOpen((prev) => !prev)}>
+            <Button
+              variant="outline"
+              size="icon"
+              aria-label={isMenuOpen ? "Close navigation" : "Open navigation"}
+              className="md:hidden border-white/30 text-white bg-black/30 backdrop-blur-sm hover:bg-white/10 hover:text-white"
+              onClick={() => setIsMenuOpen((prev) => !prev)}
+            >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
@@ -207,6 +233,7 @@ export default function ClientLayout({
           <div className="container md:hidden fixed inset-x-0 top-16 z-50 bg-background border-b shadow-lg py-4 pb-6">
             <nav className="flex flex-col gap-4">
               <Link
+                prefetch
                 href="/"
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/" ? "text-primary" : "text-muted-foreground"

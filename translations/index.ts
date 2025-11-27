@@ -127,36 +127,3 @@ export const getTranslations = (lang: string): Translations => {
   const language = ["en", "ru", "kk"].includes(lang) ? lang : "en"
   return clientTranslations[language] || clientTranslations.en
 }
-
-// Utility functions
-export const getAvailableLanguages = (): string[] => {
-  return Object.keys(clientTranslations)
-}
-
-export const getAllTranslations = (): Record<string, Translations> => {
-  return clientTranslations
-}
-
-// Function to find missing translation keys
-export const findMissingTranslations = (sourceLang: string, targetLang: string): string[] => {
-  const sourceTranslations = getTranslations(sourceLang)
-  const targetTranslations = getTranslations(targetLang)
-
-  const missingKeys: string[] = []
-
-  const checkKeys = (source: any, target: any, path = "") => {
-    for (const key in source) {
-      const currentPath = path ? `${path}.${key}` : key
-
-      if (!(key in target)) {
-        missingKeys.push(currentPath)
-      } else if (typeof source[key] === "object" && source[key] !== null) {
-        checkKeys(source[key], target[key], currentPath)
-      }
-    }
-  }
-
-  checkKeys(sourceTranslations, targetTranslations)
-
-  return missingKeys
-}

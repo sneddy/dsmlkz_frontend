@@ -12,12 +12,6 @@ import { CollaborationCard } from "@/widgets/collaboration_card"
 export function HomeContent() {
   const { t } = useTranslation()
 
-  const gradientBorderStyle = {
-    borderWidth: "2px",
-    borderStyle: "solid",
-    borderImage: "linear-gradient(135deg, #FFF32A, #00AEC7, #FFF32A) 1",
-  }
-
   const communityStats = [
     { icon: Users, label: "Members Across Platforms", value: "10,000+", color: "text-[#00AEC7]" },
     { icon: Users, label: "Active Members", value: "1,500", color: "text-[#FFF32A]" },
@@ -26,12 +20,11 @@ export function HomeContent() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
-      {/* Hero Section with enhanced gradient background and better text styling */}
-      <section className="relative overflow-hidden py-16 px-4">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#00AEC7]/20 via-slate-900/80 to-[#FFF32A]/20"></div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden py-10 px-4">
         <div className="relative max-w-7xl mx-auto text-center z-10">
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-pixel font-bold mb-6 sm:mb-8 tracking-tight leading-tight px-4">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-pixel font-bold mb-6 sm:mb-7 tracking-tight leading-tight px-4 text-white">
             <span className="bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] bg-clip-text text-transparent animate-pulse">
               DSML
             </span>{" "}
@@ -40,12 +33,12 @@ export function HomeContent() {
             </span>
           </h1>
 
-          <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8 sm:mb-12 px-4 font-medium">
+          <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-5 sm:mb-7 px-4 font-medium">
             {t("home.subtitle")}
           </p>
 
           {/* Buttons in hero section */}
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4 mb-16">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4 mb-4">
             <Link href="/auth/signup" className="w-full sm:w-auto">
               <Button
                 size="lg"
@@ -69,51 +62,48 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Hero Image Section with proper responsive images */}
-      <section className="relative w-full overflow-hidden mb-16">
-        <div className="container px-4">
-          <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl">
-            {/* Desktop image */}
-            <div className="hidden md:block w-full h-[70vh] relative">
-              <Image
-                src="/images/moon-hero-desktop.png"
-                alt="DSML Kazakhstan Community - Desktop Hero"
-                fill
-                className="object-cover"
-                priority
-                sizes="(min-width: 768px) 100vw, 0px"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
-            </div>
-            {/* Mobile image */}
-            <div className="block md:hidden w-full h-[50vh] relative">
-              <Image
-                src="/images/moon-hero-mobile.png"
-                alt="DSML Kazakhstan Community - Mobile Hero"
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 767px) 100vw, 0px"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
-            </div>
+      {/* Hero Image Section aligned with hero styling */}
+      <section className="relative w-full overflow-hidden mb-6 px-4">
+        <div className="max-w-6xl mx-auto rounded-2xl overflow-hidden shadow-2xl bg-transparent">
+          {/* Desktop image */}
+          <div className="hidden md:block w-full h-[22vh] relative">
+            <Image
+              src="/images/moon-hero-desktop.png"
+              alt="DSML Kazakhstan Community - Desktop Hero"
+              fill
+              className="object-cover"
+              priority
+              sizes="(min-width: 768px) 100vw, 0px"
+            />
+            <div className="absolute inset-0 bg-black/10 pointer-events-none"></div>
+          </div>
+          {/* Mobile image */}
+          <div className="block md:hidden w-full h-[16vh] relative">
+            <Image
+              src="/images/moon-hero-mobile.png"
+              alt="DSML Kazakhstan Community - Mobile Hero"
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 767px) 100vw, 0px"
+            />
+            <div className="absolute inset-0 bg-black/10 pointer-events-none"></div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section - Enhanced with glassmorphism effects */}
-      <section className="py-20 relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#00AEC7]/5 to-[#FFF32A]/5"></div>
-        <div className="container px-4 md:px-6 relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
+      {/* Stats Section - compact */}
+      <section className="py-8">
+        <div className="container px-4 md:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             {communityStats.map((stat, index) => (
               <div key={index} className="text-center group hover:scale-105 transition-transform duration-300">
-                <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:bg-white/10 shadow-lg hover:shadow-xl">
+                <div className="bg-white/5 backdrop-blur-md rounded-2xl p-4 border border-white/10 hover:border-white/20 transition-all duration-300 hover:bg-white/10 shadow-lg hover:shadow-xl">
                   <stat.icon
-                    className={`h-10 w-10 mx-auto mb-4 ${stat.color} group-hover:scale-110 transition-transform drop-shadow-lg`}
+                    className={`h-8 w-8 mx-auto mb-3 ${stat.color} group-hover:scale-110 transition-transform drop-shadow-lg`}
                   />
-                  <div className={`text-3xl font-bold ${stat.color} mb-2 font-pixel`}>{stat.value}</div>
-                  <div className="text-gray-300 text-sm font-medium">{stat.label}</div>
+                  <div className={`text-2xl font-bold ${stat.color} mb-1 font-pixel`}>{stat.value}</div>
+                  <div className="text-gray-300 text-xs font-medium">{stat.label}</div>
                 </div>
               </div>
             ))}
@@ -121,8 +111,8 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Community Description - Enhanced typography */}
-      <section className="py-20 bg-gradient-to-r from-slate-800/50 to-slate-900/50 backdrop-blur-sm">
+      {/* Community Description */}
+      <section className="py-12">
         <div className="container px-4 md:px-6">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl md:text-5xl font-pixel font-bold mb-8 leading-tight">
@@ -130,14 +120,14 @@ export function HomeContent() {
                 Our Community Channels
               </span>
             </h2>
-            <p className="text-gray-300 text-lg leading-relaxed mb-16 font-medium">{t("home.communityDescription")}</p>
+            <p className="text-gray-300 text-lg leading-relaxed mb-12 font-medium">{t("home.communityDescription")}</p>
           </div>
         </div>
       </section>
 
       {/* Telegram Channels Section - Enhanced cards */}
-      <section className="py-20 container px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+      <section className="py-14 container px-4 md:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
           {/* Discussion Hub */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-md border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
             <CardHeader className="pb-4">
@@ -188,7 +178,7 @@ export function HomeContent() {
             <CardContent>
               <div className="flex items-center gap-2 mb-4">
                 <Badge variant="secondary" className="bg-[#FFF32A]/10 text-[#FFF32A] border-[#FFF32A]/20 font-pixel">
-                  3,500 subscribers
+                  4,000 subscribers
                 </Badge>
               </div>
               <Link
@@ -221,7 +211,7 @@ export function HomeContent() {
             <CardContent>
               <div className="flex items-center gap-2 mb-4">
                 <Badge variant="secondary" className="bg-purple-500/10 text-purple-400 border-purple-500/20 font-pixel">
-                  8,700 subscribers
+                  9,500 subscribers
                 </Badge>
               </div>
               <Link
@@ -252,7 +242,7 @@ export function HomeContent() {
             <CardContent>
               <div className="flex items-center gap-2 mb-4">
                 <Badge variant="secondary" className="bg-orange-500/10 text-orange-400 border-orange-500/20 font-pixel">
-                  6,500 subscribers
+                  7,300 subscribers
                 </Badge>
               </div>
               <Link
@@ -285,7 +275,7 @@ export function HomeContent() {
             <CardContent>
               <div className="flex items-center gap-2 mb-4">
                 <Badge variant="secondary" className="bg-red-500/10 text-red-400 border-red-500/20 font-pixel">
-                  800 subscribers
+                  850 subscribers
                 </Badge>
               </div>
               <Link
@@ -318,7 +308,7 @@ export function HomeContent() {
             <CardContent>
               <div className="flex items-center gap-2 mb-4">
                 <Badge variant="secondary" className="bg-blue-600/10 text-blue-400 border-blue-600/20 font-pixel">
-                  1,700 followers
+                  1,850 followers
                 </Badge>
               </div>
               <Link
@@ -335,8 +325,8 @@ export function HomeContent() {
         </div>
       </section>
 
-      {/* Collaboration Section - Enhanced with modern design */}
-      <section className="py-24 bg-gradient-to-r from-slate-800/30 to-slate-900/30 backdrop-blur-sm">
+      {/* Collaboration Section */}
+      <section className="py-14">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-20">
             <h2 className="text-4xl md:text-5xl font-pixel font-bold mb-8 leading-tight">
@@ -354,28 +344,24 @@ export function HomeContent() {
               title={t("home.mediaSupport.title")}
               description={t("home.mediaSupport.description")}
               details={t("home.mediaSupport.details")}
-              gradientBorderStyle={gradientBorderStyle}
             />
 
             <CollaborationCard
               title={t("home.hiring.title")}
               description={t("home.hiring.description")}
               details={t("home.hiring.details")}
-              gradientBorderStyle={gradientBorderStyle}
             />
 
             <CollaborationCard
               title={t("home.corporateTraining.title")}
               description={t("home.corporateTraining.description")}
               details={t("home.corporateTraining.details")}
-              gradientBorderStyle={gradientBorderStyle}
             />
 
             <CollaborationCard
               title={t("home.consulting.title")}
               description={t("home.consulting.description")}
               details={t("home.consulting.details")}
-              gradientBorderStyle={gradientBorderStyle}
             />
           </div>
 
@@ -401,7 +387,7 @@ export function HomeContent() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-24 bg-gradient-to-r from-[#00AEC7]/10 via-transparent to-[#FFF32A]/10">
+      <section className="py-14">
         <div className="container px-4 md:px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-pixel font-bold mb-8 text-white leading-tight">
             Ready to Join the Future of AI in Central Asia?

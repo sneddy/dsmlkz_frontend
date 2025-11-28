@@ -5,6 +5,7 @@ import { MarkdownContent } from "@/shared/ui/markdown_content"
 import { loadMarkdownFile } from "../utils/markdown-loader"
 import { notFound } from "next/navigation"
 import { getArticleMetadata } from "../utils/articles-metadata"
+import { ArticleViewTracker } from "../article-view-tracker"
 
 // Gradient border style
 const gradientBorderStyle = {
@@ -72,6 +73,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      <ArticleViewTracker slug={slug} title={metadata.title} />
       <div className="container py-8">
         <div className="mb-6">
           <Link

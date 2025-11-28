@@ -22,7 +22,7 @@ export type AuthContextType = {
   session: Session | null
   loading: boolean
   initialized: boolean
-  signIn: (email: string, password: string) => Promise<{ error: any }>
+  signIn: (email: string, password: string) => Promise<{ error: any; user?: User | null }>
   signUp: (email: string, password: string) => Promise<{ error: any; data: any }>
   signOut: () => Promise<void>
 }

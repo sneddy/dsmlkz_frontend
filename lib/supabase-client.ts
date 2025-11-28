@@ -6,6 +6,7 @@ let supabaseInstance: ReturnType<typeof createBrowserClient<Database>> | null = 
 
 // Global variable to track if we've already logged the warning
 let warningLogged = false
+let serverLogShown = false
 
 // Update the getSupabaseClient function to properly check for environment variables
 export function getSupabaseClient() {
@@ -45,7 +46,10 @@ export function getSupabaseClient() {
 
   // For server-side rendering, create a new instance but don't store it globally
   if (typeof window === "undefined") {
-    console.log("[SERVER] Creating new Supabase client for server-side rendering")
+    if (!serverLogShown) {
+      console.log("[SERVER] Creating new Supabase client for server-side rendering")
+      serverLogShown = true
+    }
     return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
       cookies: {
         get() {

@@ -23,15 +23,24 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
 
   const supabase = useMemo(() => getSupabaseClient(), [])
 
+  const isAuthSessionMissingError = (error: any) =>
+    typeof error?.message === "string" && error.message.toLowerCase().includes("auth session missing")
+
   const withTimeout = useCallback(
-    async <T>(promise: Promise<T>, label: string): Promise<T> => {
+    async <T>(promise: Promise<T>, label: string, fallback: () => T): Promise<T> => {
       const timeoutMs = 6000
+      let timeoutId: ReturnType<typeof setTimeout> | null = null
 
       return Promise.race([
-        promise,
-        new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error(`[auth] ${label} timed out after ${timeoutMs}ms`)), timeoutMs),
-        ),
+        promise.finally(() => {
+          if (timeoutId) clearTimeout(timeoutId)
+        }),
+        new Promise<T>((resolve) => {
+          timeoutId = setTimeout(() => {
+            console.warn(`[auth] ${label} timed out after ${timeoutMs}ms — falling back to null session`)
+            resolve(fallback())
+          }, timeoutMs)
+        }),
       ])
     },
     [],
@@ -54,19 +63,32 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
         const {
           data: { session },
           error,
-        } = await withTimeout(supabase.auth.getSession(), "getSession")
+        } = await withTimeout(
+          supabase.auth.getSession(),
+          "getSession",
+          () => ({ data: { session: null } } as any),
+        )
 
         if (error) {
-          console.error("[auth] useSupabaseSession: error getting session", error)
+          if (!isAuthSessionMissingError(error)) {
+            console.error("[auth] useSupabaseSession: error getting session", error)
+          } else if (DEBUG) {
+            console.info("[auth] Session missing during getSession (expected after sign out)")
+          }
         }
 
         // Validate user to avoid using unauthenticated local state
         const { data: userData, error: userError } = await withTimeout(
           supabase.auth.getUser(),
           "getUser initial validation",
+          () => ({ data: { user: null, session: null } } as any),
         )
         if (userError) {
-          console.error("[auth] useSupabaseSession: error getting user", userError)
+          if (!isAuthSessionMissingError(userError)) {
+            console.error("[auth] useSupabaseSession: error getting user", userError)
+          } else if (DEBUG) {
+            console.info("[auth] Session missing during getUser (expected after sign out)")
+          }
         }
 
         const finalSession = userData.session || session
@@ -99,11 +121,14 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
         const { data: userData, error: userError } = await withTimeout(
           supabase.auth.getUser(),
           "getUser onAuthStateChange",
+          () => ({ data: { user: null, session: null } } as any),
         )
         const finalSession = userData.session || session
 
-        if (userError) {
+        if (userError && !isAuthSessionMissingError(userError)) {
           console.warn("[auth] getUser validation failed", userError)
+        } else if (userError && DEBUG) {
+          console.info("[auth] getUser session missing (expected after sign out)")
         }
 
         prevSessionTokenRef.current = finalSession?.access_token || null
@@ -113,8 +138,12 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
           setInitialized(true)
           setLoading(false)
         }
-      } catch (e) {
-        console.warn("[auth] getUser threw", e)
+      } catch (e: any) {
+        if (!isAuthSessionMissingError(e)) {
+          console.warn("[auth] getUser threw", e)
+        } else if (DEBUG) {
+          console.info("[auth] getUser session missing (caught), proceeding with provided session")
+        }
         prevSessionTokenRef.current = session?.access_token || null
         if (isMounted) {
           setSession(session)

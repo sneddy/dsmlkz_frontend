@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -8,9 +9,33 @@ import Link from "next/link"
 import Image from "next/image"
 import { useTranslation } from "@/hooks/use-translation"
 import { CollaborationCard } from "@/widgets/collaboration_card"
+import { trackGaEvent } from "@/shared/providers/analytics"
 
 export function HomeContent() {
   const { t } = useTranslation()
+
+  useEffect(() => {
+    trackGaEvent("home_view", { page_path: "/" })
+  }, [])
+
+  const handleCta = (ctaLabel: string, destination: string) => () => {
+    trackGaEvent("cta_click", {
+      cta_label: ctaLabel,
+      destination,
+      page_path: "/",
+      page_title: typeof document !== "undefined" ? document.title : undefined,
+    })
+  }
+
+  const handleOutbound = (label: string, url: string, contentType: string) => () => {
+    trackGaEvent("outbound_click", {
+      link_url: url,
+      link_text: label,
+      content_type: contentType,
+      page_path: "/",
+      page_title: typeof document !== "undefined" ? document.title : undefined,
+    })
+  }
 
   const communityStats = [
     { icon: Users, label: "Members Across Platforms", value: "10,000+", color: "text-[#00AEC7]" },
@@ -43,6 +68,7 @@ export function HomeContent() {
               <Button
                 size="lg"
                 className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base font-pixel"
+                onClick={handleCta("signup_home", "/auth/signup")}
               >
                 {t("home.joinButton")}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -53,6 +79,7 @@ export function HomeContent() {
                 variant="outline"
                 size="lg"
                 className="w-full sm:w-auto border-2 border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7]/10 backdrop-blur-sm px-8 py-4 rounded-full transition-all duration-300 group bg-transparent text-base font-pixel"
+                onClick={handleCta("watch_events", "/events")}
               >
                 <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
                 Watch Events
@@ -153,6 +180,7 @@ export function HomeContent() {
               <Link
                 href="/auth/signup"
                 className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link font-medium"
+                onClick={handleCta("discussion_signup", "/auth/signup")}
               >
                 Register to join
                 <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
@@ -186,8 +214,9 @@ export function HomeContent() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link font-medium"
+                onClick={handleOutbound("News & Updates", "https://t.me/dsmlkz_news", "news")}
               >
-                {t("home.joinButton")}
+                Subscribe in Telegram
                 <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
@@ -219,8 +248,9 @@ export function HomeContent() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link font-medium"
+                onClick={handleOutbound("DS/ML Jobs", "https://t.me/ml_jobs_kz", "jobs")}
               >
-                {t("home.joinButton")}
+                Subscribe in Telegram
                 <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
@@ -250,8 +280,9 @@ export function HomeContent() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link font-medium"
+                onClick={handleOutbound("IT Jobs Kazakhstan", "https://t.me/it_jobs_kz", "jobs")}
               >
-                {t("home.joinButton")}
+                Subscribe in Telegram
                 <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
@@ -283,8 +314,9 @@ export function HomeContent() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link font-medium"
+                onClick={handleOutbound("YouTube Channel", "https://www.youtube.com/c/DataScienceKazakhstan", "video")}
               >
-                {t("home.subscribeButton")}
+                Subscribe in YouTube
                 <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
@@ -316,8 +348,9 @@ export function HomeContent() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link font-medium"
+                onClick={handleOutbound("LinkedIn Page", "https://www.linkedin.com/company/53101063/admin/dashboard/", "social")}
               >
-                {t("home.subscribeButton")}
+                Subscribe on LinkedIn
                 <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
               </Link>
             </CardContent>

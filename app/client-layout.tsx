@@ -13,6 +13,7 @@ import LanguageSelector from "@/features/i18n/language_selector"
 import { useSafeTranslation } from "@/hooks/use-safe-translation"
 import { useProfile } from "@/features/profile/client/ProfileProvider"
 import { getSupabaseClient } from "@/lib/supabase-client"
+import { trackGaEvent } from "@/shared/providers/analytics"
 
 export default function ClientLayout({
   children,
@@ -56,6 +57,19 @@ export default function ClientLayout({
     }
   }, [user, profile, loadingProfile, supabase])
 
+  const handleNavClick = (label: string, destination: string) => () => {
+    trackGaEvent("navigation_click", {
+      label,
+      destination,
+      page_path: pathname,
+      page_title: typeof document !== "undefined" ? document.title : undefined,
+    })
+  }
+
+  const handleCtaClick = (ctaLabel: string, destination: string) => () => {
+    trackGaEvent("cta_click", { cta_label: ctaLabel, destination, page_path: pathname, page_title: document.title })
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 border-b bg-background">
@@ -81,6 +95,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
+                onClick={handleNavClick("home", "/")}
               >
                 {t("nav.home")}
               </Link>
@@ -90,6 +105,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/news" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
+                onClick={handleNavClick("news", "/news")}
               >
                 {t("nav.newsFeed")}
               </Link>
@@ -99,6 +115,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/jobs" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
+                onClick={handleNavClick("jobs", "/jobs")}
               >
                 {t("nav.jobsFeed")}
               </Link>
@@ -108,6 +125,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/research" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
+                onClick={handleNavClick("research", "/research")}
               >
                 {t("nav.research")}
               </Link>
@@ -117,6 +135,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/articles" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
+                onClick={handleNavClick("articles", "/articles")}
               >
                 {t("nav.articles")}
               </Link>
@@ -126,6 +145,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/events" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
+                onClick={handleNavClick("events", "/events")}
               >
                 {t("nav.events")}
               </Link>
@@ -135,6 +155,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/faces" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
+                onClick={handleNavClick("faces", "/faces")}
               >
                 {t("nav.faces")}
               </Link>
@@ -144,6 +165,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/rules" ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
+                onClick={handleNavClick("rules", "/rules")}
               >
                 {t("nav.rules")}
               </Link>
@@ -156,7 +178,7 @@ export default function ClientLayout({
 
             {user ? (
               <div className="hidden md:flex items-center gap-4">
-                <Link href="/dashboard" className="flex items-center gap-2">
+                <Link href="/dashboard" className="flex items-center gap-2" onClick={handleNavClick("dashboard", "/dashboard")}>
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                     <User className="h-4 w-4 text-primary" />
                   </div>
@@ -176,12 +198,14 @@ export default function ClientLayout({
             ) : (
               <div className="hidden md:flex items-center gap-4">
                 <Link href="/auth/signin">
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={handleCtaClick("signin", "/auth/signin")}>
                     {t("nav.signin")}
                   </Button>
                 </Link>
                 <Link href="/auth/signup">
-                  <Button size="sm">{t("nav.signup")}</Button>
+                  <Button size="sm" onClick={handleCtaClick("signup", "/auth/signup")}>
+                    {t("nav.signup")}
+                  </Button>
                 </Link>
               </div>
             )}
@@ -209,6 +233,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/" ? "text-primary" : "text-muted-foreground"
                 }`}
+                onClick={handleNavClick("home", "/")}
               >
                 {t("nav.home")}
               </Link>
@@ -217,6 +242,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/news" ? "text-primary" : "text-muted-foreground"
                 }`}
+                onClick={handleNavClick("news", "/news")}
               >
                 {t("nav.newsFeed")}
               </Link>
@@ -225,6 +251,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/jobs" ? "text-primary" : "text-muted-foreground"
                 }`}
+                onClick={handleNavClick("jobs", "/jobs")}
               >
                 {t("nav.jobsFeed")}
               </Link>
@@ -233,6 +260,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/research" ? "text-primary" : "text-muted-foreground"
                 }`}
+                onClick={handleNavClick("research", "/research")}
               >
                 {t("nav.research")}
               </Link>
@@ -241,6 +269,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/articles" ? "text-primary" : "text-muted-foreground"
                 }`}
+                onClick={handleNavClick("articles", "/articles")}
               >
                 {t("nav.articles")}
               </Link>
@@ -249,6 +278,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/events" ? "text-primary" : "text-muted-foreground"
                 }`}
+                onClick={handleNavClick("events", "/events")}
               >
                 {t("nav.events")}
               </Link>
@@ -257,6 +287,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/faces" ? "text-primary" : "text-muted-foreground"
                 }`}
+                onClick={handleNavClick("faces", "/faces")}
               >
                 {t("nav.faces")}
               </Link>
@@ -265,6 +296,7 @@ export default function ClientLayout({
                 className={`text-sm font-medium font-pixel ${
                   pathname === "/rules" ? "text-primary" : "text-muted-foreground"
                 }`}
+                onClick={handleNavClick("rules", "/rules")}
               >
                 {t("nav.rules")}
               </Link>
@@ -272,7 +304,11 @@ export default function ClientLayout({
               {/* Auth buttons mobile */}
               {user ? (
                 <>
-                  <Link href="/dashboard" className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                  <Link
+                    href="/dashboard"
+                    className="flex items-center gap-2 text-sm font-medium text-muted-foreground"
+                    onClick={handleNavClick("dashboard", "/dashboard")}
+                  >
                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
                       <User className="h-3 w-3 text-primary" />
                     </div>
@@ -294,12 +330,17 @@ export default function ClientLayout({
               ) : (
                 <div className="flex flex-col gap-2">
                   <Link href="/auth/signin">
-                    <Button variant="outline" size="sm" className="w-full bg-transparent">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full bg-transparent"
+                      onClick={handleCtaClick("signin", "/auth/signin")}
+                    >
                       {t("nav.signin")}
                     </Button>
                   </Link>
                   <Link href="/auth/signup">
-                    <Button size="sm" className="w-full">
+                    <Button size="sm" className="w-full" onClick={handleCtaClick("signup", "/auth/signup")}>
                       {t("nav.signup")}
                     </Button>
                   </Link>

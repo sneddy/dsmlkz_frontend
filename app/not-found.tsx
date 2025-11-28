@@ -1,12 +1,20 @@
 "use client"
 
-import { Suspense } from "react"
+import { Suspense, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
+import { trackGaEvent } from "@/shared/providers/analytics"
 
 // This component will use useSearchParams() safely inside Suspense
 function NotFoundContent() {
+  useEffect(() => {
+    trackGaEvent("page_not_found", {
+      page_path: typeof window !== "undefined" ? window.location.pathname : "/not-found",
+      page_title: "404 Not Found",
+    })
+  }, [])
+
   return (
     <div className="container flex flex-col items-center justify-center min-h-[80vh] py-8">
       <div className="text-center space-y-4">

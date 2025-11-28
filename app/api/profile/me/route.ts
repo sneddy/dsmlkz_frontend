@@ -12,7 +12,7 @@ const supabaseAdmin =
       })
     : null
 
-export async function GET() {
+export async function GET(request: Request) {
   if (!supabaseAdmin) {
     console.error("[profile] Missing Supabase admin configuration")
     return NextResponse.json({ error: "Server misconfigured" }, { status: 500 })
@@ -35,17 +35,39 @@ export async function GET() {
     },
   )
 
+  const authHeader = request.headers.get("authorization")
+  let bearerUserId: string | null = null
+
+  if (authHeader?.startsWith("Bearer ")) {
+    const token = authHeader.slice("Bearer ".length)
+    try {
+      const { data: authUser, error: authError } = await supabaseAdmin.auth.getUser(token)
+      if (authError) {
+        console.warn("[profile] Bearer token auth failed", authError)
+      }
+      bearerUserId = authUser?.user?.id || null
+    } catch (e) {
+      console.error("[profile] Bearer token validation threw", e)
+    }
+  }
+
   const {
     data: { user, session },
     error: userError,
   } = await supabase.auth.getUser()
 
-  if (userError || !user || !session) {
-    console.error("[profile] Failed to validate user in /api/profile/me", userError)
+  const resolvedUserId = user?.id || bearerUserId
+
+  if ((!resolvedUserId || !session) && !bearerUserId) {
+    if (userError) {
+      console.error("[profile] Failed to validate user in /api/profile/me", userError)
+    } else {
+      console.warn("[profile] No authenticated user in /api/profile/me")
+    }
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
   }
 
-  const userId = user.id
+  const userId = resolvedUserId!
 
   try {
     const { data: publicProfile, error: publicProfileError } = await supabaseAdmin

@@ -30,6 +30,7 @@ interface ProfileContextType {
   profileError: Error | null
   updateProfile: (profileData: Partial<Profile>) => Promise<{ error: any }>
   refreshProfile: () => Promise<void>
+  prefetchProfile: (userId: string, userEmail?: string | null) => Promise<void>
 }
 
 // Create the context and export it
@@ -186,6 +187,38 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user, fetchProfile])
 
+  const prefetchProfile = useCallback(
+    async (userId: string, userEmail?: string | null) => {
+      if (!userId) return
+      fetchingProfileRef.current.delete(userId)
+      setLoadingProfile(true)
+      await fetchProfile(userId, userEmail ?? undefined)
+    },
+    [fetchProfile],
+  )
+
+  // Listen to auth state changes directly to kick profile fetch immediately on SIGNED_IN
+  useEffect(() => {
+    const supabase = getSupabaseClient()
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" && session?.user) {
+        fetchingProfileRef.current.clear()
+        setLoadingProfile(true)
+        fetchProfile(session.user.id, session.user.email)
+      }
+      if (event === "SIGNED_OUT") {
+        setProfile(null)
+        setProfileError(null)
+        fetchingProfileRef.current.clear()
+        setLoadingProfile(false)
+      }
+    })
+
+    return () => {
+      listener.subscription.unsubscribe()
+    }
+  }, [fetchProfile])
+
   // Current: optimistic merge in cache → POST /api/profile/update → refreshProfile
   // Future: Server Action with Zod validation to simplify client and offload provider
   const updateProfile = useCallback(
@@ -260,8 +293,9 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       profileError,
       updateProfile,
       refreshProfile,
+      prefetchProfile,
     }),
-    [profile, loadingProfile, profileError, updateProfile, refreshProfile],
+    [profile, loadingProfile, profileError, updateProfile, refreshProfile, prefetchProfile],
   )
 
   return <ProfileContext.Provider value={contextValue}>{children}</ProfileContext.Provider>

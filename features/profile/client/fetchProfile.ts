@@ -11,9 +11,24 @@ export async function fetchProfileOnce(userId: string, retryCount = 0): Promise<
   }
 
   try {
+    const supabase = getSupabaseClient()
+    // Make sure we have a valid session before fetching
+    const { data: sessionData } = await supabase.auth.getSession()
+    const accessToken = sessionData?.session?.access_token
+    if (!sessionData?.session) {
+      const { data: refreshed } = await supabase.auth.refreshSession()
+      if (refreshed?.session?.access_token) {
+        sessionData.session = refreshed.session
+      }
+    }
+
     // Try server-assisted fetch first to bypass client auth edge cases
     try {
-      const response = await fetch("/api/profile/me", { cache: "no-store", credentials: "same-origin" })
+      const response = await fetch("/api/profile/me", {
+        cache: "no-store",
+        credentials: "same-origin",
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
+      })
       if (response.ok) {
         const { profile } = (await response.json()) as { profile?: Profile & { secret_number?: number } }
         if (profile) {
@@ -26,8 +41,6 @@ export async function fetchProfileOnce(userId: string, retryCount = 0): Promise<
     } catch (apiError) {
       logger.error("Error calling /api/profile/me", apiError)
     }
-
-    const supabase = getSupabaseClient()
 
     // Fetch profile from Supabase
     const { data: profileData, error: profileError } = await supabase

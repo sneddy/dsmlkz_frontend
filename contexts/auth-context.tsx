@@ -1,10 +1,11 @@
 "use client"
 
 import type React from "react"
-import { createContext, useContext, useCallback, useMemo, useRef } from "react"
+import { createContext, useContext, useCallback, useMemo, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { getSupabaseClient } from "@/lib/supabase-client"
 import { createLogger } from "@/lib/logger"
+import { trackGaEvent, trackGaUser } from "@/shared/providers/analytics"
 
 // Import types from separate module
 import type { AuthContextType } from "@/features/auth/types"
@@ -25,6 +26,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const supabase = useMemo(() => getSupabaseClient(), [])
   const signOutInFlightRef = useRef(false)
   const logger = useMemo(() => createLogger("auth"), [])
+
+  const isAuthSessionMissingError = (error: any) => {
+    return typeof error?.message === "string" && error.message.toLowerCase().includes("auth session missing")
+  }
+
+  useEffect(() => {
+    if (sessionUser?.id) {
+      trackGaUser(sessionUser.id)
+    }
+  }, [sessionUser?.id])
 
   const clearAuthCookies = useCallback(() => {
     if (typeof document === "undefined") return
@@ -63,12 +74,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // Ensure session is hydrated and server components pick it up
         await supabase.auth.getSession()
+        // Give the auth helper a brief moment to sync cookies before protected fetches
+        await new Promise((resolve) => setTimeout(resolve, 150))
+        trackGaUser(userData.user.id)
+        trackGaEvent("login", { method: "password", user_id: userData.user.id })
         router.refresh()
 
-        return { error: null }
+        return { error: null, user: userData.user }
       } catch (error) {
         logger.error("Exception during sign in", error)
-        return { error }
+        return { error, user: null }
       }
     },
     [supabase, logger, router],
@@ -83,6 +98,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           password,
         })
 
+        if (data?.user?.id) {
+          trackGaUser(data.user.id)
+          trackGaEvent("sign_up", { method: "password", user_id: data.user.id })
+        }
+
         return { data, error }
       } catch (error) {
         logger.error("Error signing up", error)
@@ -96,11 +116,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (signOutInFlightRef.current) return
     signOutInFlightRef.current = true
     try {
-      const { error } = await supabase.auth.signOut()
+      // If there's no active session, skip network call to avoid noisy AuthSessionMissingError
+      if (!session) {
+        logger.info("No active session; performing local sign out cleanup only")
+      } else {
+        const { error } = await supabase.auth.signOut()
 
-      if (error) {
-        logger.error("Error signing out from Supabase", error)
-        throw error
+        if (error && !isAuthSessionMissingError(error)) {
+          logger.error("Error signing out from Supabase", error)
+          throw error
+        }
+
+        if (error && isAuthSessionMissingError(error)) {
+          logger.info("Sign out attempted without active session; continuing cleanup")
+        }
       }
 
       logger.info("Successfully signed out from Supabase")

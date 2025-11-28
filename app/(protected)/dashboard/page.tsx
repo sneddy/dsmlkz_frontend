@@ -29,6 +29,7 @@ import { ErrorBoundaryWrapper } from "@/shared/ui/error_boundary_wrapper"
 import { toast } from "@/shared/lib/hooks/use-toast"
 import { useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
+import { trackGaEvent } from "@/shared/providers/analytics"
 
 export default function DashboardPage() {
   return (
@@ -426,6 +427,10 @@ function Dashboard() {
   }, [])
 
   useEffect(() => {
+    trackGaEvent("dashboard_view", { page_path: "/dashboard" })
+  }, [])
+
+  useEffect(() => {
     if (user?.id && !profileRequested) {
       setProfileRequested(true)
       refreshProfile().catch((error) => {
@@ -510,6 +515,17 @@ function Dashboard() {
         </div>
         <div className="h-32 sm:h-48 bg-gray-800 rounded-2xl animate-pulse" />
         <div className="h-80 sm:h-96 bg-gray-800 rounded-2xl animate-pulse" />
+      </div>
+    )
+  }
+
+  if (loadingProfile) {
+    return (
+      <div className="container py-8 flex justify-center items-center min-h-[60vh]">
+        <div className="flex items-center gap-3">
+          <div className="w-6 h-6 border-4 border-[#00AEC7]/30 border-t-[#00AEC7] rounded-full animate-spin" />
+          <p className="text-muted-foreground">Loading profile...</p>
+        </div>
       </div>
     )
   }

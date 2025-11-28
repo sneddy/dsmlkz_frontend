@@ -14,6 +14,7 @@ import { useTranslation } from "@/hooks/use-translation"
 import { AuthGuard } from "@/features/auth/auth_guard"
 import { Spinner } from "@/components/ui/spinner"
 import { EmailVerificationDialog } from "@/features/auth/email_verification_dialog"
+import { useProfile } from "@/features/profile/client/useProfile"
 
 export const dynamic = "force-dynamic"
 
@@ -29,6 +30,7 @@ function SignIn() {
   const [showVerificationDialog, setShowVerificationDialog] = useState(false)
   const [unverifiedEmail, setUnverifiedEmail] = useState("")
   const { signIn, user } = useAuth()
+  const { prefetchProfile, loadingProfile } = useProfile()
   const router = useRouter()
   const { t } = useTranslation()
 
@@ -51,7 +53,7 @@ function SignIn() {
     setIsSubmitting(true)
 
     try {
-      const { error } = await signIn(email, password)
+      const { error, user: signedInUser } = await signIn(email, password)
       if (error) {
         console.log("Sign in error:", error.message) // Добавляем логирование для отладки
 
@@ -82,8 +84,17 @@ function SignIn() {
         return
       }
 
+      if (signedInUser) {
+        try {
+          await prefetchProfile(signedInUser.id, signedInUser.email)
+        } catch (prefetchError) {
+          console.warn("[signin] Failed to prefetch profile", prefetchError)
+        }
+      }
+
       // Успешный вход, редирект будет выполнен через AuthGuard
       router.push("/dashboard")
+      setIsSubmitting(false)
     } catch (err: any) {
       setError(err.message || t("auth.genericError"))
       setIsSubmitting(false)
@@ -138,7 +149,7 @@ function SignIn() {
               {isSubmitting ? (
                 <>
                   <Spinner size="sm" className="mr-2" />
-                  {t("auth.signingIn")}
+                  {loadingProfile ? "Loading profile..." : t("auth.signingIn")}
                 </>
               ) : (
                 t("auth.signIn")

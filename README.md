@@ -42,24 +42,59 @@ A multilingual community platform for data science and machine learning speciali
 - `pnpm start` – serve the production build
 - `pnpm lint` – run ESLint
 
-## Project Structure
+## Project Structure (2 levels)
 ```
-app/                    # App Router routes
-  (public)/news, jobs/  # public feeds + detail pages
-  (protected)/...       # dashboard and profile (auth guarded)
-  articles/             # articles, interviews, markdown content + utils
-  auth/                 # auth flows (signin/signup/reset/email verification)
+app/                    # App Router routes/layouts
+  (public)/             # news, jobs + shared public layout
+  (protected)/          # dashboard, profile (auth guarded)
+  articles/             # listings, dynamic slugs, markdown content, utils
+  auth/                 # signin, signup, forgot/reset, email verification
   users/[nickname]/     # public member profiles
-  client-layout.tsx     # shell layout with navigation/footer
-features/               # domain logic (auth, profile, search, cities, i18n, editor)
-widgets/                # page sections/cards (home, news feed, jobs feed wrappers, faces, etc.)
-shared/                 # ui primitives + hooks (toast, blob image, error boundary)
-components/ui/          # shadcn/Radix primitives kept for legacy usage
-contexts/               # auth, language, and Supabase contexts
-lib/                    # Supabase clients, translations, utils, logging
-translations/           # en/ru/kk dictionaries
-public/                 # static assets, sitemap, robots
-styles/, types/         # Tailwind setup and Supabase types
+  client-layout.tsx, layout.tsx, page.tsx, globals.css, not-found.tsx, sitemap.ts
+
+features/               # Domain logic
+  auth/, profile/, search/, cities/, i18n/, editor/
+
+widgets/                # Page sections/cards
+  home_content.tsx, news_feed.tsx, jobs_feed_server.tsx,
+  jobs_feed_client_wrapper.tsx, jobs_feed_dynamic_wrapper.tsx,
+  faces_content.tsx, values_content.tsx, rules_content.tsx, research_content.tsx,
+  article_card.tsx, collaboration_card.tsx, community_face_card.tsx,
+  profile_card.tsx, section_hero.tsx, section_hero_ssr.tsx, image_carousel.tsx
+
+shared/                 # UI primitives + hooks/providers
+  ui/ (blob_image, markdown_content, error_boundary, error_boundary_wrapper, toast, index)
+  lib/hooks/ (use-toast, use-mobile, index)
+  providers/ (analytics.tsx)
+
+components/             # Legacy shadcn primitives + misc
+  ui/ (button, card, dialog, dropdown-menu, input, label, tabs, toast, toaster, spinner, skeleton, textarea, etc.)
+  jobs-feed-client.tsx, member-mini-card.tsx, profile-card.tsx
+
+contexts/               # React contexts
+  auth-context.tsx, language-context.tsx, supabase-context.tsx
+
+lib/                    # Supabase, utils, logging, constants
+  supabase-client.ts, supabase-server.ts, server-translations.ts,
+  logger.ts, utils.ts, utils/ (jobs-utils.ts, text-utils.ts), radix-deps.ts, constants/
+
+translations/           # i18n dictionaries
+  en/, ru/, kk/, index.ts
+
+public/                 # Static assets
+  images/, sitemap.xml, robots.txt, llms.txt, placeholders
+
+styles/                 # Global styles
+  globals.css
+
+types/                  # Types
+  supabase.ts
+
+middleware.ts           # Supabase auth handling
+next.config.mjs         # Next.js config
+tailwind.config.ts      # Tailwind setup
+tsconfig.json           # TypeScript config with path aliases
+package.json            # Scripts and deps
 ```
 
 ## Notes

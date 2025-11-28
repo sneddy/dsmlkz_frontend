@@ -3,12 +3,12 @@
 import type React from "react"
 
 import { useState, useCallback, useRef } from "react"
-import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { ExternalLink, Search, Brain, Code, MapPin, Filter } from "lucide-react"
 import Link from "next/link"
 import { ServerImage } from "@/components/ui/server-image"
 import { getSupabaseClient } from "@/lib/supabase-client"
-import { formatJobDate, getChannelInfo, truncateJobText } from "@/lib/utils/jobs-utils"
+import { formatJobDate, getChannelInfo, processJobHtml } from "@/lib/utils/jobs-utils"
 
 type JobPost = {
   post_id: string
@@ -32,6 +32,8 @@ interface JobsFeedClientProps {
   initialRemote: boolean
 }
 
+const PAGE_SIZE = 3
+
 export default function JobsFeedClient({
   initialJobs,
   initialTotalCount,
@@ -54,9 +56,8 @@ export default function JobsFeedClient({
     setLoading(true)
     try {
       const supabase = getSupabaseClient()
-      const pageSize = 9
-      const from = (newPage - 1) * pageSize
-      const to = from + pageSize - 1
+      const from = (newPage - 1) * PAGE_SIZE
+      const to = from + PAGE_SIZE - 1
 
       // Parse channel filter
       const channelIds =
@@ -65,6 +66,26 @@ export default function JobsFeedClient({
           : newChannels === "it"
             ? [-1001944996511]
             : [-1001120572276, -1001944996511]
+
+      let remotePostIds: string[] | null = null
+      if (newRemote) {
+        const { data: remoteData, error: remoteError } = await supabase
+          .from("job_details")
+          .select("post_id")
+          .ilike("location", "remote%")
+
+        if (remoteError) {
+          console.error("Error fetching remote job ids:", remoteError)
+          return
+        }
+
+        remotePostIds = (remoteData || []).map((item) => item.post_id)
+        if (remotePostIds.length === 0) {
+          setJobs([])
+          setTotalCount(0)
+          return
+        }
+      }
 
       // Build the query for channels_content
       let queryBuilder = supabase
@@ -75,6 +96,10 @@ export default function JobsFeedClient({
 
       if (newQuery) {
         queryBuilder = queryBuilder.ilike("html_text", `%${newQuery}%`)
+      }
+
+      if (newRemote && remotePostIds) {
+        queryBuilder = queryBuilder.in("post_id", remotePostIds)
       }
 
       const { data: channelsData, error: channelsError, count } = await queryBuilder.range(from, to)
@@ -104,11 +129,6 @@ export default function JobsFeedClient({
         ...post,
         location: locationMap.get(post.post_id) || null,
       })) as JobPost[]
-
-      // Filter remote jobs if needed
-      if (newRemote) {
-        combinedData = combinedData.filter((post) => post.location?.toLowerCase().startsWith("remote"))
-      }
 
       setJobs(combinedData)
       setTotalCount(count || 0)
@@ -157,8 +177,7 @@ export default function JobsFeedClient({
     [query, channels, remote, fetchJobs],
   )
 
-  const pageSize = 9
-  const totalPages = Math.ceil(totalCount / pageSize)
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE)
   const hasNextPage = page < totalPages
   const hasPrevPage = page > 1
 
@@ -202,20 +221,25 @@ export default function JobsFeedClient({
 
       {/* Search and Filters */}
       <div className="space-y-4">
-        <div className="max-w-md mx-auto">
-          <form onSubmit={handleSearch} className="relative">
-            <input
-              ref={searchInputRef}
-              type="text"
-              defaultValue={query}
-              placeholder="Поиск вакансий..."
-              className="w-full px-4 py-3 pl-12 bg-gray-800/50 border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00AEC7] focus:border-transparent"
-            />
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+        <div className="max-w-3xl mx-auto">
+          <form
+            onSubmit={handleSearch}
+            className="flex flex-col gap-3 sm:flex-row sm:items-center bg-gray-900/60 border border-gray-800/70 rounded-2xl px-4 py-3 shadow-lg backdrop-blur-sm"
+          >
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                defaultValue={query}
+                placeholder="Поиск вакансий..."
+                className="w-full rounded-xl border border-gray-800 bg-transparent py-3 pl-11 pr-4 text-white placeholder-gray-400 focus:border-[#00AEC7] focus:outline-none focus:ring-2 focus:ring-[#00AEC7]/50"
+              />
+            </div>
             <button
               type="submit"
               disabled={loading}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-1.5 bg-[#00AEC7] text-white text-sm font-medium rounded-lg hover:bg-[#00AEC7]/80 transition-colors disabled:opacity-50"
+              className="inline-flex items-center justify-center rounded-xl bg-[#00AEC7] px-5 py-3 text-sm font-semibold text-black shadow-md transition-colors hover:bg-[#00AEC7]/90 disabled:opacity-50"
             >
               {loading ? "..." : "Найти"}
             </button>
@@ -306,9 +330,8 @@ export default function JobsFeedClient({
               <h2 id="jobs-heading" className="sr-only">
                 Список вакансий
               </h2>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="space-y-8">
                 {jobs.map((job, index) => {
-                  const { text } = truncateJobText(job.html_text || "")
                   const channelInfo = getChannelInfo(job.channel_id)
                   const isFirstJob = index === 0
                   const isRemote = job.location?.toLowerCase().startsWith("remote")
@@ -316,29 +339,29 @@ export default function JobsFeedClient({
                   return (
                     <article
                       key={job.post_id}
-                      className="h-[56rem] bg-gray-800/50 border-gray-700 backdrop-blur-sm shadow-lg rounded-xl overflow-hidden hover:shadow-2xl hover:scale-[1.02] hover:bg-gray-800/70 transition-all duration-300 ease-out flex flex-col group"
+                      className="relative overflow-hidden border-gray-800/70 bg-gray-900/60 shadow-xl backdrop-blur-sm rounded-3xl"
                     >
-                      <div className="h-1 bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A]" />
 
-                      <CardHeader className="bg-gradient-to-r from-gray-700/20 to-gray-600/10 backdrop-blur-sm pb-3 flex-shrink-0 border-b border-gray-600/20">
-                        <div className="flex items-center justify-between">
-                          <CardDescription className="text-[#00AEC7] font-semibold text-sm tracking-wide">
-                            <time dateTime={job.created_at}>{formatJobDate(job.created_at)}</time>
-                            {job.sender_name && (
-                              <span className="text-gray-400 font-normal ml-2">• {job.sender_name}</span>
-                            )}
-                          </CardDescription>
-
-                          <div className="flex items-center gap-2">
+                      <CardContent className="space-y-6 p-6 sm:p-8">
+                        <div className="flex flex-wrap items-start justify-between gap-4">
+                          <div className="space-y-1">
+                            <p className="text-xs uppercase tracking-[0.25em] text-[#00AEC7]/80">Новая вакансия</p>
+                            <p className="text-lg font-semibold text-white">
+                              <time dateTime={job.created_at}>{formatJobDate(job.created_at)}</time>
+                            </p>
+                            {job.sender_name && <p className="text-sm text-gray-400">{job.sender_name}</p>}
+                          </div>
+                          <div className="flex flex-wrap items-center gap-2">
                             {isRemote && (
-                              <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-green-900/50 text-green-400 text-xs font-medium border border-green-700">
+                              <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-green-900/50 text-green-400 text-xs font-semibold border border-green-700">
                                 <MapPin className="h-3 w-3" />
                                 <span>Remote</span>
                               </div>
                             )}
 
                             <div
-                              className={`flex items-center gap-1 px-2 py-1 rounded-full ${channelInfo.bgColor} ${channelInfo.color} border ${channelInfo.borderColor} text-xs font-medium`}
+                              className={`flex items-center gap-1 px-3 py-1 rounded-full ${channelInfo.bgColor} ${channelInfo.color} border ${channelInfo.borderColor} text-xs font-semibold`}
                             >
                               {job.channel_id === -1001120572276 ? (
                                 <Brain className="h-3 w-3" />
@@ -349,57 +372,49 @@ export default function JobsFeedClient({
                             </div>
                           </div>
                         </div>
-                      </CardHeader>
 
-                      <CardContent className="pt-4 pb-6 flex-1 flex flex-col space-y-2">
-                        {job.image_url && (
-                          <div className="w-full aspect-square flex-shrink-0 relative group/image cursor-pointer overflow-hidden rounded-xl shadow-md">
-                            <ServerImage
-                              src={job.image_url}
-                              alt="Job posting image"
-                              width={400}
-                              height={400}
-                              priority={isFirstJob}
-                              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                              className="w-full h-full object-contain transition-all duration-500 ease-out group-hover/image:scale-110 group-hover/image:brightness-110"
+                        <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+                          {job.image_url && (
+                            <div className="rounded-2xl border border-gray-800/60 bg-black/20 p-3 flex justify-center lg:w-[38%] xl:w-[36%]">
+                              <ServerImage
+                                src={job.image_url}
+                                alt="Job posting image"
+                                width={600}
+                                height={400}
+                                priority={isFirstJob}
+                                sizes="(max-width: 768px) 100vw, 360px"
+                                className="w-full h-auto max-h-[400px] object-contain"
+                              />
+                            </div>
+                          )}
+
+                          <div className="flex-1 flex flex-col gap-4">
+                            <div
+                              className="prose prose-invert max-w-none prose-headings:text-[#FFF32A] prose-a:text-[#00AEC7] prose-strong:text-[#00AEC7] prose-p:text-gray-100 prose-li:text-gray-200 text-base leading-relaxed"
+                              dangerouslySetInnerHTML={{ __html: processJobHtml(job.html_text || "") }}
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-300"></div>
-                          </div>
-                        )}
 
-                        <div className="flex-1 flex flex-col justify-between space-y-2">
-                          <p className="text-gray-300 font-medium text-sm leading-relaxed line-clamp-12 tracking-wide">
-                            {text}
-                          </p>
-
-                          <div className="flex justify-between items-center pt-2 border-t border-gray-600/30">
-                            <Link
-                              href={`/jobs/${job.post_id}`}
-                              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] text-white text-sm font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 ease-out focus:ring-2 focus:ring-[#00AEC7]/50 focus:outline-none"
-                            >
-                              Подробнее
-                              <svg
-                                className="ml-2 w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                            </Link>
-
-                            {job.post_link && (
+                            <div className="flex flex-wrap justify-between gap-3 pt-3 border-t border-gray-700/50">
                               <Link
-                                href={job.post_link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center px-4 py-3 border-2 border-[#00AEC7]/30 text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white hover:border-[#00AEC7] text-sm font-medium rounded-xl transition-all duration-200 ease-out focus:ring-2 focus:ring-[#00AEC7]/50 focus:outline-none group/btn"
-                                title="Откликнуться в Telegram"
+                                href={`/jobs/${job.post_id}`}
+                                className="inline-flex items-center gap-2 rounded-full border border-gray-700/80 px-4 py-2 text-sm font-semibold text-white hover:border-[#00AEC7] hover:text-[#00AEC7] transition-colors"
                               >
-                                <ExternalLink className="h-4 w-4 mr-2 transition-transform duration-200 group-hover/btn:scale-110" />
-                                Откликнуться
+                                Читать отдельно
                               </Link>
-                            )}
+
+                              {job.post_link && (
+                                <Link
+                                  href={job.post_link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-2 rounded-full bg-[#00AEC7] px-4 py-2 text-sm font-semibold text-black hover:bg-[#00AEC7]/90 transition-colors"
+                                  title="Откликнуться в Telegram"
+                                >
+                                  <ExternalLink className="h-4 w-4" />
+                                  Откликнуться
+                                </Link>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </CardContent>
@@ -412,18 +427,18 @@ export default function JobsFeedClient({
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex justify-center items-center space-x-4 mt-8">
+            <div className="flex flex-wrap justify-center items-center gap-3 mt-8">
               {hasPrevPage && (
                 <button
                   onClick={() => handlePageChange(page - 1)}
                   disabled={loading}
-                  className="px-6 py-3 bg-gray-800/50 border border-gray-700 text-white rounded-xl hover:bg-gray-700/50 transition-colors disabled:opacity-50"
+                  className="px-6 py-3 bg-gray-800/70 border border-gray-700 text-white rounded-xl hover:bg-gray-700/60 transition-colors disabled:opacity-50 text-sm font-semibold"
                 >
                   ← Предыдущая
                 </button>
               )}
 
-              <span className="px-4 py-2 text-gray-300">
+              <span className="px-4 py-2 text-gray-300 text-sm">
                 Страница {page} из {totalPages}
               </span>
 
@@ -431,7 +446,7 @@ export default function JobsFeedClient({
                 <button
                   onClick={() => handlePageChange(page + 1)}
                   disabled={loading}
-                  className="px-6 py-3 bg-[#00AEC7] text-white rounded-xl hover:bg-[#00AEC7]/80 transition-colors disabled:opacity-50"
+                  className="px-6 py-3 bg-[#00AEC7] text-black rounded-xl hover:bg-[#00AEC7]/90 transition-colors disabled:opacity-50 text-sm font-semibold"
                 >
                   Следующая →
                 </button>

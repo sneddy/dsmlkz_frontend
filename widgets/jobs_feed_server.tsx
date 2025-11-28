@@ -3,6 +3,8 @@ import JobsFeedDynamicWrapper from "@/widgets/jobs_feed_dynamic_wrapper"
 
 export const revalidate = 60
 
+const PAGE_SIZE = 3
+
 type JobPost = {
   post_id: string
   channel_name: string
@@ -24,9 +26,24 @@ async function fetchJobs(
 ): Promise<{ jobs: JobPost[]; totalCount: number }> {
   try {
     const supabase = await createServerClient()
-    const pageSize = 9
-    const from = (page - 1) * pageSize
-    const to = from + pageSize - 1
+    const from = (page - 1) * PAGE_SIZE
+    const to = from + PAGE_SIZE - 1
+
+    let remotePostIds: string[] | null = null
+    if (remoteOnly) {
+      const { data: remoteData, error: remoteError } = await supabase
+        .from("job_details")
+        .select("post_id")
+        .ilike("location", "remote%")
+
+      if (remoteError) {
+        console.error("Error fetching remote job ids:", remoteError)
+        return { jobs: [], totalCount: 0 }
+      }
+
+      remotePostIds = (remoteData || []).map((item) => item.post_id)
+      if (remotePostIds.length === 0) return { jobs: [], totalCount: 0 }
+    }
 
     // Build the query for channels_content
     let queryBuilder = supabase
@@ -39,7 +56,11 @@ async function fetchJobs(
       queryBuilder = queryBuilder.ilike("html_text", `%${query}%`)
     }
 
-    const { data: channelsData, error: channelsError } = await queryBuilder.range(from, to)
+    if (remoteOnly && remotePostIds) {
+      queryBuilder = queryBuilder.in("post_id", remotePostIds)
+    }
+
+    const { data: channelsData, error: channelsError, count } = await queryBuilder.range(from, to)
 
     if (channelsError) {
       console.error("Error fetching jobs:", channelsError)
@@ -53,7 +74,6 @@ async function fetchJobs(
       .select("post_id, location")
       .in("post_id", postIds)
 
-    // Create location map
     const locationMap = new Map()
     if (jobDetailsData) {
       jobDetailsData.forEach((detail) => {
@@ -61,22 +81,10 @@ async function fetchJobs(
       })
     }
 
-    // Combine data
-    let combinedData = channelsData.map((post) => ({
+    const combinedData = channelsData.map((post) => ({
       ...post,
       location: locationMap.get(post.post_id) || null,
     })) as JobPost[]
-
-    // Filter remote jobs if needed
-    if (remoteOnly) {
-      combinedData = combinedData.filter((post) => post.location?.toLowerCase().startsWith("remote"))
-    }
-
-    // Get total count for pagination
-    const { count } = await supabase
-      .from("channels_content")
-      .select("*", { count: "exact", head: true })
-      .in("channel_id", channelIds)
 
     return { jobs: combinedData, totalCount: count || 0 }
   } catch (err) {

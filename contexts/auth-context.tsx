@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { createContext, useContext, useCallback, useMemo, useRef } from "react"
+import { useRouter } from "next/navigation"
 import { getSupabaseClient } from "@/lib/supabase-client"
 import { createLogger } from "@/lib/logger"
 
@@ -18,6 +19,7 @@ export { AuthContext }
 
 // Create the AuthProvider component
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
   const { session, user: sessionUser, initialized, loading: sessionLoading } = useSupabaseSession()
 
   const supabase = useMemo(() => getSupabaseClient(), [])
@@ -50,7 +52,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return { error }
         }
 
+        // Validate session against auth server to avoid stale cookie issues
+        const { data: userData, error: userError } = await supabase.auth.getUser()
+        if (userError || !userData?.user) {
+          logger.error("Auth server validation failed", userError)
+          return { error: userError || new Error("Failed to validate session") }
+        }
+
         logger.info("Sign in successful", { email })
+
+        // Ensure session is hydrated and server components pick it up
+        await supabase.auth.getSession()
+        router.refresh()
 
         return { error: null }
       } catch (error) {
@@ -58,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { error }
       }
     },
-    [supabase],
+    [supabase, logger, router],
   )
 
   // Sign up function

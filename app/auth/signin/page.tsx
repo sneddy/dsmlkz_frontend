@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -18,11 +18,7 @@ import { EmailVerificationDialog } from "@/features/auth/email_verification_dial
 export const dynamic = "force-dynamic"
 
 export default function SignInPage() {
-  return (
-    <AuthGuard requireAuth={false}>
-      <SignIn />
-    </AuthGuard>
-  )
+  return <SignIn />
 }
 
 function SignIn() {
@@ -32,7 +28,7 @@ function SignIn() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showVerificationDialog, setShowVerificationDialog] = useState(false)
   const [unverifiedEmail, setUnverifiedEmail] = useState("")
-  const { signIn, loading, initialized } = useAuth()
+  const { signIn, user } = useAuth()
   const router = useRouter()
   const { t } = useTranslation()
 
@@ -41,6 +37,13 @@ function SignIn() {
     borderStyle: "solid",
     borderImage: "linear-gradient(to right, #FFEB3B, #00AEC7) 1",
   }
+
+  // If already authenticated, go to dashboard
+  useEffect(() => {
+    if (user) {
+      router.replace("/dashboard")
+    }
+  }, [user, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -87,20 +90,6 @@ function SignIn() {
     }
   }
 
-  // Если инициализация не завершена, показываем загрузку
-  if (!initialized) {
-    return (
-      <div className="container flex items-center justify-center min-h-[80vh] py-8">
-        <Card className="w-full max-w-md" style={gradientBorderStyle}>
-          <CardContent className="p-6 text-center">
-            <Spinner size="lg" className="mx-auto mb-4" />
-            <p>{t("auth.checkingSession")}</p>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
   return (
     <div className="container flex items-center justify-center min-h-[80vh] py-8">
       <Card className="w-full max-w-md" style={gradientBorderStyle}>
@@ -120,7 +109,7 @@ function SignIn() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                disabled={isSubmitting || loading}
+                disabled={isSubmitting}
               />
             </div>
             <div className="space-y-2">
@@ -136,7 +125,7 @@ function SignIn() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                disabled={isSubmitting || loading}
+                disabled={isSubmitting}
               />
             </div>
           </CardContent>
@@ -144,9 +133,9 @@ function SignIn() {
             <Button
               type="submit"
               className="w-full bg-[#00AEC7] hover:bg-[#00AEC7]/90 text-white"
-              disabled={isSubmitting || loading}
+              disabled={isSubmitting}
             >
-              {isSubmitting || loading ? (
+              {isSubmitting ? (
                 <>
                   <Spinner size="sm" className="mr-2" />
                   {t("auth.signingIn")}

@@ -19,16 +19,31 @@ export function AuthGuard({ children, fallback, requireAuth = true }: AuthGuardP
   const [isRedirecting, setIsRedirecting] = useState(false)
 
   useEffect(() => {
-    if (initialized && !isRedirecting && !loading) {
-      if (requireAuth && !user) {
-        setIsRedirecting(true)
-        router.push("/auth/signin")
-      } else if (!requireAuth && user) {
-        setIsRedirecting(true)
-        router.push("/dashboard")
-      }
+    if (!initialized || isRedirecting) return
+
+    if (requireAuth && !loading && !user) {
+      setIsRedirecting(true)
+      router.push("/auth/signin")
+    } else if (!requireAuth && user) {
+      setIsRedirecting(true)
+      router.push("/dashboard")
     }
   }, [user, initialized, requireAuth, router, isRedirecting, loading])
+
+  // Public routes should render immediately to avoid spinner lockups if auth is slow
+  if (!requireAuth) {
+    if (isRedirecting) {
+      return (
+        fallback || (
+          <div className="flex justify-center items-center min-h-[60vh]">
+            <Spinner size="lg" />
+            <p className="ml-2 text-muted-foreground">Redirecting...</p>
+          </div>
+        )
+      )
+    }
+    return <>{children}</>
+  }
 
   if (loading || !initialized || isRedirecting) {
     return (

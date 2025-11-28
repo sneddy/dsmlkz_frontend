@@ -120,14 +120,14 @@ export function HomeContent() {
                 Our Community Channels
               </span>
             </h2>
-            <p className="text-gray-300 text-lg leading-relaxed mb-12 font-medium">{t("home.communityDescription")}</p>
+            <p className="text-gray-300 text-lg leading-relaxed mb-8 font-medium">{t("home.communityDescription")}</p>
           </div>
         </div>
       </section>
 
       {/* Telegram Channels Section - Enhanced cards */}
       <section className="py-12 container px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {/* Discussion Hub */}
           <Card className="group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-md border-slate-700/50 hover:border-[#00AEC7]/50 shadow-xl hover:shadow-2xl">
             <CardHeader className="pb-4">

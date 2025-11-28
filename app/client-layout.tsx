@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/auth-context"
 import LanguageSelector from "@/features/i18n/language_selector"
 import { useSafeTranslation } from "@/hooks/use-safe-translation"
+import { useProfile } from "@/features/profile/client/ProfileProvider"
 import { getSupabaseClient } from "@/lib/supabase-client"
 
 export default function ClientLayout({
@@ -21,6 +22,7 @@ export default function ClientLayout({
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
   const { user, signOut } = useAuth()
+  const { profile, loadingProfile } = useProfile()
   const [displayName, setDisplayName] = useState("anon")
   const { t } = useSafeTranslation()
   const supabase = useMemo(() => getSupabaseClient(), [])
@@ -38,52 +40,21 @@ export default function ClientLayout({
   useEffect(() => {
     let isCancelled = false
 
-    const deriveFallback = () => {
-      if (!user) return "anon"
-      const metaNickname = (user.user_metadata as any)?.nickname
-      if (metaNickname) return metaNickname
-      return "anon"
+    if (!user) {
+      setDisplayName("anon")
+      return
     }
 
-    const loadNickname = async () => {
-      if (!user) {
-        setDisplayName("anon")
-        return
-      }
-
-      // Optimistically set a better fallback to avoid "anon" flash
-      setDisplayName(deriveFallback())
-
-      try {
-        const { data, error } = await supabase
-          .from("public_profiles")
-          .select("nickname")
-          .eq("id", user.id)
-          .maybeSingle()
-
-        if (!isCancelled) {
-          if (error) {
-            console.warn("[nav] Failed to load profile nickname via Supabase", error)
-            setDisplayName(deriveFallback())
-          } else {
-            const nickname = data?.nickname
-            setDisplayName(nickname || deriveFallback())
-          }
-        }
-      } catch (error) {
-        console.error("[nav] Failed to fetch profile nickname", error)
-        if (!isCancelled) {
-          setDisplayName(deriveFallback())
-        }
-      }
+    const metaNickname = (user.user_metadata as any)?.nickname
+    const resolved = profile?.nickname || metaNickname || "anon"
+    if (!loadingProfile) {
+      setDisplayName(resolved)
     }
-
-    loadNickname()
 
     return () => {
       isCancelled = true
     }
-  }, [user, supabase])
+  }, [user, profile, loadingProfile, supabase])
 
   return (
     <div className="flex min-h-screen flex-col">

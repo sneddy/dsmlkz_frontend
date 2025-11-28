@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs"
+import { createClient } from "@supabase/supabase-js"
+import { createServerClient } from "@supabase/auth-helpers-nextjs"
 import { cookies } from "next/headers"
 
 // Add this line to make the route compatible with static export
@@ -15,12 +16,26 @@ export async function GET(request: NextRequest) {
 
   try {
     const cookieStore = await cookies()
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+      {
+        cookies: {
+          get: (name: string) => cookieStore.get(name)?.value,
+          set: (name: string, value: string, options: any) => cookieStore.set({ name, value, ...options }),
+          remove: (name: string, options: any) => cookieStore.set({ name, value: "", ...options, maxAge: 0 }),
+          getAll: () => cookieStore.getAll().map((c) => ({ name: c.name, value: c.value })),
+          setAll: (cookiesToSet) => {
+            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set({ name, value, ...options }))
+          },
+        },
+      },
+    )
 
     // Check if user is authenticated
     const {
-      data: { session },
-    } = await supabase.auth.getSession()
+      data: { user },
+    } = await supabase.auth.getUser()
 
     // Debug: Check if we have profiles in the database
     const { data: profilesCheck, error: profilesCheckError } = await supabase
@@ -46,14 +61,14 @@ export async function GET(request: NextRequest) {
     }
 
     // Filter out the current user if authenticated
-    const results = session?.user?.id ? data.filter((profile) => profile.id !== session.user.id) : data
+    const results = user?.id ? data.filter((profile) => profile.id !== user.id) : data
 
     return NextResponse.json({
       results,
       debug: {
         query,
         profilesCheck: profilesCheck?.length || 0,
-        authenticated: !!session,
+        authenticated: !!user,
         totalResults: data.length,
         filteredResults: results.length,
       },

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs"
 import { createClient } from "@supabase/supabase-js"
+import { createServerClient } from "@supabase/auth-helpers-nextjs"
 
 export const dynamic = "force-dynamic"
 
@@ -19,23 +19,33 @@ export async function GET() {
   }
 
   const cookieStore = await cookies()
-  const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+    {
+      cookies: {
+        get: (name: string) => cookieStore.get(name)?.value,
+        set: (name: string, value: string, options: any) => cookieStore.set({ name, value, ...options }),
+        remove: (name: string, options: any) => cookieStore.set({ name, value: "", ...options, maxAge: 0 }),
+        getAll: () => cookieStore.getAll().map((c) => ({ name: c.name, value: c.value })),
+        setAll: (cookiesToSet) => {
+          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set({ name, value, ...options }))
+        },
+      },
+    },
+  )
 
   const {
-    data: { session },
-    error: sessionError,
-  } = await supabase.auth.getSession()
+    data: { user, session },
+    error: userError,
+  } = await supabase.auth.getUser()
 
-  if (sessionError) {
-    console.error("[profile] Failed to read session in /api/profile/me", sessionError)
-    return NextResponse.json({ error: "Failed to read session" }, { status: 500 })
-  }
-
-  if (!session) {
+  if (userError || !user || !session) {
+    console.error("[profile] Failed to validate user in /api/profile/me", userError)
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
   }
 
-  const userId = session.user.id
+  const userId = user.id
 
   try {
     const { data: publicProfile, error: publicProfileError } = await supabaseAdmin

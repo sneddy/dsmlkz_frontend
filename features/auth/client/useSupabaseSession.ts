@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useMemo } from "react"
+import { useState, useEffect, useRef, useMemo, useCallback } from "react"
 import type { User, Session } from "@supabase/supabase-js"
 import { getSupabaseClient } from "@/lib/supabase-client"
 import { DEBUG } from "@/features/auth/constants"
@@ -23,6 +23,20 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
 
   const supabase = useMemo(() => getSupabaseClient(), [])
 
+  const withTimeout = useCallback(
+    async <T>(promise: Promise<T>, label: string): Promise<T> => {
+      const timeoutMs = 6000
+
+      return Promise.race([
+        promise,
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error(`[auth] ${label} timed out after ${timeoutMs}ms`)), timeoutMs),
+        ),
+      ])
+    },
+    [],
+  )
+
   useEffect(() => {
     let isMounted = true
 
@@ -40,23 +54,26 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
         const {
           data: { session },
           error,
-        } = await supabase.auth.getSession()
+        } = await withTimeout(supabase.auth.getSession(), "getSession")
 
         if (error) {
           console.error("[auth] useSupabaseSession: error getting session", error)
-          if (isMounted) {
-            setLoading(false)
-            setInitialized(true)
-          }
-          return
         }
 
-        if (session && isMounted) {
-          prevSessionTokenRef.current = session.access_token
-          setSession(session)
-          setInitialized(true)
-          setLoading(false)
-        } else if (isMounted) {
+        // Validate user to avoid using unauthenticated local state
+        const { data: userData, error: userError } = await withTimeout(
+          supabase.auth.getUser(),
+          "getUser initial validation",
+        )
+        if (userError) {
+          console.error("[auth] useSupabaseSession: error getting user", userError)
+        }
+
+        const finalSession = userData.session || session
+
+        if (isMounted) {
+          prevSessionTokenRef.current = finalSession?.access_token || null
+          setSession(finalSession || null)
           setInitialized(true)
           setLoading(false)
         }
@@ -78,13 +95,32 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.info("[auth] Auth state changed", { event, userId: session?.user?.id })
 
-      // Update token ref
-      prevSessionTokenRef.current = session?.access_token || null
+      try {
+        const { data: userData, error: userError } = await withTimeout(
+          supabase.auth.getUser(),
+          "getUser onAuthStateChange",
+        )
+        const finalSession = userData.session || session
 
-      if (isMounted) {
-        setSession(session)
-        setInitialized(true)
-        setLoading(false)
+        if (userError) {
+          console.warn("[auth] getUser validation failed", userError)
+        }
+
+        prevSessionTokenRef.current = finalSession?.access_token || null
+
+        if (isMounted) {
+          setSession(finalSession || null)
+          setInitialized(true)
+          setLoading(false)
+        }
+      } catch (e) {
+        console.warn("[auth] getUser threw", e)
+        prevSessionTokenRef.current = session?.access_token || null
+        if (isMounted) {
+          setSession(session)
+          setInitialized(true)
+          setLoading(false)
+        }
       }
     })
 
@@ -97,7 +133,7 @@ export function useSupabaseSession(): UseSupabaseSessionReturn {
         authSubscriptionRef.current = null
       }
     }
-  }, [supabase])
+  }, [supabase, withTimeout])
 
   const user = session?.user || null
 

@@ -1,7 +1,7 @@
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
+import { createServerClient } from "@supabase/auth-helpers-nextjs"
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || "",
@@ -18,20 +18,47 @@ export async function POST(request: Request) {
   try {
     console.log("Profile update API route called")
 
-    // Create a regular client to check authentication
-    const supabase = createRouteHandlerClient({ cookies })
+    const cookieStore = await cookies()
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+      {
+        cookies: {
+          get: (name: string) => cookieStore.get(name)?.value,
+          set: (name: string, value: string, options: any) => cookieStore.set({ name, value, ...options }),
+          remove: (name: string, options: any) => cookieStore.set({ name, value: "", ...options, maxAge: 0 }),
+          getAll: () => cookieStore.getAll().map((c) => ({ name: c.name, value: c.value })),
+          setAll: (cookiesToSet) => {
+            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set({ name, value, ...options }))
+          },
+        },
+      },
+    )
 
-    // Get the current user
+    const bearerToken = request.headers.get("authorization")?.replace("Bearer ", "").trim()
+
+    let userId: string | null = null
     const {
-      data: { session },
-    } = await supabase.auth.getSession()
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser()
 
-    if (!session) {
-      console.log("No session found, returning 401")
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
+    if (user?.id) {
+      userId = user.id
+    } else if (bearerToken) {
+      const { data: userData, error: userError } = await supabaseAdmin.auth.getUser(bearerToken)
+      if (userData?.user && !userError) {
+        userId = userData.user.id
+      } else {
+        console.error("Bearer token validation failed", userError)
+      }
+    } else if (userError) {
+      console.error("User validation failed", userError)
     }
 
-    const userId = session.user.id
+    if (!userId) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
+    }
 
     // Validate request body
     let profileData

@@ -10,6 +10,7 @@ import ClientLayout from "./client-layout"
 import { LanguageProvider } from "@/contexts/language-context"
 import { SupabaseProvider } from "@/contexts/supabase-context"
 import { AuthProvider } from "@/contexts/auth-context"
+import { ProfileProvider } from "@/features/profile/client/ProfileProvider"
 
 // Make sure Radix UI deps are referenced so they're bundled
 import "@/lib/radix-deps"
@@ -49,7 +50,9 @@ export default function RootLayout({
         <SupabaseProvider>
           <AuthProvider>
             <LanguageProvider>
-              <ClientLayout>{children}</ClientLayout>
+              <ProfileProvider>
+                <ClientLayout>{children}</ClientLayout>
+              </ProfileProvider>
             </LanguageProvider>
           </AuthProvider>
         </SupabaseProvider>

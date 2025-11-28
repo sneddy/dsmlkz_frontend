@@ -557,7 +557,7 @@ function Dashboard() {
         <TabsContent value="profile" className="mt-0">
           <ProfileTab
             profile={profile}
-            loading={loadingProfile}
+            loading={!profile && loadingProfile}
             error={profileError}
             onEditProfile={handleEditProfile}
           />

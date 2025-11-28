@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { createContext, useContext, useEffect, useState, useCallback, useRef, useMemo } from "react"
+import { useRouter } from "next/navigation"
 
 // Import types from separate module
 import type { Profile } from "@/features/auth/types"
@@ -18,6 +19,7 @@ import { readProfileCache, writeProfileCache, mergeProfileCache } from "@/featur
 import { fetchProfileOnce } from "@/features/profile/client/fetchProfile"
 import { useAuth } from "@/contexts/auth-context"
 import { createLogger } from "@/lib/logger"
+import { getSupabaseClient } from "@/lib/supabase-client"
 
 const PROFILE_SLOW_FETCH_THRESHOLD = 2000
 
@@ -36,6 +38,7 @@ export const ProfileContext = createContext<ProfileContextType | undefined>(unde
 // Create the ProfileProvider component
 export function ProfileProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth()
+  const router = useRouter()
 
   // Profile-specific state
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -69,7 +72,9 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         if (!isMountedRef.current) return
 
         setProfileError(null)
-        setLoadingProfile(true)
+        if (!profile) {
+          setLoadingProfile(true)
+        }
 
         if (userEmail) {
           currentUserEmailRef.current = userEmail
@@ -160,10 +165,15 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       if (user.email) {
         currentUserEmailRef.current = user.email
       }
+      // Clear any stale fetch for previous user and refetch fresh
+      fetchingProfileRef.current.clear()
+      setLoadingProfile(true)
       fetchProfile(user.id, user.email)
     } else {
       setProfile(null)
       currentUserEmailRef.current = null
+      setLoadingProfile(false)
+      fetchingProfileRef.current.clear()
     }
   }, [user, fetchProfile])
 
@@ -197,10 +207,17 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         }
 
         try {
+          const supabase = getSupabaseClient()
+          const token = (await supabase.auth.getSession()).data.session?.access_token
+          if (!token) {
+            return { error: new Error("Not authenticated") }
+          }
+
           const response = await fetch("/api/profile/update", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
               ...dataToUpdate,
@@ -215,7 +232,6 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
             logger.error("Profile update API error", errorData)
             return { error: new Error(errorData.error || "Failed to update profile") }
           }
-
         } catch (apiError) {
           logger.error("Error calling profile update API", apiError)
           return { error: apiError }
@@ -226,6 +242,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
         await new Promise((resolve) => setTimeout(resolve, PROFILE_UPDATE_DELAY))
 
         await fetchProfile(user.id, user.email)
+        router.refresh()
 
         return { error: null }
       } catch (error) {

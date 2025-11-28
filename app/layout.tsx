@@ -6,6 +6,7 @@ import "@/app/globals.css"
 import { Inter } from "next/font/google"
 import { Press_Start_2P } from "next/font/google"
 import type { Metadata } from "next"
+import Script from "next/script"
 import ClientLayout from "./client-layout"
 import { LanguageProvider } from "@/contexts/language-context"
 import { SupabaseProvider } from "@/contexts/supabase-context"
@@ -41,6 +42,7 @@ export default function RootLayout({
     <html lang="en" className={`dark ${pixelFont.variable}`} suppressHydrationWarning>
       <head>
         <link rel="alternate" type="application/rss+xml" title="DSML Kazakhstan News" href="/news.xml" />
+        <Script src="https://analytics.ahrefs.com/analytics.js" data-key="ag+CnIRGlbQp1K0HTVcvVg" async />
       </head>
       <body className={inter.className} suppressHydrationWarning>
         {/* Add Google Analytics with Suspense boundary */}

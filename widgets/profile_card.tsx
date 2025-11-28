@@ -125,7 +125,6 @@ export function ProfileCard({ profile, isPublic = false, error, loading, onEditP
             width={imageWidth}
             height={imageHeight}
             className="w-full h-auto object-contain"
-            onError={() => setImageError(true)}
             fallbackSrc={`https://api.dicebear.com/7.x/initials/svg?seed=${profile.first_name} ${profile.last_name}`}
           />
         </div>

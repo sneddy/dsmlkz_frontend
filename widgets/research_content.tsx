@@ -80,8 +80,8 @@ export default function ResearchContent() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
       <SectionHero
         title={t("research.title")}
-        subtitle={t("research.subtitle")}
-        description={t("research.description")}
+        subtitleLine1={t("research.subtitle")}
+        subtitleLine2={t("research.description")}
       />
 
       <div className="container mx-auto px-4 py-16 space-y-20">

@@ -27,7 +27,7 @@ export function MemberSearch() {
     handleKeyDown,
   } = useMemberSearch()
 
-  const searchRef = useRef<HTMLDivElement>(null)
+  const searchRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useOnClickOutside(searchRef, () => setShowResults(false))

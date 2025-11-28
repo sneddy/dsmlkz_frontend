@@ -14,32 +14,32 @@ import { SectionHero } from "@/widgets/section_hero"
 const speakerProfiles = [
   {
     key: "anuar",
-    profileUrl: "https://www.dsml.kz/users/sneddy",
+    profileUrl: "https://dsml.kz/users/sneddy",
     imageUrl: "https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/meetup2025/speakers/anuar.jpg",
   },
   {
     key: "renat",
-    profileUrl: "https://www.dsml.kz/users/alimbekovkz",
+    profileUrl: "https://dsml.kz/users/alimbekovkz",
     imageUrl: "https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/meetup2025/speakers/renat.jpg",
   },
   {
     key: "ayana",
-    profileUrl: "https://www.dsml.kz/users/Ayana",
+    profileUrl: "https://dsml.kz/users/Ayana",
     imageUrl: "https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/meetup2025/speakers/ayana.jpg",
   },
   {
     key: "zhzh",
-    profileUrl: "https://www.dsml.kz/users/cruigo93",
+    profileUrl: "https://dsml.kz/users/cruigo93",
     imageUrl: "https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/meetup2025/speakers/zhzh.jpg",
   },
   {
     key: "dulat",
-    profileUrl: "https://www.dsml.kz/users/atabekdulat",
+    profileUrl: "https://dsml.kz/users/atabekdulat",
     imageUrl: "https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/meetup2025/speakers/dulat.jpg",
   },
   {
     key: "max",
-    profileUrl: "https://www.dsml.kz/users/yamazaki",
+    profileUrl: "https://dsml.kz/users/yamazaki",
     imageUrl: "https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/meetup2025/speakers/max.jpg",
   },
   {

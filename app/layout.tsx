@@ -23,6 +23,8 @@ const pixelFont = Press_Start_2P({
   variable: "--font-pixel",
 })
 
+const siteUrl = "https://dsml.kz"
+
 export const metadata: Metadata = {
   title: "DSML Kazakhstan Community",
   description: "DSMLKZ Community - Сообщество энтузиастов AI и Машинного обучения в Казахстане",
@@ -43,6 +45,23 @@ export default function RootLayout({
       <head>
         <link rel="alternate" type="application/rss+xml" title="DSML Kazakhstan News" href="/news.xml" />
         <Script src="https://analytics.ahrefs.com/analytics.js" data-key="ag+CnIRGlbQp1K0HTVcvVg" async />
+        <Script
+          id="structured-data-website"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              url: siteUrl,
+              name: "DSML Kazakhstan",
+              potentialAction: {
+                "@type": "SearchAction",
+                target: `${siteUrl}/news?q={search_term_string}`,
+                "query-input": "required name=search_term_string",
+              },
+            }),
+          }}
+        />
       </head>
       <body className={inter.className} suppressHydrationWarning>
         {/* Add Google Analytics with Suspense boundary */}

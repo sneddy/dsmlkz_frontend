@@ -73,10 +73,10 @@ export function CityAutocomplete({ value, onChange, label, required = false }: C
             .limit(10),
         ])
 
-        const combined = [...(byCity.data || []), ...(byCountry.data || [])]
-        const seen = new Set()
-        data = combined.filter((item) => {
-          if (seen.has(item.priority)) return false
+        const combined = [...(byCity.data || []), ...(byCountry.data || [])] as CityResult[]
+        const seen = new Set<number>()
+        data = combined.filter((item: CityResult) => {
+          if (seen.has(item.priority || -1)) return false
           seen.add(item.priority)
           return true
         })
@@ -102,10 +102,10 @@ export function CityAutocomplete({ value, onChange, label, required = false }: C
             .limit(10),
         ])
 
-        const combined = [...(byAscii.data || []), ...(byCity.data || []), ...(byCountry.data || [])]
-        const seen = new Set()
-        data = combined.filter((item) => {
-          if (seen.has(item.priority)) return false
+        const combined = [...(byAscii.data || []), ...(byCity.data || []), ...(byCountry.data || [])] as CityResult[]
+        const seen = new Set<number>()
+        data = combined.filter((item: CityResult) => {
+          if (seen.has(item.priority || -1)) return false
           seen.add(item.priority)
           return true
         })

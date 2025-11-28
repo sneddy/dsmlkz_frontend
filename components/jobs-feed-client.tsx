@@ -67,7 +67,7 @@ export default function JobsFeedClient({
             ? [-1001944996511]
             : [-1001120572276, -1001944996511]
 
-      let remotePostIds: string[] | null = null
+      let remotePostIds: string[] = []
       if (newRemote) {
         const { data: remoteData, error: remoteError } = await supabase
           .from("job_details")
@@ -79,7 +79,7 @@ export default function JobsFeedClient({
           return
         }
 
-        remotePostIds = (remoteData || []).map((item) => item.post_id)
+        remotePostIds = (remoteData || []).map((item: { post_id: string }) => item.post_id)
         if (remotePostIds.length === 0) {
           setJobs([])
           setTotalCount(0)
@@ -98,7 +98,7 @@ export default function JobsFeedClient({
         queryBuilder = queryBuilder.ilike("html_text", `%${newQuery}%`)
       }
 
-      if (newRemote && remotePostIds) {
+      if (newRemote && remotePostIds.length > 0) {
         queryBuilder = queryBuilder.in("post_id", remotePostIds)
       }
 
@@ -110,22 +110,22 @@ export default function JobsFeedClient({
       }
 
       // Get job details for location info
-      const postIds = channelsData?.map((post) => post.post_id) || []
+      const postIds = channelsData?.map((post: { post_id: string }) => post.post_id) || []
       const { data: jobDetailsData } = await supabase
         .from("job_details")
         .select("post_id, location")
         .in("post_id", postIds)
 
       // Create location map
-      const locationMap = new Map()
+      const locationMap = new Map<string, string | null>()
       if (jobDetailsData) {
-        jobDetailsData.forEach((detail) => {
+        jobDetailsData.forEach((detail: { post_id: string; location: string | null }) => {
           locationMap.set(detail.post_id, detail.location)
         })
       }
 
       // Combine data
-      let combinedData = (channelsData || []).map((post) => ({
+      let combinedData = (channelsData || []).map((post: JobPost) => ({
         ...post,
         location: locationMap.get(post.post_id) || null,
       })) as JobPost[]

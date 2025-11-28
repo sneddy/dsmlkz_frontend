@@ -68,7 +68,6 @@ export function CommunityFaceCard({ face }: CommunityFaceProps) {
             width={130}
             height={130}
             className="w-[130px] h-[130px] object-cover"
-            onError={() => setImageError(true)}
             fallbackSrc={fallbackImageUrl}
           />
         </div>

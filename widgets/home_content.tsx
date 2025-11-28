@@ -44,6 +44,12 @@ export function HomeContent() {
     { icon: Briefcase, label: "Job Placements", value: "500+", color: "text-green-400" },
   ]
 
+  const gradientBorderStyle = {
+    borderWidth: "2px",
+    borderStyle: "solid",
+    borderImage: "linear-gradient(135deg, #FFF32A, #00AEC7) 1",
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black">
       {/* Hero Section */}
@@ -377,24 +383,28 @@ export function HomeContent() {
               title={t("home.mediaSupport.title")}
               description={t("home.mediaSupport.description")}
               details={t("home.mediaSupport.details")}
+              gradientBorderStyle={gradientBorderStyle}
             />
 
             <CollaborationCard
               title={t("home.hiring.title")}
               description={t("home.hiring.description")}
               details={t("home.hiring.details")}
+              gradientBorderStyle={gradientBorderStyle}
             />
 
             <CollaborationCard
               title={t("home.corporateTraining.title")}
               description={t("home.corporateTraining.description")}
               details={t("home.corporateTraining.details")}
+              gradientBorderStyle={gradientBorderStyle}
             />
 
             <CollaborationCard
               title={t("home.consulting.title")}
               description={t("home.consulting.description")}
               details={t("home.consulting.details")}
+              gradientBorderStyle={gradientBorderStyle}
             />
           </div>
 

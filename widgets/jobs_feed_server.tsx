@@ -21,7 +21,7 @@ type JobPost = {
 async function fetchJobs(
   page = 1,
   query = "",
-  channelIds = [-1001120572276, -1001944996511],
+  channelIds: number[] = [-1001120572276, -1001944996511],
   remoteOnly = false,
 ): Promise<{ jobs: JobPost[]; totalCount: number }> {
   try {
@@ -29,7 +29,7 @@ async function fetchJobs(
     const from = (page - 1) * PAGE_SIZE
     const to = from + PAGE_SIZE - 1
 
-    let remotePostIds: string[] | null = null
+    let remotePostIds: string[] = []
     if (remoteOnly) {
       const { data: remoteData, error: remoteError } = await supabase
         .from("job_details")
@@ -41,7 +41,7 @@ async function fetchJobs(
         return { jobs: [], totalCount: 0 }
       }
 
-      remotePostIds = (remoteData || []).map((item) => item.post_id)
+      remotePostIds = (remoteData || []).map((item: { post_id: string }) => item.post_id)
       if (remotePostIds.length === 0) return { jobs: [], totalCount: 0 }
     }
 
@@ -56,7 +56,7 @@ async function fetchJobs(
       queryBuilder = queryBuilder.ilike("html_text", `%${query}%`)
     }
 
-    if (remoteOnly && remotePostIds) {
+    if (remoteOnly && remotePostIds.length > 0) {
       queryBuilder = queryBuilder.in("post_id", remotePostIds)
     }
 
@@ -68,20 +68,20 @@ async function fetchJobs(
     }
 
     // Get job details for location info
-    const postIds = channelsData.map((post) => post.post_id)
+    const postIds = (channelsData || []).map((post: { post_id: string }) => post.post_id)
     const { data: jobDetailsData } = await supabase
       .from("job_details")
       .select("post_id, location")
       .in("post_id", postIds)
 
-    const locationMap = new Map()
+    const locationMap = new Map<string, string | null>()
     if (jobDetailsData) {
-      jobDetailsData.forEach((detail) => {
+      jobDetailsData.forEach((detail: { post_id: string; location: string | null }) => {
         locationMap.set(detail.post_id, detail.location)
       })
     }
 
-    const combinedData = channelsData.map((post) => ({
+    const combinedData = (channelsData || []).map((post: JobPost) => ({
       ...post,
       location: locationMap.get(post.post_id) || null,
     })) as JobPost[]

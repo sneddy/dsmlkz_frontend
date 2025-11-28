@@ -32,11 +32,16 @@ async function getJob(id: string): Promise<JobPost | null> {
     }
 
     // Get job details for location
-    const { data: jobDetails } = await supabase.from("job_details").select("location").eq("post_id", id).single()
+    type JobDetails = { location: string | null }
+    const { data: jobDetails } = await supabase
+      .from("job_details")
+      .select("location")
+      .eq("post_id", id)
+      .single<JobDetails>()
 
     return {
-      ...jobData,
-      location: jobDetails?.location || null,
+      ...(jobData as JobPost),
+      location: jobDetails?.location ?? null,
     }
   } catch (error) {
     console.error("Error fetching job:", error)

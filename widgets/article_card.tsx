@@ -50,7 +50,6 @@ export function ArticleCard({
               width={600}
               height={400}
               className="relative w-full h-auto object-contain max-h-[300px] rounded-lg"
-              onError={() => setImageError(true)}
               fallbackSrc="/placeholder.svg?height=400&width=600"
             />
           </div>

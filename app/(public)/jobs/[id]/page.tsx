@@ -6,6 +6,8 @@ import { ServerImage } from "@/components/ui/server-image"
 import { ExternalLink, MapPin, Calendar, Building, Brain, Code } from "lucide-react"
 import Link from "next/link"
 
+const siteUrl = "https://dsml.kz"
+
 type JobPost = {
   post_id: string
   channel_name: string
@@ -84,7 +86,7 @@ export async function generateMetadata({
       title,
       description,
       type: "article",
-      url: `https://www.dsml.kz/jobs/${params.id}`,
+      url: `${siteUrl}/jobs/${params.id}`,
       siteName: "DSML Kazakhstan",
       images: job.image_url
         ? [
@@ -98,7 +100,7 @@ export async function generateMetadata({
           ]
         : [
             {
-              url: "https://www.dsml.kz/images/dsml-logo.png",
+              url: `${siteUrl}/images/dsml-logo.png`,
               width: 1200,
               height: 630,
               alt: "DSML Kazakhstan",
@@ -113,11 +115,11 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: job.image_url ? [job.image_url] : ["https://www.dsml.kz/images/dsml-logo.png"],
+      images: job.image_url ? [job.image_url] : [`${siteUrl}/images/dsml-logo.png`],
       creator: "@dsmlkz",
     },
     alternates: {
-      canonical: `https://www.dsml.kz/jobs/${params.id}`,
+      canonical: `${siteUrl}/jobs/${params.id}`,
     },
   }
 }
@@ -171,8 +173,8 @@ export default async function JobPage({
     employmentType: isRemote ? ["CONTRACTOR", "FULL_TIME"] : ["FULL_TIME"],
     workHours: "40 hours per week",
     jobLocationType: isRemote ? "TELECOMMUTE" : undefined,
-    url: `https://www.dsml.kz/jobs/${params.id}`,
-    image: job.image_url || "https://www.dsml.kz/images/dsml-logo.png",
+    url: `${siteUrl}/jobs/${params.id}`,
+    image: job.image_url || `${siteUrl}/images/dsml-logo.png`,
     industry: channelType === "ML" ? "Machine Learning" : "Information Technology",
     occupationalCategory: channelType === "ML" ? "15-1299.08" : "15-1299.00",
     qualifications: `${channelType} experience required`,
@@ -188,19 +190,19 @@ export default async function JobPage({
         "@type": "ListItem",
         position: 1,
         name: "Главная",
-        item: "https://www.dsml.kz",
+        item: siteUrl,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Вакансии",
-        item: "https://www.dsml.kz/jobs",
+        item: `${siteUrl}/jobs`,
       },
       {
         "@type": "ListItem",
         position: 3,
         name: `${channelType} вакансия`,
-        item: `https://www.dsml.kz/jobs/${params.id}`,
+        item: `${siteUrl}/jobs/${params.id}`,
       },
     ],
   }

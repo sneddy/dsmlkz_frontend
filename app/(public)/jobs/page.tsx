@@ -10,6 +10,8 @@ type SearchParams = Promise<{
   remote?: string
 }>
 
+const siteUrl = "https://dsml.kz"
+
 export async function generateMetadata({
   searchParams,
 }: {
@@ -37,8 +39,8 @@ export async function generateMetadata({
 
   const hasFilters = query || channels !== "all" || remote
   const canonicalUrl = hasFilters
-    ? "https://www.dsml.kz/jobs"
-    : `https://www.dsml.kz/jobs${page > 1 ? `?page=${page}` : ""}`
+    ? `${siteUrl}/jobs`
+    : `${siteUrl}/jobs${page > 1 ? `?page=${page}` : ""}`
 
   const robots = hasFilters ? "noindex,follow" : "index,follow"
 
@@ -64,7 +66,7 @@ export async function generateMetadata({
       siteName: "DSML Kazakhstan",
       images: [
         {
-          url: "https://www.dsml.kz/images/dsml-logo.png",
+          url: `${siteUrl}/images/dsml-logo.png`,
           width: 1200,
           height: 630,
           alt: t("jobs.ogImageAlt"),
@@ -75,7 +77,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: ["https://www.dsml.kz/images/dsml-logo.png"],
+      images: [`${siteUrl}/images/dsml-logo.png`],
     },
     alternates: {
       canonical: canonicalUrl,
@@ -83,14 +85,14 @@ export async function generateMetadata({
     ...(page > 1 &&
       !hasFilters && {
         other: {
-          prev: `https://www.dsml.kz/jobs${page > 2 ? `?page=${page - 1}` : ""}`,
+          prev: `${siteUrl}/jobs${page > 2 ? `?page=${page - 1}` : ""}`,
         },
       }),
     ...(page >= 1 &&
       !hasFilters && {
         other: {
-          ...(page > 1 && { prev: `https://www.dsml.kz/jobs${page > 2 ? `?page=${page - 1}` : ""}` }),
-          next: `https://www.dsml.kz/jobs?page=${page + 1}`,
+          ...(page > 1 && { prev: `${siteUrl}/jobs${page > 2 ? `?page=${page - 1}` : ""}` }),
+          next: `${siteUrl}/jobs?page=${page + 1}`,
         },
       }),
   }
@@ -114,7 +116,7 @@ export default async function JobsPage({
     "@type": "CollectionPage",
     name: t("jobs.siteTitle"),
     description: t("jobs.description"),
-    url: "https://www.dsml.kz/jobs",
+    url: `${siteUrl}/jobs`,
     mainEntity: {
       "@type": "ItemList",
       name: t("jobs.listTitle"),
@@ -128,13 +130,13 @@ export default async function JobsPage({
           "@type": "ListItem",
           position: 1,
           name: t("nav.home"),
-          item: "https://www.dsml.kz",
+          item: siteUrl,
         },
         {
           "@type": "ListItem",
           position: 2,
           name: t("nav.jobsFeed"),
-          item: "https://www.dsml.kz/jobs",
+          item: `${siteUrl}/jobs`,
         },
       ],
     },
@@ -145,9 +147,9 @@ export default async function JobsPage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {page > 1 && !query && !channels && !remote && (
-        <link rel="prev" href={`https://www.dsml.kz/jobs${page > 2 ? `?page=${page - 1}` : ""}`} />
+        <link rel="prev" href={`${siteUrl}/jobs${page > 2 ? `?page=${page - 1}` : ""}`} />
       )}
-      {!query && !channels && !remote && <link rel="next" href={`https://www.dsml.kz/jobs?page=${page + 1}`} />}
+      {!query && !channels && !remote && <link rel="next" href={`${siteUrl}/jobs?page=${page + 1}`} />}
 
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800">
         <SectionHeroSSR

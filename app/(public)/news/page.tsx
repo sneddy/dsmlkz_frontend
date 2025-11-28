@@ -7,6 +7,8 @@ interface NewsPageProps {
   searchParams: Promise<{ page?: string; q?: string }>
 }
 
+const siteUrl = "https://dsml.kz"
+
 export async function generateMetadata({ searchParams }: NewsPageProps): Promise<Metadata> {
   const { t } = await tServer()
   const params = await searchParams
@@ -30,11 +32,11 @@ export async function generateMetadata({ searchParams }: NewsPageProps): Promise
       title,
       description,
       type: "website",
-      url: `https://www.dsml.kz/news${page > 1 ? `?page=${page}` : ""}${query ? `${page > 1 ? "&" : "?"}q=${query}` : ""}`,
+      url: `${siteUrl}/news${page > 1 ? `?page=${page}` : ""}${query ? `${page > 1 ? "&" : "?"}q=${query}` : ""}`,
       siteName: "DSML Kazakhstan",
       images: [
         {
-          url: "https://www.dsml.kz/images/dsml-logo.png",
+          url: `${siteUrl}/images/dsml-logo.png`,
           width: 1200,
           height: 630,
           alt: t("news.ogImageAlt"),
@@ -45,10 +47,10 @@ export async function generateMetadata({ searchParams }: NewsPageProps): Promise
       card: "summary_large_image",
       title,
       description,
-      images: ["https://www.dsml.kz/images/dsml-logo.png"],
+      images: [`${siteUrl}/images/dsml-logo.png`],
     },
     alternates: {
-      canonical: `https://www.dsml.kz/news${page > 1 ? `?page=${page}` : ""}${query ? `${page > 1 ? "&" : "?"}q=${query}` : ""}`,
+      canonical: `${siteUrl}/news${page > 1 ? `?page=${page}` : ""}${query ? `${page > 1 ? "&" : "?"}q=${query}` : ""}`,
     },
   }
 }
@@ -64,7 +66,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
     "@type": "CollectionPage",
     name: query ? `${t("news.searchTitle")}: "${query}"` : t("news.siteTitle"),
     description: t("news.description"),
-    url: `https://www.dsml.kz/news${page > 1 ? `?page=${page}` : ""}${query ? `${page > 1 ? "&" : "?"}q=${query}` : ""}`,
+    url: `${siteUrl}/news${page > 1 ? `?page=${page}` : ""}${query ? `${page > 1 ? "&" : "?"}q=${query}` : ""}`,
     mainEntity: {
       "@type": "ItemList",
       name: t("news.siteTitle"),
@@ -77,23 +79,23 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
           "@type": "ListItem",
           position: 1,
           name: t("nav.home"),
-          item: "https://www.dsml.kz",
+          item: siteUrl,
         },
         {
           "@type": "ListItem",
           position: 2,
           name: t("nav.newsFeed"),
-          item: "https://www.dsml.kz/news",
+          item: `${siteUrl}/news`,
         },
       ],
     },
     publisher: {
       "@type": "Organization",
       name: "DSML Kazakhstan",
-      url: "https://www.dsml.kz",
+      url: siteUrl,
       logo: {
         "@type": "ImageObject",
-        url: "https://www.dsml.kz/images/dsml-logo.png",
+        url: `${siteUrl}/images/dsml-logo.png`,
       },
     },
   }

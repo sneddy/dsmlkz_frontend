@@ -41,6 +41,12 @@ A multilingual community platform for data science and machine learning speciali
 - `pnpm build` – build for production
 - `pnpm start` – serve the production build
 - `pnpm lint` – run ESLint
+- Supabase helpers:  
+  - `pnpm supabase:start|stop|status|reset` – локальный стек Supabase в Docker  
+  - `pnpm supabase:link` – связать CLI с прод-проектом (ref `swfxusemimczhhhfzjhc`)  
+  - `pnpm supabase:pull` – снять схему в `supabase/migrations/*__remote.sql`  
+  - `pnpm supabase:push` – применить миграции из `supabase/migrations` в облако  
+  - `pnpm supabase:types` – сгенерировать `types/supabase.ts` из актуальной схемы
 
 ## Project Structure (2 levels)
 ```
@@ -96,6 +102,13 @@ tailwind.config.ts      # Tailwind setup
 tsconfig.json           # TypeScript config with path aliases
 package.json            # Scripts and deps
 ```
+
+## Supabase management (CLI + migrations)
+- Requirements: Docker running, Supabase CLI (`brew install supabase/tap/supabase`), and `supabase login`.
+- Local dev: `pnpm supabase:start` (first run pulls containers). Copy anon/service_role keys and `http://127.0.0.1:54321` from `pnpm supabase:status` into `.env.local` if you want the app to hit local Supabase; stop with `pnpm supabase:stop`.
+- Schema/migrations: `pnpm supabase:pull` (linked project) to capture current cloud schema, `supabase migration new <name>` to add SQL, `pnpm supabase:reset` to apply locally, `pnpm supabase:push` (linked) after review to apply to cloud (prefer from CI/staging).
+- Types: `pnpm supabase:types` (linked) refreshes `types/supabase.ts` after schema changes.
+- Details and sequence: `supabase/README.md`.
 
 ## Notes
 - Google Analytics loads only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set.

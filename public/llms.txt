@@ -1,54 +1,33 @@
-# DSMLKZ - Data Science & Machine Learning Kazakhstan Community
+# DSMLKZ — Data Science & Machine Learning Kazakhstan
+- Website: https://dsml.kz (also known as DSML Kazakhstan, DSML KZ, Data Science Kazakhstan)
+- Founded: 2018, Kazakhstan. Community size: 10,000+ across platforms.
+- Mission: развиваем AI/ML в Казахстане через обучение, коллаборации, профразвитие.
+- Colors: #00AEC7 (blue), #FFF32A (yellow).
 
-## About
-DSMLKZ (Data Science Machine Learning Kazakhstan) is the largest community of Data Science and Machine Learning specialists in Kazakhstan. Founded in 2018, we unite professionals, students, and enthusiasts in the field of artificial intelligence and data analysis.
+## Core stats
+- 1,500 активных участников дискуссий
+- 3,500 подписчиков новостей
+- 8,700 подписчиков ML Jobs
+- 6,500 подписчиков IT Jobs
+- 800 YouTube, 1,700 LinkedIn
+- 8 оффлайн-ивентов, 500+ трудоустройств
 
-## Key Information
-- Website: https://dsml.kz
-- Alternative names: DSML Kazakhstan, DSML KZ, Data Science Kazakhstan
-- Founded: 2018
-- Location: Kazakhstan
-- Community size: 10,000+ members across all platforms
-
-## Statistics
-- 1,500 Active Members in Discussion Hub
-- 3,500 Subscribers in News Feed
-- 8,700 Subscribers in DS Jobs Channel
-- 6,500 Subscribers in IT Jobs Channel
-- 800 YouTube Subscribers
-- 1,700 LinkedIn Followers
-- 8 Offline Events Hosted
-- 500+ Job Placements Facilitated
-
-## Official Channels
-- News Channel: https://t.me/dsmlkz_news
-- Discussion Hub: https://t.me/DSMLmeetup
+## Official channels
+- News: https://t.me/dsmlkz_news
+- Chat: https://t.me/DSMLmeetup
 - ML Jobs: https://t.me/ml_jobs_kz
 - IT Jobs: https://t.me/it_jobs_kz
 - YouTube: https://www.youtube.com/c/DataScienceKazakhstan
 - LinkedIn: https://www.linkedin.com/company/53101063/
 
 ## Services
-- Job placement assistance
-- Educational content and tutorials
-- Networking events and meetups
-- Research collaboration opportunities
-- Mentorship programs
-- Industry insights and news
+- Вакансии и подбор
+- Образовательные материалы и митапы
+- Research-коллаборации и менторство
+- Новости отрасли
 
-## Collaboration Opportunities
-- Speaking at events
-- Content creation partnerships
-- Research collaborations
-- Sponsorship opportunities
-- Job posting services
+## Collaboration
+- Спикерство, контент-партнерства, спонсорство, публикация вакансий.
+- Контакт: https://t.me/DSMLmeetup
 
-## Brand Colors
-- Primary Blue: #00AEC7
-- Secondary Yellow: #FFF32A
-
-## Contact
-For partnerships and collaborations: https://t.me/DSMLmeetup
-
-## Mission
-To advance the field of Data Science and Machine Learning in Kazakhstan by fostering education, collaboration, and professional development within our community.
+Полное описание: /public/llms-full.txt

@@ -31,6 +31,10 @@ type CommunityFace = {
   kaggle: string | null
 }
 
+type VerifiedProfileRef = {
+  profile_id: string
+}
+
 export function FacesContent() {
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [highlights, setHighlights] = useState<CommunityFace[]>([])
@@ -50,15 +54,12 @@ export function FacesContent() {
       try {
         setLoading(true)
 
-        const [{ data: profilesData, error: profilesError }, { data: highlightsData, error: highlightsError }] =
+        const [{ data: verifiedData, error: verifiedError }, { data: highlightsData, error: highlightsError }] =
           await Promise.all([
             supabase
-              .from("public_profiles" as any)
-              .select("*, verified_profiles!inner(id)")
-              .not("nickname", "is", null)
-              .not("first_name", "is", null)
-              .not("last_name", "is", null)
-              .not("avatar_url", "is", null),
+              .from("profile_verifications" as any)
+              .select("profile_id")
+              .eq("verification_status", "verified"),
             supabase
               .from("community_faces" as any)
               .select("*")
@@ -66,15 +67,38 @@ export function FacesContent() {
               .order("name", { ascending: true }),
           ])
 
-        if (profilesError) {
-          throw profilesError
+        if (verifiedError) {
+          throw verifiedError
         }
+
+        const verifiedProfileIds = ((verifiedData as VerifiedProfileRef[]) || [])
+          .map((item) => item.profile_id)
+          .filter(Boolean)
+
+        let profilesData: Profile[] = []
+        if (verifiedProfileIds.length > 0) {
+          const { data, error: profilesError } = await supabase
+            .from("public_profiles" as any)
+            .select("*")
+            .in("id", verifiedProfileIds)
+            .not("nickname", "is", null)
+            .not("first_name", "is", null)
+            .not("last_name", "is", null)
+            .not("avatar_url", "is", null)
+
+          if (profilesError) {
+            throw profilesError
+          }
+
+          profilesData = (data as Profile[]) || []
+        }
+
 
         if (highlightsError) {
           console.error("Error fetching highlighted faces:", highlightsError)
         }
 
-        setProfiles((profilesData as Profile[]) || [])
+        setProfiles(profilesData)
         setHighlights((highlightsData as CommunityFace[]) || [])
       } catch (err: any) {
         console.error("Error fetching community faces:", err, err?.message, err?.details)

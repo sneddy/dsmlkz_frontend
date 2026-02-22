@@ -124,19 +124,31 @@ FOR EACH ROW
 EXECUTE FUNCTION public.update_modified_column();
 
 -- 2) Backfill channels
+WITH deduped_channels AS (
+  SELECT
+    cc.channel_id AS telegram_chat_id,
+    max(
+      CASE
+        WHEN cc.post_link ~ '^https?://t\.me/c/' THEN NULL
+        ELSE substring(cc.post_link FROM '^https?://t\.me/([^/]+)/')
+      END
+    ) AS username,
+    max(NULLIF(cc.channel_name, '')) AS title,
+    bool_or(COALESCE(cc.is_public, true)) AS is_public,
+    COALESCE(min(cc.inserted_at::timestamptz), now()) AS created_at
+  FROM public.channels_content cc
+  WHERE cc.channel_id IS NOT NULL
+  GROUP BY cc.channel_id
+)
 INSERT INTO public.telegram_channels (telegram_chat_id, username, title, is_public, created_at, updated_at)
-SELECT DISTINCT
-  cc.channel_id,
-  CASE
-    WHEN cc.post_link ~ '^https?://t\.me/c/' THEN NULL
-    ELSE substring(cc.post_link FROM '^https?://t\.me/([^/]+)/')
-  END AS username,
-  NULLIF(cc.channel_name, ''),
-  COALESCE(cc.is_public, true),
-  COALESCE(cc.inserted_at::timestamptz, now()),
+SELECT
+  dc.telegram_chat_id,
+  dc.username,
+  dc.title,
+  dc.is_public,
+  dc.created_at,
   now()
-FROM public.channels_content cc
-WHERE cc.channel_id IS NOT NULL
+FROM deduped_channels dc
 ON CONFLICT (telegram_chat_id) DO UPDATE
 SET
   username = COALESCE(EXCLUDED.username, public.telegram_channels.username),
@@ -333,6 +345,26 @@ SET
   telegram_login = EXCLUDED.telegram_login,
   updated_at = now();
 
+WITH resolved_links AS (
+  SELECT
+    tl.id AS legacy_id,
+    tl.nickname,
+    tl.telegram_id,
+    tl.telegram_account,
+    tl.created_at,
+    p.id AS profile_id,
+    row_number() OVER (
+      PARTITION BY p.id
+      ORDER BY tl.created_at DESC NULLS LAST, tl.id DESC
+    ) AS rn_profile,
+    row_number() OVER (
+      PARTITION BY tl.telegram_id
+      ORDER BY tl.created_at DESC NULLS LAST, tl.id DESC
+    ) AS rn_telegram
+  FROM public.telegram_links tl
+  LEFT JOIN public.profiles p
+    ON p.nickname = tl.nickname
+)
 INSERT INTO public.schema_normalization_conflicts (entity_type, legacy_key, reason, payload)
 SELECT
   'telegram_links',
@@ -407,6 +439,26 @@ SET
   verified_at = EXCLUDED.verified_at,
   updated_at = now();
 
+WITH resolved_verifications AS (
+  SELECT
+    vp.id AS legacy_id,
+    COALESCE(vp.profile_id, p.id) AS profile_id,
+    vp.telegram_id,
+    vp.telegram_login,
+    vp.telegram_avatar_url,
+    vp.inserted_at,
+    row_number() OVER (
+      PARTITION BY COALESCE(vp.profile_id, p.id)
+      ORDER BY vp.inserted_at DESC NULLS LAST, vp.id DESC
+    ) AS rn_profile,
+    row_number() OVER (
+      PARTITION BY vp.telegram_id
+      ORDER BY vp.inserted_at DESC NULLS LAST, vp.id DESC
+    ) AS rn_telegram
+  FROM public.verified_profiles vp
+  LEFT JOIN public.profiles p
+    ON p.nickname = vp.nickname
+)
 INSERT INTO public.schema_normalization_conflicts (entity_type, legacy_key, reason, payload)
 SELECT
   'verified_profiles',

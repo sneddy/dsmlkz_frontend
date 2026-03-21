@@ -9,14 +9,13 @@ import { Input } from "@/components/ui/input"
 import { RefreshCw, Search } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useTranslation } from "@/hooks/use-translation"
-import { getSupabaseClient } from "@/lib/supabase-client"
 import { ProfileCard } from "@/widgets/profile_card"
 import { CommunityFaceCard } from "@/widgets/community_face_card"
 import type { Profile } from "@/features/auth/types"
 import { useMobile } from "@/shared/lib/hooks/use-mobile"
 import { SectionHero } from "@/widgets/section_hero"
 
-type CommunityFace = {
+export type CommunityFace = {
   id: number
   name: string
   title: string | null
@@ -31,85 +30,28 @@ type CommunityFace = {
   kaggle: string | null
 }
 
-type VerifiedProfileRef = {
-  profile_id: string
+interface FacesContentProps {
+  initialProfiles?: Profile[]
+  initialHighlights?: CommunityFace[]
+  initialError?: string | null
 }
 
-export function FacesContent() {
-  const [profiles, setProfiles] = useState<Profile[]>([])
-  const [highlights, setHighlights] = useState<CommunityFace[]>([])
+export function FacesContent({
+  initialProfiles = [],
+  initialHighlights = [],
+  initialError = null,
+}: FacesContentProps) {
+  const [profiles] = useState<Profile[]>(initialProfiles)
+  const [highlights] = useState<CommunityFace[]>(initialHighlights)
   const [visibleProfiles, setVisibleProfiles] = useState<Profile[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [loading] = useState(false)
+  const [error] = useState<string | null>(initialError)
   const [searchText, setSearchText] = useState("")
   const [appliedQuery, setAppliedQuery] = useState("")
   const [activeTab, setActiveTab] = useState<"highlighted" | "random">("highlighted")
   const [highlightPage, setHighlightPage] = useState(0)
   const { t } = useTranslation()
-  const supabase = getSupabaseClient()
   const isMobile = useMobile()
-
-  useEffect(() => {
-    const fetchCommunityData = async () => {
-      try {
-        setLoading(true)
-
-        const [{ data: verifiedData, error: verifiedError }, { data: highlightsData, error: highlightsError }] =
-          await Promise.all([
-            supabase
-              .from("profile_verifications" as any)
-              .select("profile_id")
-              .eq("verification_status", "verified"),
-            supabase
-              .from("community_faces" as any)
-              .select("*")
-              .order("display_order", { ascending: true })
-              .order("name", { ascending: true }),
-          ])
-
-        if (verifiedError) {
-          throw verifiedError
-        }
-
-        const verifiedProfileIds = ((verifiedData as VerifiedProfileRef[]) || [])
-          .map((item) => item.profile_id)
-          .filter(Boolean)
-
-        let profilesData: Profile[] = []
-        if (verifiedProfileIds.length > 0) {
-          const { data, error: profilesError } = await supabase
-            .from("public_profiles" as any)
-            .select("*")
-            .in("id", verifiedProfileIds)
-            .not("nickname", "is", null)
-            .not("first_name", "is", null)
-            .not("last_name", "is", null)
-            .not("avatar_url", "is", null)
-
-          if (profilesError) {
-            throw profilesError
-          }
-
-          profilesData = (data as Profile[]) || []
-        }
-
-
-        if (highlightsError) {
-          console.error("Error fetching highlighted faces:", highlightsError)
-        }
-
-        setProfiles(profilesData)
-        setHighlights((highlightsData as CommunityFace[]) || [])
-      } catch (err: any) {
-        console.error("Error fetching community faces:", err, err?.message, err?.details)
-        setError(err?.message || err?.details || "Failed to load community faces")
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchCommunityData()
-  }, [supabase])
 
   const pickRandomProfiles = useCallback(
     (source: Profile[]) => {

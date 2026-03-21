@@ -43,9 +43,6 @@ export function CommunityFaceCard({ face }: CommunityFaceProps) {
     ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/faces/${face.image_path.replace(/^faces\//, "")}`
     : fallbackImageUrl
 
-  console.log("Original image_path:", face.image_path)
-  console.log("Constructed image URL:", imageUrl)
-
   return (
     <Card className="w-full overflow-hidden relative bg-white h-full" style={gradientBorderStyle}>
       <div className="absolute inset-0 bg-white"></div>

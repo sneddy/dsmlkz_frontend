@@ -88,7 +88,7 @@ export default function ClientLayout({
             </Link>
 
             {/* -------- Desktop navigation -------- */}
-            <nav className="hidden md:flex items-center gap-6">
+            <nav className="hidden xl:flex items-center gap-6">
               <Link
                 prefetch
                 href="/"
@@ -177,7 +177,7 @@ export default function ClientLayout({
             <LanguageSelector />
 
             {user ? (
-              <div className="hidden md:flex items-center gap-4">
+              <div className="hidden xl:flex items-center gap-4">
                 <Link href="/dashboard" className="flex items-center gap-2" onClick={handleNavClick("dashboard", "/dashboard")}>
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                     <User className="h-4 w-4 text-primary" />
@@ -196,7 +196,7 @@ export default function ClientLayout({
                 </Button>
               </div>
             ) : (
-              <div className="hidden md:flex items-center gap-4">
+              <div className="hidden xl:flex items-center gap-4">
                 <Button asChild variant="outline" size="sm">
                   <Link href="/auth/signin" onClick={handleCtaClick("signin", "/auth/signin")}>
                     {t("nav.signin")}
@@ -217,7 +217,7 @@ export default function ClientLayout({
               aria-label={isMenuOpen ? "Close navigation" : "Open navigation"}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-navigation"
-              className="md:hidden border-white/30 text-white bg-black/30 backdrop-blur-sm hover:bg-white/10 hover:text-white"
+              className="xl:hidden border-white/30 text-white bg-black/30 backdrop-blur-sm hover:bg-white/10 hover:text-white"
               onClick={() => setIsMenuOpen((prev) => !prev)}
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -227,7 +227,7 @@ export default function ClientLayout({
 
         {/* ---------- Mobile menu ---------- */}
         {isMenuOpen && (
-          <div className="md:hidden fixed inset-x-0 top-16 z-50 w-full max-w-full overflow-x-hidden bg-background border-b shadow-lg">
+          <div className="xl:hidden fixed inset-x-0 top-16 z-50 w-full max-w-full overflow-x-hidden bg-background border-b shadow-lg">
             <nav id="mobile-navigation" className="mx-auto flex w-full max-w-screen-sm flex-col gap-4 px-4 py-4 pb-6">
               <Link
                 prefetch

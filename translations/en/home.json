@@ -10,6 +10,9 @@
     "offlineEventsHosted": "Offline Events Hosted",
     "jobPlacements": "Job Placements"
   },
+  "communityPulse": "Community Pulse",
+  "ecosystemSnapshot": "Live ecosystem snapshot",
+  "featuredChannel": "Featured channel",
   "signIn": "Sign In",
   "signUp": "Sign Up",
   "channelsTitle": "Our Community Channels",
@@ -29,6 +32,7 @@
   "collaborationTitle": "Partnership Opportunities",
   "collaborationSubtitle": "We partner with leading companies and organizations to create value for our community members.",
   "collaborationContact": "Contact Us",
+  "partnershipTrack": "Partnership track",
   "finalCtaTitle": "Ready to Join the Future of AI in Central Asia?",
   "finalCtaDescription": "Connect with like-minded professionals, access exclusive resources, and accelerate your career in AI/ML.",
   "getStartedToday": "Get Started Today",

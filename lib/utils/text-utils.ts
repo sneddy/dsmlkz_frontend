@@ -72,18 +72,29 @@ export function normalizeHtmlLinks(html: string) {
   })
 }
 
-export function formatDate(dateString: string) {
+type RelativeDateLabels = {
+  yesterday: string
+  daysAgo: string
+  months: string[]
+}
+
+const defaultDateLabels: RelativeDateLabels = {
+  yesterday: "Вчера",
+  daysAgo: "дней назад",
+  months: ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"],
+}
+
+export function formatDate(dateString: string, labels: RelativeDateLabels = defaultDateLabels) {
   const date = new Date(dateString)
   const now = new Date()
   const diffTime = Math.abs(now.getTime() - date.getTime())
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
-  if (diffDays === 1) return "Вчера"
-  if (diffDays < 7) return `${diffDays} дней назад`
+  if (diffDays === 1) return labels.yesterday
+  if (diffDays < 7) return `${diffDays} ${labels.daysAgo}`
 
   const day = date.getDate()
-  const months = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"]
-  const monthName = months[date.getMonth()]
+  const monthName = labels.months[date.getMonth()]
   const year = date.getFullYear()
 
   return `${day} ${monthName} ${year}`

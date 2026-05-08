@@ -36,24 +36,31 @@ export function SectionHeroSSR({
   const { translations } = useLanguage()
 
   const t = (key: string) => getNestedTranslation(translations, key)
+  const title = t(titleKey)
+  const useReadableTitleFont = title.length > 14
 
   return (
     <div
       className={cn(
-        "relative overflow-hidden py-16 px-4 bg-gradient-to-br from-slate-900 via-black to-slate-800",
+        "relative overflow-hidden bg-gradient-to-br from-slate-900 via-black to-slate-800 px-4 py-12 sm:py-14 md:py-16",
         className,
       )}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-[#00AEC7]/20 via-slate-900/80 to-[#FFF32A]/20"></div>
       <div className="relative max-w-7xl mx-auto text-center z-10">
-        <h1 className="text-4xl md:text-6xl font-pixel font-bold mb-6 tracking-tight leading-tight">
+        <h1
+          className={cn(
+            "mx-auto mb-5 max-w-5xl break-words text-balance text-[clamp(1.9rem,9vw,4.5rem)] font-bold leading-[1.12] [overflow-wrap:break-word] md:leading-tight",
+            useReadableTitleFont ? "font-sans" : "font-pixel",
+          )}
+        >
           <span className="bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] bg-clip-text text-transparent drop-shadow-lg">
-            {t(titleKey)}
+            {title}
           </span>
         </h1>
 
         {(subtitleLine1Key || subtitleLine2Key) && (
-          <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8 font-medium">
+          <p className="mx-auto mb-8 max-w-3xl text-balance text-base font-medium leading-relaxed text-white/90 sm:text-lg md:text-xl">
             {subtitleLine1Key && t(subtitleLine1Key)}
             {subtitleLine2Key && (
               <>

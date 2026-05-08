@@ -15,5 +15,9 @@
   "speakers": "Speakers",
   "pricing": "Pricing",
   "registration": "Registration",
-  "askQuestion": "Ask Question"
+  "askQuestion": "Ask Question",
+  "noUpcomingTitle": "No upcoming events yet",
+  "noUpcomingDescription": "DSML MEETUP 2025 has already happened. New meetups and workshops will appear here when registration opens.",
+  "pastEvent": "Past Event",
+  "eventEnded": "This event has ended. Registration is closed, but the program and materials remain available for reference."
 }

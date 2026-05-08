@@ -168,6 +168,11 @@ body {
     @apply bg-background text-foreground;
   }
 
+  :focus-visible {
+    outline: 2px solid var(--dsml-blue);
+    outline-offset: 3px;
+  }
+
   h1,
   h2,
   h3,

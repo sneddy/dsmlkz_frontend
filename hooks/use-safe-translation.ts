@@ -17,6 +17,8 @@ export function useSafeTranslation() {
     "nav.signin": "Войти",
     "nav.signup": "Регистрация",
     "nav.signout": "Выйти",
+    "nav.openNavigation": "Открыть навигацию",
+    "nav.closeNavigation": "Закрыть навигацию",
   }
 
   const getNestedTranslation = (translations: any, key: string): string | undefined => {

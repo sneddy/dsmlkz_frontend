@@ -4,15 +4,29 @@
   "joinButton": "Join Community",
   "watchEvents": "Watch Events",
   "subscribeButton": "Subscribe",
+  "communityPulse": "Community pulse",
+  "ecosystemSnapshot": "A quick snapshot across DSMLKZ platforms",
+  "featuredChannel": "Featured channel",
+  "channelMetrics": {
+    "discussionMembers": "1,500 members",
+    "newsSubscribers": "4,000 subscribers",
+    "dataJobsSubscribers": "9,800 subscribers",
+    "itJobsSubscribers": "8,250 subscribers",
+    "youtubeSubscribers": "900 subscribers",
+    "linkedinFollowers": "2,000 followers"
+  },
+  "channelActions": {
+    "join": "Register to join",
+    "telegram": "Subscribe in Telegram",
+    "youtube": "Subscribe on YouTube",
+    "linkedin": "Subscribe on LinkedIn"
+  },
   "stats": {
     "membersAcrossPlatforms": "Members Across Platforms",
     "activeMembers": "Active Members",
     "offlineEventsHosted": "Offline Events Hosted",
     "jobPlacements": "Job Placements"
   },
-  "communityPulse": "Community Pulse",
-  "ecosystemSnapshot": "Live ecosystem snapshot",
-  "featuredChannel": "Featured channel",
   "signIn": "Sign In",
   "signUp": "Sign Up",
   "channelsTitle": "Our Community Channels",

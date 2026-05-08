@@ -1,20 +1,30 @@
-export function formatJobDate(dateString: string): string {
+type RelativeDateLabels = {
+  yesterday: string
+  daysAgo: string
+  months: string[]
+}
+
+const defaultJobDateLabels: RelativeDateLabels = {
+  yesterday: "вчера",
+  daysAgo: "дн. назад",
+  months: ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"],
+}
+
+export function formatJobDate(dateString: string, labels: RelativeDateLabels = defaultJobDateLabels): string {
   const date = new Date(dateString)
   const now = new Date()
   const diffTime = Math.abs(now.getTime() - date.getTime())
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
-  if (diffDays === 1) return "вчера"
-  if (diffDays < 7) return `${diffDays} дн. назад`
+  if (diffDays === 1) return labels.yesterday
+  if (diffDays < 7) return `${diffDays} ${labels.daysAgo}`
 
   // For dates older than a week, show day, month and year
   const day = date.getDate()
   const month = date.getMonth()
   const year = date.getFullYear()
 
-  const monthNames = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"]
-
-  return `${day} ${monthNames[month]} ${year}`
+  return `${day} ${labels.months[month]} ${year}`
 }
 
 export function getChannelInfo(channelId: number) {

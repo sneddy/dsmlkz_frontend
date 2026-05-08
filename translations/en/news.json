@@ -51,5 +51,10 @@
     "oct": "Oct",
     "nov": "Nov",
     "dec": "Dec"
-  }
+  },
+  "results_found": "Showing {{count}} news posts",
+  "clear_search": "Clear search",
+  "fresh_news": "Fresh news",
+  "read_separately": "Read separately",
+  "page_of": "Page {{page}} of {{total}}"
 }

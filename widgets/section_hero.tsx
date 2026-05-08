@@ -20,19 +20,28 @@ export function SectionHero({
   badges = [],
   className = "",
 }: SectionHeroProps) {
+  const useReadableTitleFont = title.length > 14
+
   return (
     <div
-      className={cn("relative overflow-hidden py-16 px-4", className)}
+      className={cn("relative overflow-hidden px-4 py-12 sm:py-14 md:py-16", className)}
       style={{
         backgroundImage: `linear-gradient(to right, ${gradientFrom}, ${gradientTo})`,
       }}
     >
       <div className="absolute inset-0 bg-black/20"></div>
       <div className="relative max-w-7xl mx-auto text-center">
-        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight font-pixel">{title}</h1>
+        <h1
+          className={cn(
+            "mx-auto mb-5 max-w-5xl break-words text-balance text-[clamp(1.9rem,9vw,4.5rem)] font-bold leading-[1.12] text-white [overflow-wrap:break-word] sm:mb-6 md:leading-tight",
+            useReadableTitleFont ? "font-sans" : "font-pixel",
+          )}
+        >
+          {title}
+        </h1>
 
         {(subtitleLine1 || subtitleLine2) && (
-          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+          <p className="mx-auto max-w-3xl text-balance text-base font-medium leading-relaxed text-white/90 sm:text-lg md:text-2xl">
             {subtitleLine1} <br />
             {subtitleLine2 && <span className="font-semibold">{subtitleLine2}</span>}
           </p>

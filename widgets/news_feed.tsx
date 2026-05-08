@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ServerImage } from "@/components/ui/server-image"
 import { createServerClient } from "@/lib/supabase-server"
 import { formatDate, normalizeHref, normalizeHtmlLinks } from "@/lib/utils/text-utils"
+import { tServer } from "@/lib/server-translations"
 
 export const revalidate = 60
 
@@ -55,10 +56,24 @@ const processHtml = (html: string) => {
 }
 
 export default async function NewsFeed({ page = 1, query = "" }: { page?: number; query?: string }) {
+  const { t } = await tServer()
   const { posts, totalCount } = await fetchPosts(page, query)
   const totalPages = Math.ceil(totalCount / PAGE_SIZE)
   const hasNextPage = page < totalPages
   const hasPrevPage = page > 1
+  const tr = (key: string, params?: Record<string, string | number>) => {
+    const value = t(key)
+    if (!params) return value
+    return Object.entries(params).reduce((acc, [paramKey, paramValue]) => {
+      return acc.replace(`{{${paramKey}}}`, String(paramValue))
+    }, value)
+  }
+  const monthKeys = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+  const newsDateLabels = {
+    yesterday: t("news.yesterday"),
+    daysAgo: t("news.days_ago"),
+    months: monthKeys.map((key) => t(`news.months.${key}`)),
+  }
 
   if (posts.length === 0) {
     return (
@@ -66,6 +81,7 @@ export default async function NewsFeed({ page = 1, query = "" }: { page?: number
         <div className="max-w-3xl mx-auto">
           <form
             method="GET"
+            action="/news#news-results"
             className="flex flex-col gap-3 sm:flex-row sm:items-center bg-gray-900/60 border border-gray-800/70 rounded-2xl px-4 py-3 shadow-lg backdrop-blur-sm"
           >
             <div className="relative flex-1">
@@ -74,7 +90,7 @@ export default async function NewsFeed({ page = 1, query = "" }: { page?: number
                 type="text"
                 name="q"
                 defaultValue={query}
-                placeholder="Поиск новостей..."
+                placeholder={t("news.search_placeholder")}
                 className="w-full rounded-xl border border-gray-800 bg-transparent py-3 pl-11 pr-4 text-white placeholder-gray-400 focus:border-[#00AEC7] focus:outline-none focus:ring-2 focus:ring-[#00AEC7]/50"
               />
             </div>
@@ -82,15 +98,30 @@ export default async function NewsFeed({ page = 1, query = "" }: { page?: number
               type="submit"
               className="inline-flex items-center justify-center rounded-xl bg-[#00AEC7] px-5 py-3 text-sm font-semibold text-black shadow-md transition-colors hover:bg-[#00AEC7]/90"
             >
-              Найти
+              {t("common.search")}
             </button>
           </form>
         </div>
 
-        <Card className="mb-4 bg-gray-800/50 border-gray-700">
+        <div className="mx-auto flex max-w-3xl flex-col items-center justify-between gap-3 rounded-xl border border-gray-800/70 bg-gray-900/40 px-4 py-3 text-center text-sm text-gray-300 sm:flex-row sm:text-left">
+          <p aria-live="polite">
+            {query ? tr("news.no_search_results", { query }) : t("news.no_posts_available")}
+          </p>
+          {query && (
+            <Link
+              href="/news#news-results"
+              className="min-h-11 rounded-lg border border-gray-700 px-4 py-2 font-semibold text-white transition-colors hover:border-[#00AEC7] hover:text-[#00AEC7]"
+            >
+              {t("news.clear_search")}
+            </Link>
+          )}
+        </div>
+
+        <Card id="news-results" tabIndex={-1} className="mb-4 scroll-mt-24 bg-gray-800/50 border-gray-700 outline-none">
           <CardContent className="p-4">
             <div className="text-center text-[#00AEC7] font-medium">
-              <p>{query ? `Ничего не найдено по запросу "${query}"` : "Новости временно недоступны"}</p>
+              <p>{query ? tr("news.no_search_results", { query }) : t("news.no_posts_available")}</p>
+              <p className="mt-2 text-sm text-gray-300">{t("news.try_different_search")}</p>
             </div>
           </CardContent>
         </Card>
@@ -103,28 +134,43 @@ export default async function NewsFeed({ page = 1, query = "" }: { page?: number
       <div className="max-w-3xl mx-auto">
         <form
           method="GET"
+          action="/news#news-results"
           className="flex flex-col gap-3 sm:flex-row sm:items-center bg-gray-900/60 border border-gray-800/70 rounded-2xl px-4 py-3 shadow-lg backdrop-blur-sm"
         >
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             <input
-              type="text"
-              name="q"
-              defaultValue={query}
-              placeholder="Поиск новостей..."
-              className="w-full rounded-xl border border-gray-800 bg-transparent py-3 pl-11 pr-4 text-white placeholder-gray-400 focus:border-[#00AEC7] focus:outline-none focus:ring-2 focus:ring-[#00AEC7]/50"
-            />
+            type="text"
+            name="q"
+            defaultValue={query}
+            placeholder={t("news.search_placeholder")}
+            className="w-full rounded-xl border border-gray-800 bg-transparent py-3 pl-11 pr-4 text-white placeholder-gray-400 focus:border-[#00AEC7] focus:outline-none focus:ring-2 focus:ring-[#00AEC7]/50"
+          />
           </div>
           <button
             type="submit"
             className="inline-flex items-center justify-center rounded-xl bg-[#00AEC7] px-5 py-3 text-sm font-semibold text-black shadow-md transition-colors hover:bg-[#00AEC7]/90"
+        >
+          {t("common.search")}
+        </button>
+      </form>
+    </div>
+
+      <div className="mx-auto flex max-w-3xl flex-col items-center justify-between gap-3 rounded-xl border border-gray-800/70 bg-gray-900/40 px-4 py-3 text-center text-sm text-gray-300 sm:flex-row sm:text-left">
+        <p aria-live="polite">
+          {query ? tr("news.search_results", { count: totalCount, query }) : tr("news.results_found", { count: totalCount })}
+        </p>
+        {query && (
+          <Link
+            href="/news#news-results"
+            className="min-h-11 rounded-lg border border-gray-700 px-4 py-2 font-semibold text-white transition-colors hover:border-[#00AEC7] hover:text-[#00AEC7]"
           >
-            Найти
-          </button>
-        </form>
+            {t("news.clear_search")}
+          </Link>
+        )}
       </div>
 
-      <div className="space-y-8">
+      <div id="news-results" tabIndex={-1} className="space-y-8 scroll-mt-24 outline-none">
         {posts.map((post, index) => {
           const isFirstPost = index === 0
           return (
@@ -136,8 +182,8 @@ export default async function NewsFeed({ page = 1, query = "" }: { page?: number
               <CardContent className="space-y-6 p-6 sm:p-8">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div className="space-y-1">
-                    <p className="text-xs uppercase tracking-[0.25em] text-[#00AEC7]/80">Свежая новость</p>
-                    <p className="text-lg font-semibold text-white">{formatDate(post.created_at)}</p>
+                    <p className="text-xs uppercase tracking-[0.25em] text-[#00AEC7]/80">{t("news.fresh_news")}</p>
+                    <p className="text-lg font-semibold text-white">{formatDate(post.created_at, newsDateLabels)}</p>
                     {post.sender_name && <p className="text-sm text-gray-400">{post.sender_name}</p>}
                   </div>
                   <div className="flex flex-wrap gap-3">
@@ -145,7 +191,7 @@ export default async function NewsFeed({ page = 1, query = "" }: { page?: number
                       href={`/news/${post.post_id}`}
                       className="inline-flex items-center gap-2 rounded-full border border-gray-700/80 px-4 py-2 text-sm font-semibold text-white hover:border-[#00AEC7] hover:text-[#00AEC7] transition-colors"
                     >
-                      Читать отдельно
+                      {t("news.read_separately")}
                     </Link>
                     {post.post_link && (
                       <Link
@@ -153,7 +199,7 @@ export default async function NewsFeed({ page = 1, query = "" }: { page?: number
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 rounded-full bg-[#00AEC7] px-4 py-2 text-sm font-semibold text-black hover:bg-[#00AEC7]/90 transition-colors"
-                        title="Открыть в Telegram"
+                        title={t("news.open_in_telegram")}
                       >
                         <ExternalLink className="h-4 w-4" />
                         Telegram
@@ -193,12 +239,12 @@ export default async function NewsFeed({ page = 1, query = "" }: { page?: number
               href={`/news${page === 2 ? "" : `?page=${page - 1}`}${query ? `${page === 2 ? "?" : "&"}q=${encodeURIComponent(query)}` : ""}`}
               className="px-6 py-3 bg-gray-800/70 border border-gray-700 text-white rounded-xl hover:bg-gray-700/60 transition-colors text-sm font-semibold"
             >
-              ← Предыдущая
+              {t("common.previous")}
             </Link>
           )}
 
           <span className="px-4 py-2 text-gray-300 text-sm">
-            Страница {page} из {totalPages}
+            {tr("news.page_of", { page, total: totalPages })}
           </span>
 
           {hasNextPage && (
@@ -206,7 +252,7 @@ export default async function NewsFeed({ page = 1, query = "" }: { page?: number
               href={`/news?page=${page + 1}${query ? `&q=${encodeURIComponent(query)}` : ""}`}
               className="px-6 py-3 bg-[#00AEC7] text-black rounded-xl hover:bg-[#00AEC7]/90 transition-colors text-sm font-semibold"
             >
-              Следующая →
+              {t("common.next")}
             </Link>
           )}
         </div>

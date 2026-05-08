@@ -13,6 +13,20 @@ type LanguageContextType = {
   translations: Record<string, any>
 }
 
+const isSupportedLanguage = (value: string | null): value is Language => value === "en" || value === "ru" || value === "kk"
+
+const getCookieLanguage = (): Language | null => {
+  if (typeof document === "undefined") return null
+
+  const match = document.cookie.match(/(?:^|;\s*)language=(en|ru|kk)(?:;|$)/)
+  return match?.[1] ? (match[1] as Language) : null
+}
+
+const persistLanguageCookie = (language: Language) => {
+  if (typeof document === "undefined") return
+  document.cookie = `language=${language}; path=/; max-age=31536000; samesite=lax`
+}
+
 // Создаем контекст с дефолтными значениями, чтобы избежать ошибки при серверном рендеринге
 const defaultTranslations = getTranslations("en")
 const defaultContext: LanguageContextType = {
@@ -48,9 +62,13 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       console.error("Error accessing localStorage:", e)
     }
 
-    if (storedLanguage && ["en", "ru", "kk"].includes(storedLanguage)) {
-      setLanguageState(storedLanguage)
-      setTranslationsState(getTranslations(storedLanguage))
+    const cookieLanguage = getCookieLanguage()
+    const preferredLanguage = isSupportedLanguage(storedLanguage) ? storedLanguage : cookieLanguage
+
+    if (preferredLanguage) {
+      setLanguageState(preferredLanguage)
+      setTranslationsState(getTranslations(preferredLanguage))
+      persistLanguageCookie(preferredLanguage)
     } else {
       // Detect browser language
       try {
@@ -58,18 +76,22 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         if (browserLanguage === "ru") {
           setLanguageState("ru")
           setTranslationsState(getTranslations("ru"))
+          persistLanguageCookie("ru")
         } else if (browserLanguage === "kk") {
           setLanguageState("kk")
           setTranslationsState(getTranslations("kk"))
+          persistLanguageCookie("kk")
         } else {
           setLanguageState("en")
           setTranslationsState(getTranslations("en"))
+          persistLanguageCookie("en")
         }
       } catch (e) {
         console.error("Error detecting browser language:", e)
         // Fallback to English
         setLanguageState("en")
         setTranslationsState(getTranslations("en"))
+        persistLanguageCookie("en")
       }
     }
   }, [isClient])
@@ -88,6 +110,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     try {
       if (isClient) {
         localStorage.setItem("language", newLanguage)
+        persistLanguageCookie(newLanguage)
       }
     } catch (e) {
       console.error("Error setting language in localStorage:", e)

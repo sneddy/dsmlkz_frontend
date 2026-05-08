@@ -39,8 +39,6 @@ export default function ClientLayout({
   }, [])
 
   useEffect(() => {
-    let isCancelled = false
-
     if (!user) {
       setDisplayName("anon")
       return
@@ -50,10 +48,6 @@ export default function ClientLayout({
     const resolved = profile?.nickname || metaNickname || "anon"
     if (!loadingProfile) {
       setDisplayName(resolved)
-    }
-
-    return () => {
-      isCancelled = true
     }
   }, [user, profile, loadingProfile, supabase])
 
@@ -70,13 +64,30 @@ export default function ClientLayout({
     trackGaEvent("cta_click", { cta_label: ctaLabel, destination, page_path: pathname, page_title: document.title })
   }
 
+  const navLinks = [
+    { href: "/", label: t("nav.home"), analyticsLabel: "home", active: pathname === "/" },
+    { href: "/news", label: t("nav.newsFeed"), analyticsLabel: "news", active: pathname === "/news" },
+    { href: "/jobs", label: t("nav.jobsFeed"), analyticsLabel: "jobs", active: pathname === "/jobs" },
+    { href: "/research", label: t("nav.research"), analyticsLabel: "research", active: pathname === "/research" },
+    { href: "/articles", label: t("nav.articles"), analyticsLabel: "articles", active: pathname === "/articles" },
+    { href: "/events", label: t("nav.events"), analyticsLabel: "events", active: pathname === "/events" },
+    { href: "/faces", label: t("nav.faces"), analyticsLabel: "faces", active: pathname === "/faces" },
+    { href: "/rules", label: t("nav.rules"), analyticsLabel: "rules", active: pathname === "/rules" },
+  ]
+
+  const navLinkClass =
+    "flex min-h-11 items-center rounded-md text-sm font-medium font-pixel transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00AEC7] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 border-b bg-background">
         <div className="container mx-auto flex h-16 items-center justify-between px-4 py-4">
           {/* ------------- Logo & desktop nav ------------- */}
           <div className="flex min-w-0 items-center gap-6">
-            <Link href="/" className="flex shrink-0 items-center gap-2">
+            <Link
+              href="/"
+              className="flex min-h-11 shrink-0 items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00AEC7] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
               <Image
                 src="/images/dsml-logo.png"
                 alt="DSML Kazakhstan Logo"
@@ -89,86 +100,20 @@ export default function ClientLayout({
 
             {/* -------- Desktop navigation -------- */}
             <nav className="hidden xl:flex items-center gap-6">
-              <Link
-                prefetch
-                href="/"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={handleNavClick("home", "/")}
-              >
-                {t("nav.home")}
-              </Link>
-              <Link
-                prefetch
-                href="/news"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/news" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={handleNavClick("news", "/news")}
-              >
-                {t("nav.newsFeed")}
-              </Link>
-              <Link
-                prefetch
-                href="/jobs"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/jobs" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={handleNavClick("jobs", "/jobs")}
-              >
-                {t("nav.jobsFeed")}
-              </Link>
-              <Link
-                prefetch
-                href="/research"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/research" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={handleNavClick("research", "/research")}
-              >
-                {t("nav.research")}
-              </Link>
-              <Link
-                prefetch
-                href="/articles"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/articles" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={handleNavClick("articles", "/articles")}
-              >
-                {t("nav.articles")}
-              </Link>
-              <Link
-                prefetch
-                href="/events"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/events" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={handleNavClick("events", "/events")}
-              >
-                {t("nav.events")}
-              </Link>
-              <Link
-                prefetch
-                href="/faces"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/faces" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={handleNavClick("faces", "/faces")}
-              >
-                {t("nav.faces")}
-              </Link>
-              <Link
-                prefetch
-                href="/rules"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/rules" ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={handleNavClick("rules", "/rules")}
-              >
-                {t("nav.rules")}
-              </Link>
+              {navLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  prefetch
+                  href={item.href}
+                  aria-current={item.active ? "page" : undefined}
+                  className={`${navLinkClass} px-1 ${
+                    item.active ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                  onClick={handleNavClick(item.analyticsLabel, item.href)}
+                >
+                  {item.label}
+                </Link>
+              ))}
             </nav>
           </div>
 
@@ -178,7 +123,11 @@ export default function ClientLayout({
 
             {user ? (
               <div className="hidden xl:flex items-center gap-4">
-                <Link href="/dashboard" className="flex items-center gap-2" onClick={handleNavClick("dashboard", "/dashboard")}>
+                <Link
+                  href="/dashboard"
+                  className="flex min-h-11 items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00AEC7] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  onClick={handleNavClick("dashboard", "/dashboard")}
+                >
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                     <User className="h-4 w-4 text-primary" />
                   </div>
@@ -197,12 +146,12 @@ export default function ClientLayout({
               </div>
             ) : (
               <div className="hidden xl:flex items-center gap-4">
-                <Button asChild variant="outline" size="sm">
+                <Button asChild variant="outline" size="sm" className="min-h-11">
                   <Link href="/auth/signin" onClick={handleCtaClick("signin", "/auth/signin")}>
                     {t("nav.signin")}
                   </Link>
                 </Button>
-                <Button asChild size="sm">
+                <Button asChild size="sm" className="min-h-11">
                   <Link href="/auth/signup" onClick={handleCtaClick("signup", "/auth/signup")}>
                     {t("nav.signup")}
                   </Link>
@@ -214,10 +163,10 @@ export default function ClientLayout({
             <Button
               variant="outline"
               size="icon"
-              aria-label={isMenuOpen ? "Close navigation" : "Open navigation"}
+              aria-label={isMenuOpen ? t("nav.closeNavigation") : t("nav.openNavigation")}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-navigation"
-              className="xl:hidden border-white/30 text-white bg-black/30 backdrop-blur-sm hover:bg-white/10 hover:text-white"
+              className="xl:hidden min-h-11 min-w-11 border-white/30 text-white bg-black/30 backdrop-blur-sm hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-[#00AEC7] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               onClick={() => setIsMenuOpen((prev) => !prev)}
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -227,88 +176,28 @@ export default function ClientLayout({
 
         {/* ---------- Mobile menu ---------- */}
         {isMenuOpen && (
-          <div className="xl:hidden fixed inset-x-0 top-16 z-50 w-full max-w-full overflow-x-hidden bg-background border-b shadow-lg">
-            <nav id="mobile-navigation" className="mx-auto flex w-full max-w-screen-sm flex-col gap-4 px-4 py-4 pb-6">
-              <Link
-                prefetch
-                href="/"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/" ? "text-primary" : "text-muted-foreground"
-                }`}
-                onClick={handleNavClick("home", "/")}
-              >
-                {t("nav.home")}
-              </Link>
-              <Link
-                href="/news"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/news" ? "text-primary" : "text-muted-foreground"
-                }`}
-                onClick={handleNavClick("news", "/news")}
-              >
-                {t("nav.newsFeed")}
-              </Link>
-              <Link
-                href="/jobs"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/jobs" ? "text-primary" : "text-muted-foreground"
-                }`}
-                onClick={handleNavClick("jobs", "/jobs")}
-              >
-                {t("nav.jobsFeed")}
-              </Link>
-              <Link
-                href="/research"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/research" ? "text-primary" : "text-muted-foreground"
-                }`}
-                onClick={handleNavClick("research", "/research")}
-              >
-                {t("nav.research")}
-              </Link>
-              <Link
-                href="/articles"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/articles" ? "text-primary" : "text-muted-foreground"
-                }`}
-                onClick={handleNavClick("articles", "/articles")}
-              >
-                {t("nav.articles")}
-              </Link>
-              <Link
-                href="/events"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/events" ? "text-primary" : "text-muted-foreground"
-                }`}
-                onClick={handleNavClick("events", "/events")}
-              >
-                {t("nav.events")}
-              </Link>
-              <Link
-                href="/faces"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/faces" ? "text-primary" : "text-muted-foreground"
-                }`}
-                onClick={handleNavClick("faces", "/faces")}
-              >
-                {t("nav.faces")}
-              </Link>
-              <Link
-                href="/rules"
-                className={`text-sm font-medium font-pixel ${
-                  pathname === "/rules" ? "text-primary" : "text-muted-foreground"
-                }`}
-                onClick={handleNavClick("rules", "/rules")}
-              >
-                {t("nav.rules")}
-              </Link>
+          <div className="fixed inset-x-0 top-16 z-50 w-full max-w-full overflow-x-hidden border-b border-white/10 bg-background/95 shadow-2xl backdrop-blur-xl xl:hidden">
+            <nav id="mobile-navigation" className="mx-auto flex w-full max-w-screen-sm flex-col gap-2 px-4 py-4 pb-6">
+              {navLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={item.active ? "page" : undefined}
+                  className={`${navLinkClass} px-2 ${
+                    item.active ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                  onClick={handleNavClick(item.analyticsLabel, item.href)}
+                >
+                  {item.label}
+                </Link>
+              ))}
 
               {/* Auth buttons mobile */}
               {user ? (
                 <>
                   <Link
                     href="/dashboard"
-                    className="flex items-center gap-2 text-sm font-medium text-muted-foreground"
+                    className="flex min-h-11 items-center gap-2 rounded-md text-sm font-medium text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00AEC7] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     onClick={handleNavClick("dashboard", "/dashboard")}
                   >
                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
@@ -319,7 +208,7 @@ export default function ClientLayout({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90 border-[#FFF32A]"
+                    className="min-h-11 w-full bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90 border-[#FFF32A]"
                     onClick={() => {
                       const btn = document.activeElement as HTMLButtonElement
                       if (btn) btn.disabled = true
@@ -335,13 +224,13 @@ export default function ClientLayout({
                     asChild
                     variant="outline"
                     size="sm"
-                    className="w-full bg-transparent"
+                    className="min-h-11 w-full bg-transparent"
                   >
                     <Link href="/auth/signin" onClick={handleCtaClick("signin", "/auth/signin")}>
                       {t("nav.signin")}
                     </Link>
                   </Button>
-                  <Button asChild size="sm" className="w-full">
+                  <Button asChild size="sm" className="min-h-11 w-full">
                     <Link href="/auth/signup" onClick={handleCtaClick("signup", "/auth/signup")}>
                       {t("nav.signup")}
                     </Link>

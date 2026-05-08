@@ -3,5 +3,8 @@
   "description": "Эксклюзивные исследования, написанные для DSML Kazakhstan",
   "readMore": "Читать полностью",
   "comingSoon": "Скоро будет доступно",
-  "backToArticles": "Назад к статьям"
+  "backToArticles": "Назад к статьям",
+  "contributeTitle": "Хотите поделиться своим опытом?",
+  "contributeDescription": "Присоединяйтесь к сообществу авторов DSML Kazakhstan и делитесь практическими знаниями с коллегами по всему Казахстану.",
+  "proposeArticle": "Предложить статью"
 }

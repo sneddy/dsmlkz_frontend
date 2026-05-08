@@ -13,5 +13,7 @@
   "signin": "Войти",
   "signup": "Регистрация",
   "signout": "Выйти",
-  "dashboard": "Панель"
+  "dashboard": "Панель",
+  "openNavigation": "Открыть навигацию",
+  "closeNavigation": "Закрыть навигацию"
 }

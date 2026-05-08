@@ -41,6 +41,8 @@ export default async function ArticlesPage() {
               hasCustomPage={article.hasCustomPage}
               isMarkdownBased={article.isMarkdownBased}
               date={article.date}
+              readMoreLabel={t("articles.readMore")}
+              comingSoonLabel={t("articles.comingSoon")}
             />
           ))}
         </div>
@@ -49,12 +51,12 @@ export default async function ArticlesPage() {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-[#FFF32A]/5 to-[#00AEC7]/5 rounded-2xl blur-2xl"></div>
             <div className="relative bg-gray-800/30 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 text-center">
-              <h2 className="text-2xl font-bold mb-4 text-[#00AEC7]">Хотите поделиться своим опытом?</h2>
+              <h2 className="text-2xl font-bold mb-4 text-[#00AEC7]">{t("articles.contributeTitle")}</h2>
               <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-                Присоединяйтесь к нашему сообществу авторов и делитесь знаниями с коллегами по всему Казахстану
+                {t("articles.contributeDescription")}
               </p>
               <button className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-black font-medium px-8 py-3 rounded-lg transition-all duration-300 transform hover:scale-105">
-                Предложить статью
+                {t("articles.proposeArticle")}
               </button>
             </div>
           </div>

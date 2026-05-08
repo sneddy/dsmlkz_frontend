@@ -13,5 +13,7 @@
   "signin": "Кіру",
   "signup": "Тіркелу",
   "signout": "Шығу",
-  "dashboard": "Панель"
+  "dashboard": "Панель",
+  "openNavigation": "Навигацияны ашу",
+  "closeNavigation": "Навигацияны жабу"
 }

@@ -13,5 +13,7 @@
   "signin": "Sign In",
   "signup": "Sign Up",
   "signout": "Sign Out",
-  "dashboard": "Dashboard"
+  "dashboard": "Dashboard",
+  "openNavigation": "Open navigation",
+  "closeNavigation": "Close navigation"
 }

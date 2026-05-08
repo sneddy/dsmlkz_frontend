@@ -11,6 +11,32 @@ import Link from "next/link"
 import { useTranslation } from "@/hooks/use-translation"
 import { SectionHero } from "@/widgets/section_hero"
 
+type EventItem = {
+  id: string
+  startsAt: string
+  endsAt: string
+  translationPrefix: string
+  imageUrl?: string
+  registerUrl?: string
+  contactUrl?: string
+}
+
+type PastVideoEvent = {
+  id: string
+  translationPrefix: string
+  videos: string[]
+}
+
+const dsmlMeetup2025: EventItem = {
+  id: "dsml-meetup-2025",
+  startsAt: "2025-07-05T12:00:00+05:00",
+  endsAt: "2025-07-05T18:00:00+05:00",
+  translationPrefix: "events_announcements.dsml_meetup_2025",
+  imageUrl: "/images/announce_horizontal.png",
+  registerUrl: "https://forms.gle/az9sGAzZacJw5Zb56",
+  contactUrl: "https://t.me/DSMLmeetup",
+}
+
 const speakerProfiles = [
   {
     key: "anuar",
@@ -49,14 +75,217 @@ const speakerProfiles = [
   },
 ]
 
+const meetup2025Talks = [
+  "anuar_welcome",
+  "zhuldyzhan",
+  "ayana",
+  "jimmy",
+  "renat",
+  "dulat",
+  "ivan",
+  "anuar_delivery",
+]
+
+const pastVideoEvents: PastVideoEvent[] = [
+  {
+    id: "dsml-ai-meetup-2019",
+    translationPrefix: "events_past.dsml_ai_meetup_2019",
+    videos: ["j5VnAxAjgnQ", "HDsJaxpQ2oI", "BUTUC3wk548", "gU1BcfZLpQk", "4U278oeSHt8", "5DE681nlHtM", "s7dJ8ltrkj4"],
+  },
+  {
+    id: "ai-meetup-astana-2018",
+    translationPrefix: "events_past.ai_meetup_astana_2018",
+    videos: ["l5V_UD5ouG0", "hTwvqDu4Q9I", "iI1ekmGFL0o", "kwzRijN0V28"],
+  },
+  {
+    id: "total-meetup-2018",
+    translationPrefix: "events_past.total_meetup_2018",
+    videos: ["Ta-Wvfmqfpo", "-5yhoxGI-jM", "Yhr58V7h6BM", "sYBa4UScneU"],
+  },
+]
+
 export default function EventsPage() {
   const { t } = useTranslation()
-  const [activeTab, setActiveTab] = useState("upcoming")
+  const now = new Date()
+  const upcomingEvents = [dsmlMeetup2025].filter((event) => new Date(event.endsAt) >= now)
+  const recentPastEvents = [dsmlMeetup2025].filter((event) => new Date(event.endsAt) < now)
+  const [activeTab, setActiveTab] = useState(upcomingEvents.length > 0 ? "upcoming" : "past")
   const [showProgram, setShowProgram] = useState(false)
+
+  const renderMeetup2025Card = (event: EventItem, isPast: boolean) => {
+    const prefix = event.translationPrefix
+
+    return (
+      <Card key={event.id} className="overflow-hidden">
+        <div className="relative">
+          <BlobImage
+            src={event.imageUrl || "/images/announce_horizontal.png"}
+            alt={t(`${prefix}.title`)}
+            width={1200}
+            height={400}
+            className="w-full h-auto object-contain"
+          />
+          <div className="absolute top-4 left-4">
+            <Badge className="bg-[#FFF32A] text-black font-semibold">
+              {isPast ? t("events.pastEvent") : t(`${prefix}.badge`)}
+            </Badge>
+          </div>
+        </div>
+
+        <CardHeader>
+          <CardTitle className="text-2xl md:text-3xl">{t(`${prefix}.title`)}</CardTitle>
+          <CardDescription className="text-lg">{t(`${prefix}.subtitle`)}</CardDescription>
+        </CardHeader>
+
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="flex items-center gap-3">
+              <Calendar className="h-5 w-5 text-[#00AEC7]" />
+              <div>
+                <p className="font-semibold">{t(`${prefix}.date`)}</p>
+                <p className="text-sm text-muted-foreground">{t(`${prefix}.day`)}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Clock className="h-5 w-5 text-[#00AEC7]" />
+              <div>
+                <p className="font-semibold">{t(`${prefix}.time`)}</p>
+                <p className="text-sm text-muted-foreground">{t(`${prefix}.gathering`)}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <MapPin className="h-5 w-5 text-[#00AEC7]" />
+              <div>
+                <p className="font-semibold">{t(`${prefix}.venue`)}</p>
+                <p className="text-sm text-muted-foreground">{t(`${prefix}.address`)}</p>
+              </div>
+            </div>
+          </div>
+
+          {isPast && (
+            <div className="rounded-lg border border-[#00AEC7]/30 bg-[#00AEC7]/10 p-4 text-sm text-[#67e8f9]">
+              {t("events.eventEnded")}
+            </div>
+          )}
+
+          <div className="prose max-w-none">
+            <p className="text-lg leading-relaxed">{t(`${prefix}.description_1`)}</p>
+            <p>{t(`${prefix}.description_2`)}</p>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              {t(`${prefix}.speakers_title`)}
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
+              {speakerProfiles.map((speaker) => (
+                <Link key={speaker.key} href={speaker.profileUrl} target="_blank" rel="noopener noreferrer" className="group">
+                  <div className="text-center space-y-2">
+                    <div className="relative overflow-hidden rounded-lg">
+                      <BlobImage
+                        src={speaker.imageUrl}
+                        alt={t(`${prefix}.speakers.${speaker.key}.name`)}
+                        width={120}
+                        height={160}
+                        className="w-full h-auto object-contain transition-transform group-hover:scale-105"
+                      />
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <p className="text-sm text-muted-foreground mt-4">{t(`${prefix}.speakers_note`)}</p>
+          </div>
+
+          <div className="mt-6">
+            <Button
+              variant="outline"
+              onClick={() => setShowProgram(!showProgram)}
+              className="w-full flex items-center justify-center gap-2 bg-muted/50 hover:bg-muted"
+            >
+              {showProgram ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              {showProgram ? t(`${prefix}.hide_program`) : t(`${prefix}.show_program`)}
+            </Button>
+
+            {showProgram && (
+              <div className="mt-6 space-y-4 animate-in slide-in-from-top-2 duration-300">
+                <div className="bg-muted/30 rounded-lg p-6">
+                  <h4 className="text-lg font-semibold mb-4 text-[#00AEC7]">{t(`${prefix}.program_title`)}</h4>
+                  <div className="space-y-6">
+                    {meetup2025Talks.slice(0, 4).map((talkKey, index) => (
+                      <ProgramTalk key={talkKey} prefix={prefix} talkKey={talkKey} accent={index % 2 === 0 ? "#FFF32A" : "#00AEC7"} />
+                    ))}
+
+                    <div className="border-l-4 border-gray-300 pl-4">
+                      <div className="flex items-start gap-3">
+                        <Coffee className="w-4 h-4 text-gray-500 mt-2 flex-shrink-0" />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-1">
+                            <Badge variant="outline" className="text-xs font-mono">
+                              {t(`${prefix}.talks.break_time`)}
+                            </Badge>
+                            <p className="font-medium text-gray-600">{t(`${prefix}.talks.break`)}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {meetup2025Talks.slice(4).map((talkKey, index) => (
+                      <ProgramTalk key={talkKey} prefix={prefix} talkKey={talkKey} accent={index % 2 === 0 ? "#FFF32A" : "#00AEC7"} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="bg-muted/50 rounded-lg p-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Ticket className="h-5 w-5 text-[#00AEC7]" />
+                  <span className="font-semibold">{t(`${prefix}.pricing_title`)}</span>
+                </div>
+                <p className="text-2xl font-bold">{t(`${prefix}.price`)}</p>
+                <p className="text-sm text-muted-foreground">{t(`${prefix}.discount`)}</p>
+              </div>
+              <div className="flex flex-col gap-3">
+                {!isPast && event.registerUrl && (
+                  <Button asChild size="lg" className="w-full bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90">
+                    <Link href={event.registerUrl} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      {t(`${prefix}.register_button`)}
+                    </Link>
+                  </Button>
+                )}
+                {event.contactUrl && (
+                  <Button asChild variant="outline" size="lg" className="w-full bg-transparent">
+                    <Link href={event.contactUrl} target="_blank" rel="noopener noreferrer">
+                      {t(`${prefix}.ask_question_button`)}
+                    </Link>
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg overflow-hidden">
+            <BlobImage
+              src="https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/meetup2025/speakers_all_horizontal.png"
+              alt={t(`${prefix}.speakers_title`)}
+              width={1200}
+              height={400}
+              className="w-full h-auto"
+            />
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
       <SectionHero
         title={t("nav.events")}
         subtitleLine1={t("events.description")}
@@ -78,629 +307,125 @@ export default function EventsPage() {
           </TabsList>
 
           <TabsContent value="upcoming" className="space-y-8">
-            {/* Main Event Card */}
-            <Card className="overflow-hidden">
-              <div className="relative">
-                <BlobImage
-                  src="/images/announce_horizontal.png"
-                  alt="DSML MEETUP 2025"
-                  width={1200}
-                  height={400}
-                  className="w-full h-auto object-contain"
-                />
-                <div className="absolute top-4 left-4">
-                  <Badge className="bg-[#FFF32A] text-black font-semibold">
-                    {t("events_announcements.dsml_meetup_2025.badge")}
-                  </Badge>
-                </div>
-              </div>
-
-              <CardHeader>
-                <CardTitle className="text-2xl md:text-3xl">
-                  {t("events_announcements.dsml_meetup_2025.title")}
-                </CardTitle>
-                <CardDescription className="text-lg">
-                  {t("events_announcements.dsml_meetup_2025.subtitle")}
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent className="space-y-6">
-                {/* Event Details */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="flex items-center gap-3">
-                    <Calendar className="h-5 w-5 text-[#00AEC7]" />
-                    <div>
-                      <p className="font-semibold">{t("events_announcements.dsml_meetup_2025.date")}</p>
-                      <p className="text-sm text-muted-foreground">{t("events_announcements.dsml_meetup_2025.day")}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Clock className="h-5 w-5 text-[#00AEC7]" />
-                    <div>
-                      <p className="font-semibold">{t("events_announcements.dsml_meetup_2025.time")}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {t("events_announcements.dsml_meetup_2025.gathering")}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <MapPin className="h-5 w-5 text-[#00AEC7]" />
-                    <div>
-                      <p className="font-semibold">{t("events_announcements.dsml_meetup_2025.venue")}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {t("events_announcements.dsml_meetup_2025.address")}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Description */}
-                <div className="prose max-w-none">
-                  <p className="text-lg leading-relaxed">{t("events_announcements.dsml_meetup_2025.description_1")}</p>
-                  <p>{t("events_announcements.dsml_meetup_2025.description_2")}</p>
-                </div>
-
-                {/* Speakers Section */}
-                <div>
-                  <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <Users className="h-5 w-5" />
-                    {t("events_announcements.dsml_meetup_2025.speakers_title")}
-                  </h3>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
-                    {speakerProfiles.map((speaker, index) => (
-                      <Link
-                        key={index}
-                        href={speaker.profileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group"
-                      >
-                        <div className="text-center space-y-2">
-                          <div className="relative overflow-hidden rounded-lg">
-                            <BlobImage
-                              src={speaker.imageUrl}
-                              alt={`Speaker ${index + 1}`}
-                              width={120}
-                              height={160}
-                              className="w-full h-auto object-contain transition-transform group-hover:scale-105"
-                            />
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-4">
-                    {t("events_announcements.dsml_meetup_2025.speakers_note")}
-                  </p>
-
-                  {/* Expandable Program Timeline */}
-                  <div className="mt-6">
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowProgram(!showProgram)}
-                      className="w-full flex items-center justify-center gap-2 bg-muted/50 hover:bg-muted"
-                    >
-                      {showProgram ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                      {showProgram
-                        ? t("events_announcements.dsml_meetup_2025.hide_program")
-                        : t("events_announcements.dsml_meetup_2025.show_program")}
-                    </Button>
-
-                    {showProgram && (
-                      <div className="mt-6 space-y-4 animate-in slide-in-from-top-2 duration-300">
-                        <div className="bg-muted/30 rounded-lg p-6">
-                          <h4 className="text-lg font-semibold mb-4 text-[#00AEC7]">
-                            {t("events_announcements.dsml_meetup_2025.program_title")}
-                          </h4>
-
-                          <div className="space-y-6">
-                            {/* Talk 1 - Anuar Welcome */}
-                            <div className="border-l-4 border-[#FFF32A] pl-4">
-                              <div className="flex items-start gap-3">
-                                <div className="w-2 h-2 bg-[#FFF32A] rounded-full mt-2 flex-shrink-0"></div>
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-3 mb-1">
-                                    <Badge variant="outline" className="text-xs font-mono">
-                                      {t("events_announcements.dsml_meetup_2025.talks.anuar_welcome.time")}
-                                    </Badge>
-                                    <h5 className="font-semibold text-[#00AEC7]">
-                                      {t("events_announcements.dsml_meetup_2025.talks.anuar_welcome.speaker")}
-                                    </h5>
-                                  </div>
-                                  <p className="font-medium mb-2">
-                                    {t("events_announcements.dsml_meetup_2025.talks.anuar_welcome.topic")}
-                                  </p>
-                                  <p className="text-sm text-muted-foreground">
-                                    {t("events_announcements.dsml_meetup_2025.talks.anuar_welcome.abstract")}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Talk 2 - Zhuldyzhan */}
-                            <div className="border-l-4 border-[#00AEC7] pl-4">
-                              <div className="flex items-start gap-3">
-                                <div className="w-2 h-2 bg-[#00AEC7] rounded-full mt-2 flex-shrink-0"></div>
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-3 mb-1">
-                                    <Badge variant="outline" className="text-xs font-mono">
-                                      {t("events_announcements.dsml_meetup_2025.talks.zhuldyzhan.time")}
-                                    </Badge>
-                                    <h5 className="font-semibold text-[#00AEC7]">
-                                      {t("events_announcements.dsml_meetup_2025.talks.zhuldyzhan.speaker")}
-                                    </h5>
-                                  </div>
-                                  <p className="font-medium mb-2">
-                                    {t("events_announcements.dsml_meetup_2025.talks.zhuldyzhan.topic")}
-                                  </p>
-                                  <p className="text-sm text-muted-foreground">
-                                    {t("events_announcements.dsml_meetup_2025.talks.zhuldyzhan.abstract")}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Talk 3 - Ayana */}
-                            <div className="border-l-4 border-[#FFF32A] pl-4">
-                              <div className="flex items-start gap-3">
-                                <div className="w-2 h-2 bg-[#FFF32A] rounded-full mt-2 flex-shrink-0"></div>
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-3 mb-1">
-                                    <Badge variant="outline" className="text-xs font-mono">
-                                      {t("events_announcements.dsml_meetup_2025.talks.ayana.time")}
-                                    </Badge>
-                                    <h5 className="font-semibold text-[#00AEC7]">
-                                      {t("events_announcements.dsml_meetup_2025.talks.ayana.speaker")}
-                                    </h5>
-                                  </div>
-                                  <p className="font-medium mb-2">
-                                    {t("events_announcements.dsml_meetup_2025.talks.ayana.topic")}
-                                  </p>
-                                  <p className="text-sm text-muted-foreground">
-                                    {t("events_announcements.dsml_meetup_2025.talks.ayana.abstract")}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Talk 4 - Jimmy Yamazaki */}
-                            <div className="border-l-4 border-[#00AEC7] pl-4">
-                              <div className="flex items-start gap-3">
-                                <div className="w-2 h-2 bg-[#00AEC7] rounded-full mt-2 flex-shrink-0"></div>
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-3 mb-1">
-                                    <Badge variant="outline" className="text-xs font-mono">
-                                      {t("events_announcements.dsml_meetup_2025.talks.jimmy.time")}
-                                    </Badge>
-                                    <h5 className="font-semibold text-[#00AEC7]">
-                                      {t("events_announcements.dsml_meetup_2025.talks.jimmy.speaker")}
-                                    </h5>
-                                  </div>
-                                  <p className="font-medium mb-2">
-                                    {t("events_announcements.dsml_meetup_2025.talks.jimmy.topic")}
-                                  </p>
-                                  <p className="text-sm text-muted-foreground">
-                                    {t("events_announcements.dsml_meetup_2025.talks.jimmy.abstract")}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Break */}
-                            <div className="border-l-4 border-gray-300 pl-4">
-                              <div className="flex items-start gap-3">
-                                <Coffee className="w-4 h-4 text-gray-500 mt-2 flex-shrink-0" />
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-3 mb-1">
-                                    <Badge variant="outline" className="text-xs font-mono">
-                                      {t("events_announcements.dsml_meetup_2025.talks.break_time")}
-                                    </Badge>
-                                    <p className="font-medium text-gray-600">
-                                      {t("events_announcements.dsml_meetup_2025.talks.break")}
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Talk 5 - Renat */}
-                            <div className="border-l-4 border-[#FFF32A] pl-4">
-                              <div className="flex items-start gap-3">
-                                <div className="w-2 h-2 bg-[#FFF32A] rounded-full mt-2 flex-shrink-0"></div>
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-3 mb-1">
-                                    <Badge variant="outline" className="text-xs font-mono">
-                                      {t("events_announcements.dsml_meetup_2025.talks.renat.time")}
-                                    </Badge>
-                                    <h5 className="font-semibold text-[#00AEC7]">
-                                      {t("events_announcements.dsml_meetup_2025.talks.renat.speaker")}
-                                    </h5>
-                                  </div>
-                                  <p className="font-medium mb-2">
-                                    {t("events_announcements.dsml_meetup_2025.talks.renat.topic")}
-                                  </p>
-                                  <p className="text-sm text-muted-foreground">
-                                    {t("events_announcements.dsml_meetup_2025.talks.renat.abstract")}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Talk 6 - Dulat */}
-                            <div className="border-l-4 border-[#00AEC7] pl-4">
-                              <div className="flex items-start gap-3">
-                                <div className="w-2 h-2 bg-[#00AEC7] rounded-full mt-2 flex-shrink-0"></div>
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-3 mb-1">
-                                    <Badge variant="outline" className="text-xs font-mono">
-                                      {t("events_announcements.dsml_meetup_2025.talks.dulat.time")}
-                                    </Badge>
-                                    <h5 className="font-semibold text-[#00AEC7]">
-                                      {t("events_announcements.dsml_meetup_2025.talks.dulat.speaker")}
-                                    </h5>
-                                  </div>
-                                  <p className="font-medium mb-2">
-                                    {t("events_announcements.dsml_meetup_2025.talks.dulat.topic")}
-                                  </p>
-                                  <p className="text-sm text-muted-foreground">
-                                    {t("events_announcements.dsml_meetup_2025.talks.dulat.abstract")}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Talk 7 - Ivan NEW SPEAKER */}
-                            <div className="border-l-4 border-[#FFF32A] pl-4">
-                              <div className="flex items-start gap-3">
-                                <div className="w-2 h-2 bg-[#FFF32A] rounded-full mt-2 flex-shrink-0"></div>
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-3 mb-1">
-                                    <Badge variant="outline" className="text-xs font-mono">
-                                      {t("events_announcements.dsml_meetup_2025.talks.ivan.time")}
-                                    </Badge>
-                                    <h5 className="font-semibold text-[#00AEC7]">
-                                      {t("events_announcements.dsml_meetup_2025.talks.ivan.speaker")}
-                                    </h5>
-                                  </div>
-                                  <p className="font-medium mb-2">
-                                    {t("events_announcements.dsml_meetup_2025.talks.ivan.topic")}
-                                  </p>
-                                  <p className="text-sm text-muted-foreground">
-                                    {t("events_announcements.dsml_meetup_2025.talks.ivan.abstract")}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Talk 8 - Anuar Delivery */}
-                            <div className="border-l-4 border-[#00AEC7] pl-4">
-                              <div className="flex items-start gap-3">
-                                <div className="w-2 h-2 bg-[#00AEC7] rounded-full mt-2 flex-shrink-0"></div>
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-3 mb-1">
-                                    <Badge variant="outline" className="text-xs font-mono">
-                                      {t("events_announcements.dsml_meetup_2025.talks.anuar_delivery.time")}
-                                    </Badge>
-                                    <h5 className="font-semibold text-[#00AEC7]">
-                                      {t("events_announcements.dsml_meetup_2025.talks.anuar_delivery.speaker")}
-                                    </h5>
-                                  </div>
-                                  <p className="font-medium mb-2">
-                                    {t("events_announcements.dsml_meetup_2025.talks.anuar_delivery.topic")}
-                                  </p>
-                                  <p className="text-sm text-muted-foreground">
-                                    {t("events_announcements.dsml_meetup_2025.talks.anuar_delivery.abstract")}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Pricing and Registration */}
-                <div className="bg-muted/50 rounded-lg p-6">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Ticket className="h-5 w-5 text-[#00AEC7]" />
-                        <span className="font-semibold">
-                          {t("events_announcements.dsml_meetup_2025.pricing_title")}
-                        </span>
-                      </div>
-                      <p className="text-2xl font-bold">{t("events_announcements.dsml_meetup_2025.price")}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {t("events_announcements.dsml_meetup_2025.discount")}
-                      </p>
-                    </div>
-                    <div className="flex flex-col gap-3">
-                      <Button asChild size="lg" className="w-full bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90">
-                        <Link href="https://forms.gle/az9sGAzZacJw5Zb56" target="_blank" rel="noopener noreferrer">
-                          <ExternalLink className="h-4 w-4 mr-2" />
-                          {t("events_announcements.dsml_meetup_2025.register_button")}
-                        </Link>
-                      </Button>
-                      <Button asChild variant="outline" size="lg" className="w-full bg-transparent">
-                        <Link href="https://t.me/DSMLmeetup" target="_blank" rel="noopener noreferrer">
-                          {t("events_announcements.dsml_meetup_2025.ask_question_button")}
-                        </Link>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* All Speakers Image */}
-                <div className="rounded-lg overflow-hidden">
-                  <BlobImage
-                    src="https://swfxusemimczhhhfzjhc.supabase.co/storage/v1/object/public/meetup2025/speakers_all_horizontal.png"
-                    alt="Все спикеры DSML MEETUP 2025"
-                    width={1200}
-                    height={400}
-                    className="w-full h-auto"
-                  />
-                </div>
-              </CardContent>
-            </Card>
+            {upcomingEvents.length === 0 ? (
+              <Card className="border-dashed">
+                <CardContent className="p-8 text-center">
+                  <h2 className="text-2xl font-semibold text-[#00AEC7]">{t("events.noUpcomingTitle")}</h2>
+                  <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">{t("events.noUpcomingDescription")}</p>
+                </CardContent>
+              </Card>
+            ) : (
+              upcomingEvents.map((event) => renderMeetup2025Card(event, false))
+            )}
           </TabsContent>
 
           <TabsContent value="past" className="space-y-6">
-            {/* DSML AI Meetup 2019 */}
-            <Card className="overflow-hidden">
-              <CardHeader>
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="secondary">{t("events_past.dsml_ai_meetup_2019.year")}</Badge>
-                  <Badge variant="outline">{t("events_past.dsml_ai_meetup_2019.location")}</Badge>
-                </div>
-                <CardTitle className="text-2xl">{t("events_past.dsml_ai_meetup_2019.title")}</CardTitle>
-                <CardDescription className="text-lg">{t("events_past.dsml_ai_meetup_2019.subtitle")}</CardDescription>
-              </CardHeader>
-
-              <CardContent className="space-y-6">
-                <div className="prose max-w-none">
-                  <p className="text-lg leading-relaxed">{t("events_past.dsml_ai_meetup_2019.description")}</p>
-                </div>
-
-                {/* Event Details */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-muted/50 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Calendar className="h-5 w-5 text-[#00AEC7]" />
-                    <div>
-                      <p className="font-semibold">{t("events_past.dsml_ai_meetup_2019.year")}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {t("events_past.dsml_ai_meetup_2019.meetup_number")}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <MapPin className="h-5 w-5 text-[#00AEC7]" />
-                    <div>
-                      <p className="font-semibold">{t("events_past.dsml_ai_meetup_2019.venue")}</p>
-                      <p className="text-sm text-muted-foreground">{t("events_past.dsml_ai_meetup_2019.location")}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Users className="h-5 w-5 text-[#00AEC7]" />
-                    <div>
-                      <p className="font-semibold">{t("events_past.dsml_ai_meetup_2019.participants")}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {t("events_past.dsml_ai_meetup_2019.participants_note")}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Videos Section */}
-                <div>
-                  <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <ExternalLink className="h-5 w-5" />
-                    {t("events_past.dsml_ai_meetup_2019.videos_title")}
-                  </h3>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {[
-                      { id: "j5VnAxAjgnQ", title: "Доклад 1" },
-                      { id: "HDsJaxpQ2oI", title: "Доклад 2" },
-                      { id: "BUTUC3wk548", title: "Доклад 3" },
-                      { id: "gU1BcfZLpQk", title: "Доклад 4" },
-                      { id: "4U278oeSHt8", title: "Доклад 5" },
-                      { id: "5DE681nlHtM", title: "Доклад 6" },
-                      { id: "s7dJ8ltrkj4", title: "Доклад 7" },
-                    ].map((video, index) => (
-                      <div key={video.id} className="group">
-                        <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
-                          <iframe
-                            width="100%"
-                            height="100%"
-                            src={`https://www.youtube.com/embed/${video.id}`}
-                            title={`DSML AI Meetup 2019 - ${video.title}`}
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            allowFullScreen
-                            className="transition-transform group-hover:scale-105"
-                          />
-                        </div>
-                        <p className="mt-2 text-sm font-medium text-center">
-                          {t("events_past.talk_number")} {index + 1}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* AI Meetup Astana 2018 */}
-            <Card className="overflow-hidden">
-              <CardHeader>
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="secondary">{t("events_past.ai_meetup_astana_2018.year")}</Badge>
-                  <Badge variant="outline">{t("events_past.ai_meetup_astana_2018.location")}</Badge>
-                </div>
-                <CardTitle className="text-2xl">{t("events_past.ai_meetup_astana_2018.title")}</CardTitle>
-                <CardDescription className="text-lg">{t("events_past.ai_meetup_astana_2018.subtitle")}</CardDescription>
-              </CardHeader>
-
-              <CardContent className="space-y-6">
-                <div className="prose max-w-none">
-                  <p className="text-lg leading-relaxed">{t("events_past.ai_meetup_astana_2018.description")}</p>
-                </div>
-
-                {/* Event Details */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-muted/50 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Calendar className="h-5 w-5 text-[#00AEC7]" />
-                    <div>
-                      <p className="font-semibold">{t("events_past.ai_meetup_astana_2018.year")}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {t("events_past.ai_meetup_astana_2018.meetup_number")}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <MapPin className="h-5 w-5 text-[#00AEC7]" />
-                    <div>
-                      <p className="font-semibold">{t("events_past.ai_meetup_astana_2018.venue")}</p>
-                      <p className="text-sm text-muted-foreground">{t("events_past.ai_meetup_astana_2018.location")}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Users className="h-5 w-5 text-[#00AEC7]" />
-                    <div>
-                      <p className="font-semibold">{t("events_past.ai_meetup_astana_2018.participants")}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {t("events_past.ai_meetup_astana_2018.participants_note")}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Videos Section */}
-                <div>
-                  <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <ExternalLink className="h-5 w-5" />
-                    {t("events_past.ai_meetup_astana_2018.videos_title")}
-                  </h3>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {[
-                      { id: "l5V_UD5ouG0", title: "Доклад 1" },
-                      { id: "hTwvqDu4Q9I", title: "Доклад 2" },
-                      { id: "iI1ekmGFL0o", title: "Доклад 3" },
-                      { id: "kwzRijN0V28", title: "Доклад 4" },
-                    ].map((video, index) => (
-                      <div key={video.id} className="group">
-                        <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
-                          <iframe
-                            width="100%"
-                            height="100%"
-                            src={`https://www.youtube.com/embed/${video.id}`}
-                            title={`AI Meetup Astana 2018 - ${video.title}`}
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            allowFullScreen
-                            className="transition-transform group-hover:scale-105"
-                          />
-                        </div>
-                        <p className="mt-2 text-sm font-medium text-center">
-                          {t("events_past.talk_number")} {index + 1}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Тотальный митап 2018 */}
-            <Card className="overflow-hidden">
-              <CardHeader>
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="secondary">{t("events_past.total_meetup_2018.year")}</Badge>
-                  <Badge variant="outline">{t("events_past.total_meetup_2018.location")}</Badge>
-                </div>
-                <CardTitle className="text-2xl">{t("events_past.total_meetup_2018.title")}</CardTitle>
-                <CardDescription className="text-lg">{t("events_past.total_meetup_2018.subtitle")}</CardDescription>
-              </CardHeader>
-
-              <CardContent className="space-y-6">
-                <div className="prose max-w-none">
-                  <p className="text-lg leading-relaxed">{t("events_past.total_meetup_2018.description")}</p>
-                </div>
-
-                {/* Event Details */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-muted/50 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Calendar className="h-5 w-5 text-[#00AEC7]" />
-                    <div>
-                      <p className="font-semibold">{t("events_past.total_meetup_2018.year")}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {t("events_past.total_meetup_2018.meetup_number")}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <MapPin className="h-5 w-5 text-[#00AEC7]" />
-                    <div>
-                      <p className="font-semibold">{t("events_past.total_meetup_2018.venue")}</p>
-                      <p className="text-sm text-muted-foreground">{t("events_past.total_meetup_2018.location")}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Users className="h-5 w-5 text-[#00AEC7]" />
-                    <div>
-                      <p className="font-semibold">{t("events_past.total_meetup_2018.participants")}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {t("events_past.total_meetup_2018.participants_note")}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Videos Section */}
-                <div>
-                  <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <ExternalLink className="h-5 w-5" />
-                    {t("events_past.total_meetup_2018.videos_title")}
-                  </h3>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {[
-                      { id: "Ta-Wvfmqfpo", title: "Доклад 1" },
-                      { id: "-5yhoxGI-jM", title: "Доклад 2" },
-                      { id: "Yhr58V7h6BM", title: "Доклад 3" },
-                      { id: "sYBa4UScneU", title: "Доклад 4" },
-                    ].map((video, index) => (
-                      <div key={video.id} className="group">
-                        <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
-                          <iframe
-                            width="100%"
-                            height="100%"
-                            src={`https://www.youtube.com/embed/${video.id}`}
-                            title={`Тотальный митап 2018 - ${video.title}`}
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            allowFullScreen
-                            className="transition-transform group-hover:scale-105"
-                          />
-                        </div>
-                        <p className="mt-2 text-sm font-medium text-center">
-                          {t("events_past.talk_number")} {index + 1}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {recentPastEvents.map((event) => renderMeetup2025Card(event, true))}
+            {pastVideoEvents.map((event) => (
+              <PastVideoEventCard key={event.id} event={event} />
+            ))}
           </TabsContent>
         </Tabs>
       </div>
     </div>
+  )
+}
+
+function ProgramTalk({ prefix, talkKey, accent }: { prefix: string; talkKey: string; accent: string }) {
+  const { t } = useTranslation()
+
+  return (
+    <div className="border-l-4 pl-4" style={{ borderColor: accent }}>
+      <div className="flex items-start gap-3">
+        <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: accent }} />
+        <div className="flex-1">
+          <div className="flex flex-wrap items-center gap-3 mb-1">
+            <Badge variant="outline" className="text-xs font-mono">
+              {t(`${prefix}.talks.${talkKey}.time`)}
+            </Badge>
+            <h5 className="font-semibold text-[#00AEC7]">{t(`${prefix}.talks.${talkKey}.speaker`)}</h5>
+          </div>
+          <p className="font-medium mb-2">{t(`${prefix}.talks.${talkKey}.topic`)}</p>
+          <p className="text-sm text-muted-foreground">{t(`${prefix}.talks.${talkKey}.abstract`)}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function PastVideoEventCard({ event }: { event: PastVideoEvent }) {
+  const { t } = useTranslation()
+  const prefix = event.translationPrefix
+
+  return (
+    <Card className="overflow-hidden">
+      <CardHeader>
+        <div className="flex items-center gap-2 mb-2">
+          <Badge variant="secondary">{t(`${prefix}.year`)}</Badge>
+          <Badge variant="outline">{t(`${prefix}.location`)}</Badge>
+        </div>
+        <CardTitle className="text-2xl">{t(`${prefix}.title`)}</CardTitle>
+        <CardDescription className="text-lg">{t(`${prefix}.subtitle`)}</CardDescription>
+      </CardHeader>
+
+      <CardContent className="space-y-6">
+        <div className="prose max-w-none">
+          <p className="text-lg leading-relaxed">{t(`${prefix}.description`)}</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-muted/50 rounded-lg">
+          <div className="flex items-center gap-3">
+            <Calendar className="h-5 w-5 text-[#00AEC7]" />
+            <div>
+              <p className="font-semibold">{t(`${prefix}.year`)}</p>
+              <p className="text-sm text-muted-foreground">{t(`${prefix}.meetup_number`)}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <MapPin className="h-5 w-5 text-[#00AEC7]" />
+            <div>
+              <p className="font-semibold">{t(`${prefix}.venue`)}</p>
+              <p className="text-sm text-muted-foreground">{t(`${prefix}.location`)}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <Users className="h-5 w-5 text-[#00AEC7]" />
+            <div>
+              <p className="font-semibold">{t(`${prefix}.participants`)}</p>
+              <p className="text-sm text-muted-foreground">{t(`${prefix}.participants_note`)}</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <ExternalLink className="h-5 w-5" />
+            {t(`${prefix}.videos_title`)}
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {event.videos.map((videoId, index) => (
+              <div key={videoId} className="group">
+                <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src={`https://www.youtube.com/embed/${videoId}`}
+                    title={`${t(`${prefix}.title`)} - ${t("events_past.talk_number")} ${index + 1}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                    className="transition-transform group-hover:scale-105"
+                  />
+                </div>
+                <p className="mt-2 text-sm font-medium text-center">
+                  {t("events_past.talk_number")} {index + 1}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   )
 }

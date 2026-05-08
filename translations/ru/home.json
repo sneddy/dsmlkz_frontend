@@ -60,7 +60,7 @@
   "communityFirst": "Сообщество прежде всего",
   "communityFirstDesc": "Мы ставим потребности и рост участников нашего сообщества превыше всего остального.",
   "continuousLearning": "Непрерывное обучение",
-  "continuousLearningDesc": "Мы способствуем соз��анию среды постоянного обучения и обмена знаниями.",
+  "continuousLearningDesc": "Мы способствуем созданию среды постоянного обучения и обмена знаниями.",
   "careerGrowth": "Карьерный рост",
   "careerGrowthDesc": "Мы помогаем нашим участникам продвигаться по карьерной лестнице через нетворкинг и возможности.",
   "newsFeed": {
@@ -68,5 +68,19 @@
     "subtitle": "Будьте в курсе последних новостей в области Data Science и Machine Learning",
     "highlights": "Основные моменты",
     "highlightsDesc": "Ключевые обновления и актуальные темы в сообществе DSML"
+  },
+  "channelMetrics": {
+    "discussionMembers": "1 500 участников",
+    "newsSubscribers": "4 000 подписчиков",
+    "dataJobsSubscribers": "9 800 подписчиков",
+    "itJobsSubscribers": "8 250 подписчиков",
+    "youtubeSubscribers": "900 подписчиков",
+    "linkedinFollowers": "2 000 подписчиков"
+  },
+  "channelActions": {
+    "join": "Зарегистрироваться",
+    "telegram": "Подписаться в Telegram",
+    "youtube": "Подписаться на YouTube",
+    "linkedin": "Подписаться на LinkedIn"
   }
 }

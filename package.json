@@ -6,6 +6,7 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
+    "check:text": "node scripts/check-text-integrity.mjs",
     "start": "next start",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",

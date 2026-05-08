@@ -7,7 +7,7 @@
   "lastName": "Фамилия",
   "currentCity": "Текущий город",
   "birthday": "Дата рождения",
-  "recentUniversity": "Недавний униве��ситет (необязательно)",
+  "recentUniversity": "Недавний университет (необязательно)",
   "relevantCompany": "Соответствующая компания",
   "relevantPosition": "Соответствующая должность",
   "relevantPositionPlaceholder": "например, Data Scientist, ML Engineer",
@@ -29,7 +29,7 @@
   "university": "Университет",
   "company": "Компания",
   "position": "Должность",
-  "motivationPlaceholder": "Что мо��ивировало вас присоединиться к сообществу DSML Казахстан?",
+  "motivationPlaceholder": "Что мотивировало вас присоединиться к сообществу DSML Казахстан?",
   "otherLinksPlaceholder": "GitHub, личный сайт и т.д. (по одному на строку)",
   "saving": "Сохранение...",
   "saveProfile": "Сохранить профиль",
@@ -78,6 +78,6 @@
   "profileExists": "Профиль уже существует",
   "redirectingToEdit": "У вас уже есть профиль. Перенаправление в режим редактирования...",
   "noProfileFound": "Профиль не найден",
-  "redirectingToCreate": "У вас еще нет профиля. Перенаправление в режим созд��ния...",
+  "redirectingToCreate": "У вас еще нет профиля. Перенаправление в режим создания...",
   "enterCity": "Введите название города"
 }

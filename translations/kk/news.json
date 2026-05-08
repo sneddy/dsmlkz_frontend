@@ -51,5 +51,10 @@
     "oct": "Қаз",
     "nov": "Қар",
     "dec": "Жел"
-  }
+  },
+  "results_found": "{{count}} жаңалық көрсетілді",
+  "clear_search": "Іздеуді тазалау",
+  "fresh_news": "Жаңа жаңалық",
+  "read_separately": "Бөлек оқу",
+  "page_of": "{{page}} / {{total}} бет"
 }

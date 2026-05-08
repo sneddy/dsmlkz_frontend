@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Globe } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
+import { useTranslation } from "@/hooks/use-translation"
 
 export default function LanguageSelector() {
   const { language, setLanguage } = useLanguage()
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
   const languages = [
@@ -24,9 +26,9 @@ export default function LanguageSelector() {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" aria-label={t("common.selectLanguage")} className="min-h-11 min-w-11">
           <Globe className="h-5 w-5" />
-          <span className="sr-only">Select language</span>
+          <span className="sr-only">{t("common.selectLanguage")}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

@@ -1,6 +1,6 @@
 {
   "title": "Вакансии",
-  "description": "Найдите работу мечты в области Data Science, машинного обучения и IT",
+  "description": "Описание",
   "main_title": "Вакансии",
   "subtitle_line1": "Найдите работу мечты в области Data Science, машинного обучения и IT",
   "subtitle_line2": "Присоединяйтесь к ведущим технологическим компаниям Казахстана",
@@ -67,10 +67,16 @@
   "posted_date": "Дата публикации",
   "expires_date": "Дата окончания",
   "tags": "Теги",
-  "description": "Описание",
   "requirements": "Требования",
   "benefits": "Преимущества",
   "apply_now": "Откликнуться",
   "contact_employer": "Связаться с работодателем",
-  "no_application_method": "Способ подачи заявки недоступен"
+  "no_application_method": "Способ подачи заявки недоступен",
+  "filters": "Фильтры",
+  "category": "Категория",
+  "work_type": "Тип работы",
+  "clear_filters": "Сбросить фильтры",
+  "list_heading": "Список вакансий",
+  "new_job": "Новая вакансия",
+  "page_of": "Страница {{page}} из {{total}}"
 }

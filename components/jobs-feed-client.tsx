@@ -10,6 +10,7 @@ import { ServerImage } from "@/components/ui/server-image"
 import { getSupabaseClient } from "@/lib/supabase-client"
 import { formatJobDate, getChannelInfo, processJobHtml } from "@/lib/utils/jobs-utils"
 import { normalizeHref } from "@/lib/utils/text-utils"
+import { useTranslation } from "@/hooks/use-translation"
 
 type JobPost = {
   post_id: string
@@ -52,6 +53,28 @@ export default function JobsFeedClient({
   const [loading, setLoading] = useState(false)
   const [showFilters, setShowFilters] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const resultsRef = useRef<HTMLDivElement>(null)
+  const { t } = useTranslation()
+
+  const syncUrl = useCallback((newPage: number, newQuery: string, newChannels: string, newRemote: boolean) => {
+    if (typeof window === "undefined") return
+
+    const params = new URLSearchParams()
+    if (newPage > 1) params.set("page", String(newPage))
+    if (newQuery.trim()) params.set("q", newQuery.trim())
+    if (newChannels !== "all") params.set("channels", newChannels)
+    if (newRemote) params.set("remote", "true")
+
+    const queryString = params.toString()
+    window.history.replaceState(null, "", `${window.location.pathname}${queryString ? `?${queryString}` : ""}`)
+  }, [])
+
+  const focusResults = useCallback(() => {
+    window.requestAnimationFrame(() => {
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+      resultsRef.current?.focus({ preventScroll: true })
+    })
+  }, [])
 
   const fetchJobs = useCallback(async (newPage = 1, newQuery = "", newChannels = "all", newRemote = false) => {
     setLoading(true)
@@ -146,41 +169,61 @@ export default function JobsFeedClient({
       const newQuery = searchInputRef.current?.value || ""
       setQuery(newQuery)
       setPage(1)
-      fetchJobs(1, newQuery, channels, remote)
+      syncUrl(1, newQuery, channels, remote)
+      fetchJobs(1, newQuery, channels, remote).then(focusResults)
     },
-    [channels, remote, fetchJobs],
+    [channels, remote, fetchJobs, focusResults, syncUrl],
   )
 
   const handleChannelFilter = useCallback(
     (newChannels: string) => {
       setChannels(newChannels)
       setPage(1)
-      fetchJobs(1, query, newChannels, remote)
+      syncUrl(1, query, newChannels, remote)
+      fetchJobs(1, query, newChannels, remote).then(focusResults)
     },
-    [query, remote, fetchJobs],
+    [query, remote, fetchJobs, focusResults, syncUrl],
   )
 
   const handleRemoteFilter = useCallback(
     (newRemote: boolean) => {
       setRemote(newRemote)
       setPage(1)
-      fetchJobs(1, query, channels, newRemote)
+      syncUrl(1, query, channels, newRemote)
+      fetchJobs(1, query, channels, newRemote).then(focusResults)
     },
-    [query, channels, fetchJobs],
+    [query, channels, fetchJobs, focusResults, syncUrl],
   )
 
   const handlePageChange = useCallback(
     (newPage: number) => {
       setPage(newPage)
-      fetchJobs(newPage, query, channels, remote)
-      window.scrollTo({ top: 0, behavior: "smooth" })
+      syncUrl(newPage, query, channels, remote)
+      fetchJobs(newPage, query, channels, remote).then(focusResults)
     },
-    [query, channels, remote, fetchJobs],
+    [query, channels, remote, fetchJobs, focusResults, syncUrl],
   )
+
+  const handleClearFilters = useCallback(() => {
+    if (searchInputRef.current) searchInputRef.current.value = ""
+    setQuery("")
+    setChannels("all")
+    setRemote(false)
+    setPage(1)
+    syncUrl(1, "", "all", false)
+    fetchJobs(1, "", "all", false).then(focusResults)
+  }, [fetchJobs, focusResults, syncUrl])
 
   const totalPages = Math.ceil(totalCount / PAGE_SIZE)
   const hasNextPage = page < totalPages
   const hasPrevPage = page > 1
+  const hasActiveFilters = query.trim().length > 0 || channels !== "all" || remote
+  const monthKeys = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+  const jobDateLabels = {
+    yesterday: t("jobs.yesterday"),
+    daysAgo: t("jobs.days_ago"),
+    months: monthKeys.map((key) => t(`jobs.months.${key}`)),
+  }
 
   // Mock stats - replace with actual data
   const stats = {
@@ -197,25 +240,25 @@ export default function JobsFeedClient({
         <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700">
           <div className="text-center">
             <div className="text-2xl font-bold text-[#FFF32A] mb-1">{stats.total}+</div>
-            <div className="text-sm text-gray-400">Всего вакансий</div>
+            <div className="text-sm text-gray-400">{t("jobs.total_jobs")}</div>
           </div>
         </div>
         <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700">
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-400 mb-1">{stats.ml}+</div>
-            <div className="text-sm text-gray-400">ML вакансии</div>
+            <div className="text-sm text-gray-400">{t("jobs.ml_jobs")}</div>
           </div>
         </div>
         <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700">
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-400 mb-1">{stats.it}+</div>
-            <div className="text-sm text-gray-400">IT вакансии</div>
+            <div className="text-sm text-gray-400">{t("jobs.it_jobs")}</div>
           </div>
         </div>
         <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700">
           <div className="text-center">
             <div className="text-2xl font-bold text-green-400 mb-1">{stats.remote}+</div>
-            <div className="text-sm text-gray-400">Удаленные</div>
+            <div className="text-sm text-gray-400">{t("jobs.remote_jobs")}</div>
           </div>
         </div>
       </div>
@@ -233,7 +276,7 @@ export default function JobsFeedClient({
                 ref={searchInputRef}
                 type="text"
                 defaultValue={query}
-                placeholder="Поиск вакансий..."
+                placeholder={t("jobs.search_placeholder")}
                 className="w-full rounded-xl border border-gray-800 bg-transparent py-3 pl-11 pr-4 text-white placeholder-gray-400 focus:border-[#00AEC7] focus:outline-none focus:ring-2 focus:ring-[#00AEC7]/50"
               />
             </div>
@@ -242,7 +285,7 @@ export default function JobsFeedClient({
               disabled={loading}
               className="inline-flex items-center justify-center rounded-xl bg-[#00AEC7] px-5 py-3 text-sm font-semibold text-black shadow-md transition-colors hover:bg-[#00AEC7]/90 disabled:opacity-50"
             >
-              {loading ? "..." : "Найти"}
+              {loading ? "..." : t("common.search")}
             </button>
           </form>
         </div>
@@ -253,19 +296,38 @@ export default function JobsFeedClient({
             className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 border border-gray-700 text-white rounded-lg hover:bg-gray-700/50 transition-colors"
           >
             <Filter className="h-4 w-4" />
-            Фильтры
+            {t("jobs.filters")}
           </button>
+        </div>
+
+        <div className="mx-auto flex max-w-3xl flex-col items-center justify-between gap-3 rounded-xl border border-gray-800/70 bg-gray-900/40 px-4 py-3 text-center text-sm text-gray-300 sm:flex-row sm:text-left">
+          <p aria-live="polite">
+            {loading
+              ? t("jobs.loading")
+              : query
+                ? t("jobs.search_results", { count: totalCount, query })
+                : t("jobs.results_found", { count: totalCount })}
+          </p>
+          {hasActiveFilters && (
+            <button
+              type="button"
+              onClick={handleClearFilters}
+              className="min-h-11 rounded-lg border border-gray-700 px-4 py-2 font-semibold text-white transition-colors hover:border-[#00AEC7] hover:text-[#00AEC7]"
+            >
+              {t("jobs.clear_filters")}
+            </button>
+          )}
         </div>
 
         {showFilters && (
           <div className="max-w-2xl mx-auto bg-gray-800/50 border border-gray-700 rounded-xl p-6 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Категория</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">{t("jobs.category")}</label>
               <div className="flex gap-2 flex-wrap">
                 {[
-                  { value: "all", label: "Все" },
-                  { value: "ml", label: "ML/AI" },
-                  { value: "it", label: "IT" },
+                  { value: "all", label: t("jobs.filter_all") },
+                  { value: "ml", label: t("jobs.filter_data_ai") },
+                  { value: "it", label: t("jobs.filter_it_dev") },
                 ].map((option) => (
                   <button
                     key={option.value}
@@ -283,7 +345,7 @@ export default function JobsFeedClient({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Тип работы</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">{t("jobs.work_type")}</label>
               <div className="flex gap-2">
                 <button
                   onClick={() => handleRemoteFilter(false)}
@@ -291,7 +353,7 @@ export default function JobsFeedClient({
                     !remote ? "bg-[#00AEC7] text-white" : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50"
                   }`}
                 >
-                  Все
+                  {t("jobs.show_all")}
                 </button>
                 <button
                   onClick={() => handleRemoteFilter(true)}
@@ -299,7 +361,7 @@ export default function JobsFeedClient({
                     remote ? "bg-[#00AEC7] text-white" : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50"
                   }`}
                 >
-                  Только удаленные
+                  {t("jobs.filter_remote")}
                 </button>
               </div>
             </div>
@@ -307,11 +369,13 @@ export default function JobsFeedClient({
         )}
       </div>
 
+      <div ref={resultsRef} tabIndex={-1} className="scroll-mt-24 outline-none" />
+
       {/* Loading State */}
       {loading && (
         <div className="text-center py-8">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#00AEC7]"></div>
-          <p className="mt-2 text-gray-400">Загрузка вакансий...</p>
+          <p className="mt-2 text-gray-400">{t("jobs.loading")}</p>
         </div>
       )}
 
@@ -322,14 +386,15 @@ export default function JobsFeedClient({
             <Card className="mb-4 bg-gray-800/50 border-gray-700">
               <CardContent className="p-4">
                 <div className="text-center text-[#00AEC7] font-medium">
-                  <p>{query ? `Ничего не найдено по запросу "${query}"` : "Вакансии временно недоступны"}</p>
+                  <p>{query ? t("jobs.no_search_results", { query }) : t("jobs.no_posts_available")}</p>
+                  <p className="mt-2 text-sm text-gray-300">{t("jobs.try_different_search")}</p>
                 </div>
               </CardContent>
             </Card>
           ) : (
             <section aria-labelledby="jobs-heading">
               <h2 id="jobs-heading" className="sr-only">
-                Список вакансий
+                {t("jobs.list_heading")}
               </h2>
               <div className="space-y-8">
                 {jobs.map((job, index) => {
@@ -347,9 +412,9 @@ export default function JobsFeedClient({
                       <CardContent className="space-y-6 p-6 sm:p-8">
                         <div className="flex flex-wrap items-start justify-between gap-4">
                           <div className="space-y-1">
-                            <p className="text-xs uppercase tracking-[0.25em] text-[#00AEC7]/80">Новая вакансия</p>
+                            <p className="text-xs uppercase tracking-[0.25em] text-[#00AEC7]/80">{t("jobs.new_job")}</p>
                             <p className="text-lg font-semibold text-white">
-                              <time dateTime={job.created_at}>{formatJobDate(job.created_at)}</time>
+                              <time dateTime={job.created_at}>{formatJobDate(job.created_at, jobDateLabels)}</time>
                             </p>
                             {job.sender_name && <p className="text-sm text-gray-400">{job.sender_name}</p>}
                           </div>
@@ -357,7 +422,7 @@ export default function JobsFeedClient({
                             {isRemote && (
                               <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-green-900/50 text-green-400 text-xs font-semibold border border-green-700">
                                 <MapPin className="h-3 w-3" />
-                                <span>Remote</span>
+                                <span>{t("jobs.remote")}</span>
                               </div>
                             )}
 
@@ -400,7 +465,7 @@ export default function JobsFeedClient({
                                 href={`/jobs/${job.post_id}`}
                                 className="inline-flex items-center gap-2 rounded-full border border-gray-700/80 px-4 py-2 text-sm font-semibold text-white hover:border-[#00AEC7] hover:text-[#00AEC7] transition-colors"
                               >
-                                Читать отдельно
+                                {t("jobs.read_more")}
                               </Link>
 
                               {job.post_link && (
@@ -409,10 +474,10 @@ export default function JobsFeedClient({
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="inline-flex items-center gap-2 rounded-full bg-[#00AEC7] px-4 py-2 text-sm font-semibold text-black hover:bg-[#00AEC7]/90 transition-colors"
-                                  title="Откликнуться в Telegram"
+                                  title={t("jobs.open_in_telegram")}
                                 >
                                   <ExternalLink className="h-4 w-4" />
-                                  Откликнуться
+                                  {t("jobs.apply")}
                                 </Link>
                               )}
                             </div>
@@ -435,12 +500,12 @@ export default function JobsFeedClient({
                   disabled={loading}
                   className="px-6 py-3 bg-gray-800/70 border border-gray-700 text-white rounded-xl hover:bg-gray-700/60 transition-colors disabled:opacity-50 text-sm font-semibold"
                 >
-                  ← Предыдущая
+                  {t("common.previous")}
                 </button>
               )}
 
               <span className="px-4 py-2 text-gray-300 text-sm">
-                Страница {page} из {totalPages}
+                {t("jobs.page_of", { page, total: totalPages })}
               </span>
 
               {hasNextPage && (
@@ -449,7 +514,7 @@ export default function JobsFeedClient({
                   disabled={loading}
                   className="px-6 py-3 bg-[#00AEC7] text-black rounded-xl hover:bg-[#00AEC7]/90 transition-colors disabled:opacity-50 text-sm font-semibold"
                 >
-                  Следующая →
+                  {t("common.next")}
                 </button>
               )}
             </div>

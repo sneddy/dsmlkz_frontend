@@ -68,9 +68,9 @@ export function HomeContent() {
     {
       title: t("home.discussionHubTitle"),
       description: t("home.discussionHubDescription"),
-      metric: "1,500 members",
+      metric: t("home.channelMetrics.discussionMembers"),
       href: "/auth/signup",
-      action: "Register to join",
+      action: t("home.channelActions.join"),
       icon: MessageCircle,
       accent: "from-[#00AEC7] via-[#6DE7F2] to-[#FFF32A]",
       iconClass: "text-[#00AEC7]",
@@ -84,9 +84,9 @@ export function HomeContent() {
     {
       title: t("home.newsFeedTitle"),
       description: t("home.newsFeedDescription"),
-      metric: "4,000 subscribers",
+      metric: t("home.channelMetrics.newsSubscribers"),
       href: "https://t.me/dsmlkz_news",
-      action: "Subscribe in Telegram",
+      action: t("home.channelActions.telegram"),
       icon: MessageCircle,
       accent: "from-[#FFF32A] via-[#B8F36B] to-[#00AEC7]",
       iconClass: "text-[#FFF32A]",
@@ -99,9 +99,9 @@ export function HomeContent() {
     {
       title: t("home.dataJobsTitle"),
       description: t("home.dataJobsDescription"),
-      metric: "9,500 subscribers",
+      metric: t("home.channelMetrics.dataJobsSubscribers"),
       href: "https://t.me/ml_jobs_kz",
-      action: "Subscribe in Telegram",
+      action: t("home.channelActions.telegram"),
       icon: Briefcase,
       accent: "from-purple-400 via-[#00AEC7] to-[#FFF32A]",
       iconClass: "text-purple-300",
@@ -114,9 +114,9 @@ export function HomeContent() {
     {
       title: t("home.itJobsTitle"),
       description: t("home.itJobsDescription"),
-      metric: "7,300 subscribers",
+      metric: t("home.channelMetrics.itJobsSubscribers"),
       href: "https://t.me/it_jobs_kz",
-      action: "Subscribe in Telegram",
+      action: t("home.channelActions.telegram"),
       icon: Briefcase,
       accent: "from-orange-300 via-[#FFF32A] to-[#00AEC7]",
       iconClass: "text-orange-300",
@@ -129,9 +129,9 @@ export function HomeContent() {
     {
       title: t("home.youtubeChannelTitle"),
       description: t("home.youtubeChannelDescription"),
-      metric: "850 subscribers",
+      metric: t("home.channelMetrics.youtubeSubscribers"),
       href: "https://www.youtube.com/c/DataScienceKazakhstan",
-      action: "Subscribe in YouTube",
+      action: t("home.channelActions.youtube"),
       icon: Play,
       accent: "from-red-300 via-[#00AEC7] to-[#FFF32A]",
       iconClass: "text-red-300",
@@ -144,9 +144,9 @@ export function HomeContent() {
     {
       title: t("home.linkedinPageTitle"),
       description: t("home.linkedinPageDescription"),
-      metric: "1,850 followers",
+      metric: t("home.channelMetrics.linkedinFollowers"),
       href: LINKEDIN_URL,
-      action: "Subscribe on LinkedIn",
+      action: t("home.channelActions.linkedin"),
       icon: Users,
       accent: "from-blue-300 via-[#00AEC7] to-[#FFF32A]",
       iconClass: "text-blue-300",
@@ -164,11 +164,11 @@ export function HomeContent() {
       {/* Hero Section */}
       <section className="relative overflow-hidden py-8 px-4 sm:py-10">
         <div className="relative max-w-7xl mx-auto text-center z-10">
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-pixel font-bold mb-5 sm:mb-7 tracking-tight leading-tight px-4 text-white">
+          <h1 className="px-4 mb-5 text-balance text-[clamp(2rem,8.2vw,4.5rem)] font-bold leading-[1.12] tracking-tight text-white [overflow-wrap:break-word] sm:mb-7 md:leading-tight">
             <span className="bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] bg-clip-text text-transparent animate-pulse">
               DSML
             </span>{" "}
-            <span className="bg-gradient-to-r from-[#00AEC7] via-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
+            <span className="font-sans bg-gradient-to-r from-[#00AEC7] via-[#FFF32A] to-[#00AEC7] bg-clip-text text-transparent">
               Kazakhstan
             </span>
           </h1>
@@ -182,7 +182,7 @@ export function HomeContent() {
             <Button
               asChild
               size="lg"
-              className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base font-pixel"
+              className="h-auto min-h-12 w-full whitespace-normal rounded-full bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 px-6 py-3 text-center font-pixel text-[clamp(0.78rem,3.4vw,1rem)] font-semibold leading-tight text-black shadow-lg transition-all duration-300 hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 hover:shadow-xl sm:w-auto sm:px-8 group"
             >
               <Link href="/auth/signup" onClick={handleCta("signup_home", "/auth/signup")}>
                 {t("home.joinButton")}
@@ -193,7 +193,7 @@ export function HomeContent() {
               asChild
               variant="outline"
               size="lg"
-              className="w-full sm:w-auto border-2 border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7]/10 backdrop-blur-sm px-8 py-4 rounded-full transition-all duration-300 group bg-transparent text-base font-pixel"
+              className="h-auto min-h-12 w-full whitespace-normal rounded-full border-2 border-[#00AEC7] bg-transparent px-6 py-3 text-center font-pixel text-[clamp(0.78rem,3.4vw,1rem)] leading-tight text-[#00AEC7] backdrop-blur-sm transition-all duration-300 hover:bg-[#00AEC7]/10 sm:w-auto sm:px-8 group"
             >
               <Link href="/events" onClick={handleCta("watch_events", "/events")}>
                 <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
@@ -335,7 +335,7 @@ export function HomeContent() {
                       href={channel.href}
                       target={channel.external ? "_blank" : undefined}
                       rel={channel.external ? "noopener noreferrer" : undefined}
-                      className="inline-flex items-center rounded-full border border-[#00AEC7]/25 bg-[#00AEC7]/10 px-3 py-2 text-sm font-semibold text-[#67e8f9] transition-colors hover:border-[#FFF32A]/40 hover:bg-[#FFF32A]/10 hover:text-[#FFF32A]"
+                      className="inline-flex min-h-11 items-center rounded-full border border-[#00AEC7]/25 bg-[#00AEC7]/10 px-3 py-2 text-sm font-semibold text-[#67e8f9] transition-colors hover:border-[#FFF32A]/40 hover:bg-[#FFF32A]/10 hover:text-[#FFF32A]"
                       onClick={clickHandler}
                     >
                       {channel.action}
@@ -398,7 +398,7 @@ export function HomeContent() {
             <Button
               asChild
               size="lg"
-              className="w-full sm:w-auto bg-gradient-to-r from-[#00AEC7] to-[#00AEC7]/80 text-white hover:from-[#00AEC7]/90 hover:to-[#00AEC7]/70 font-pixel text-lg px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+              className="h-auto min-h-12 w-full whitespace-normal rounded-full bg-gradient-to-r from-[#00AEC7] to-[#00AEC7]/80 px-8 py-3 text-center font-pixel text-[clamp(0.8rem,3.4vw,1.125rem)] leading-tight text-white shadow-lg transition-all duration-300 hover:from-[#00AEC7]/90 hover:to-[#00AEC7]/70 hover:shadow-xl sm:w-auto sm:px-10 group"
             >
               <Link href="https://t.me/DSMLmeetup" target="_blank" rel="noopener noreferrer">
                 <MessageCircle className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" />
@@ -423,7 +423,7 @@ export function HomeContent() {
             <Button
               asChild
               size="lg"
-              className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-pixel font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base"
+              className="h-auto min-h-12 w-full whitespace-normal rounded-full bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 px-6 py-3 text-center font-pixel text-[clamp(0.78rem,3.4vw,1rem)] font-semibold leading-tight text-black shadow-lg transition-all duration-300 hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 hover:shadow-xl sm:w-auto sm:px-8 group"
             >
               <Link href="/auth/signup" onClick={handleCta("final_signup", "/auth/signup")}>
                 {t("home.getStartedToday")}
@@ -434,7 +434,7 @@ export function HomeContent() {
               asChild
               variant="outline"
               size="lg"
-              className="w-full sm:w-auto border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-4 rounded-full transition-all duration-300 bg-transparent text-base font-pixel"
+              className="h-auto min-h-12 w-full whitespace-normal rounded-full border-2 border-white/30 bg-transparent px-6 py-3 text-center font-pixel text-[clamp(0.78rem,3.4vw,1rem)] leading-tight text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/10 sm:w-auto sm:px-8"
             >
               <Link href="/events" onClick={handleCta("final_events", "/events")}>
                 {t("home.exploreEvents")}

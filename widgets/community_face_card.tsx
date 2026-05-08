@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { BlobImage } from "@/shared/ui/blob_image"
 import { MapPin, Linkedin, Globe, MessageSquare, Award } from "lucide-react"
@@ -26,7 +25,6 @@ interface CommunityFaceProps {
 }
 
 export function CommunityFaceCard({ face }: CommunityFaceProps) {
-  const [imageError, setImageError] = useState(false)
   const { language } = useLanguage()
 
   const gradientBorderStyle = {
@@ -35,8 +33,8 @@ export function CommunityFaceCard({ face }: CommunityFaceProps) {
     borderImage: "linear-gradient(to right, #FFF32A, #00AEC7) 1",
   }
 
-  const title = language === "ru" && face.title_ru ? face.title_ru : face.title
-  const description = language === "ru" && face.description_ru ? face.description_ru : face.description
+  const title = language !== "en" && face.title_ru ? face.title_ru : face.title
+  const description = language !== "en" && face.description_ru ? face.description_ru : face.description
 
   const fallbackImageUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${face.name}`
 
@@ -45,11 +43,11 @@ export function CommunityFaceCard({ face }: CommunityFaceProps) {
     : fallbackImageUrl
 
   return (
-    <Card className="w-full overflow-hidden relative bg-white h-full" style={gradientBorderStyle}>
-      <div className="absolute inset-0 bg-white"></div>
+    <Card className="w-full overflow-hidden relative h-full border-white/10 bg-slate-950 text-white shadow-xl" style={gradientBorderStyle}>
+      <div className="absolute inset-0 bg-slate-950"></div>
 
       <div
-        className="absolute inset-0 bg-center bg-cover bg-no-repeat"
+        className="absolute inset-0 bg-center bg-cover bg-no-repeat opacity-90"
         style={{
           backgroundImage: `url('/images/card_background.png')`,
         }}
@@ -61,7 +59,7 @@ export function CommunityFaceCard({ face }: CommunityFaceProps) {
           style={gradientBorderStyle}
         >
           <BlobImage
-            src={!imageError ? imageUrl : fallbackImageUrl}
+            src={imageUrl}
             alt={face.name}
             width={130}
             height={130}
@@ -82,23 +80,23 @@ export function CommunityFaceCard({ face }: CommunityFaceProps) {
         {face.location && (
           <div className="flex items-center justify-center gap-1 mb-3">
             <MapPin className="h-3 w-3 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">{face.location}</span>
+            <span className="text-xs text-slate-300">{face.location}</span>
           </div>
         )}
 
         {description && (
-          <div className="w-full mb-3 p-2 rounded-md bg-white/80" style={gradientBorderStyle}>
+          <div className="w-full mb-3 p-2 rounded-md bg-white/90" style={gradientBorderStyle}>
             <p className="text-xs text-black">{description}</p>
           </div>
         )}
 
-        <div className="flex items-center justify-center gap-3 mt-auto pt-1">
+        <div className="flex items-center justify-center gap-2 mt-auto pt-1">
           {face.linkedin && (
             <Link
               href={face.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#00AEC7] hover:opacity-80 transition-opacity"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-[#00AEC7] transition-colors hover:bg-[#00AEC7]/10 hover:text-[#008ba0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00AEC7]"
               title="LinkedIn"
             >
               <Linkedin className="h-4 w-4" />
@@ -110,7 +108,7 @@ export function CommunityFaceCard({ face }: CommunityFaceProps) {
               href={face.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#00AEC7] hover:opacity-80 transition-opacity"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-[#00AEC7] transition-colors hover:bg-[#00AEC7]/10 hover:text-[#008ba0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00AEC7]"
               title="Website"
             >
               <Globe className="h-4 w-4" />
@@ -122,7 +120,7 @@ export function CommunityFaceCard({ face }: CommunityFaceProps) {
               href={normalizeTelegramHref(face.telegram)}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#00AEC7] hover:opacity-80 transition-opacity"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-[#00AEC7] transition-colors hover:bg-[#00AEC7]/10 hover:text-[#008ba0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00AEC7]"
               title="Telegram"
             >
               <MessageSquare className="h-4 w-4" />
@@ -134,7 +132,7 @@ export function CommunityFaceCard({ face }: CommunityFaceProps) {
               href={face.kaggle}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#00AEC7] hover:opacity-80 transition-opacity"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-[#00AEC7] transition-colors hover:bg-[#00AEC7]/10 hover:text-[#008ba0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00AEC7]"
               title="Kaggle"
             >
               <svg

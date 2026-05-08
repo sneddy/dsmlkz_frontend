@@ -14,6 +14,8 @@ interface ArticleCardProps {
   hasCustomPage?: boolean
   isMarkdownBased?: boolean
   date?: string
+  readMoreLabel?: string
+  comingSoonLabel?: string
 }
 
 export function ArticleCard({
@@ -26,6 +28,8 @@ export function ArticleCard({
   hasCustomPage = false,
   isMarkdownBased = false,
   date,
+  readMoreLabel = "Read More",
+  comingSoonLabel = "Coming Soon",
 }: ArticleCardProps) {
   const isArticleAvailable = hasCustomPage || isMarkdownBased
 
@@ -76,7 +80,7 @@ export function ArticleCard({
                 className="w-full md:w-auto bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-black font-medium transition-all duration-300 transform hover:scale-105"
               >
                 <Link href={`/articles/${slug}`} className="w-full md:w-auto">
-                  Читать полностью
+                  {readMoreLabel}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -85,7 +89,7 @@ export function ArticleCard({
                 className="w-full md:w-auto bg-gray-600/50 hover:bg-gray-600/70 text-gray-300 font-medium cursor-not-allowed border border-gray-600"
                 disabled
               >
-                Скоро будет доступно
+                {comingSoonLabel}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             )}

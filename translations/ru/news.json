@@ -51,5 +51,10 @@
     "oct": "Окт",
     "nov": "Ноя",
     "dec": "Дек"
-  }
+  },
+  "results_found": "Показано новостей: {{count}}",
+  "clear_search": "Очистить поиск",
+  "fresh_news": "Свежая новость",
+  "read_separately": "Читать отдельно",
+  "page_of": "Страница {{page}} из {{total}}"
 }

@@ -11,14 +11,14 @@ export default function JobNotFound() {
           Запрашиваемая вакансия не найдена или была удалена. Возможно, она уже неактуальна.
         </p>
         <div className="space-y-4">
-          <Link href="/jobs">
-            <Button className="w-full bg-[#00AEC7] hover:bg-[#00AEC7]/80">Все вакансии</Button>
-          </Link>
-          <Link href="/">
-            <Button variant="outline" className="w-full bg-transparent">
+          <Button asChild className="w-full bg-[#00AEC7] hover:bg-[#00AEC7]/80">
+            <Link href="/jobs">Все вакансии</Link>
+          </Button>
+          <Button asChild variant="outline" className="w-full bg-transparent">
+            <Link href="/">
               На главную
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </div>
     </div>

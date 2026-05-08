@@ -1,13 +1,11 @@
-"use client"
-import { useState, useCallback, useMemo } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import remarkMath from "remark-math"
 import rehypeKatex from "rehype-katex"
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism"
-import { Check, Copy, Terminal } from "lucide-react"
+import { Terminal } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { ServerImage } from "@/components/ui/server-image"
+import { normalizeHref } from "@/lib/utils/text-utils"
 import "katex/dist/katex.min.css"
 
 interface MarkdownContentProps {
@@ -16,9 +14,7 @@ interface MarkdownContentProps {
 }
 
 export function MarkdownContent({ content, className }: MarkdownContentProps) {
-  const processedContent = useMemo(() => {
-    return content.replace(/(\s)\$(\s)/g, "$1\\$$2")
-  }, [content])
+  const processedContent = content.replace(/(\s)\$(\s)/g, "$1\\$$2")
 
   return (
     <div className="markdown-content">
@@ -41,7 +37,20 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
             />
           ),
           p: (props) => <p className="mb-4 text-white" {...props} />,
-          a: (props) => <a className="text-[#00AEC7] hover:underline" {...props} />,
+          a: ({ href, ...props }) => {
+            const normalizedHref = href ? normalizeHref(href) : undefined
+            const isExternal = normalizedHref?.startsWith("http")
+
+            return (
+              <a
+                href={normalizedHref}
+                target={isExternal ? "_blank" : undefined}
+                rel={isExternal ? "noopener noreferrer" : undefined}
+                className="text-[#00AEC7] hover:underline"
+                {...props}
+              />
+            )
+          },
           blockquote: (props) => (
             <blockquote
               className="p-4 bg-black/5 rounded-lg my-6 border-[#00AEC7]/30 border-l-4"
@@ -55,8 +64,15 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
           ul: (props) => <ul className="list-disc pl-5 mb-4 text-white" {...props} />,
           ol: (props) => <ol className="list-decimal pl-5 mb-4 text-white" {...props} />,
           hr: (props) => <hr className="my-8 border-[#00AEC7]/30" {...props} />,
-          img: ({ src, alt, ...props }) => (
-            <img src={src || "/placeholder.svg"} alt={alt} className="w-full h-auto rounded-lg my-4" {...props} />
+          img: ({ src, alt }) => (
+            <ServerImage
+              src={src || "/placeholder.svg"}
+              alt={alt || "Article image"}
+              width={1200}
+              height={675}
+              sizes="(max-width: 1024px) 100vw, 1024px"
+              className="w-full h-auto rounded-lg my-4"
+            />
           ),
           strong: (props) => <strong className="font-bold text-[#7FDBFF]" {...props} />,
           em: (props) => <em className="italic text-[#00AEC7]" {...props} />,
@@ -97,21 +113,6 @@ export function MarkdownContent({ content, className }: MarkdownContentProps) {
         {processedContent}
       </ReactMarkdown>
 
-      <style jsx global>{`
-        .katex-display {
-          margin: 1.5rem 0;
-          overflow-x: auto;
-          overflow-y: hidden;
-          padding: 0.5rem 0;
-        }
-        .katex {
-          font-size: 1.1em;
-        }
-        .katex-display > .katex {
-          display: flex;
-          justify-content: center;
-        }
-      `}</style>
     </div>
   )
 }
@@ -122,14 +123,6 @@ interface CodeBlockProps {
 }
 
 function CodeBlock({ language, children }: CodeBlockProps) {
-  const [copied, setCopied] = useState(false)
-
-  const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(children)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }, [children])
-
   const displayLanguage =
     {
       py: "Python",
@@ -171,46 +164,13 @@ function CodeBlock({ language, children }: CodeBlockProps) {
 
   return (
     <div className="relative my-6 rounded-lg overflow-hidden">
-      <div className={`flex items-center justify-between px-4 py-2 bg-gradient-to-r ${headerBgClass} text-white`}>
-        <div className="flex items-center gap-2">
-          <Terminal size={16} />
-          <span className="text-sm font-medium">{displayLanguage}</span>
-        </div>
-        <button
-          onClick={handleCopy}
-          className="flex items-center gap-1 text-xs py-1 px-2 rounded hover:bg-white/10 transition-colors"
-          aria-label="Copy code"
-        >
-          {copied ? (
-            <>
-              <Check size={14} />
-              <span>Copied!</span>
-            </>
-          ) : (
-            <>
-              <Copy size={14} />
-              <span>Copy</span>
-            </>
-          )}
-        </button>
+      <div className={`flex items-center gap-2 px-4 py-2 bg-gradient-to-r ${headerBgClass} text-white`}>
+        <Terminal size={16} />
+        <span className="text-sm font-medium">{displayLanguage}</span>
       </div>
-
-      <SyntaxHighlighter
-        language={language || "text"}
-        style={atomDark}
-        customStyle={{
-          margin: 0,
-          padding: "1rem",
-          borderRadius: "0 0 0.5rem 0.5rem",
-          backgroundColor: "rgba(0, 0, 0, 0.8)",
-          fontSize: "0.9rem",
-          border: "1px solid rgba(0, 174, 199, 0.3)",
-        }}
-        showLineNumbers={language.toLowerCase() !== "text" && !!language}
-        wrapLines={true}
-      >
-        {children}
-      </SyntaxHighlighter>
+      <pre className="overflow-x-auto rounded-b-lg border border-[#00AEC7]/30 bg-black/80 p-4 text-sm text-white">
+        <code>{children}</code>
+      </pre>
     </div>
   )
 }

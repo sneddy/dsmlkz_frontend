@@ -1,11 +1,11 @@
 import { ArrowLeft, Calendar } from "lucide-react"
 import Link from "next/link"
-import { BlobImage } from "@/shared/ui/blob_image"
 import { MarkdownContent } from "@/shared/ui/markdown_content"
 import { loadMarkdownFile } from "../utils/markdown-loader"
 import { notFound } from "next/navigation"
 import { getArticleMetadata } from "../utils/articles-metadata"
 import { ArticleViewTracker } from "../article-view-tracker"
+import { ServerImage } from "@/components/ui/server-image"
 
 // Gradient border style
 const gradientBorderStyle = {
@@ -51,10 +51,11 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] rounded-full"></div>
                 <h1 className="text-3xl font-bold mb-4 text-[#00AEC7]">{metadata.title}</h1>
                 <p className="text-gray-300 mb-8">Эта статья скоро будет доступна. Пожалуйста, проверьте позже.</p>
-                <Link href="/articles">
-                  <button className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-black font-medium px-6 py-3 rounded-lg transition-all duration-300">
-                    Вернуться к статьям
-                  </button>
+                <Link
+                  href="/articles"
+                  className="inline-flex rounded-lg bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] px-6 py-3 font-medium text-black transition-all duration-300 hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90"
+                >
+                  Вернуться к статьям
                 </Link>
               </div>
             </div>
@@ -93,14 +94,16 @@ export default async function ArticlePage({ params }: { params: { slug: string }
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FFF32A] to-[#00AEC7]"></div>
 
               <div className="p-8">
-                <BlobImage
-                  src={metadata.imageUrl}
-                  alt={metadata.title}
-                  width={800}
-                  height={450}
-                  className="w-full h-auto rounded-lg mb-6"
-                  style={gradientBorderStyle}
-                />
+                <div style={gradientBorderStyle}>
+                  <ServerImage
+                    src={metadata.imageUrl}
+                    alt={metadata.title}
+                    width={800}
+                    height={450}
+                    className="w-full h-auto rounded-lg mb-6"
+                    sizes="(max-width: 1024px) 100vw, 800px"
+                  />
+                </div>
 
                 <h1 className="text-3xl md:text-4xl font-bold mb-4 text-[#00AEC7]">{metadata.title}</h1>
 
@@ -124,10 +127,11 @@ export default async function ArticlePage({ params }: { params: { slug: string }
 
           {/* Back to Articles */}
           <div className="mt-12 text-center">
-            <Link href="/articles">
-              <button className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-black font-medium px-8 py-3 rounded-lg transition-all duration-300 transform hover:scale-105">
-                Вернуться к статьям
-              </button>
+            <Link
+              href="/articles"
+              className="inline-flex rounded-lg bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] px-8 py-3 font-medium text-black transition-all duration-300 hover:scale-105 hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90"
+            >
+              Вернуться к статьям
             </Link>
           </div>
         </article>

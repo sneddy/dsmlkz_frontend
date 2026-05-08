@@ -74,6 +74,13 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
   }, [isClient])
 
+  useEffect(() => {
+    if (!isClient) return
+
+    document.documentElement.lang = language
+    document.documentElement.dataset.locale = language
+  }, [isClient, language])
+
   const setLanguage = (newLanguage: Language) => {
     setLanguageState(newLanguage)
     setTranslationsState(getTranslations(newLanguage))

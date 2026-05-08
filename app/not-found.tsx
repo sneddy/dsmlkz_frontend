@@ -24,12 +24,12 @@ function NotFoundContent() {
           The page you are looking for doesn't exist or has been moved.
         </p>
         <div className="pt-6">
-          <Link href="/">
-            <Button className="bg-[#00AEC7] hover:bg-[#00AEC7]/90 text-white">
+          <Button asChild className="bg-[#00AEC7] hover:bg-[#00AEC7]/90 text-white">
+            <Link href="/">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Return to Home
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </div>
     </div>

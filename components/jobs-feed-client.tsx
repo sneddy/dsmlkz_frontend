@@ -9,6 +9,7 @@ import Link from "next/link"
 import { ServerImage } from "@/components/ui/server-image"
 import { getSupabaseClient } from "@/lib/supabase-client"
 import { formatJobDate, getChannelInfo, processJobHtml } from "@/lib/utils/jobs-utils"
+import { normalizeHref } from "@/lib/utils/text-utils"
 
 type JobPost = {
   post_id: string
@@ -404,7 +405,7 @@ export default function JobsFeedClient({
 
                               {job.post_link && (
                                 <Link
-                                  href={job.post_link}
+                                  href={normalizeHref(job.post_link)}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className="inline-flex items-center gap-2 rounded-full bg-[#00AEC7] px-4 py-2 text-sm font-semibold text-black hover:bg-[#00AEC7]/90 transition-colors"

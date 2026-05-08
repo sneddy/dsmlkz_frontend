@@ -210,16 +210,17 @@ export function ProfileCard({ profile, isPublic = false, error, loading, onEditP
                   {t("dashboard.editProfile")}
                 </Button>
               )}
-              <Link href={`/users/${profile.nickname}`}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7]/10 bg-transparent"
-                >
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7]/10 bg-transparent"
+              >
+                <Link href={`/users/${profile.nickname}`}>
                   <Eye className="h-4 w-4 mr-2" />
                   {t("dashboard.viewProfile")}
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         )}

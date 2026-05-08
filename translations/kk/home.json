@@ -2,7 +2,14 @@
   "title": "DSML Kazakhstan",
   "subtitle": "DSMLKZ Community - Қазақстандағы AI және Машиналық оқыту энтузиастарының қауымдастығы",
   "joinButton": "Қауымдастыққа қосылу",
+  "watchEvents": "Оқиғаларды көру",
   "subscribeButton": "Жазылу",
+  "stats": {
+    "membersAcrossPlatforms": "Платформалардағы мүшелер",
+    "activeMembers": "Белсенді мүшелер",
+    "offlineEventsHosted": "Офлайн оқиғалар",
+    "jobPlacements": "Жұмысқа орналасулар"
+  },
   "signIn": "Кіру",
   "signUp": "Тіркелу",
   "channelsTitle": "Біздің қауымдастық арналары",
@@ -22,6 +29,10 @@
   "collaborationTitle": "Серіктестік мүмкіндіктері",
   "collaborationSubtitle": "Біз қауымдастық мүшелері үшін құндылық жасау үшін жетекші компаниялар мен ұйымдармен серіктестік жасаймыз.",
   "collaborationContact": "Бізбен байланысыңыз",
+  "finalCtaTitle": "Орталық Азиядағы AI болашағына қосылуға дайынсыз ба?",
+  "finalCtaDescription": "Пікірлес мамандармен байланысып, эксклюзивті ресурстарға қол жеткізіңіз және AI/ML саласындағы мансабыңызды жылдамдатыңыз.",
+  "getStartedToday": "Бүгін бастау",
+  "exploreEvents": "Оқиғаларды көру",
   "mediaSupport": {
     "title": "Медиа серіктестігі",
     "description": "Оқиғаларыңыз бен хабарландыруларыңызды ��үшейтіңіз",

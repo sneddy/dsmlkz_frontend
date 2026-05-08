@@ -45,7 +45,7 @@ const speakerProfiles = [
   {
     key: "ivan",
     profileUrl: "#",
-    imageUrl: "/images/speakers/ivan.jpg",
+    imageUrl: "/placeholder-user.jpg",
   },
 ]
 
@@ -417,17 +417,17 @@ export default function EventsPage() {
                       </p>
                     </div>
                     <div className="flex flex-col gap-3">
-                      <Link href="https://forms.gle/az9sGAzZacJw5Zb56" target="_blank" rel="noopener noreferrer">
-                        <Button size="lg" className="w-full bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90">
+                      <Button asChild size="lg" className="w-full bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90">
+                        <Link href="https://forms.gle/az9sGAzZacJw5Zb56" target="_blank" rel="noopener noreferrer">
                           <ExternalLink className="h-4 w-4 mr-2" />
                           {t("events_announcements.dsml_meetup_2025.register_button")}
-                        </Button>
-                      </Link>
-                      <Link href="https://t.me/DSMLmeetup" target="_blank" rel="noopener noreferrer">
-                        <Button variant="outline" size="lg" className="w-full bg-transparent">
+                        </Link>
+                      </Button>
+                      <Button asChild variant="outline" size="lg" className="w-full bg-transparent">
+                        <Link href="https://t.me/DSMLmeetup" target="_blank" rel="noopener noreferrer">
                           {t("events_announcements.dsml_meetup_2025.ask_question_button")}
-                        </Button>
-                      </Link>
+                        </Link>
+                      </Button>
                     </div>
                   </div>
                 </div>

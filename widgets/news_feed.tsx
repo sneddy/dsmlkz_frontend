@@ -3,7 +3,7 @@ import { ExternalLink, Search } from "lucide-react"
 import Link from "next/link"
 import { ServerImage } from "@/components/ui/server-image"
 import { createServerClient } from "@/lib/supabase-server"
-import { formatDate } from "@/lib/utils/text-utils"
+import { formatDate, normalizeHref, normalizeHtmlLinks } from "@/lib/utils/text-utils"
 
 export const revalidate = 60
 
@@ -51,7 +51,7 @@ async function fetchPosts(page = 1, query = ""): Promise<{ posts: TelegramPost[]
 }
 
 const processHtml = (html: string) => {
-  return html.replace(/\n/g, "<br />").replace(/<br \/><br \/>/g, "</p><p>")
+  return normalizeHtmlLinks(html).replace(/\n/g, "<br />").replace(/<br \/><br \/>/g, "</p><p>")
 }
 
 export default async function NewsFeed({ page = 1, query = "" }: { page?: number; query?: string }) {
@@ -149,7 +149,7 @@ export default async function NewsFeed({ page = 1, query = "" }: { page?: number
                     </Link>
                     {post.post_link && (
                       <Link
-                        href={post.post_link}
+                        href={normalizeHref(post.post_link)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 rounded-full bg-[#00AEC7] px-4 py-2 text-sm font-semibold text-black hover:bg-[#00AEC7]/90 transition-colors"

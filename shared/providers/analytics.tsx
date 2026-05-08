@@ -58,31 +58,46 @@ export function GoogleAnalytics() {
     // Skip if no measurement ID is available
     if (!GA_MEASUREMENT_ID) return
 
-    // Add Google Analytics script
-    const script1 = document.createElement("script")
-    script1.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`
-    script1.async = true
-    document.head.appendChild(script1)
+    let script1: HTMLScriptElement | null = null
+    let script2: HTMLScriptElement | null = null
 
-    // Initialize gtag
-    const script2 = document.createElement("script")
-    script2.innerHTML = `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', '${GA_MEASUREMENT_ID}', {
-        page_path: window.location.pathname,
-        page_title: document.title || undefined,
-        send_page_view: false,
-        user_id: window.__gaUserId || undefined
-      });
-    `
-    document.head.appendChild(script2)
+    const loadAnalytics = () => {
+      // Add Google Analytics script
+      script1 = document.createElement("script")
+      script1.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`
+      script1.async = true
+      document.head.appendChild(script1)
+
+      // Initialize gtag
+      script2 = document.createElement("script")
+      script2.innerHTML = `
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '${GA_MEASUREMENT_ID}', {
+          page_path: window.location.pathname,
+          page_title: document.title || undefined,
+          send_page_view: false,
+          user_id: window.__gaUserId || undefined
+        });
+      `
+      document.head.appendChild(script2)
+    }
+
+    const idleId =
+      "requestIdleCallback" in window
+        ? window.requestIdleCallback(loadAnalytics, { timeout: 3000 })
+        : window.setTimeout(loadAnalytics, 1500)
 
     return () => {
+      if ("cancelIdleCallback" in window) {
+        window.cancelIdleCallback(idleId)
+      } else {
+        window.clearTimeout(idleId)
+      }
       // Clean up
-      if (script1.parentNode) document.head.removeChild(script1)
-      if (script2.parentNode) document.head.removeChild(script2)
+      if (script1?.parentNode) document.head.removeChild(script1)
+      if (script2?.parentNode) document.head.removeChild(script2)
     }
   }, [])
 

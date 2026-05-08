@@ -190,12 +190,12 @@ export default function MemberSearch() {
                       </p>
                     )}
                   </div>
-                  <Link href={`/users/${member.nickname}`}>
-                    <Button variant="outline" size="sm">
+                  <Button asChild variant="outline" size="sm">
+                    <Link href={`/users/${member.nickname}`}>
                       {t("view")}
                       <ExternalLink className="ml-1 h-3 w-3" />
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 </div>
               ))}
             </div>

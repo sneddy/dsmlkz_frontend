@@ -1,9 +1,6 @@
-"use client"
-
-import { useState } from "react"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { BlobImage } from "@/shared/ui/blob_image"
+import { ServerImage } from "@/components/ui/server-image"
 import { ArrowRight, Calendar } from "lucide-react"
 import Link from "next/link"
 
@@ -30,8 +27,6 @@ export function ArticleCard({
   isMarkdownBased = false,
   date,
 }: ArticleCardProps) {
-  const [imageError, setImageError] = useState(false)
-
   const isArticleAvailable = hasCustomPage || isMarkdownBased
 
   return (
@@ -44,12 +39,13 @@ export function ArticleCard({
         <div className="md:w-2/5 lg:w-1/3 p-6 flex items-center justify-center">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-[#FFF32A]/20 to-[#00AEC7]/20 rounded-lg blur-sm"></div>
-            <BlobImage
+            <ServerImage
               src={imageUrl}
               alt={title || "Статья DSML Kazakhstan"}
               width={600}
               height={400}
               className="relative w-full h-auto object-contain max-h-[300px] rounded-lg"
+              sizes="(max-width: 768px) 100vw, 33vw"
               fallbackSrc="/placeholder.svg?height=400&width=600"
             />
           </div>
@@ -75,12 +71,15 @@ export function ArticleCard({
 
           <CardFooter className="p-6 pt-0">
             {isArticleAvailable ? (
-              <Link href={`/articles/${slug}`} className="w-full md:w-auto">
-                <Button className="w-full md:w-auto bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-black font-medium transition-all duration-300 transform hover:scale-105">
+              <Button
+                asChild
+                className="w-full md:w-auto bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-black font-medium transition-all duration-300 transform hover:scale-105"
+              >
+                <Link href={`/articles/${slug}`} className="w-full md:w-auto">
                   Читать полностью
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             ) : (
               <Button
                 className="w-full md:w-auto bg-gray-600/50 hover:bg-gray-600/70 text-gray-300 font-medium cursor-not-allowed border border-gray-600"

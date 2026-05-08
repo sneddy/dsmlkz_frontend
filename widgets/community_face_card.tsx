@@ -6,6 +6,7 @@ import { BlobImage } from "@/shared/ui/blob_image"
 import { MapPin, Linkedin, Globe, MessageSquare, Award } from "lucide-react"
 import Link from "next/link"
 import { useLanguage } from "@/contexts/language-context"
+import { normalizeTelegramHref } from "@/lib/utils/text-utils"
 
 interface CommunityFaceProps {
   face: {
@@ -118,7 +119,7 @@ export function CommunityFaceCard({ face }: CommunityFaceProps) {
           )}
           {face.telegram && (
             <Link
-              href={`https://t.me/${face.telegram.replace("@", "")}`}
+              href={normalizeTelegramHref(face.telegram)}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#00AEC7] hover:opacity-80 transition-opacity"

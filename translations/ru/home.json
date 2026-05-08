@@ -2,7 +2,14 @@
   "title": "DSML Kazakhstan",
   "subtitle": "DSMLKZ Community - Сообщество энтузиастов AI и Машинного обучения в Казахстане",
   "joinButton": "Присоединиться",
+  "watchEvents": "Смотреть события",
   "subscribeButton": "Подписаться",
+  "stats": {
+    "membersAcrossPlatforms": "Участников на платформах",
+    "activeMembers": "Активных участников",
+    "offlineEventsHosted": "Офлайн-событий",
+    "jobPlacements": "Трудоустройств"
+  },
   "signIn": "Войти",
   "signUp": "Зарегистрироваться",
   "channelsTitle": "Наши каналы сообщества",
@@ -22,6 +29,10 @@
   "collaborationTitle": "Возможности партнерства",
   "collaborationSubtitle": "Мы сотрудничаем с ведущими компаниями и организациями для создания ценности для участников нашего сообщества.",
   "collaborationContact": "Связаться с нами",
+  "finalCtaTitle": "Готовы присоединиться к будущему AI в Центральной Азии?",
+  "finalCtaDescription": "Общайтесь с единомышленниками, получайте доступ к эксклюзивным ресурсам и ускоряйте карьеру в AI/ML.",
+  "getStartedToday": "Начать сегодня",
+  "exploreEvents": "Посмотреть события",
   "mediaSupport": {
     "title": "Медиа партнерство",
     "description": "Усильте ваши события и анонсы",

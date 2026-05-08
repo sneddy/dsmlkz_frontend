@@ -214,12 +214,12 @@ function OverviewTab({
                     {step.id === 1 && (
                       <div className="space-y-2">
                         {!realProfile ? (
-                          <Link href="/profile?mode=create">
-                            <Button size="sm" className="bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90">
+                          <Button asChild size="sm" className="bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90">
+                            <Link href="/profile?mode=create">
                               <UserPlus className="mr-2 h-4 w-4" />
                               {t("dashboard.createProfile")}
-                            </Button>
-                          </Link>
+                            </Link>
+                          </Button>
                         ) : (
                           <Button
                             size="sm"
@@ -236,31 +236,36 @@ function OverviewTab({
 
                     {step.id === 2 && (
                       <div className="space-y-2">
-                        <Link
-                          href={
+                        <Button
+                          asChild={profileComplete}
+                          size="sm"
+                          disabled={!profileComplete}
+                          className={
                             profileComplete
-                              ? `https://t.me/databek_bot?start=verify_${profile.nickname}_${profile.secret_number ?? ""}`
-                              : "#"
+                              ? "bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90"
+                              : "bg-gray-300 text-gray-500 cursor-not-allowed"
                           }
-                          target={profileComplete ? "_blank" : undefined}
-                          rel={profileComplete ? "noopener noreferrer" : undefined}
-                          className={!profileComplete ? "pointer-events-none" : ""}
                         >
-                          <Button
-                            size="sm"
-                            disabled={!profileComplete}
-                            className={
-                              profileComplete
-                                ? "bg-[#FFF32A] text-black hover:bg-[#FFF32A]/90"
-                                : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                            }
-                          >
+                          {profileComplete ? (
+                            <Link
+                              href={`https://t.me/databek_bot?start=verify_${profile.nickname}_${profile.secret_number ?? ""}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.296c-.146.658-.537.818-1.084.51l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121L8.48 13.278l-2.95-.924c-.642-.204-.654-.642.135-.953l11.447-4.415c.538-.196 1.006.13.45 1.262z" />
+                              </svg>
+                              {t("dashboard.attachTelegram")}
+                            </Link>
+                          ) : (
+                            <>
                             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
                               <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.296c-.146.658-.537.818-1.084.51l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.054 5.56-5.022c.242-.213-.054-.334-.373-.121L8.48 13.278l-2.95-.924c-.642-.204-.654-.642.135-.953l11.447-4.415c.538-.196 1.006.13.45 1.262z" />
                             </svg>
                             {t("dashboard.attachTelegram")}
-                          </Button>
-                        </Link>
+                            </>
+                          )}
+                        </Button>
                         {!profileComplete && (
                           <p className="text-xs text-amber-600">{t("dashboard.completeProfileFirst")}</p>
                         )}
@@ -303,16 +308,17 @@ function OverviewTab({
 
                   <div className="flex-shrink-0">
                     {profileComplete ? (
-                      <Link href={`/users/${profile.nickname}`}>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="border-gray-300 text-gray-700 hover:bg-gray-50 bg-white/90"
-                        >
+                      <Button
+                        asChild
+                        size="sm"
+                        variant="outline"
+                        className="border-gray-300 text-gray-700 hover:bg-gray-50 bg-white/90"
+                      >
+                        <Link href={`/users/${profile.nickname}`}>
                           <ExternalLink className="mr-2 h-4 w-4" />
                           {t("dashboard.view")}
-                        </Button>
-                      </Link>
+                        </Link>
+                      </Button>
                     ) : (
                       <Button
                         size="sm"

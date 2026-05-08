@@ -73,10 +73,10 @@ export default function ClientLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 border-b bg-background">
-        <div className="container flex h-16 items-center justify-between py-4">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4 py-4">
           {/* ------------- Logo & desktop nav ------------- */}
-          <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2 -ml-12">
+          <div className="flex min-w-0 items-center gap-6">
+            <Link href="/" className="flex shrink-0 items-center gap-2">
               <Image
                 src="/images/dsml-logo.png"
                 alt="DSML Kazakhstan Logo"
@@ -197,16 +197,16 @@ export default function ClientLayout({
               </div>
             ) : (
               <div className="hidden md:flex items-center gap-4">
-                <Link href="/auth/signin">
-                  <Button variant="outline" size="sm" onClick={handleCtaClick("signin", "/auth/signin")}>
+                <Button asChild variant="outline" size="sm">
+                  <Link href="/auth/signin" onClick={handleCtaClick("signin", "/auth/signin")}>
                     {t("nav.signin")}
-                  </Button>
-                </Link>
-                <Link href="/auth/signup">
-                  <Button size="sm" onClick={handleCtaClick("signup", "/auth/signup")}>
+                  </Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link href="/auth/signup" onClick={handleCtaClick("signup", "/auth/signup")}>
                     {t("nav.signup")}
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             )}
 
@@ -215,6 +215,8 @@ export default function ClientLayout({
               variant="outline"
               size="icon"
               aria-label={isMenuOpen ? "Close navigation" : "Open navigation"}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-navigation"
               className="md:hidden border-white/30 text-white bg-black/30 backdrop-blur-sm hover:bg-white/10 hover:text-white"
               onClick={() => setIsMenuOpen((prev) => !prev)}
             >
@@ -225,8 +227,8 @@ export default function ClientLayout({
 
         {/* ---------- Mobile menu ---------- */}
         {isMenuOpen && (
-          <div className="container md:hidden fixed inset-x-0 top-16 z-50 bg-background border-b shadow-lg py-4 pb-6">
-            <nav className="flex flex-col gap-4">
+          <div className="md:hidden fixed inset-x-0 top-16 z-50 w-full max-w-full overflow-x-hidden bg-background border-b shadow-lg">
+            <nav id="mobile-navigation" className="mx-auto flex w-full max-w-screen-sm flex-col gap-4 px-4 py-4 pb-6">
               <Link
                 prefetch
                 href="/"
@@ -329,21 +331,21 @@ export default function ClientLayout({
                 </>
               ) : (
                 <div className="flex flex-col gap-2">
-                  <Link href="/auth/signin">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full bg-transparent"
-                      onClick={handleCtaClick("signin", "/auth/signin")}
-                    >
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="sm"
+                    className="w-full bg-transparent"
+                  >
+                    <Link href="/auth/signin" onClick={handleCtaClick("signin", "/auth/signin")}>
                       {t("nav.signin")}
-                    </Button>
-                  </Link>
-                  <Link href="/auth/signup">
-                    <Button size="sm" className="w-full" onClick={handleCtaClick("signup", "/auth/signup")}>
+                    </Link>
+                  </Button>
+                  <Button asChild size="sm" className="w-full">
+                    <Link href="/auth/signup" onClick={handleCtaClick("signup", "/auth/signup")}>
                       {t("nav.signup")}
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 </div>
               )}
             </nav>
@@ -384,7 +386,7 @@ export default function ClientLayout({
               YouTube
             </Link>
             <Link
-              href="https://www.linkedin.com/company/53101063/admin/dashboard/"
+              href="https://www.linkedin.com/company/53101063/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-muted-foreground hover:text-foreground"

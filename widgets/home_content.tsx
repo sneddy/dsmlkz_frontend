@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ExternalLink, MessageCircle, Users, Calendar, Briefcase, ArrowRight, Play } from "lucide-react"
 import Link from "next/link"
-import Image from "next/image"
 import { useTranslation } from "@/hooks/use-translation"
 import { CollaborationCard } from "@/widgets/collaboration_card"
 import { trackGaEvent } from "@/shared/providers/analytics"
+
+const LINKEDIN_URL = "https://www.linkedin.com/company/53101063/"
 
 export function HomeContent() {
   const { t } = useTranslation()
@@ -38,10 +39,10 @@ export function HomeContent() {
   }
 
   const communityStats = [
-    { icon: Users, label: "Members Across Platforms", value: "10,000+", color: "text-[#00AEC7]" },
-    { icon: Users, label: "Active Members", value: "1,500", color: "text-[#FFF32A]" },
-    { icon: Calendar, label: "Offline Events Hosted", value: "8", color: "text-purple-400" },
-    { icon: Briefcase, label: "Job Placements", value: "500+", color: "text-green-400" },
+    { icon: Users, label: t("home.stats.membersAcrossPlatforms"), value: "10,000+", color: "text-[#00AEC7]" },
+    { icon: Users, label: t("home.stats.activeMembers"), value: "1,500", color: "text-[#FFF32A]" },
+    { icon: Calendar, label: t("home.stats.offlineEventsHosted"), value: "8", color: "text-purple-400" },
+    { icon: Briefcase, label: t("home.stats.jobPlacements"), value: "500+", color: "text-green-400" },
   ]
 
   const gradientBorderStyle = {
@@ -70,27 +71,27 @@ export function HomeContent() {
 
           {/* Buttons in hero section */}
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4 mb-4">
-            <Link href="/auth/signup" className="w-full sm:w-auto">
-              <Button
-                size="lg"
-                className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base font-pixel"
-                onClick={handleCta("signup_home", "/auth/signup")}
-              >
+            <Button
+              asChild
+              size="lg"
+              className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/90 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/80 font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base font-pixel"
+            >
+              <Link href="/auth/signup" onClick={handleCta("signup_home", "/auth/signup")}>
                 {t("home.joinButton")}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-            <Link href="/events" className="w-full sm:w-auto">
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto border-2 border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7]/10 backdrop-blur-sm px-8 py-4 rounded-full transition-all duration-300 group bg-transparent text-base font-pixel"
-                onClick={handleCta("watch_events", "/events")}
-              >
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="w-full sm:w-auto border-2 border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7]/10 backdrop-blur-sm px-8 py-4 rounded-full transition-all duration-300 group bg-transparent text-base font-pixel"
+            >
+              <Link href="/events" onClick={handleCta("watch_events", "/events")}>
                 <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
-                Watch Events
-              </Button>
-            </Link>
+                {t("home.watchEvents")}
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -98,28 +99,19 @@ export function HomeContent() {
       {/* Hero Image Section aligned with hero styling */}
       <section className="relative w-full overflow-hidden mb-4 sm:mb-6 px-4">
         <div className="max-w-6xl mx-auto rounded-2xl overflow-hidden shadow-2xl bg-transparent">
-          {/* Desktop image */}
-          <div className="hidden md:block w-full h-[20vh] relative">
-            <Image
-              src="/images/moon-hero-desktop.png"
-              alt="DSML Kazakhstan Community - Desktop Hero"
-              fill
-              className="object-cover"
-              priority
-              sizes="(min-width: 768px) 100vw, 0px"
-            />
-            <div className="absolute inset-0 bg-black/10 pointer-events-none"></div>
-          </div>
-          {/* Mobile image */}
-          <div className="block md:hidden w-full h-[14vh] relative">
-            <Image
-              src="/images/moon-hero-mobile.png"
-              alt="DSML Kazakhstan Community - Mobile Hero"
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 767px) 100vw, 0px"
-            />
+          <div className="relative h-[14vh] w-full md:h-[20vh]">
+            <picture>
+              <source media="(min-width: 768px)" srcSet="/images/moon-hero-desktop.png" />
+              <img
+                src="/images/moon-hero-mobile.png"
+                alt="DSML Kazakhstan Community"
+                width={2475}
+                height={1358}
+                className="h-full w-full object-cover"
+                decoding="async"
+                fetchPriority="high"
+              />
+            </picture>
             <div className="absolute inset-0 bg-black/10 pointer-events-none"></div>
           </div>
         </div>
@@ -148,9 +140,9 @@ export function HomeContent() {
       <section className="py-10">
         <div className="container px-4 md:px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-pixel font-bold mb-8 leading-tight">
-              <span className="bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] bg-clip-text text-transparent drop-shadow-lg">
-                Our Community Channels
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-pixel font-bold mb-8 leading-tight break-words">
+              <span className="inline-block max-w-full whitespace-normal break-words bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] bg-clip-text text-transparent drop-shadow-lg">
+                {t("home.channelsTitle")}
               </span>
             </h2>
             <p className="text-gray-300 text-lg leading-relaxed mb-8 font-medium">{t("home.communityDescription")}</p>
@@ -350,11 +342,11 @@ export function HomeContent() {
                 </Badge>
               </div>
               <Link
-                href="https://www.linkedin.com/company/53101063/admin/dashboard/"
+                href={LINKEDIN_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center text-[#00AEC7] hover:text-[#FFF32A] transition-colors group/link font-medium"
-                onClick={handleOutbound("LinkedIn Page", "https://www.linkedin.com/company/53101063/admin/dashboard/", "social")}
+                onClick={handleOutbound("LinkedIn Page", LINKEDIN_URL, "social")}
               >
                 Subscribe on LinkedIn
                 <ExternalLink className="ml-2 h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
@@ -368,8 +360,8 @@ export function HomeContent() {
       <section className="py-12">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-pixel font-bold mb-8 leading-tight">
-              <span className="bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] bg-clip-text text-transparent drop-shadow-lg">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-pixel font-bold mb-8 leading-tight break-words">
+              <span className="inline-block max-w-full whitespace-normal break-words bg-gradient-to-r from-[#FFF32A] via-[#00AEC7] to-[#FFF32A] bg-clip-text text-transparent drop-shadow-lg">
                 {t("home.collaborationTitle")}
               </span>
             </h2>
@@ -410,21 +402,17 @@ export function HomeContent() {
 
           {/* Enhanced CTA */}
           <div className="text-center px-4">
-            <Link
-              href="https://t.me/DSMLmeetup"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block w-full sm:w-auto"
+            <Button
+              asChild
+              size="lg"
+              className="w-full sm:w-auto bg-gradient-to-r from-[#00AEC7] to-[#00AEC7]/80 text-white hover:from-[#00AEC7]/90 hover:to-[#00AEC7]/70 font-pixel text-lg px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
             >
-              <Button
-                size="lg"
-                className="w-full sm:w-auto bg-gradient-to-r from-[#00AEC7] to-[#00AEC7]/80 text-white hover:from-[#00AEC7]/90 hover:to-[#00AEC7]/70 font-pixel text-lg px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
-              >
+              <Link href="https://t.me/DSMLmeetup" target="_blank" rel="noopener noreferrer">
                 <MessageCircle className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" />
                 <span className="truncate">{t("home.collaborationContact")}</span>
                 <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
@@ -433,30 +421,32 @@ export function HomeContent() {
       <section className="py-12">
         <div className="container px-4 md:px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-pixel font-bold mb-8 text-white leading-tight">
-            Ready to Join the Future of AI in Central Asia?
+            {t("home.finalCtaTitle")}
           </h2>
           <p className="text-gray-300 text-lg mb-12 max-w-2xl mx-auto leading-relaxed font-medium">
-            Connect with like-minded professionals, access exclusive resources, and accelerate your career in AI/ML.
+            {t("home.finalCtaDescription")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-4">
-            <Link href="/auth/signup" className="w-full sm:w-auto">
-              <Button
-                size="lg"
-                className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-pixel font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base"
-              >
-                Get Started Today
+            <Button
+              asChild
+              size="lg"
+              className="w-full sm:w-auto bg-gradient-to-r from-[#FFF32A] to-[#FFF32A]/80 text-black hover:from-[#FFF32A]/90 hover:to-[#FFF32A]/70 font-pixel font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group text-base"
+            >
+              <Link href="/auth/signup" onClick={handleCta("final_signup", "/auth/signup")}>
+                {t("home.getStartedToday")}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-            <Link href="/events" className="w-full sm:w-auto">
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-4 rounded-full transition-all duration-300 bg-transparent text-base font-pixel"
-              >
-                Explore Events
-              </Button>
-            </Link>
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="w-full sm:w-auto border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-4 rounded-full transition-all duration-300 bg-transparent text-base font-pixel"
+            >
+              <Link href="/events" onClick={handleCta("final_events", "/events")}>
+                {t("home.exploreEvents")}
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

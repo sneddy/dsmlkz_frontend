@@ -67,9 +67,11 @@ export default function ForgotPasswordPage() {
             <CardDescription>{t("auth.checkEmail")}</CardDescription>
           </CardHeader>
           <CardFooter>
-            <Link href="/auth/signin" className="w-full">
-              <Button className="w-full bg-[#00AEC7] hover:bg-[#00AEC7]/90 text-white">{t("auth.backToSignIn")}</Button>
-            </Link>
+            <Button asChild className="w-full bg-[#00AEC7] hover:bg-[#00AEC7]/90 text-white">
+              <Link href="/auth/signin" className="w-full">
+                {t("auth.backToSignIn")}
+              </Link>
+            </Button>
           </CardFooter>
         </Card>
       </div>
@@ -89,7 +91,9 @@ export default function ForgotPasswordPage() {
               <Label htmlFor="email">{t("auth.email")}</Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
+                autoComplete="email"
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

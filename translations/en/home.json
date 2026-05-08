@@ -2,7 +2,14 @@
   "title": "DSML Kazakhstan",
   "subtitle": "DSMLKZ Community - AI and Machine Learning enthusiasts community in Kazakhstan",
   "joinButton": "Join Community",
+  "watchEvents": "Watch Events",
   "subscribeButton": "Subscribe",
+  "stats": {
+    "membersAcrossPlatforms": "Members Across Platforms",
+    "activeMembers": "Active Members",
+    "offlineEventsHosted": "Offline Events Hosted",
+    "jobPlacements": "Job Placements"
+  },
   "signIn": "Sign In",
   "signUp": "Sign Up",
   "channelsTitle": "Our Community Channels",
@@ -22,6 +29,10 @@
   "collaborationTitle": "Partnership Opportunities",
   "collaborationSubtitle": "We partner with leading companies and organizations to create value for our community members.",
   "collaborationContact": "Contact Us",
+  "finalCtaTitle": "Ready to Join the Future of AI in Central Asia?",
+  "finalCtaDescription": "Connect with like-minded professionals, access exclusive resources, and accelerate your career in AI/ML.",
+  "getStartedToday": "Get Started Today",
+  "exploreEvents": "Explore Events",
   "mediaSupport": {
     "title": "Media Partnership",
     "description": "Amplify your events and announcements",

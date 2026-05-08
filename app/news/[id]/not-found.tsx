@@ -20,12 +20,12 @@ export default function NewsNotFound() {
           <CardContent className="pt-6">
             <p className="text-gray-300 mb-6">К сожалению, запрашиваемая новость не существует или была удалена.</p>
 
-            <Link href="/news">
-              <Button className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-white">
+            <Button asChild className="bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] hover:from-[#FFF32A]/90 hover:to-[#00AEC7]/90 text-white">
+              <Link href="/news">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Вернуться к новостям
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </CardContent>
         </Card>
       </div>

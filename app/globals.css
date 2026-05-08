@@ -494,6 +494,22 @@ body {
   border-bottom: none;
 }
 
+.katex-display {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0;
+}
+
+.katex {
+  font-size: 1.1em;
+}
+
+.katex-display > .katex {
+  display: flex;
+  justify-content: center;
+}
+
 /* === УТИЛИТЫ ДЛЯ ОТЛАДКИ === */
 .debug-bg {
   background: repeating-linear-gradient(

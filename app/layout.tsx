@@ -26,13 +26,45 @@ const pixelFont = Press_Start_2P({
 const siteUrl = "https://dsml.kz"
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "DSML Kazakhstan Community",
   description: "DSMLKZ Community - Сообщество энтузиастов AI и Машинного обучения в Казахстане",
+  alternates: {
+    canonical: "/",
+    languages: {
+      en: "/",
+      ru: "/?lang=ru",
+      kk: "/?lang=kk",
+    },
+  },
+  openGraph: {
+    title: "DSML Kazakhstan Community",
+    description: "AI and Machine Learning community in Kazakhstan",
+    url: siteUrl,
+    siteName: "DSML Kazakhstan",
+    images: [
+      {
+        url: "/images/moon-hero-desktop.png",
+        width: 1200,
+        height: 630,
+        alt: "DSML Kazakhstan Community",
+      },
+    ],
+    locale: "en",
+    alternateLocale: ["ru", "kk"],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DSML Kazakhstan Community",
+    description: "AI and Machine Learning community in Kazakhstan",
+    images: ["/images/moon-hero-desktop.png"],
+  },
   icons: {
     icon: "/images/dsml-logo.png",
     apple: "/images/dsml-logo.png",
   },
-    generator: 'v0.app'
+  generator: "v0.app",
 }
 
 export default function RootLayout({

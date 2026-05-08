@@ -5,6 +5,7 @@ import { ArrowLeft, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BlobImage } from "@/components/ui/blob-image"
+import { normalizeHref, normalizeHtmlLinks } from "@/lib/utils/text-utils"
 
 type TelegramPost = {
   post_id: string
@@ -88,7 +89,7 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
 
   // Обработка HTML контента
   const processHtml = (html: string) => {
-    return html.replace(/\n/g, "<br />").replace(/<br \/><br \/>/g, "</p><p>")
+    return normalizeHtmlLinks(html).replace(/\n/g, "<br />").replace(/<br \/><br \/>/g, "</p><p>")
   }
 
   const jsonLd = {
@@ -130,15 +131,16 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           {/* Кнопка назад */}
           <div className="mb-6">
-            <Link href="/news">
-              <Button
-                variant="outline"
-                className="flex items-center gap-2 bg-gray-800/50 border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:text-white"
-              >
+            <Button
+              asChild
+              variant="outline"
+              className="flex items-center gap-2 bg-gray-800/50 border-gray-600 text-gray-300 hover:bg-gray-700/50 hover:text-white"
+            >
+              <Link href="/news">
                 <ArrowLeft className="h-4 w-4" />
                 Назад к новостям
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
 
           {/* Основная карточка новости */}
@@ -158,7 +160,7 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
                 </div>
                 {post.post_link && (
                   <Link
-                    href={post.post_link}
+                    href={normalizeHref(post.post_link)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center px-4 py-2 border border-[#00AEC7] text-[#00AEC7] hover:bg-[#00AEC7] hover:text-white text-sm font-medium rounded-md transition-all duration-200"

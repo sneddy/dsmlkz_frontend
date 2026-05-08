@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { createServerClient } from "@/lib/supabase-server"
 import { formatJobDate, truncateJobText, processJobHtml } from "@/lib/utils/jobs-utils"
+import { normalizeHref } from "@/lib/utils/text-utils"
 import { ServerImage } from "@/components/ui/server-image"
 import { ExternalLink, MapPin, Calendar, Building, Brain, Code } from "lucide-react"
 import Link from "next/link"
@@ -295,7 +296,7 @@ export default async function JobPage({
             {job.post_link && (
               <div className="mt-8 pt-6 border-t border-gray-600/30">
                 <Link
-                  href={job.post_link}
+                  href={normalizeHref(job.post_link)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-[#FFF32A] to-[#00AEC7] text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200"

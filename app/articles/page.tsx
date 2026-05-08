@@ -1,29 +1,33 @@
-"use client"
-
-import { useTranslation } from "@/hooks/use-translation"
 import { ArticleCard } from "@/widgets/article_card"
 import { articlesMetadata } from "./utils/articles-metadata"
-import { SectionHero } from "@/widgets/section_hero"
+import { tServer } from "@/lib/server-translations"
 
-export default function ArticlesPage() {
-  const { t } = useTranslation()
+export const revalidate = 300
 
-  // Фильтруем статьи, чтобы не показывать скрытые
+export default async function ArticlesPage() {
+  const { t } = await tServer()
+
   const visibleArticles = articlesMetadata.filter((article) => !article.hidden)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      {/* Hero Section */}
-      <SectionHero
-        title={t("articles.title") || "Статьи"}
-        subtitleLine1={t("articles.description") || "Исследования, интервью и аналитика от экспертов DSML Kazakhstan"}
-        gradientFrom="#FFF32A"
-        gradientTo="#00AEC7"
-        className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
-      />
+      <div
+        className="relative overflow-hidden py-16 px-4 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"
+        style={{ backgroundImage: "linear-gradient(to right, #FFF32A, #00AEC7)" }}
+      >
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="relative max-w-7xl mx-auto text-center">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight font-pixel">
+            {t("articles.title", "Статьи")}
+          </h1>
+          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+            {t("articles.description", "Исследования, интервью и аналитика от экспертов DSML Kazakhstan")}
+            <br />
+          </p>
+        </div>
+      </div>
 
       <div className="container py-8">
-        {/* Articles Grid */}
         <div className="space-y-8">
           {visibleArticles.map((article) => (
             <ArticleCard
@@ -41,7 +45,6 @@ export default function ArticlesPage() {
           ))}
         </div>
 
-        {/* Call to Action */}
         <div className="mt-16">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-[#FFF32A]/5 to-[#00AEC7]/5 rounded-2xl blur-2xl"></div>

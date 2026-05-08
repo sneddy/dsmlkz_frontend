@@ -76,14 +76,14 @@ export default function ClientLayout({
   ]
 
   const navLinkClass =
-    "flex min-h-11 items-center rounded-md text-sm font-medium font-pixel transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00AEC7] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+    "flex min-h-11 items-center rounded-md text-[13px] font-medium font-pixel transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00AEC7] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
 
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-50 border-b bg-background">
         <div className="container mx-auto flex h-16 items-center justify-between px-4 py-4">
           {/* ------------- Logo & desktop nav ------------- */}
-          <div className="flex min-w-0 items-center gap-6">
+          <div className="flex min-w-0 items-center gap-4 2xl:gap-6">
             <Link
               href="/"
               className="flex min-h-11 shrink-0 items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00AEC7] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
@@ -99,7 +99,7 @@ export default function ClientLayout({
             </Link>
 
             {/* -------- Desktop navigation -------- */}
-            <nav className="hidden xl:flex items-center gap-6">
+            <nav className="hidden 2xl:flex items-center gap-2">
               {navLinks.map((item) => (
                 <Link
                   key={item.href}
@@ -118,11 +118,11 @@ export default function ClientLayout({
           </div>
 
           {/* --------- Right section (language, auth, burger) --------- */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 2xl:gap-4">
             <LanguageSelector />
 
             {user ? (
-              <div className="hidden xl:flex items-center gap-4">
+              <div className="hidden 2xl:flex items-center gap-3 2xl:gap-4">
                 <Link
                   href="/dashboard"
                   className="flex min-h-11 items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00AEC7] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
@@ -145,7 +145,7 @@ export default function ClientLayout({
                 </Button>
               </div>
             ) : (
-              <div className="hidden xl:flex items-center gap-4">
+              <div className="hidden 2xl:flex items-center gap-3 2xl:gap-4">
                 <Button asChild variant="outline" size="sm" className="min-h-11">
                   <Link href="/auth/signin" onClick={handleCtaClick("signin", "/auth/signin")}>
                     {t("nav.signin")}
@@ -166,7 +166,7 @@ export default function ClientLayout({
               aria-label={isMenuOpen ? t("nav.closeNavigation") : t("nav.openNavigation")}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-navigation"
-              className="xl:hidden min-h-11 min-w-11 border-white/30 text-white bg-black/30 backdrop-blur-sm hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-[#00AEC7] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="2xl:hidden min-h-11 min-w-11 border-white/30 text-white bg-black/30 backdrop-blur-sm hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-[#00AEC7] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               onClick={() => setIsMenuOpen((prev) => !prev)}
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -176,7 +176,7 @@ export default function ClientLayout({
 
         {/* ---------- Mobile menu ---------- */}
         {isMenuOpen && (
-          <div className="fixed inset-x-0 top-16 z-50 w-full max-w-full overflow-x-hidden border-b border-white/10 bg-background/95 shadow-2xl backdrop-blur-xl xl:hidden">
+          <div className="fixed inset-x-0 top-16 z-50 w-full max-w-full overflow-x-hidden border-b border-white/10 bg-background/95 shadow-2xl backdrop-blur-xl 2xl:hidden">
             <nav id="mobile-navigation" className="mx-auto flex w-full max-w-screen-sm flex-col gap-2 px-4 py-4 pb-6">
               {navLinks.map((item) => (
                 <Link

@@ -1,23 +1,6 @@
 {
-  "title": "Community Culture",
-  "description": "DSML Kazakhstan works best when people share openly, challenge ideas with care, and help each other build real skills in AI, data, and engineering.",
-  "hero": {
-    "kicker": "How DSML works",
-    "promise": "Rules are the minimum. Culture is the standard we choose when nobody is forcing us.",
-    "primaryAction": "Join the community",
-    "secondaryAction": "See events",
-    "proofTitle": "Culture contract",
-    "proofItems": {
-      "context": "Bring context before asking for help: goal, constraints, data, code, and what you already tried.",
-      "evidence": "Prefer evidence over status: benchmarks, sources, reproducible examples, and clear reasoning.",
-      "care": "Challenge ideas directly while protecting people, trust, and long-term collaboration."
-    }
-  },
-  "stats": {
-    "members": "members across DSML channels",
-    "events": "major offline events hosted",
-    "careers": "career opportunities shared"
-  },
+  "title": "Community Values",
+  "description": "Our community is built on mutual respect, support, and the pursuit of development in artificial intelligence and machine learning.",
   "tabs": {
     "welcome": "Welcome",
     "content": "Content Guidelines",
@@ -25,88 +8,73 @@
   },
   "welcome": {
     "title": "Welcome to DSML Kazakhstan",
-    "intro": "DSML Kazakhstan is a community for builders, researchers, students, founders, and practitioners who care about data, machine learning, and useful technology.",
+    "intro": "Welcome to DSML Kazakhstan — the largest community of machine learning and artificial intelligence specialists in Kazakhstan! We unite professionals, students, and enthusiasts who share a passion for data, algorithms, and innovation.",
     "mission": {
-      "title": "Our mission",
-      "description": "Create an open environment where people exchange knowledge, ship better work, and grow the AI ecosystem in Kazakhstan."
+      "title": "Our Mission",
+      "description": "To create an open and supportive environment for sharing knowledge, experience, and ideas in the field of AI and ML."
     },
     "community": {
-      "title": "What makes us different",
-      "description": "We value practical knowledge, peer support, high standards, and real connections between people who are serious about learning and building."
+      "title": "What Makes Us Special",
+      "description": "Professional development through mentorship, regular events and workshops, career growth opportunities, and genuine connections between like-minded individuals."
     }
-  },
-  "culture": {
-    "badge": "Operating principles",
-    "description": "The page is less about policing and more about the habits that make DSML useful: precise questions, generous answers, honest feedback, and respect for different levels of experience."
-  },
-  "actions": {
-    "badge": "Signal over noise",
-    "description": "Good participation makes the next person smarter, faster, or better connected. These are the behaviors we want to see more often."
-  },
-  "boundaries": {
-    "badge": "Clear boundaries",
-    "description": "Boundaries keep the room focused and safe. They are here to protect learning, work, and trust, not to make the community feel formal or closed."
   },
   "content": {
     "guidelines": {
-      "title": "How we show up",
-      "relevant": "Share content relevant to AI, ML, data science, engineering, research, product work, and careers.",
-      "respectful": "Keep the tone calm and professional, especially when disagreeing or giving critique.",
-      "constructive": "Give feedback that helps the other person improve the work, not just defend your opinion.",
-      "original": "Credit sources, label assumptions, and make it clear when you are sharing your own work."
+      "title": "Content Guidelines",
+      "relevant": "Share content relevant to AI, ML, data science, and related technologies",
+      "respectful": "Maintain a respectful and professional tone in all interactions",
+      "constructive": "Provide constructive feedback and engage in meaningful discussions",
+      "original": "Share original work and properly attribute sources when sharing others' content"
     },
     "prohibited": {
-      "title": "Boundaries that protect the room",
-      "spam": "Spam, growth hacks, and unauthorized advertising",
-      "harassment": "Harassment, personal attacks, and toxic behavior",
-      "offtopic": "Off-topic political fights or culture-war threads",
-      "inappropriate": "Discriminatory, explicit, or intentionally offensive content"
+      "title": "Prohibited Content",
+      "spam": "Spam & Unauthorized Advertising",
+      "harassment": "Harassment & Toxic Behavior",
+      "offtopic": "Off-topic Political Discussions",
+      "inappropriate": "Inappropriate or Offensive Content"
     }
   },
   "moderation": {
     "process": {
-      "title": "Moderation is transparent",
-      "description": "Moderation exists to keep the community useful. We start with clarification where possible and escalate only when behavior keeps harming the space."
+      "title": "Moderation Process",
+      "description": "We maintain a fair and transparent moderation system to ensure a healthy community atmosphere. Our goal is to help each member become their best professional self."
     },
     "steps": {
-      "warning": "Clarify the standard and give guidance",
-      "temporary": "Limit participation when the same issue repeats",
-      "permanent": "Remove access for serious or harmful violations"
-    },
-    "principle": "The goal is not punishment. The goal is a high-trust space where people can learn, hire, collaborate, and discuss hard technical ideas."
+      "warning": "First violation: Warning and guidance",
+      "temporary": "Repeated violations: Temporary restrictions",
+      "permanent": "Severe violations: Permanent removal"
+    }
   },
   "values": {
-    "title": "The culture we reward",
+    "title": "Our Core Values",
     "respect": {
-      "title": "Respectful candor",
-      "description": "Be direct about the work and careful with the person. Strong critique and human respect should coexist."
+      "title": "Mutual Respect",
+      "description": "We value every member regardless of their experience level and treat everyone with dignity and respect."
     },
     "learning": {
-      "title": "Continuous learning",
-      "description": "Ask better questions, share what worked, and make knowledge easier for the next person to find."
+      "title": "Continuous Learning",
+      "description": "We foster an environment where learning never stops and knowledge sharing is encouraged."
     },
     "collaboration": {
       "title": "Collaboration",
-      "description": "Help others connect, review, hire, mentor, and build. The network is stronger when value flows both ways."
+      "description": "We believe in the power of working together to solve complex problems and achieve common goals."
     },
     "innovation": {
-      "title": "Useful innovation",
-      "description": "Novelty matters when it creates real progress: clearer models, better products, stronger research, and better decisions."
+      "title": "Innovation",
+      "description": "We encourage creative thinking and innovative approaches to challenges in AI and ML."
     },
     "diversity": {
-      "title": "Range of backgrounds",
-      "description": "Students, seniors, founders, researchers, and career switchers all belong when they participate in good faith."
+      "title": "Diversity & Inclusion",
+      "description": "We celebrate diverse perspectives and ensure everyone feels welcome in our community."
     },
     "excellence": {
-      "title": "High standards",
-      "description": "We care about quality, evidence, and craft while staying generous with people who are still learning."
+      "title": "Excellence",
+      "description": "We strive for high standards in everything we do while supporting each other's growth."
     }
   },
   "cta": {
-    "badge": "Build with us",
-    "title": "Join a community with standards",
-    "description": "DSML is for people who want to learn faster, build useful systems, and raise the level of AI and data work in Kazakhstan.",
-    "button": "Join DSML Kazakhstan",
-    "secondary": "Read community news"
+    "title": "Ready to Join Our Community?",
+    "description": "Become part of Kazakhstan's leading AI and ML community. Connect with professionals, learn from experts, and grow your career.",
+    "button": "Join DSML Kazakhstan"
   }
 }
